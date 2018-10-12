@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_VRC_OK_CLS" Id="{690d035f-3d97-4425-8805-1c0ab824e26b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_VRC_OK_CLS
+VAR_IN_OUT
+	iq_stValve : ST_VRC;
+END_VAR
+VAR_INPUT
+
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+
+tonOvrd	:	TON;
+tonDelOK : TON;
+rtOK	:	R_TRIG;
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This fumction block is different from the regular VRC in that CLOSING must be permitted. *)
+(* Implemented for the funky valve 04 on LAMP *)
+IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
+iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
+
+(* Override logic *)
+(* Goal: give ability to override, but do so in a way that people won't forget it.
+Solution: Override only after ten seconds of override, protect against blips,
+when the valve permission goes true for more than ten seconds consistently, remove override
+*)
+
+tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=T#10S);
+rtOK(CLK:=tonDelOK.Q);
+IF rtOK.Q THEN iq_stValve.pv_xOvrdOpn :=FALSE; END_IF
+
+//Override timer
+tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=T#10S);
+
+(* Here's where the valve opens *)
+iq_stValve.q_xOPN_DO := NOT iq_stValve.xCLS_OK OR ((iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND g_stSystem.xOverrideMode));]]></ST>
+    </Implementation>
+    <LineIds Name="FB_VRC_OK_CLS">
+      <LineId Id="3" Count="19" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

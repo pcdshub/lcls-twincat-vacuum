@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <DUT Name="ST_VCC_NO" Id="{b5ff0a28-38ae-4b86-b0f5-fc2738b0759d}">
+    <Declaration><![CDATA[TYPE ST_VCC_NO :
+STRUCT
+
+(* A normally open valve needs permission to close! *)
+(* Inputs *)
+{attribute 'pytmc' := '
+    pv: CLS_SW
+	io: io
+	'}
+	pv_xCLS_SW	: BOOL;
+	{attribute 'pytmc' := '
+    pv: OVRD_CLS
+	io: io
+	'}
+	pv_xOvrdCls	:	BOOL;
+	{attribute 'pytmc' := '
+    pv: CLS_OK
+	io: i
+	'}
+	xCLS_OK	: BOOL;
+
+(* Outputs *)
+{attribute 'pytmc' := '
+    pv: CLS_DO
+	io: i
+	'}
+	xCLS_DO	: BOOL;
+
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

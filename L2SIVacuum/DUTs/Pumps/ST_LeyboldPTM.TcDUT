@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <DUT Name="ST_LeyboldPTM" Id="{928359f7-41f5-4b97-ac89-aed21155294b}">
+    <Declaration><![CDATA[TYPE ST_LeyboldPTM EXTENDS ST_PTM :
+STRUCT
+(* Extension of the PTM archetype for Oerlikon turbo controllers 
+Applicable to: 
+Mag Drive Digital
+Mag Drive S
+More?
+*)
+//Readbacks
+	{attribute 'pytmc' := '
+    pv: DECEL
+	io: i
+	'}
+	i_xDecel	:	BOOL;
+	{attribute 'pytmc' := '
+    pv: TEMP
+	io: i
+	'}
+	i_diPumpTemp:	DINT;
+	{attribute 'pytmc' := '
+    pv: PWR
+	io: i
+	'}
+	i_diPwr   	:   DINT;
+	i_diElecTemp:	DINT;
+	{attribute 'pytmc' := '
+    pv: OVR_TEMP
+	io: i
+	'}
+	i_xTempFault:	BOOL;
+	i_xNCError	:	BOOL; //Using normally closed wiring
+
+//Controls
+	{attribute 'pytmc' := '
+    pv: Remote_EN
+	io: io
+	'}
+	q_xRemote : BOOL; (* Remote control enabled *)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

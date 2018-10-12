@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_PTM_Pfeiffer" Id="{f61aaad0-85b4-4244-b8a7-58d7d76a340e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_Pfeiffer
+VAR_IN_OUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	iq_stPTM : ST_PfeifferPTM;
+END_VAR
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Basic pump supervisory section *)
+IF iq_stPTM.xExtRunOk AND NOT (iq_stPTM.i_xFault OR iq_stPTM.i_xTempFault) THEN
+	iq_stPTM.q_RunDO:=iq_stPTM.xRunSW;
+ELSE
+	iq_stPTM.xRunSW:=0;
+	iq_stPTM.q_RunDO:=FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_PTM_Pfeiffer">
+      <LineId Id="3" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

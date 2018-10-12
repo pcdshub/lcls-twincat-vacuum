@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_MKS317" Id="{8a56f7a2-f285-4648-be2d-40acd79b269f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS317
+VAR_IN_OUT
+	
+END_VAR
+VAR_INPUT
+	
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	PG : ST_VG;
+END_VAR
+VAR
+	rV	:	REAL;
+		MinPressure: REAL := 1E-4;
+		(*IO*)
+	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 937B Logarithmic Output Conversion *)
+(* 5-20-2016, Alex Wallace and Scott Stubbs *)
+(* 09-28-2018, Margaret Ghaly *)
+(* This function will read the pressure from any gauge on a 937B. *)
+
+rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;
+PG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));
+
+
+//Default setpoint 50 mT
+IF PG.rVAC_SP = 0 THEN
+	PG.rVAC_SP := 5E-2;
+END_IF
+
+
+(* Pressure gauge OK checks *)
+PG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6);
+
+IF (rV <=9.7 ) AND (rV>=0.6) THEN
+	PG.eState := Valid; // normal
+ELSIF rV >= 0.18 AND rV <= 0.22 THEN
+	PG.eState := ValidLo; //LO
+ELSIF rV > 9.7 AND rV<= 9.9 THEN
+	PG.eState := ValidHi; //HIGH
+ELSIF rV < 0.18 THEN
+	PG.eState := GaugeDisconnected; //not on
+ELSE
+	PG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+END_IF
+
+(* Pressure OK check *)
+PG.xPRESS_OK := (PG.rPRESS >= MinPressure);
+
+(* Setpoint evaluation *)
+PG.xAT_VAC := (PG.eState =Valid) AND PG.rPRESS < PG.rVAC_SP;
+
+]]></ST>
+    </Implementation>
+    <Action Name="IO" Id="{267ed2b0-2e00-403e-b259-b7dc82fa629f}">
+      <Implementation>
+        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_MKS317">
+      <LineId Id="3" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="4" Count="5" />
+      <LineId Id="106" Count="3" />
+      <LineId Id="26" Count="16" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="43" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS317.IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <DUT Name="ST_RoughPump" Id="{e8dd9b37-7fd0-43c2-b8a5-8831bd77891b}">
+    <Declaration><![CDATA[TYPE ST_RoughPump :
+STRUCT
+	
+(* Generic roughing pump controls 
+
+NOTE: This is an archetype, use an extension of this structure for a specific pump (or make one).
+
+*)
+
+//Controls
+{attribute 'pytmc' := '
+    pv: RUN_SW
+	io: io
+	'}
+pv_xRunSW	:	BOOL; //epics/ software control switch
+{attribute 'pytmc' := '
+    pv: RUN_DO
+	io: i
+	'}
+q_xRunDo 	:   BOOL; 
+
+//Status and Readback
+{attribute 'pytmc' := '
+    pv: ILK_OK
+	io: i
+	'}
+xIlk	:	BOOL; //Interlock bit, true means OK to run
+xExtIlk	:	BOOL; //External interlock, this is where the logic goes
+{attribute 'pytmc' := '
+    pv: AT_SPD
+	io: i
+	'}
+xAtSpd	:	BOOL; //Pump at speed setpoint
+{attribute 'pytmc' := '
+    pv: WARN
+	io: i
+	'}
+xWrn	:	BOOL; //Pump warning
+iWrn	:	BOOL; //Warning state/code
+xErr	:	BOOL; //Error summary
+iErr	:	BOOL; //Error state/code
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

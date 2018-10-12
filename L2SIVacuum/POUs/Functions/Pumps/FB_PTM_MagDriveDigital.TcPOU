@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_PTM_MagDriveDigital" Id="{50197c8d-2497-4812-a680-acd70b819f81}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_MagDriveDigital
+VAR_IN_OUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	iq_stPtm	:	ST_LeyboldPTM;
+END_VAR
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+
+END_VAR
+VAR
+	xRunOk	:	BOOL;
+	tofRemoteDelay	:	TOF;
+	
+	
+	(*IO*)
+	i_xAtSpd AT%I*: BOOL;
+	i_xFault AT%I*: BOOL;
+    i_xAccel AT%I*: BOOL;
+ 	i_xDecel AT%I*: BOOL;
+ 	i_xWarn AT%I*: BOOL;
+	
+	q_RunDO AT%Q*: BOOL;
+	q_xRemote AT%Q*: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Basic MagDrive Digital Turbo Controls *)
+(* A. Wallace, 2015-7-15 *)
+
+tofRemoteDelay(IN:=iq_stPtm.q_RunDO, PT:=T#5S);
+
+iq_stPtm.q_xRemote := tofRemoteDelay.Q;
+
+(* Interlock Sum *)
+xRunOk := iq_stPtm.xExtRunOk AND NOT iq_stPtm.i_xFault;
+
+(* Basic pump supervisory section *)
+IF xRunOk THEN
+	iq_stPtm.q_RunDO := iq_stPTM.xRunSW;
+ELSE
+	iq_stPtm.xRunSW:=FALSE;
+	iq_stPtm.q_RunDO:=FALSE;
+END_IF
+
+(*I/O soft mapping*)
+ACT_IO();
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{10fdb7df-4c79-46c6-b28e-aee5578ebede}">
+      <Implementation>
+        <ST><![CDATA[(*Inputs*)
+iq_stPtm.i_xAtSpd := i_xAtSpd;
+iq_stPtm.i_xFault := NOT i_xFault;
+iq_stPtm.i_xAccel := i_xAccel;
+iq_stPtm.i_xDecel := i_xDecel;
+iq_stPtm.i_xWarn := i_xWarn;
+
+(*Outputs*)
+q_RunDO := iq_stPtm.q_RunDO;
+q_xRemote := iq_stPtm.q_xRemote; // remote out]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_PTM_MagDriveDigital">
+      <LineId Id="3" Count="15" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_MagDriveDigital.ACT_IO">
+      <LineId Id="2" Count="8" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_MKS_937A" Id="{0483146b-b0e8-4c2d-b90b-7317630633a1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS_937A
+VAR_IN_OUT
+	VG : ST_VG;
+END_VAR
+VAR_INPUT
+	PG	:	ST_VG := g_DummyVG;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	rV	:	REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 937A Logarithmic Output Conversion *)
+(* 7-15-2015 *)
+(* This function will read the pressure from any gauge on a 937A. *)
+
+rV := 10*INT_TO_REAL(VG.i_iPRESS_R)/32767;
+VG.rPRESS := LREAL_TO_REAL(EXPT(10,rV/0.6-12));
+
+
+(* Ion Gauge Protection Functions *)
+(* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
+(* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
+(* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+
+IF PG.rPRESS < VG.rPRO_SP THEN
+
+VG.q_xHV_DIS := NOT VG.xHV_SW;
+
+ELSIF NOT VG.q_xHV_DIS THEN
+	IF VG.rPRESS > VG.rPRO_SP + VG.rHYS_PR OR PG.rPRESS > VG.rPRO_SP + VG.rHYS_PR THEN
+		VG.q_xHV_DIS := TRUE;
+	END_IF
+ELSE
+	VG.q_xHV_DIS := TRUE;
+END_IF
+
+
+(* Pressure gauge OK checks *)
+VG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6); //legacy
+
+IF (rV <=9.6 ) AND (rV>=0.6) THEN
+	VG.eState := Valid; // normal
+ELSIF rV >= 0.18 AND rV <= 0.22 THEN
+	VG.eState := ValidLo; //LO
+ELSIF rV >= 9.7 AND rV<= 9.9 THEN
+	VG.eState := ValidHi; //HIGH
+ELSIF rV < 0.18 THEN
+	VG.eState := GaugeDisconnected; //not on
+ELSE
+	VG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+END_IF
+
+(* Setpoint evaluation *)
+VG.xAT_VAC := (VG.eState =Valid) AND VG.rPRESS < VG.rVAC_SP;
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_MKS_937A">
+      <LineId Id="3" Count="45" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

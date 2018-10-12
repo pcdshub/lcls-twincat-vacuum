@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_PTM_Agilent" Id="{30958a8b-73eb-4ef7-96d3-72fcd80f684d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_Agilent
+VAR_IN_OUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	iq_stPtm	:	ST_AgilentPTM;	
+END_VAR
+VAR_INPUT
+	i_stGauge	:	ST_VG; //Pirani backing gauge for pump interlock 
+END_VAR
+VAR_OUTPUT
+	
+END_VAR
+VAR
+	//xRunOk	:	BOOL;
+	nMaxR1Fault: INT :=5;
+	nR1Fault : INT;
+	tFaultWindowDuration : TIME := T#300S;
+	tR1FaultDuration : TIME := T#120S;
+	tTimeOutDuration: TIME:= T#120S;
+	tFaultWindowElapsed: TON;
+	tR1Fault : TON;
+	tStartTimeOut : TON;
+	tR1TimeOut: TON;
+	step : INT :=0;
+	nErrorCode: INT :=0;
+	
+	xBackingPressureOK: BOOL;
+	
+	
+	(*I/Os*)
+	i_xSTART 	AT%I*:	BOOL; // 'TcLinkTo' (EL1088) ^Input
+	i_xR1	AT%I*	:  BOOL;// 'TcLinkTo' (EL1088) ^Input
+	i_xR2	AT%I*	:  BOOL;// 'TcLinkTo' (EL1088) ^Input
+	i_xLSpd	AT%I*:  BOOL;// 'TcLinkTo' (EL1088) ^Input
+	i_iPumpCurrent AT%I*: INT;
+	i_xFault AT%I*	:	BOOL;
+	q_RunDO AT%Q*	:	BOOL;
+	q_xLSpd	AT%Q*	:  BOOL;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Basic Agilent Turbo Controls *)
+(* M. Ghaly, 2018-9-26 *)
+(* state machine *)
+CASE (step) OF
+(*Pump Stopped State*)
+	0: // Pump Stopped State
+		iq_stPtm.xRunSW:=FALSE;
+		//Reset Output signals;
+		iq_stPtm.q_RunDO:=FALSE;
+		iq_stPtm.q_xSS := FALSE;
+		iq_stPtm.q_xLSpd:= FALSE;
+		//Reset timer
+		tFaultWindowElapsed.IN := FALSE;
+		nR1Fault := 0;
+		iq_stPtm.eState := pumpSTOPPED;
+		step :=10;
+(*Idle State waiting to start*)	
+	10: // Idle State, waiting for the xRunSwitch
+		IF iq_stPtm.xIlk  AND iq_stPTM.xRunSW THEN
+			iq_stPtm.q_RunDO := iq_stPTM.xRunSW; //
+			step:=20;
+		END_IF
+(*Pump Starting State*)	
+	20: // Pump is starting
+		nErrorCode:=0;
+		iq_stPtm.q_RunDO := iq_stPTM.xRunSW; // done in previous state
+		IF (*(NOT iq_stPtm.i_xR1) AND*)iq_stPtm.i_xSTART  THEN
+		iq_stPtm.eState := pumpSTARTING;
+		step:= 40;
+		ELSIF tStartTimeOut.Q THEN
+			step:=90; // or fault state
+			nErrorCode:=950;
+		END_IF
+		// should check R1 ?? check Fault condition?
+		
+	40: // Pump is starting
+		iq_stPtm.eState := pumpSTARTING;
+		IF   NOT iq_stPtm.i_xR1 AND NOT iq_stPtm.i_xSTART  THEN
+			step := 0 ;
+		ELSIF NOT iq_stPtm.i_xR1 AND iq_stPtm.i_xSTART  THEN
+			step :=40;
+		ELSIF iq_stPtm.i_xR1 AND NOT iq_stPtm.i_xSTART THEN
+			step:= 50;
+		END_IF
+		IF tR1TimeOut.Q THEN
+			step:= 90;
+			iq_stPtm.xPumpFaultLock := TRUE;
+			nErrorCode:= 930; // R1 Signal at Start time out.
+		END_IF
+		
+	50: // Pump is Running (Normal Operation) ( R1 is True and STARTing is FALSE)
+		iq_stPtm.eState := pumpRUNNING;
+		IF NOT iq_stPtm.i_xR1 THEN
+			nR1Fault:= nR1Fault+1 ; 
+			tFaultWindowElapsed.IN := TRUE; ///
+			//tR1Fault.IN := TRUE;
+			step :=60;
+		END_IF
+	
+	60: // Pump is Running (Not Nomral Operation) (R1 is False, pump not @ speed )
+		IF ((nR1Fault = nMaxR1Fault) AND NOT tFaultWindowElapsed.Q) OR (tR1Fault.Q) THEN // number of fault occured during the same time window
+			step:= 90;
+			tR1Fault.IN := FALSE;
+			tFaultWindowElapsed.IN := FALSE;
+			iq_stPtm.xPumpFaultLock := TRUE;
+			nErrorCode:= 920; // R1 Signal Lost multiple times.
+		ELSIF tFaultWindowElapsed.Q  THEN
+			tFaultWindowElapsed.IN := FALSE;
+			nR1Fault := 0;
+		ELSIF iq_stPtm.i_xR1 THEN
+			tR1Fault.IN := FALSE;
+			step:=50;
+		END_IF
+	
+	90: // Pump Fault STATE 
+		iq_stPtm.xRunSW:=FALSE;
+		iq_stPtm.q_RunDO:=FALSE;
+		iq_stPtm.q_xSS := FALSE;
+		iq_stPtm.q_xLSpd:= FALSE;
+		iq_stPtm.eState := pumpFAULT;
+		step := 95;
+	
+	95:	
+		IF (NOT iq_stPtm.xPumpFaultLock) OR iq_stPtm.xRunSW THEN 
+			step:=0;
+		END_IF
+END_CASE
+
+(* Interrupts *)
+(* FAULT signal*)
+IF (iq_stPtm.i_xFault) AND (step < 90 ) THEN 
+	iq_stPtm.eState := pumpFAULT; // no need taken care of in the state
+	iq_stPtm.xPumpFaultLock := TRUE;
+	nErrorCode := 900; // Pump Controller FAULT
+	step:=90; 
+END_IF
+
+
+(*Pump Lock Reset bit*)
+IF (iq_stPtm.xReset ) THEN
+	iq_stPtm.xReset := FALSE;
+	iq_stPtm.xPumpFaultLock := FALSE;
+END_IF
+
+(*Check backing gauge pressure*)
+//xBackingPressureOK := i_stGauge.xPRESS_OK AND ( i_stGauge.rPRESS < iq_stPtm.rBackingPressureSP);
+
+(* Interlock Sum *)
+iq_stPtm.xIlk := iq_stPtm.xExtRunOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock;// AND xBackingPressureOK;
+
+IF NOT iq_stPtm.xIlk AND (NOT (step >= 90)) THEN
+	step:=0; 
+END_IF
+
+(*Stop By the Operator and not due to fault *)
+IF (NOT iq_stPtm.xRunSW) AND (NOT (step >= 90)) AND (NOT (step = 10)) THEN
+	step := 0;
+END_IF
+
+
+
+(* Timers *)
+tFaultWindowElapsed(PT:=tFaultWindowDuration);
+tR1Fault(IN:= (step = 60), PT:=tR1FaultDuration);
+tStartTimeOut(IN := (step=20), PT:=tTimeOutDuration);
+tR1TimeOut(IN := (step=40), PT:=tTimeOutDuration);
+
+(*Assign Error Message*)
+iq_stPtm.sError := ErrorMessage(nErrorCode, iq_stPtm.eState);
+]]></ST>
+    </Implementation>
+    <Method Name="ErrorMessage" Id="{633e028f-b2ab-4c53-99a2-60784964c3ea}">
+      <Declaration><![CDATA[METHOD PUBLIC ErrorMessage : STRING
+VAR_INPUT
+	nErrorCode : INT;
+	eState: E_PumpState;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (eState := pumpFAULT ) THEN
+	CASE nErrorCode OF
+		950:
+			ErrorMessage := 'Pump Starting Fault';
+		930: 
+			ErrorMessage := 'R1 Signal Timeout at Startup';
+	
+		920:
+			ErrorMessage := 'R1 signal lost multiple times';
+
+		900:
+			ErrorMessage := 'Pump Controller Fault';	
+	END_CASE
+	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Action Name="IO" Id="{91e0ad29-851c-46ff-a4b9-77352c8095fc}">
+      <Implementation>
+        <ST><![CDATA[(*inputs*)
+iq_stPtm.i_xSTART:=	i_xSTART;
+iq_stPtm.i_xR1:=	i_xR1;
+iq_stPtm.i_xR2:=	i_xR2;
+iq_stPtm.i_xLSpd:=	i_xLSpd;
+iq_stPtm.i_xFault:=	i_xFault;
+(*outputs*)
+q_RunDO := iq_stPtm.q_RunDO;
+q_xLSpd := iq_stPtm.q_xLSpd;
+i_iPumpCurrent := iq_stPtm.i_iPumpCurrent;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_PTM_Agilent">
+      <LineId Id="21" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="268" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="94" Count="2" />
+      <LineId Id="257" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="112" Count="2" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="192" Count="1" />
+      <LineId Id="116" Count="2" />
+      <LineId Id="261" Count="0" />
+      <LineId Id="265" Count="0" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="313" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="269" Count="1" />
+      <LineId Id="274" Count="1" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="312" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="249" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="381" Count="3" />
+      <LineId Id="308" Count="1" />
+      <LineId Id="311" Count="0" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="253" Count="1" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="132" Count="1" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="345" Count="0" />
+      <LineId Id="347" Count="4" />
+      <LineId Id="413" Count="1" />
+      <LineId Id="346" Count="0" />
+      <LineId Id="416" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="186" Count="1" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="302" Count="1" />
+      <LineId Id="305" Count="2" />
+      <LineId Id="339" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="76" Count="2" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="301" Count="0" />
+      <LineId Id="458" Count="2" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.ErrorMessage">
+      <LineId Id="10" Count="1" />
+      <LineId Id="13" Count="8" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.IO">
+      <LineId Id="7" Count="0" />
+      <LineId Id="2" Count="3" />
+      <LineId Id="8" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

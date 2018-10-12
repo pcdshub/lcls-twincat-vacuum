@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_MKS500" Id="{7585aac8-a989-4785-918b-438600204b3a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS500
+VAR_IN_OUT
+
+END_VAR
+VAR_INPUT
+
+	PG	:	ST_VG;
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	IG : ST_VG;
+END_VAR
+VAR
+	rV : REAL;
+	pBase : REAL :=1.0E-10;//default curve base pressure is 1E-10. Confusing since can't actually read that low using analog out.
+	vBase : REAL := 0; // corresponding vbase 0V based on default curve.  See manual pg. 44
+	vSlope : REAL := 1.0; //looks correct for default curve
+	GaugeTurnOnTmr : TON;
+	MinPressure: REAL := 1E-10;
+	cDefaultPressure : REAL := 0;
+	
+	
+	(*IOs to be linked*)
+	/// Controls and I/Os
+	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
+	i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1124) ^Input
+	i_xDisc_Active AT %I* : BOOL;// Discharge Current Active // 'TcLinkTo' (EL1124) ^Input
+	q_xHV_DIS AT %Q* : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EL2624) ^Output
+	//
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 500 Logarithmic Output Conversion, factory default configuration *)
+
+
+(*check health of the ethercat terminal*)
+
+rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
+
+(*
+IF rV >= 0.49 AND rV < 0.52  THEN
+	IG.wState := 5;
+	IG.rPRESS := cDefaultPressure;
+ELSIF rV < 0.4 THEN
+	IG.wState := 4;//HV Off/ gauge disconnected
+	IG.rPRESS := cDefaultPressure;
+ELSE
+	IG.wState := 1;
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+END_IF
+*)
+
+(* Set Guage State based on the inputs HV ON and Discharge current*)
+IF IG.i_xHV_ON AND NOT IG.i_xDisc_Active THEN
+	IG.eState := Starting;
+	IG.rPRESS := cDefaultPressure;
+ELSIF IG.i_xHV_ON AND IG.i_xDisc_Active THEN
+	IG.eState := Valid;
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+ELSIF NOT IG.i_xHV_ON AND NOT IG.i_xDisc_Active THEN
+	IG.eState := Off;
+	IG.rPRESS := cDefaultPressure;
+END_IF
+
+
+
+
+(* Ion Gauge Protection Functions *)
+(* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
+(* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
+(* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+
+
+
+IF PG.rPRESS < IG.rPRO_SP AND PG.xPRESS_OK THEN
+
+	IG.q_xHV_DIS := IG.xHV_SW;
+
+ELSIF IG.q_xHV_DIS THEN
+	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+		IG.q_xHV_DIS := FALSE;
+		IG.xHV_SW := FALSE;
+	END_IF
+ELSE
+	IG.q_xHV_DIS := FALSE;
+	IG.xHV_SW := FALSE;
+END_IF
+
+(* Pressure gauge OK checks *)
+
+GaugeTurnOnTmr(IN:=IG.q_xHV_DIS, PT:=T#10S, Q=>IG.xTurnOnTime);
+
+
+//Backwards compatibility
+IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
+
+(* Setpoint evaluation *)
+IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid) ;
+
+
+(*Soft IO Linking*)
+// check ethercat Diagnostics
+IO();
+]]></ST>
+    </Implementation>
+    <Action Name="IO" Id="{d5dcbb30-1e72-4867-8faf-91e37cf07851}">
+      <Implementation>
+        <ST><![CDATA[(*soft link inputs*)
+IG.i_iPRESS_R:=	i_iPRESS_R; 
+IG.i_xHV_ON:= i_xHV_ON;
+IG.i_xDisc_Active:=i_xDisc_Active; 
+(*soft link outputs*)
+q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_MKS500">
+      <LineId Id="31" Count="0" />
+      <LineId Id="190" Count="1" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="40" Count="9" />
+      <LineId Id="148" Count="4" />
+      <LineId Id="163" Count="2" />
+      <LineId Id="153" Count="2" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="50" Count="29" />
+      <LineId Id="81" Count="4" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="219" Count="1" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500.IO">
+      <LineId Id="6" Count="0" />
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

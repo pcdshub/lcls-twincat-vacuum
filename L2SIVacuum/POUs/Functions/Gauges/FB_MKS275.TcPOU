@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_MKS275" Id="{ffda77c7-a04b-4d4f-b9a5-3ec5d874c4e9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS275
+VAR_IN_OUT
+
+END_VAR
+VAR_INPUT
+END_VAR
+
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	PG : ST_VG;
+END_VAR
+VAR
+	MinPressure: REAL := 1E-4;
+	V : REAL;
+	Vlowest: REAL := 10;
+	
+	rValidLoBoundary	:	REAL := 0.375; // manual page 27
+	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
+	rDisconnectedBoundary	:	REAL := 0.3;
+	
+	(*IO*)
+	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
+ it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
+(* For MKS 275 mini-convectron *)
+
+//Default setpoint 50 mT
+IF PG.rVAC_SP = 0 THEN
+	PG.rVAC_SP := 5E-2;
+END_IF
+
+(* Real-value calculation *)
+
+V := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;	
+
+Vlowest := MIN(V, Vlowest);
+
+IF V > rDisconnectedBoundary AND V < rValidLoBoundary THEN
+
+PG.rPRESS := MinPressure;
+PG.eState := ValidLo;
+
+ELSIF V >= rValidLoBoundary AND V < 2.842 THEN
+
+PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+PG.eState := Valid;
+
+ELSIF V >= 2.842 AND V < 4.945 THEN
+
+PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
+PG.eState := Valid;
+
+ELSIF V >= 4.945 AND V < rValidHiBoundary THEN
+
+PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
+PG.eState := Valid;
+
+ELSIF V <= rDisconnectedBoundary THEN
+
+PG.eState := GaugeDisconnected; //Most likely not connected
+PG.rPRESS := -1;;
+
+ELSE
+	
+PG.eState := OoR; //Larger voltage, probably out of range?
+PG.rPRESS := -1;
+END_IF
+
+(* Protection Functions *)
+(* If the PG pressure is greater than the IG.PRO_SP then the gauge is disabled *)
+(* If the PG pressure is less than the IG.PRO_SP then the gauge is enabled *)
+(* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+
+(* Pressure OK check *)
+PG.xPRESS_OK := (PG.rPRESS >= MinPressure);
+
+(* Setpoint evaluation *)
+PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS<PG.rVAC_SP);
+
+(*Soft IO Mapping *)
+IO();
+]]></ST>
+    </Implementation>
+    <Action Name="IO" Id="{fa1d0754-87c0-473a-9c19-51013692b513}">
+      <Implementation>
+        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_MKS275">
+      <LineId Id="24" Count="26" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="52" Count="3" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="57" Count="3" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="62" Count="16" />
+      <LineId Id="95" Count="1" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS275.IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

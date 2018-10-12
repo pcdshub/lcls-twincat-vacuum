@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <DUT Name="ST_PTM" Id="{4cff5a41-fc78-4938-9468-a980c788ccb5}">
+    <Declaration><![CDATA[TYPE ST_PTM :
+STRUCT
+(* General PTM Structure
+Each PTM might have a serial control structure, but all will have a general supervisory control structure
+
+NOTE: This is an archetype, use an extension of this structure for a specific pump (or make one).
+
+*)
+
+(* Controls *)
+	{attribute 'pytmc' := '
+    pv: Run_SW
+	io: io
+	'}
+	xRunSW	:	BOOL;
+	{attribute 'pytmc' := '
+    pv: Reset_SW
+	io: io
+	'}
+	xReset	:	BOOL; //For resetting faults
+	{attribute 'pytmc' := '
+    pv: RUN_DO
+	io: i
+	'}
+	q_RunDO 	:	BOOL;
+
+(* Readbacks *)
+{attribute 'pytmc' := '
+    pv: RUN_OK
+	io: i
+	'}
+	xExtRunOk	:	BOOL; (* also a control *)
+	{attribute 'pytmc' := '
+    pv: ACCEL
+	io: i
+	'}
+	i_xAccel	:	BOOL;
+	{attribute 'pytmc' := '
+    pv: AT_SPD
+	io: i
+	'}
+	i_xAtSpd	:	BOOL;
+	i_diCurSpd	:	DINT;
+	
+	xCommTimeout	:	BOOL := TRUE;  (* Initialized true since we haven't talked to pump yet *)
+(* Alarm Outputs *)
+	{attribute 'pytmc' := '
+    pv: FAULT
+	io: i
+	'}
+	i_xFault		:	BOOL; //Note, for Ebara this is *false* in a fault condition!
+	{attribute 'pytmc' := '
+    pv: WARN
+	io: i
+	'}
+	i_xWarn		:	BOOL; (* warning *)
+	
+(* IWS instructions *)
+	xActive	:	BOOL; // this bit is set to add the pump to the system
+	iPumpGrp 	:	INT; // all members of a pump group start at the same time
+	
+(* Operational Setpoints *)
+	rForelineSP	:	REAL := 0.5;
+
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

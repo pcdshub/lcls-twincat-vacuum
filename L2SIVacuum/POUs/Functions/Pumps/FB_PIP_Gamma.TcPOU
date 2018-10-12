@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_PIP_Gamma" Id="{c735b214-fb8d-491c-9d35-e2f8609cfbf0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PIP_Gamma
+VAR_INPUT
+	i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock 
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	stPump	:	ST_PIP; //Gamma Ion pump structure
+	o_stGauge	:	ST_VG; //When ion pump is used as a measuring device for interlocking gate valves
+END_VAR
+VAR_IN_OUT
+END_VAR
+VAR
+ rPRESS : REAL;
+ 
+ (* IO Controls *)
+ q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when True // 'TcLinkTo' (EL1124) ^Input
+ i_iPRESS  AT %I*: INT;  //
+ i_xSP_DI  AT %I* : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Does Gamma Ion pump HV interlock. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
+
+(* Interlock *)
+IF (i_stGauge.xPRESS_OK AND (i_stGauge.rPRESS <= stPump.rHVEna_SP)) THEN
+	stPump.xHV_ExtIlk := TRUE;
+ELSE
+	stPump.xHVEna_SW := FALSE;
+	stPump.xHV_ExtIlk  := FALSE;
+END_IF
+(* Enable HV *)
+stPump.q_xHVEna_DO := stPump.xHVEna_SW AND stPump.xHV_ExtIlk ;
+
+(*Update output gauge values*)
+ACT_SetGauge();
+(*Soft IO Mapping*)
+IO();
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_SetGauge" Id="{7f72f23c-b05a-4919-b11f-c886c11a10b4}">
+      <Implementation>
+        <ST><![CDATA[(* Update SP relay status*)
+o_stGauge.xPress_OK := stPump.i_xSP_DI;
+// convert the analog inout into readable pressure
+rPress := i_iPress; // needs to be done
+IF (stPump.i_xSP_DI) THEN 
+	o_stGauge.rPRESS := rPRESS;
+	ELSE
+	o_stGauge.rPRESS := rPRESS;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="IO" Id="{a9e5b5c0-3557-4ce9-a1b9-765648e955e7}">
+      <Implementation>
+        <ST><![CDATA[
+(*inputs*)
+stPump.i_iPRESS:=	i_iPRESS;  
+stPump.i_xSP_DI:=	i_xSP_DI;
+(*output*)
+q_xHVEna_DO:=stPump.q_xHVEna_DO;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_PIP_Gamma">
+      <LineId Id="10" Count="8" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="114" Count="1" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.ACT_SetGauge">
+      <LineId Id="2" Count="0" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="3" Count="4" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.IO">
+      <LineId Id="2" Count="1" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

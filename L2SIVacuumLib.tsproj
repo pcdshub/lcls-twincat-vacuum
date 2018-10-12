@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4020.39">
+	<Project ProjectGUID="{607CA8E5-6515-4A1F-A434-6C029DB902EC}" Target64Bit="true" ShowHideConfigurations="#x106">
+		<Plc>
+			<Project File="L2SIVacuum.xti"/>
+		</Plc>
+	</Project>
+</TcSmProject>

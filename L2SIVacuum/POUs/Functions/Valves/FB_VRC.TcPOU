@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_VRC" Id="{2db6a988-e12f-4920-baa1-9b034d8c1cf9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_VRC
+VAR_IN_OUT
+	{attribute 'pytmc' := '
+    pv:
+	'}
+	iq_stValve : ST_VRC;
+END_VAR
+VAR_INPUT
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+
+tonOvrd	:	TON;
+tonDelOK : TON;
+rtOK	:	R_TRIG;
+
+
+	(*IO*)
+	i_xOpnLS	AT%I*: BOOL;
+	i_xClsLS	AT%I*: BOOL;
+	q_xOPN_DO	AT%Q*: BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+///Check valve postion
+IF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=0;
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=1;
+ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=2;
+ELSE
+	iq_stValve.eState:=3;
+END_IF
+
+IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
+iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
+
+(* Override logic *)
+(* Goal: give ability to override, but do so in a way that people won't forget it.
+Solution: Override only after ten seconds of override, protect against blips,
+when the valve permission goes true for more than ten seconds consistently, remove override
+*)
+
+tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=T#10S);
+rtOK(CLK:=tonDelOK.Q);
+IF rtOK.Q THEN iq_stValve.pv_xOvrdOpn :=FALSE; END_IF
+
+//Override timer
+tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=T#10S);
+
+(* Here's where the valve opens *)
+iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND g_stSystem.xOverrideMode);
+
+(*Soft IO Mapping*)
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{71e6a07b-f8a4-4ad9-819a-47adf702a688}">
+      <Implementation>
+        <ST><![CDATA[(*inputs*)
+iq_stValve.i_xOpnLS := 	i_xOpnLS;
+iq_stValve.i_xClsLS:=	i_xClsLS;
+(*outputs*)
+q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="F_TURBO_VRC_ILK" Id="{13e97e4c-9278-46e1-8037-fcb3f7ade02d}">
+      <Declaration><![CDATA[METHOD PUBLIC F_TURBO_VRC_ILK : BOOL
+VAR_INPUT
+
+	i_xHiVac 	: BOOL;
+	i_xRunPTM	: BOOL;
+	i_xFLVac	: BOOL;
+
+END_VAR
+VAR
+
+	rHysterisis : REAL := 0;
+
+	xInterlock: BOOL;
+	rTolerance: REAL := 20;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(* Close the vic if the roughing pump pirani loses its at-vac setpoint while the turbo is pumping *)
+F_TURBO_VRC_ILK := (NOT i_xHiVac AND NOT i_xRunPTM AND NOT i_xFLVac) OR
+					(NOT i_xRunPTM AND i_xFLVac) OR
+					(i_xRunPTM AND i_xFLVac);
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_VRC">
+      <LineId Id="3" Count="29" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.ACT_IO">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.F_TURBO_VRC_ILK">
+      <LineId Id="6" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

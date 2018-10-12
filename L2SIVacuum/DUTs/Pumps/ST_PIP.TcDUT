@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <DUT Name="ST_PIP" Id="{3e94e806-a651-479f-afb3-d6455fe7a8d1}">
+    <Declaration><![CDATA[TYPE ST_PIP :
+STRUCT
+(* Read back *)
+// 	i_xHVisON : BOOL; 
+	
+(* Interlock *)
+	{attribute 'pytmc' := '
+    pv: ExtIlk
+	io: i
+	'}
+   	xHV_ExtIlk : BOOL; 
+	{attribute 'pytmc' := '
+    pv: ENB_SP
+	io: io
+	'}
+	rHVEna_SP : REAL := 1.0E-4;	
+	
+(* EPICS Controls *)	
+	{attribute 'pytmc' := '
+    pv: HV_SW
+	io: io
+    '}
+	xHVEna_SW : BOOL; 
+	
+(* IO Controls *)
+	{attribute 'pytmc' := '
+    pv: HV_DO
+	io: i
+    '}
+	q_xHVEna_DO : BOOL;	// Enable High Voltage when True // 'TcLinkTo' (EL1124) ^Input
+	{attribute 'pytmc' := '
+    pv: PRESS
+	io: i
+    '}
+	i_iPRESS: INT;  //
+	{attribute 'pytmc' := '
+    pv: SP_DI
+	io:i
+    '}
+	i_xSP_DI : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
+
+
+
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

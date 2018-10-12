@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_MKS722" Id="{367caa56-e444-4f21-b772-700d1462b7b8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS722
+VAR_IN_OUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	VG	:	ST_VG;
+END_VAR
+VAR_INPUT
+	i_rMinPressure	:	REAL;
+	i_rMaxPressure	:	REAL;
+END_VAR
+VAR
+	rMinPressure: REAL;
+	rVMin	:	REAL := 0.01; // Anything less than this voltage is considered disconnected
+	rVMax :	REAL := 10.5; // Anything more than this is considered invalid
+	rV	:REAL;
+	
+	(*IO*)
+	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// Is the gauge plugged in, and within a reasonable range?
+IF rV < rVMin THEN
+	VG.eState := GaugeDisconnected;
+ELSIF rV > rVMax THEN
+	VG.eState := PressInvalid;
+ELSIF VG.rPRESS >= rMinPressure AND VG.rPRESS <= i_rMaxPressure THEN
+				VG.eState := Valid;
+ELSIF VG.rPRESS < i_rMinPressure THEN
+				VG.eState := ValidLo;
+ELSE
+				VG.eState := ValidHi;
+END_IF
+			
+// Legacy Press OK boolean eval
+VG.xPRESS_OK := VG.eState >= gc_GaugeValidState;
+
+(*IO Soft Mapping*)
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{a9ca031f-8292-44da-bb18-9cf126ecf67e}">
+      <Implementation>
+        <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_MKS722">
+      <LineId Id="27" Count="0" />
+      <LineId Id="36" Count="4" />
+      <LineId Id="30" Count="5" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="47" Count="2" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS722.ACT_IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

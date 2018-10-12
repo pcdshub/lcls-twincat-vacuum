@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_EbaraDryPump" Id="{fa5a85fd-eab5-4a2b-a440-c1a901955592}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EbaraDryPump
+VAR_INPUT
+	i_stBPGauge	:	ST_VG; //booster pump interlock gauge
+	i_xVlvOpn	:	BOOL; //valve(s) to main system load are open
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR_IN_OUT
+	stPump	:	ST_EbaraDryPump; //Ebara dry pump structure
+END_VAR
+VAR
+	(*IO*)
+	q_xMPStart	AT%Q*:	BOOL; //Main Pump start
+	q_xBPStart	AT%Q*:	BOOL; // Booster Pump start (this can be started by the pump automatically)
+	//Readbacks
+	i_xMPStatus	AT%I*:	BOOL; //MP status
+	i_xBPStatus	AT%I*:	BOOL; //BP status
+	i_xWarning	AT%I*:	BOOL; //Warning status
+	i_xAlarm	AT%I*:	BOOL; //Alarm, maps to error
+	i_xRemote	AT%I*:	BOOL; //Remote control status
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Ebara Dry Pump Control Routine
+A. Wallace
+2016-4-29
+Applicable to:
+EV-S20
+EV-S50
+EV-S100
+EV-S200
+
+Does basic controls for the pump. Starts booster pump when appropriate. Turns off pump
+in the event of errors/ warnings. Provides interlocking interface.
+
+Main Pump Operational Note:
+Ebara recommends that the pump be exposed to the full system load after the main pump is running.
+
+Booster Pump Operational Note:
+The booster pump can either be started automatically by the pump itself (probably based on a timer?)
+or it can be started by the PLC. The pressure setpoint is by default 30T. It may be wise to make
+sure the pump was exposed to the full system load before starting the booster.
+
+*)
+
+//Mapping
+ACT_IO();
+// These are normally closed inputs
+stPump.xErr := NOT stPump.i_xAlarm;
+stPump.xWrn := NOT stPump.i_xWarning;
+
+
+//Interlock and error/warning
+stPump.xIlk :=  stPump.xExtIlk AND NOT (stpump.xErr OR stpump.xWrn);
+
+//Start/ Stop the pump
+IF stpump.xIlk THEN
+	stpump.q_xMPStart := stpump.pv_xRunSW;
+ELSE
+	stpump.q_xMPStart := stpump.pv_xRunSW := FALSE;
+END_IF
+
+//Booster pump
+stpump.xBPIlk := i_xVlvOpn AND stpump.i_xMPStatus AND (i_stBPGauge.rPRESS < stpump.rBPIlkSP) AND i_stbpgauge.xPRESS_OK;
+stpump.tonBP(IN:=stpump.xBPIlk);
+stpump.q_xBPStart := stpump.tonBP.Q;]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{98533322-3808-41fc-88a0-2acd4df6d1ea}">
+      <Implementation>
+        <ST><![CDATA[(*Outputs*)
+	q_xMPStart	:= stPump.q_xMPStart;
+	q_xBPStart	:= stPump.q_xBPStart;
+(*Inputs*)
+stPump.i_xMPStatus:=	i_xMPStatus;
+stPump.i_xBPStatus:=	i_xBPStatus;
+stPump.i_xWarning:= i_xWarning	;
+stPump.i_xAlarm:=	i_xAlarm;
+stPump.i_xRemote:= i_xRemote;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_EbaraDryPump">
+      <LineId Id="3" Count="41" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_EbaraDryPump.ACT_IO">
+      <LineId Id="2" Count="7" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <DUT Name="ST_AgilentPTM_01" Id="{a938abf6-36f3-4107-b22c-ed5b703ad258}">
+    <Declaration><![CDATA[TYPE ST_AgilentPTM_01 EXTENDS ST_PTM :
+STRUCT
+
+(* Inputs *)
+	(* 24V in Ramp state; 0V for others *)
+    i_xSTART :	BOOL; 
+	
+	(* setpoint related to frequency *)
+	i_xR1	:  BOOL;
+	
+	(* setpoint related to Power *)
+	i_xR2	:  BOOL;
+	
+	(* low speed mode *)
+	i_xLSpd	:  BOOL;
+	
+	(* Fault input*)
+	//i_xFault : BOOL;  Inherit ST_PTM.xFault
+	
+	
+
+(* controls *)
+	(* Start/Stop - 
+		q_RunDo ;   Inherit ST_PTM.
+	 *)
+	
+	(* Low speed control *)
+	q_xLSpd		:  BOOL;
+	
+	(*Soft start *)
+	q_xSS   	:  BOOL;
+	
+	(* Run interlock*)
+	q_xIlk : BOOL;
+		
+	eState	:	E_PumpState;
+	
+	rBackingPressureSP : REAL := 0.01;
+	rInletPressureSP : REAL := 0.5;
+	
+	
+	(*pump Lock*)
+	q_xPumpFaultLock : BOOL := FALSE;
+	i_xPumpLockReset: BOOL := FALSE;
+	
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
