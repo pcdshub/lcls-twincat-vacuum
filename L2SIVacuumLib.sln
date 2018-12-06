@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{B1E792BE-AA5F-4E3C-8C82-674BF9C0715B}") = "L2SIVacuumLib", "L2SIVacuumLib.tsproj", "{607CA8E5-6515-4A1F-A434-6C029DB902EC}"
 EndProject
@@ -35,6 +35,7 @@ Global
 		{19F43C40-AA59-45D4-A14D-CFB75472AEBC}.Release|TwinCAT CE7 (ARMV7).ActiveCfg = Release|TwinCAT CE7 (ARMV7)
 		{19F43C40-AA59-45D4-A14D-CFB75472AEBC}.Release|TwinCAT CE7 (ARMV7).Build.0 = Release|TwinCAT CE7 (ARMV7)
 		{19F43C40-AA59-45D4-A14D-CFB75472AEBC}.Release|TwinCAT RT (x64).ActiveCfg = Release|TwinCAT RT (x64)
+		{19F43C40-AA59-45D4-A14D-CFB75472AEBC}.Release|TwinCAT RT (x64).Build.0 = Release|TwinCAT RT (x64)
 		{19F43C40-AA59-45D4-A14D-CFB75472AEBC}.Release|TwinCAT RT (x86).ActiveCfg = Release|TwinCAT RT (x86)
 		{19F43C40-AA59-45D4-A14D-CFB75472AEBC}.Release|TwinCAT RT (x86).Build.0 = Release|TwinCAT RT (x86)
 	EndGlobalSection
