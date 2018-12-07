@@ -3,6 +3,9 @@
   <POU Name="FB_MKS722" Id="{367caa56-e444-4f21-b772-700d1462b7b8}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS722
 VAR_IN_OUT
+	
+END_VAR
+VAR_OUTPUT
 	{attribute 'pytmc' := '
     pv: 
 	'}

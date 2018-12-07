@@ -1,22 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_MKS422" Id="{2e4ef3e9-09c8-44c2-b5f5-464ffb8c18a0}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS422
 VAR_IN_OUT
-	
-	
+		
 END_VAR
 VAR_INPUT
-		PG	:	ST_VG;
+		PG	:	ST_VG; // Pirani Gauge Structure used to Interlock the Cold Cathode
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
     pv: GCC
 	'}
-	IG : ST_VG;
-	
-	
-
+	IG : ST_VG; // The Cold Cathode Data Structure
 END_VAR
 VAR
 	rV	:	REAL;
@@ -58,7 +54,7 @@ END_IF
 (* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
 (* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
 
-IF PG.rPRESS < IG.rPRO_SP THEN
+IF PG.rPRESS <= IG.rPRO_SP THEN
 	IG.q_xHV_DIS := IG.xHV_SW;
 
 ELSIF IG.q_xHV_DIS THEN

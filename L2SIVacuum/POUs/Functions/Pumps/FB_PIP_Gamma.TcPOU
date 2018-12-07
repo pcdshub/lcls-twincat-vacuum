@@ -10,13 +10,13 @@ VAR_OUTPUT
     pv: 
 	'}
 	stPump	:	ST_PIP; //Gamma Ion pump structure
-	o_stGauge	:	ST_VG; //When ion pump is used as a measuring device for interlocking gate valves
+	q_IG	:	ST_VG; //When ion pump is used as a measuring device for interlocking gate valves
 END_VAR
 VAR_IN_OUT
 END_VAR
 VAR
  rPRESS : REAL;
- 
+ rV : REAL;
  (* IO Controls *)
  q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when True // 'TcLinkTo' (EL1124) ^Input
  i_iPRESS  AT %I*: INT;  //
@@ -45,14 +45,17 @@ IO();
     </Implementation>
     <Action Name="ACT_SetGauge" Id="{7f72f23c-b05a-4919-b11f-c886c11a10b4}">
       <Implementation>
-        <ST><![CDATA[(* Update SP relay status*)
-o_stGauge.xPress_OK := stPump.i_xSP_DI;
-// convert the analog inout into readable pressure
-rPress := i_iPress; // needs to be done
+        <ST><![CDATA[(* convert the analog input into readable pressure*)
+(* use logarithmic Pressure calculation, Output= Normal and Offset = 0*)
+rV := 10*INT_TO_REAL(i_iPress)/32767;
+rPRESS := LREAL_TO_REAL(EXPT(10,(rV-0))); (*offset = 0*)
+
 IF (stPump.i_xSP_DI) THEN 
-	o_stGauge.rPRESS := rPRESS;
+	q_IG.rPRESS := rPRESS;
+	q_IG.xPRESS_OK := TRUE;
 	ELSE
-	o_stGauge.rPRESS := rPRESS;
+	q_IG.rPRESS := rPRESS;
+	q_IG.xPRESS_OK := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -76,9 +79,14 @@ q_xHVEna_DO:=stPump.q_xHVEna_DO;]]></ST>
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_PIP_Gamma.ACT_SetGauge">
-      <LineId Id="2" Count="0" />
-      <LineId Id="8" Count="1" />
-      <LineId Id="3" Count="4" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="3" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PIP_Gamma.IO">

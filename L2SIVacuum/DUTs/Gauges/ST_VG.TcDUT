@@ -77,12 +77,16 @@ STRUCT
 	rVAC_SP: REAL := 0.5;
 	/// Protection setpoint for ion gauges at which the gauge turns off, not used for pirani 
 	{attribute 'pytmc' := '
-    pv: SP
+    pv: PRO_SP
 	io: io
     '}
-	rPRO_SP: REAL := 0.01;
+	rPRO_SP: REAL := 0.0001;
+	{attribute 'pytmc' := '
+    pv: SP_HYS
+	io: io
+    '}
 	/// Protection setpoint hysteresis 
-	rHYS_PR: REAL; 
+	rHYS_PR: REAL := 0.001; 
 	/// Full scale pressure in Torr for baratron pressure conversion 
 	rFULL_SCALE: REAL := 1000;
 	

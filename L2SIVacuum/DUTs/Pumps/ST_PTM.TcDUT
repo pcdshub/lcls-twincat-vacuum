@@ -20,7 +20,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
     pv: Reset_SW
 	io: io
 	'}
-	xReset	:	BOOL; //For resetting faults
+	xResetSW	:	BOOL; //For resetting faults
 	{attribute 'pytmc' := '
     pv: RUN_DO
 	io: i
@@ -43,6 +43,10 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	io: i
 	'}
 	i_xAtSpd	:	BOOL;
+	{attribute 'pytmc' := '
+    pv: SPEED
+	io: i
+	'}
 	i_diCurSpd	:	DINT;
 	
 	xCommTimeout	:	BOOL := TRUE;  (* Initialized true since we haven't talked to pump yet *)
@@ -57,6 +61,11 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	io: i
 	'}
 	i_xWarn		:	BOOL; (* warning *)
+	{attribute 'pytmc' := '
+    pv: ALARM
+	io: i
+	'}
+	i_xALARM	:	BOOL; (* ALARM *)
 	
 (* IWS instructions *)
 	xActive	:	BOOL; // this bit is set to add the pump to the system
@@ -64,6 +73,23 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	
 (* Operational Setpoints *)
 	rForelineSP	:	REAL := 0.5;
+	
+	{attribute 'pytmc' := '
+    pv: BackingPressureSP
+	io: io
+	'}
+	rBackingPressureSP : REAL := 0.01;
+	{attribute 'pytmc' := '
+    pv: InletPressureSP
+	io: io
+	'}
+	rInletPressureSP : REAL := 0.5;
+	
+	{attribute 'pytmc' := '
+    pv: STATE
+	io: i
+	'}	
+	eState	:	E_PumpState;
 
 END_STRUCT
 END_TYPE]]></Declaration>

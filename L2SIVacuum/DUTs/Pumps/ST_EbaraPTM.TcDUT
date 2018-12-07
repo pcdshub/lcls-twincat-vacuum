@@ -9,18 +9,6 @@ ETC series
 *)
 //Controls
 	{attribute 'pytmc' := '
-    pv: START_SW
-	io: io
-	'}
-i_xStart   : BOOL; //Momentary start switch
-	{attribute 'pytmc' := '
-    pv: STOP_SW
-	io: io
-	'}
-i_xStop    : BOOL; //Momentary stop switch
-// i_xReset is momentary reset switch - resets protection functions
-
-	{attribute 'pytmc' := '
     pv: START
 	io: i
 	'}
@@ -34,16 +22,26 @@ q_xStop    : BOOL;
     pv: RESET
 	io: i
 	'}
-q_xReset   : BOOL;
+q_xReset   : BOOL; // xReset is momentary reset switch - resets protection functions
 	{attribute 'pytmc' := '
     pv: ILK
 	io: i
 	'}
 q_xProtection : BOOL; //NC. If opened, pump will decelerate/not start
-
+	{attribute 'pytmc' := '
+    pv: SETSPEED
+	io: io
+	'}
 iq_xSpeedSet    : BOOL; //Request to set speed
+	{attribute 'pytmc' := '
+    pv: SPEED
+	io: io
+	'}
 q_iSpeedSet   : DINT; //Requested speed (min. 100 RPM)
-
+	{attribute 'pytmc' := '
+    pv: OVRD
+	io: io
+	'}
 i_xOverride   : BOOL; //Override mode - ignores interlocks
 
 //Readbacks - also has Accel/At speed/Decel/Fault/Cur Speed (min 100RPM)
@@ -63,10 +61,20 @@ i_xDecel  : BOOL; //If closed, brake engaged (pump decelerating)
 	'}
 i_xNCFault  : BOOL; //Normally closed fault wiring. If false, there is a fault, or cable is unplugged.
 	{attribute 'pytmc' := '
-    pv: SPEED
+    pv: SPEED_RDBK
 	io: i
 	'}
 i_iRawSpeed	:	INT; //Raw pump speed from analog input
+{attribute 'pytmc' := '
+    pv: TEMP_MON
+	io: i
+	'}
+i_iTempMon	:	INT; //Voltage according to the pump temprature 0->5V 0->100C
+{attribute 'pytmc' := '
+    pv: Current_MON
+	io: i
+	'}
+i_iCurrentMon : INT; // Voltage to the output current of motor 0->5V 0->10A
 
 END_STRUCT
 END_TYPE

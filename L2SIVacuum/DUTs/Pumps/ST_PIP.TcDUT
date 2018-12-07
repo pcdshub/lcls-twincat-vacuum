@@ -35,7 +35,7 @@ STRUCT
     pv: PRESS
 	io: i
     '}
-	i_iPRESS: INT;  //
+	i_iPRESS: REAL;  //
 	{attribute 'pytmc' := '
     pv: SP_DI
 	io:i

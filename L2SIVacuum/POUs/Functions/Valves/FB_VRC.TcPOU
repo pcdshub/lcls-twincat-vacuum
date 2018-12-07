@@ -3,15 +3,16 @@
   <POU Name="FB_VRC" Id="{2db6a988-e12f-4920-baa1-9b034d8c1cf9}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VRC
 VAR_IN_OUT
-	{attribute 'pytmc' := '
-    pv:
-	'}
-	iq_stValve : ST_VRC;
+	
 END_VAR
 VAR_INPUT
 	
 END_VAR
 VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv:
+	'}
+	iq_stValve : ST_VRC;
 END_VAR
 VAR
 

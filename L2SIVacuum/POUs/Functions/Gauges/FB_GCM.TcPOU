@@ -3,12 +3,13 @@
   <POU Name="FB_GCM" Id="{d03d0435-a8a4-4ab2-9d39-a304a183952d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_GCM
 VAR_IN_OUT
-	{attribute 'pytmc' := '
+
+END_VAR
+VAR_OUTPUT
+		{attribute 'pytmc' := '
     pv: 
 	'}
 	VG	:	ST_VG;
-END_VAR
-VAR_OUTPUT
 END_VAR
 VAR
 	rMinPressure: REAL;

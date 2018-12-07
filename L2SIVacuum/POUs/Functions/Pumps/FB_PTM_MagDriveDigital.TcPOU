@@ -19,13 +19,13 @@ VAR
 	
 	
 	(*IO*)
-	i_xAtSpd AT%I*: BOOL;
-	i_xFault AT%I*: BOOL;
+	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
+	i_xFault AT%I*: BOOL; // Error
     i_xAccel AT%I*: BOOL;
  	i_xDecel AT%I*: BOOL;
  	i_xWarn AT%I*: BOOL;
 	
-	q_RunDO AT%Q*: BOOL;
+	q_RunDO AT%Q*: BOOL; // Start/Stop
 	q_xRemote AT%Q*: BOOL;
 END_VAR
 ]]></Declaration>

@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_VCN" Id="{b91718c1-ee94-477e-afdc-a1b96008e0fd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_VCN
+VAR_INPUT
+	i_xExtIlk	:	BOOL; //External Interlock
+	i_ReqPos	:	BOOL; //Requested position
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv:
+	'}
+	iq_stVCN	:	ST_VCN; //Needle valve structure
+END_VAR
+VAR_IN_OUT
+	
+END_VAR
+
+VAR CONSTANT
+	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual
+	rCloseVoltage	:	REAL := 0.4;	
+END_VAR
+VAR
+	// Requested voltage
+	rReqVoltage: REAL := 0;
+	(*IO*)
+	q_iRawPosition AT%Q* :INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Needle valve control FB
+A. Wallace 2016-7-21
+
+This FB should be used as a low level control block.
+
+It provides:
+
+Valve position ceiling
+Interlock
+Scaling
+
+It is not intended for:
+Closed-loop control
+
+It could be used for:
+Valve position/flow linearization
+
+Note: Raw position calc is based on 0.5 to 9V span, 32767 bits
+*)
+
+
+
+
+// Interlocking
+iq_stVCN.xIlk := i_xExtIlk;
+
+IF iq_stVCN.xIlk THEN
+	
+	IF iq_stVCN.eValveControl = OpenValve THEN
+		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;
+	ELSIF iq_stVCN.eValveControl = CloseValve THEN
+		iq_stVCN.rReqPosition := 0;
+	ELSE
+		 ;
+	END_IF
+
+	//Raw position calc
+	iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
+	rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
+	rReqVoltage := LIMIT(rCloseVoltage, rReqVoltage, rOpenVoltage); //The requested voltage should remain within this range
+	iq_stvcn.q_iRawPosition := REAL_TO_INT( 32767/10 * rReqVoltage);	
+ELSE
+	iq_stvcn.q_iRawPosition := 0;
+	iq_stVCN.rReqPosition := 0;
+	iq_stVCN.eValveControl := CloseValve;
+END_IF]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{897ec2aa-1321-4251-b360-05c31f40b449}">
+      <Implementation>
+        <ST><![CDATA[(*outputs*)
+q_iRawPosition := iq_stVCN.q_iRawPosition;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_VCN">
+      <LineId Id="3" Count="44" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCN.ACT_IO">
+      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

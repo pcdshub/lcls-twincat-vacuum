@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_MKS500_EP" Id="{4da1e942-f359-4f6e-ab12-d5a0031e68e6}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS500_EP
 VAR_IN_OUT
-
+		
 END_VAR
 VAR_INPUT
 
 	PG	:	ST_VG;
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
+{attribute 'pytmc' := '
     pv: 
 	'}
 	IG : ST_VG;
@@ -61,7 +61,7 @@ END_IF
 
 
 
-IF PG.rPRESS < IG.rPRO_SP AND PG.xPRESS_OK THEN
+IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
 
 	IG.q_xHV_DIS := IG.xHV_SW;
 

@@ -5,14 +5,26 @@
 STRUCT
 	(* VCN - Valve Controlled Needle
 	Used for Pfeiffer EVR 116 needle valves *)
+	{attribute 'pytmc' := '
+    pv: POS_RDBK
+	io: i
+    '}
 	// Inputs
 	i_iPosition	:	INT; //Position readback (if it exists)
 	
 	// Outputs
+	{attribute 'pytmc' := '
+    pv: POS_CTRL
+	io: io
+    '}
 	q_iRawPosition	:	INT; //Position control 
 	//For the EVR 116 this is 0-10V analog
 	
 	//Softvariables
+	{attribute 'pytmc' := '
+    pv: ILK_OK
+	io: i
+    '}
 	xIlk	:	BOOL := FALSE; // Interlock Bit
 	rUpperLimit	:	REAL;	//Upper limit on valve open
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)

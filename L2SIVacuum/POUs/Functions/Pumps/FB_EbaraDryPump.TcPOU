@@ -9,6 +9,9 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR_IN_OUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
 	stPump	:	ST_EbaraDryPump; //Ebara dry pump structure
 END_VAR
 VAR
@@ -71,8 +74,8 @@ stpump.q_xBPStart := stpump.tonBP.Q;]]></ST>
     <Action Name="ACT_IO" Id="{98533322-3808-41fc-88a0-2acd4df6d1ea}">
       <Implementation>
         <ST><![CDATA[(*Outputs*)
-	q_xMPStart	:= stPump.q_xMPStart;
-	q_xBPStart	:= stPump.q_xBPStart;
+q_xMPStart	:= stPump.q_xMPStart;
+q_xBPStart	:= stPump.q_xBPStart;
 (*Inputs*)
 stPump.i_xMPStatus:=	i_xMPStatus;
 stPump.i_xBPStatus:=	i_xBPStatus;

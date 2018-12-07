@@ -69,22 +69,7 @@ STRUCT
 	'}
 	xIlk : BOOL;
 	
-	{attribute 'pytmc' := '
-    pv: STATE
-	io: i
-	'}	
-	eState	:	E_PumpState;
 	
-	{attribute 'pytmc' := '
-    pv: BackingPressureSP
-	io: io
-	'}
-	rBackingPressureSP : REAL := 0.01;
-	{attribute 'pytmc' := '
-    pv: InletPressureSP
-	io: io
-	'}
-	rInletPressureSP : REAL := 0.5;
 	
 	
 	(*pump Lock*)

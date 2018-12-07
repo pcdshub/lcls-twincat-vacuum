@@ -3,7 +3,6 @@
   <POU Name="FB_VCC" Id="{5ba1a6cc-24ff-4014-aa5e-6a7b6226a38e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VCC
 VAR_IN_OUT
-	
 
 END_VAR
 VAR_INPUT

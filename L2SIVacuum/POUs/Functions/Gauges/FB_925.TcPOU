@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_925" Id="{2b25be69-d890-49a3-9eed-41a1523a8d75}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_925
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	PG	: ST_VG;
+END_VAR
+VAR_IN_OUT
+	
+END_VAR
+VAR
+	rV : REAL;
+	fbGaugeState : FB_PressureState;
+	rMaxPressure	:	REAL := 760; //Torr
+	rMinPressure	:	REAL := 1E-5; //Torr
+	
+	(*IO*)
+	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Standard MKS 9XX series conversion *)
+(* works for 972 and 925 *)
+
+//Default setpoint 50 mT
+IF PG.rVAC_SP = 0 THEN
+	PG.rVAC_SP := 5E-2;
+END_IF
+
+rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;
+
+IF rV >= 0.99 THEN
+	IF rV >= 0.99 AND rV < 1 THEN
+		PG.rPRESS := 1E-5;
+	ELSE
+		PG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-6));
+	END_IF
+	PG.xPRESS_OK := TRUE; //Backwards compatibility
+ELSE
+	PG.xPRESS_OK := FALSE;
+END_IF
+
+(* Pressure OK check *)
+fbGaugeState.i_rV := rV;
+fbGaugeState.i_MaxPressure := rMaxPressure;
+fbGaugeState.i_MinPressure := rMinPressure;
+fbGaugeState(iq_stVG:=PG);
+
+(* Setpoint evaluation *)
+PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS < PG.rVAC_SP);]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{fa0165d3-2f39-4dbf-b71c-224ecb928e0b}">
+      <Implementation>
+        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_925">
+      <LineId Id="3" Count="0" />
+      <LineId Id="43" Count="4" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="5" Count="20" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_925.ACT_IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
