@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_Ebara_011M" Id="{80002545-2d80-4798-8b5d-b360277946fd}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_Ebara_011M
 VAR_IN_OUT
@@ -8,7 +8,7 @@ VAR_INPUT
 	i_rMaxBackingPressure : REAL := 0.01;
 	i_iMinSpeedRPM : DINT := 100; //check pump manual for setting
 	i_iMaxSpeedRPM : DINT := 33600; // check pump manual for setting
-	i_xExtRunOk : BOOL; // Connect to external interlock logic, TRUE if not used.
+	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -54,7 +54,7 @@ Modified Nov 2018 by M. Ghaly
 //TOF_RESET();
 
 (* Simple protection reset *)
-iq_stPtm.xExtRunOk:= i_xExtRunOk;
+iq_stPtm.xExtRunOk:= i_xExtILKOk;
 iq_stPTM.q_xProtection := iq_stPTM.xExtRunOk;
 
 (* Basic pump supervisory section *)

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_VRC" Id="{ee6efa67-7be0-4e42-b045-50546d4578bb}">
     <Declaration><![CDATA[TYPE ST_VRC :
 STRUCT
@@ -32,7 +32,7 @@ STRUCT
 	pv_xOPN_SW	: BOOL;
 	//Manually toggling valve Local "ILK on button" on EDM
 	{attribute 'pytmc' := '
-    pv: OVRD_OPN
+    pv: FORCE_OPN
 	io: io
     '}
 	pv_xOvrdOpn	:	BOOL;

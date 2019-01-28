@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_MagDriveDigital" Id="{50197c8d-2497-4812-a680-acd70b819f81}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_MagDriveDigital
 VAR_IN_OUT
@@ -9,7 +9,7 @@ VAR_IN_OUT
 	iq_stPtm	:	ST_LeyboldPTM;
 END_VAR
 VAR_INPUT
-	i_xExtRunOk : BOOL; // Connect to external interlock logic, TRUE if not used.
+	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
 
@@ -39,7 +39,7 @@ tofRemoteDelay(IN:=iq_stPtm.q_RunDO, PT:=T#5S);
 iq_stPtm.q_xRemote := tofRemoteDelay.Q;
 
 (* Interlock Sum *)
-iq_stPtm.xExtRunOk:= i_xExtRunOk;
+iq_stPtm.xExtRunOk:= i_xExtILKOk;
 xRunOk := iq_stPtm.xExtRunOk AND NOT iq_stPtm.i_xFault;
 
 (* Basic pump supervisory section *)

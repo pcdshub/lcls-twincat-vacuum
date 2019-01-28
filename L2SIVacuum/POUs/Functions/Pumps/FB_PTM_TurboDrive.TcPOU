@@ -9,7 +9,7 @@ VAR_IN_OUT
 	iq_stPtm	:	ST_LeyboldPTM;
 END_VAR
 VAR_INPUT
-	i_xExtRunOk : BOOL; // Connect to external interlock logic, TRUE if not used.
+	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
 
@@ -33,7 +33,7 @@ END_VAR
 (* M. Ghaly Jan. 2019 *)
 
 (* Interlock Sum *)
-iq_stPtm.xExtRunOk:= i_xExtRunOk;
+iq_stPtm.xExtRunOk:= i_xExtILKOk;
 xRunOk := iq_stPtm.xExtRunOk AND iq_stPtm.i_xNCError;
 
 (* Basic pump supervisory section *)

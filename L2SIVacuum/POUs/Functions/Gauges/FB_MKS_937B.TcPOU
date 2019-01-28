@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS_937B" Id="{a7ec3968-3989-4c07-aeb2-4dc132212737}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS_937B
 VAR_IN_OUT
@@ -9,9 +9,7 @@ VAR_INPUT
 	PG	:	ST_VG := g_DummyVG;
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: VG
-	'}
+	{attribute 'pytmc' := pv: '}
 	VG : ST_VG;
 	
 	

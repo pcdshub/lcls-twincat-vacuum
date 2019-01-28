@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS422" Id="{2e4ef3e9-09c8-44c2-b5f5-464ffb8c18a0}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS422
 VAR_IN_OUT
@@ -9,9 +9,7 @@ VAR_INPUT
 		PG	:	ST_VG; // Pirani Gauge Structure used to Interlock the Cold Cathode
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: GCC
-	'}
+	{attribute 'pytmc' := 'pv:'}
 	IG : ST_VG; // The Cold Cathode Data Structure
 END_VAR
 VAR
@@ -34,7 +32,7 @@ END_VAR
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
 IG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));
 
-
+(* Pressure gauge State checks *)
 
 IF (rV <=9.7 ) AND (rV>=0.6) THEN
 	IG.eState := Valid; // normal
@@ -56,7 +54,6 @@ END_IF
 
 IF PG.rPRESS <= IG.rPRO_SP THEN
 	IG.q_xHV_DIS := IG.xHV_SW;
-
 ELSIF IG.q_xHV_DIS THEN
 	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
 		IG.q_xHV_DIS := FALSE;
@@ -97,7 +94,8 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="110" Count="11" />
       <LineId Id="108" Count="0" />
       <LineId Id="9" Count="7" />
-      <LineId Id="18" Count="3" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="1" />
       <LineId Id="123" Count="0" />
       <LineId Id="22" Count="1" />
       <LineId Id="124" Count="0" />

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS317" Id="{8a56f7a2-f285-4648-be2d-40acd79b269f}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS317
 VAR_IN_OUT
@@ -16,8 +16,9 @@ VAR_OUTPUT
 END_VAR
 VAR
 	rV	:	REAL;
-		MinPressure: REAL := 1E-4;
-		(*IO*)
+	rMinPressure: REAL := 1E-4;
+	rDefaultVAC_SP: REAL :=5E-2; // Default 50 mT
+	(*IO*)
 	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 ]]></Declaration>
@@ -31,9 +32,9 @@ rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;
 PG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));
 
 
-//Default setpoint 50 mT
+//Default setpoint 
 IF PG.rVAC_SP = 0 THEN
-	PG.rVAC_SP := 5E-2;
+	PG.rVAC_SP := rDefaultVAC_SP;
 END_IF
 
 
@@ -53,7 +54,7 @@ ELSE
 END_IF
 
 (* Pressure OK check *)
-PG.xPRESS_OK := (PG.rPRESS >= MinPressure);
+PG.xPRESS_OK := (PG.rPRESS >= rMinPressure);
 
 (* Setpoint evaluation *)
 PG.xAT_VAC := (PG.eState =Valid) AND PG.rPRESS < PG.rVAC_SP;

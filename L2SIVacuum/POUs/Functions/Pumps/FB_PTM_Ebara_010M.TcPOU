@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_Ebara_010M" Id="{db9fdbdf-85bb-4e58-96cc-808f2a65a0e5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_Ebara_010M
 VAR_IN_OUT
 	
 END_VAR
 VAR_INPUT
-	i_xExtRunOk : BOOL; // Turbo ILK bit , set to True if not used
+	i_xExtILKOk : BOOL; // Turbo ILK bit , set to True if not used
 	//i_iRawSpeed: INT; //Should come from PLC Soft IO.
 	i_rMaxBackingPressure : REAL := 0.01;
 	i_iMinSpeedRPM : DINT := 100; //check pump manual for setting
@@ -55,8 +55,10 @@ is true, and false otherwise. Per the manual, when START bit is closed the pump 
 bit is Opened, the pump will decelerate with with break and stop *)
 
 (* Simple protection reset *)
-iq_stPtm.xExtRunOk:= i_xExtRunOk;
+iq_stPtm.xExtRunOk:= i_xExtILKOk;
 iq_stPTM.q_xProtection:= iq_stPTM.xExtRunOk;
+(*soft IO mapping*)
+ACT_IO();
 
 (* Basic pump supervisory section *)
 	(* If override mode, ignore everything else *)
@@ -104,8 +106,6 @@ iq_stPTM.q_xStart := iq_stPTM.q_xStop := iq_stPTM.q_RunDO;
 
 (*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
 iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
-(*soft IO mapping*)
-ACT_IO();
 
 ]]></ST>
     </Implementation>
@@ -170,7 +170,9 @@ END_VAR
       <LineId Id="132" Count="0" />
       <LineId Id="222" Count="0" />
       <LineId Id="18" Count="0" />
-      <LineId Id="21" Count="11" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="266" Count="1" />
+      <LineId Id="22" Count="10" />
       <LineId Id="140" Count="0" />
       <LineId Id="173" Count="0" />
       <LineId Id="34" Count="2" />
@@ -193,8 +195,8 @@ END_VAR
       <LineId Id="149" Count="0" />
       <LineId Id="144" Count="0" />
       <LineId Id="99" Count="1" />
-      <LineId Id="108" Count="1" />
-      <LineId Id="105" Count="1" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="106" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_010M.ACT_IO">

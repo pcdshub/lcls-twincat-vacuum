@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_VCN" Id="{b91718c1-ee94-477e-afdc-a1b96008e0fd}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VCN
 VAR_INPUT
-	i_xExtIlk	:	BOOL; //External Interlock
+	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
 	i_ReqPos	:	BOOL; //Requested position
 END_VAR
 VAR_OUTPUT
@@ -52,9 +52,9 @@ Note: Raw position calc is based on 0.5 to 9V span, 32767 bits
 
 
 // Interlocking
-iq_stVCN.xIlk := i_xExtIlk;
+iq_stVCN.xIlkOK := i_xExtIlkOK;
 
-IF iq_stVCN.xIlk THEN
+IF iq_stVCN.xIlkOK THEN
 	
 	IF iq_stVCN.eValveControl = OpenValve THEN
 		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;

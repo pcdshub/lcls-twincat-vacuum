@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS500" Id="{7585aac8-a989-4785-918b-438600204b3a}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS500
 VAR_IN_OUT
@@ -74,9 +74,7 @@ END_IF
 
 
 IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
-
 	IG.q_xHV_DIS := IG.xHV_SW;
-
 ELSIF IG.q_xHV_DIS THEN
 	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
 		IG.q_xHV_DIS := FALSE;
@@ -125,7 +123,9 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="163" Count="2" />
       <LineId Id="153" Count="2" />
       <LineId Id="159" Count="0" />
-      <LineId Id="50" Count="29" />
+      <LineId Id="50" Count="12" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="66" Count="13" />
       <LineId Id="81" Count="4" />
       <LineId Id="107" Count="0" />
       <LineId Id="274" Count="1" />
