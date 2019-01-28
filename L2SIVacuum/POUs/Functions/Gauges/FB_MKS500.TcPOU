@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
   <POU Name="FB_MKS500" Id="{7585aac8-a989-4785-918b-438600204b3a}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS500
 VAR_IN_OUT
@@ -98,6 +98,8 @@ IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
 (* Setpoint evaluation *)
 IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid) ;
 
+(*Inlk Evaluation*)
+IG.xILKOk := (PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK);
 
 (*Soft IO Linking*)
 // check ethercat Diagnostics
@@ -126,6 +128,7 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="50" Count="29" />
       <LineId Id="81" Count="4" />
       <LineId Id="107" Count="0" />
+      <LineId Id="274" Count="1" />
       <LineId Id="121" Count="0" />
       <LineId Id="242" Count="0" />
       <LineId Id="219" Count="1" />

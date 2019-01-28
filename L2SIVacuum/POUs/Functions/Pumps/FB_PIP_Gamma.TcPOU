@@ -45,7 +45,8 @@ IO();
     </Implementation>
     <Action Name="ACT_SetGauge" Id="{7f72f23c-b05a-4919-b11f-c886c11a10b4}">
       <Implementation>
-        <ST><![CDATA[(* convert the analog input into readable pressure*)
+        <ST><![CDATA[(*MG*)
+(* convert the analog input into readable pressure*)
 (* use logarithmic Pressure calculation, Output= Normal and Offset = 0*)
 rV := 10*INT_TO_REAL(i_iPress)/32767;
 rPRESS := LREAL_TO_REAL(EXPT(10,(rV-0))); (*offset = 0*)
@@ -79,6 +80,7 @@ q_xHVEna_DO:=stPump.q_xHVEna_DO;]]></ST>
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_PIP_Gamma.ACT_SetGauge">
+      <LineId Id="16" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="10" Count="1" />
       <LineId Id="9" Count="0" />

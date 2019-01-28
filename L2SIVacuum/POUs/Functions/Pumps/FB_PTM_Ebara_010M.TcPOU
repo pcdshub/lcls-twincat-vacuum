@@ -6,7 +6,7 @@ VAR_IN_OUT
 	
 END_VAR
 VAR_INPUT
-	xExtRunOk : BOOL; // Turbo ILK bit
+	i_xExtRunOk : BOOL; // Turbo ILK bit , set to True if not used
 	//i_iRawSpeed: INT; //Should come from PLC Soft IO.
 	i_rMaxBackingPressure : REAL := 0.01;
 	i_iMinSpeedRPM : DINT := 100; //check pump manual for setting
@@ -55,6 +55,7 @@ is true, and false otherwise. Per the manual, when START bit is closed the pump 
 bit is Opened, the pump will decelerate with with break and stop *)
 
 (* Simple protection reset *)
+iq_stPtm.xExtRunOk:= i_xExtRunOk;
 iq_stPTM.q_xProtection:= iq_stPTM.xExtRunOk;
 
 (* Basic pump supervisory section *)
@@ -167,6 +168,7 @@ END_VAR
       <LineId Id="141" Count="1" />
       <LineId Id="6" Count="0" />
       <LineId Id="132" Count="0" />
+      <LineId Id="222" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="21" Count="11" />
       <LineId Id="140" Count="0" />

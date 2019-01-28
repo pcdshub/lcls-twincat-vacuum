@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_TurbVentvalve_NO" Id="{13f6dcdf-6eaf-4953-b8b2-2ecf46768828}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_TurbVentvalve_NO
 VAR_IN_OUT
@@ -455,7 +455,7 @@ If the code looks confusing please use a truth table to verify*)]]></Declaration
                       <o n="OutputItems" t="OutputItemList">
                         <l2 n="OutputItems" cet="Operand">
                           <o>
-                            <v n="Operand">"iq_stValve.xCLS_SW"</v>
+                            <v n="Operand">"iq_stValve.pv_xCLS_SW"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>

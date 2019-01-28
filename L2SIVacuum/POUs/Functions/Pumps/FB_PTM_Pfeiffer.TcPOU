@@ -7,24 +7,59 @@ VAR_IN_OUT
     pv: 
 	'}
 	iq_stPTM : ST_PfeifferPTM;
+	iq_stPfeiffer_ctrl: ST_PfeifferControl;
+	iq_stPfeiffer_stat: ST_PfeifferStatus;
 END_VAR
 VAR_INPUT
+	i_xExtRunOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+	P_stComIn		AT %I*	:	EL6inData22B (*KL6inData22B*);
+	P_stComOut		AT %Q*	:	EL6outData22B (*KL6outData22B*);
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* Basic pump supervisory section *)
-IF iq_stPTM.xExtRunOk AND NOT (iq_stPTM.i_xFault OR iq_stPTM.i_xTempFault) THEN
-	iq_stPTM.q_RunDO:=iq_stPTM.xRunSW;
+      <ST><![CDATA[(* This function block is used to map the IO points from the pfeiffer structures
+to the generic turbo structures *)
+
+(* Controls *)
+iq_stPfeiffer_ctrl.xPumpingStation_010 := iq_stPTM.q_RunDO;
+iq_stPfeiffer_ctrl.xMotorPump_023 := 1; //Setting always true because parameter 10 alone can enable/disable the pump
+iq_stPfeiffer_ctrl.uiPowerPct_708 := iq_stPTM.q_uiPowerPct;
+
+(* Readbacks *)
+iq_stPTM.i_xAccel := iq_stPfeiffer_stat.xPumpAccelerating_307;
+iq_stPTM.i_xAtSpd := iq_stPfeiffer_stat.xRotationSpeedAttn_306;
+iq_stPTM.i_diCurSpd := iq_stPfeiffer_stat.diActiveRotationSpeed_309;
+iq_stPTM.i_diPwr := iq_stPfeiffer_stat.diDrivePower_316;
+iq_stPTM.i_diElecTemp := iq_stPfeiffer_stat.diTempElec_326;
+iq_stPTM.i_diBtmTemp := iq_stPfeiffer_stat.diTempPmpBot_330;
+iq_stPTM.i_diBrngTemp := iq_stPfeiffer_stat.diTempBearng_342;
+iq_stPTM.i_diMtrTemp := iq_stPfeiffer_stat.diTempMotor_346;
+iq_stPTM.i_uiPowerPctRbk := iq_stPfeiffer_stat.uiPowerPct_708;
+
+iq_stPTM.xCommTimeout	:=	iq_stPfeiffer_stat.xTimeout;
+iq_stPTM.i_iErrorCode := iq_stPfeiffer_stat.iErrorCode_303;
+iq_stPTM.i_iWarningCode := iq_stPfeiffer_stat.iWarningCode_303;
+
+(* Check that error acknowledgment is processed *)
+IF iq_stPfeiffer_stat.xErrorAcknowledged THEN
+	iq_stPfeiffer_stat.xErrorAcknowledged := FALSE;
+	iq_stPfeiffer_ctrl.xErrorAck_009 := FALSE;
+END_IF
+
+IF iq_stPfeiffer_stat.sErrorCode_303 = '' THEN
+	;
+ELSIF iq_stPfeiffer_stat.sErrorCode_303 <> '000000' THEN
+iq_stPTM.i_xFault := TRUE;
 ELSE
-	iq_stPTM.xRunSW:=0;
-	iq_stPTM.q_RunDO:=FALSE;
-END_IF]]></ST>
+iq_stPTM.i_xFault := FALSE;
+END_IF
+]]></ST>
     </Implementation>
     <LineIds Name="FB_PTM_Pfeiffer">
-      <LineId Id="3" Count="5" />
+      <LineId Id="23" Count="35" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

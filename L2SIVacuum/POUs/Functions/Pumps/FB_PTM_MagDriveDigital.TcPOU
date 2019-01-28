@@ -9,6 +9,7 @@ VAR_IN_OUT
 	iq_stPtm	:	ST_LeyboldPTM;
 END_VAR
 VAR_INPUT
+	i_xExtRunOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
 
@@ -38,6 +39,7 @@ tofRemoteDelay(IN:=iq_stPtm.q_RunDO, PT:=T#5S);
 iq_stPtm.q_xRemote := tofRemoteDelay.Q;
 
 (* Interlock Sum *)
+iq_stPtm.xExtRunOk:= i_xExtRunOk;
 xRunOk := iq_stPtm.xExtRunOk AND NOT iq_stPtm.i_xFault;
 
 (* Basic pump supervisory section *)
@@ -67,7 +69,9 @@ q_xRemote := iq_stPtm.q_xRemote; // remote out]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_PTM_MagDriveDigital">
-      <LineId Id="3" Count="15" />
+      <LineId Id="3" Count="6" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="10" Count="8" />
       <LineId Id="40" Count="1" />
       <LineId Id="47" Count="0" />
       <LineId Id="42" Count="0" />

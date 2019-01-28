@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_VG" Id="{e8999049-eca7-4ca1-9a7c-26918f6aba1e}">
     <Declaration><![CDATA[TYPE ST_VG :
 STRUCT
@@ -43,17 +43,17 @@ STRUCT
     pv: HV_ON
 	io: i
     '}
-	i_xHV_ON	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1124) ^Input
+	i_xHV_ON	: BOOL; //  True when High Voltage is on  
 	{attribute 'pytmc' := '
     pv: DISC_ACTIVE
 	io: i
     '}
-	i_xDisc_Active : BOOL;// Discharge Current Active // 'TcLinkTo' (EL1124) ^Input
+	i_xDisc_Active : BOOL;// Discharge Current Active 
 	{attribute 'pytmc' := '
     pv: HV_DIS
 	io: i
     '}
-	q_xHV_DIS : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EL2624) ^Output
+	q_xHV_DIS : BOOL; // Enable High Voltage when True 
 	//
 	wHV_RO: WORD;
 		
@@ -69,12 +69,13 @@ STRUCT
 	
 	 
 	xTurnOnTime: BOOL;/// Turn on Timers for cold cathode warmup
+	
 	iVacSp	:	INT;/// At vacuum setpoint for all gauges
 	{attribute 'pytmc' := '
     pv: VAC_SP
 	io:io
     '}
-	rVAC_SP: REAL := 0.5;
+	rVAC_SP: REAL := 0.5; /// At vacuum setpoint for all gauges
 	/// Protection setpoint for ion gauges at which the gauge turns off, not used for pirani 
 	{attribute 'pytmc' := '
     pv: PRO_SP
@@ -85,6 +86,11 @@ STRUCT
     pv: SP_HYS
 	io: io
     '}
+	{attribute 'pytmc' := '
+    pv: ILK_OK
+	io: i
+	'}
+	xILKOk	:	BOOL; (* also a control *)
 	/// Protection setpoint hysteresis 
 	rHYS_PR: REAL := 0.001; 
 	/// Full scale pressure in Torr for baratron pressure conversion 

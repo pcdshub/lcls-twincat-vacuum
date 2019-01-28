@@ -31,6 +31,7 @@ rMinPressure := VG.rFULL_SCALE * 5E-4;
 
 
 rV :=MAX((10*INT_TO_REAL(VG.i_iPRESS_R)/32767),0);
+
 VG.rPRESS := (VG.rFULL_SCALE/10)*rV;
 IF VG.rPRESS > rMinPressure THEN
 	VG.xPRESS_OK := TRUE;
@@ -47,7 +48,9 @@ ACT_IO();]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_GCM">
-      <LineId Id="3" Count="15" />
+      <LineId Id="3" Count="9" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="13" Count="5" />
       <LineId Id="35" Count="2" />
       <LineId Id="2" Count="0" />
     </LineIds>

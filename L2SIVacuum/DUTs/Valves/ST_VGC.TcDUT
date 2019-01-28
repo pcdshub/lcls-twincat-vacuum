@@ -81,7 +81,10 @@ STRUCT
 	xERR_LstVac		: 	BOOL;
 	xAlmSum			: 	BOOL;
 	
-
+	{attribute 'pytmc' := '
+    pv: Error
+	io: o
+    '}
 	bErrorPresent : BOOL;
 	iErrorCode: INT;
 	sErrorMessage: STRING;

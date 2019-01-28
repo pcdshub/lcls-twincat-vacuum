@@ -27,7 +27,7 @@ q_xRunDo 	:   BOOL;
     pv: ILK_OK
 	io: i
 	'}
-xIlk	:	BOOL; //Interlock bit, true means OK to run
+xIlkOK	:	BOOL; //Interlock bit, true means OK to run
 xExtIlk	:	BOOL; //External interlock, this is where the logic goes
 {attribute 'pytmc' := '
     pv: AT_SPD
@@ -40,6 +40,10 @@ xAtSpd	:	BOOL; //Pump at speed setpoint
 	'}
 xWrn	:	BOOL; //Pump warning
 iWrn	:	BOOL; //Warning state/code
+{attribute 'pytmc' := '
+    pv: ERROR
+	io: i
+	'}
 xErr	:	BOOL; //Error summary
 iErr	:	BOOL; //Error state/code
 

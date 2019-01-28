@@ -8,7 +8,7 @@ STRUCT
 	
 (* Interlock *)
 	{attribute 'pytmc' := '
-    pv: ExtIlk
+    pv: ILK_OK
 	io: i
 	'}
    	xHV_ExtIlk : BOOL; 
