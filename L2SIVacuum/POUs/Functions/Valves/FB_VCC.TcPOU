@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_VCC" Id="{5ba1a6cc-24ff-4014-aa5e-6a7b6226a38e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VCC
 VAR_IN_OUT
 
 END_VAR
 VAR_INPUT
-
+	i_xExtILK_OK:BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -26,6 +26,8 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
+iq_stValve.xOPN_OK := i_xExtILK_OK;
+
 IF NOT iq_stValve.xOPN_OK THEN
 iq_stValve.pv_xOPN_SW := FALSE;
 END_IF
@@ -56,6 +58,7 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_VCC">
+      <LineId Id="70" Count="1" />
       <LineId Id="3" Count="18" />
       <LineId Id="44" Count="2" />
       <LineId Id="2" Count="0" />

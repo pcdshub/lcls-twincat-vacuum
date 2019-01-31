@@ -1,15 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_KashiyamaPump" Id="{c252a3ee-f366-44ed-9d74-8c0f474d15b1}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_KashiyamaPump
 VAR_IN_OUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	iq_stPump : ST_KashiyamaDryPump;
+
 END_VAR
 VAR_INPUT
 	
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := 'pv:'}
+	q_stPump : ST_KashiyamaDryPump;
 END_VAR
 VAR
 	TONtmr : TON;
@@ -30,22 +31,22 @@ END_VAR
     <Implementation>
       <ST><![CDATA[
 //Kashiyama Dry pump outputs at high level indicate no warning, no alarm and remotely
-iq_stPump.xIlkOK := iq_stPump.i_xLocal AND iq_stPump.i_xWarning AND iq_stPump.i_xAlarm;
+q_stPump.xIlkOK := q_stPump.i_xLocal AND q_stPump.i_xWarning AND q_stPump.i_xAlarm;
 
-IF iq_stPump.xIlkOK THEN
-	iq_stPump.q_xRunDO := iq_stPump.pv_xRunSW;
+IF q_stPump.xIlkOK THEN
+	q_stPump.q_xRunDO := q_stPump.pv_xRunSW;
 	ELSE
-		iq_stPump.PV_xRunSW := FALSE;
-        iq_stPump.q_xRunDO := FALSE;	
+		q_stPump.PV_xRunSW := FALSE;
+        q_stPump.q_xRunDO := FALSE;	
 END_IF
  
-iq_stPump.xLspd_IlkENA := iq_stPump.q_xRunDO;
+q_stPump.xLspd_IlkENA := q_stPump.q_xRunDO;
 
-IF iq_stPump.xLspd_IlkENA THEN
-	iq_stPump.q_xLspdDo := iq_stPump.xLspdSW;
+IF q_stPump.xLspd_IlkENA THEN
+	q_stPump.q_xLspdDo := q_stPump.xLspdSW;
 	ELSE
-		iq_stPump.xLspdSW := FALSE;
-        iq_stPump.q_xLspdDo := FALSE;	
+		q_stPump.xLspdSW := FALSE;
+        q_stPump.q_xLspdDo := FALSE;	
 END_IF
 
 //resetTmr (In := iq_stPump.xResetSW, PT := T#2S);
@@ -53,11 +54,11 @@ END_IF
 //	iq_stPump.xResetSW := FALSE;
 //END_IF
 
-iq_stPump.q_xResetDo := NOT iq_stPump.i_xIsRun AND iq_stPump.xResetSW;
+q_stPump.q_xResetDo := NOT q_stPump.i_xIsRun AND q_stPump.xResetSW;
 
 //countdown Timer
-TONtmr (IN := iq_stPump.i_xIsRun, PT := T#20S);
-iq_stPump.RdyTmr := TO_REAL(TONtmr.PT) - TO_REAL(TONtmr.ET);
+TONtmr (IN := q_stPump.i_xIsRun, PT := T#20S);
+q_stPump.RdyTmr := TO_REAL(TONtmr.PT) - TO_REAL(TONtmr.ET);
 
 
 //Mapping
@@ -66,15 +67,15 @@ ACT_IO();]]></ST>
     <Action Name="ACT_IO" Id="{03052d11-e75b-497b-a08a-11e5ae7ae948}">
       <Implementation>
         <ST><![CDATA[(* Output *)	
-	q_xRunDO 	:= iq_stPump.q_xRunDO;
-	q_xResetDo := iq_stPump.q_xResetDo;;
-	q_xLspdDo := iq_stPump.q_xLspdDo;;
+	q_xRunDO 	:= q_stPump.q_xRunDO;
+	q_xResetDo := q_stPump.q_xResetDo;;
+	q_xLspdDo := q_stPump.q_xLspdDo;;
 	
 (* Input *)
-	iq_stPump.i_xLocal := i_xLocal;
-	iq_stPump.i_xAlarm :=	i_xAlarm;
-	iq_stPump.i_xWarning :=	i_xWarning;
-	iq_stPump.i_xIsRun :=	i_xIsRun;]]></ST>
+	q_stPump.i_xLocal := i_xLocal;
+	q_stPump.i_xAlarm :=	i_xAlarm;
+	q_stPump.i_xWarning :=	i_xWarning;
+	q_stPump.i_xIsRun :=	i_xIsRun;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_KashiyamaPump">

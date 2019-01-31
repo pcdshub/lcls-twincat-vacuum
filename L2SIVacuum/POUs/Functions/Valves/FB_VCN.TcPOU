@@ -4,7 +4,7 @@
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VCN
 VAR_INPUT
 	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
-	i_ReqPos	:	BOOL; //Requested position
+	i_ReqPos	:	REAL; //Requested position
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -53,7 +53,6 @@ Note: Raw position calc is based on 0.5 to 9V span, 32767 bits
 
 // Interlocking
 iq_stVCN.xIlkOK := i_xExtIlkOK;
-
 IF iq_stVCN.xIlkOK THEN
 	
 	IF iq_stVCN.eValveControl = OpenValve THEN
@@ -82,7 +81,8 @@ q_iRawPosition := iq_stVCN.q_iRawPosition;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_VCN">
-      <LineId Id="3" Count="44" />
+      <LineId Id="3" Count="24" />
+      <LineId Id="29" Count="18" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VCN.ACT_IO">

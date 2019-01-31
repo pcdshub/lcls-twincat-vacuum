@@ -240,7 +240,7 @@ END_IF
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND g_stSystem.xOverrideMode);
 
 (* When the valve  is open MPS is OK*)
-xMPS_OK := iq_stValve.i_xOpnLS; 
+xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS; 
 
 ///Check valve postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 

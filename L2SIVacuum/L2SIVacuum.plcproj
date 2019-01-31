@@ -104,6 +104,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_CMR362.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_GCM.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -169,7 +172,19 @@
     <Compile Include="POUs\Functions\Pumps\FB_ScrollPump.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Pumps\FB_TurboExtLogic.TcPOU">
+    <Compile Include="POUs\Functions\Pumps\functions\FB_TurboExtLogic.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Pumps\functions\F_TurboExtILK_NO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Pumps\functions\F_TurboExtILKLogic.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_Kashiyama_VRC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_MKS248.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_TurbVentvalve_NO.TcPOU">
@@ -195,15 +210,18 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\F_TURBO_VRC_ILK.TcPOU">
+    <Compile Include="POUs\Functions\Valves\functions\F_TurboGateValve_ILK.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\functions\F_TURBO_VRC_ILK.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\F_VALVE_REL_ILK.TcPOU">
+    <Compile Include="POUs\Functions\Valves\functions\F_VALVE_REL_ILK.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\F_VRC_DIODE_ILK.TcPOU">
+    <Compile Include="POUs\Functions\Valves\functions\F_VRC_DIODE_ILK.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -219,8 +237,10 @@
     <Folder Include="GVLs" />
     <Folder Include="POUs\Functions" />
     <Folder Include="POUs\Functions\Gauges" />
+    <Folder Include="POUs\Functions\Pumps\functions" />
     <Folder Include="POUs\Functions\Valves" />
     <Folder Include="POUs\Functions\Pumps" />
+    <Folder Include="POUs\Functions\Valves\functions" />
     <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />

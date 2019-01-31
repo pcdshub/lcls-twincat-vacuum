@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_VCC" Id="{29dc25c3-dd01-4b35-9336-905aa03d820f}">
     <Declaration><![CDATA[TYPE ST_VCC :
 STRUCT
@@ -10,10 +10,7 @@ STRUCT
 	io: io
 	'}
 	pv_xOPN_SW	: BOOL;
-	{attribute 'pytmc' := '
-    pv:OVRD_OPN
-	io: io
-	'}
+	{attribute 'pytmc' := 'pv:FORCE_OPN io: io'}
 	xOvrdOpn	:	BOOL;
 	{attribute 'pytmc' := '
     pv: OPN_OK
@@ -22,10 +19,7 @@ STRUCT
 	xOPN_OK	: BOOL;
 
 (* Outputs *)
-{attribute 'pytmc' := '
-    pv: RUN_DO
-	io: i
-	'}
+	{attribute 'pytmc' := 'pv: OPN_DO io: i'}
 	q_xOPN_DO	: BOOL;
 
 END_STRUCT

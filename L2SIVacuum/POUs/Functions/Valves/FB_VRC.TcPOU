@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_VRC" Id="{2db6a988-e12f-4920-baa1-9b034d8c1cf9}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VRC
 VAR_IN_OUT
 	
 END_VAR
 VAR_INPUT
-	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition, otherwise, Set to True if the valve is not interlocked
+	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -30,19 +30,19 @@ END_VAR]]></Declaration>
 
 ///Check valve postion
 IF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
-	iq_stValve.eState:=0;
+	iq_stValve.eState:=OPEN;
 ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
-	iq_stValve.eState:=1;
+	iq_stValve.eState:=CLOSED;
 ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
-	iq_stValve.eState:=2;
+	iq_stValve.eState:=MOVING;
 ELSE
-	iq_stValve.eState:=3;
+	iq_stValve.eState:=INVALID;
 END_IF
 
 (*evaluate Valve open external interlock*)
 iq_stValve.xOPN_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
-iq_stValve.pv_xOPN_SW := FALSE;
+	iq_stValve.pv_xOPN_SW := FALSE;
 END_IF
 
 (* Override logic *)

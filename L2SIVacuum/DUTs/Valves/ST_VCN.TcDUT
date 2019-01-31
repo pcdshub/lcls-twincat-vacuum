@@ -26,6 +26,13 @@ STRUCT
 	io: i
     '}
 	xIlkOK	:	BOOL := FALSE; // Interlock Bit
+	//Manually Pressing valve "Open/Close" on EDM
+	{attribute 'pytmc' := '
+    pv: OPN_SW
+	io: io
+    '}
+	pv_xOPN_SW	: BOOL;
+	
 	rUpperLimit	:	REAL;	//Upper limit on valve open
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
 	eValveControl	:	E_VCN := CloseValve; // Valve control state

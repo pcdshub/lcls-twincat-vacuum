@@ -1,15 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_GCM" Id="{d03d0435-a8a4-4ab2-9d39-a304a183952d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_GCM
 VAR_IN_OUT
 
 END_VAR
 VAR_OUTPUT
-		{attribute 'pytmc' := '
-    pv: 
-	'}
+	{attribute 'pytmc' := 'pv:'}
 	VG	:	ST_VG;
+END_VAR
+VAR_INPUT
+	i_rFULL_SCALE : REAL;
 END_VAR
 VAR
 	rMinPressure: REAL;
@@ -26,7 +27,7 @@ A. Wallace
 The full-scale pressure times the ratio of the meas.
 voltage to full-scale voltage (10V).
 The minimum pressure is always going to be 5e-4 * F.S.V.*)
-
+VG.rFULL_SCALE := i_rFULL_SCALE;
 rMinPressure := VG.rFULL_SCALE * 5E-4;
 
 
