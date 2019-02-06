@@ -17,7 +17,7 @@
     <Company>SLAC</Company>
     <Released>true</Released>
     <Title>L2SI Vacuum Library</Title>
-    <ProjectVersion>0.0.1</ProjectVersion>
+    <ProjectVersion>1.0.1</ProjectVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\Gauges\E_PressureState.TcDUT">

@@ -114,7 +114,7 @@ ACT_IO();
 	iq_stPTM.i_xRotate :=	i_xRotate;
 	iq_stPTM.i_xNCFault :=	i_xFaultNC ;
 	iq_stPTM.i_xAtSpd := i_xAtSpd;
-	iq_stPTM.i_iRawSpeed :=	i_iRawSpeed;
+	//iq_stPTM.i_iRawSpeed :=	i_iRawSpeed;
 //V (AI/32767*10) * (33600 {Max RPM} - 100) / 5
 (*outputs*)
 	q_xStart:= iq_stPTM.q_xStart;
@@ -129,8 +129,8 @@ IF iq_stPTM.q_iSpeedSet  >= i_iMinSpeedRPM AND iq_stPTM.q_iSpeedSet  <=i_iMaxSpe
 END_IF
 
 (* Pump speed calculation *)
-IF iq_stPTM.i_iRawSpeed / (EXPT(2,i_iADCBits)-1) * 10 >= 0.2 THEN //Speed reading appears zero at ~0.16V
-iq_stPTM.i_diCurSpd := LREAL_TO_DINT(iq_stPTM.i_iRawSpeed/(EXPT(2,i_iADCBits)-1)*67000);
+IF i_iRawSpeed / (EXPT(2,i_iADCBits)-1) * 10 >= 0.2 THEN //Speed reading appears zero at ~0.16V
+iq_stPTM.i_diCurSpd := LREAL_TO_DINT(i_iRawSpeed/(EXPT(2,i_iADCBits)-1)*67000);
 //V (AI/(2^{# ADC bits} -1 ) * 10[ADC 10V scaling]) * (33600 [Max RPM] - 100) / 5
 ELSE
 	iq_stPTM.i_diCurSpd := 0;
