@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PIP_Gamma" Id="{c735b214-fb8d-491c-9d35-e2f8609cfbf0}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_PIP_Gamma
+    <Declaration><![CDATA[(* This function block does basic controls FOR the ION pump connected to a Gamma QPCe controller.
+ Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
+FUNCTION_BLOCK FB_PIP_Gamma
 VAR_INPUT
 	i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock 
 END_VAR
@@ -17,8 +19,9 @@ END_VAR
 VAR
  rPRESS : REAL;
  rV : REAL;
+ rHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
  (* IO Controls *)
- q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when True // 'TcLinkTo' (EL1124) ^Input
+ q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when FALSE // 'TcLinkTo' (EL1124) ^Input
  i_iPRESS  AT %I*: INT;  //
  i_xSP_DI  AT %I* : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
 
@@ -26,6 +29,11 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Does Gamma Ion pump HV interlock. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
+
+(*Ensures the set point is not higher than 1.0E-4*)
+IF (stPump.rHVEna_SP > rHVEna_SP) THEN
+	stPump.rHVEna_SP := rHVEna_SP;
+END_IF
 
 (* Interlock *)
 IF (i_stGauge.xPRESS_OK AND (i_stGauge.rPRESS <= stPump.rHVEna_SP)) THEN
@@ -67,11 +75,16 @@ END_IF]]></ST>
 stPump.i_iPRESS:=	i_iPRESS;  
 stPump.i_xSP_DI:=	i_xSP_DI;
 (*output*)
-q_xHVEna_DO:=stPump.q_xHVEna_DO;]]></ST>
+q_xHVEna_DO:= NOT stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activae function]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_PIP_Gamma">
-      <LineId Id="10" Count="8" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="167" Count="2" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="12" Count="6" />
       <LineId Id="32" Count="0" />
       <LineId Id="114" Count="1" />
       <LineId Id="51" Count="1" />

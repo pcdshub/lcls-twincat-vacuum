@@ -1,12 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_VRC" Id="{2db6a988-e12f-4920-baa1-9b034d8c1cf9}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_VRC
+    <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for certain types of valves e.g Turbo Isolation valves, Apperture Valve *)
+(* Note Interlock Logic is External *)
+FUNCTION_BLOCK FB_VRC
 VAR_IN_OUT
 	
 END_VAR
 VAR_INPUT
 	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
+	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -59,7 +62,7 @@ IF rtOK.Q THEN iq_stValve.pv_xOvrdOpn :=FALSE; END_IF
 tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=T#10S);
 
 (* Here's where the valve opens *)
-iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND g_stSystem.xOverrideMode);
+iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (*Soft IO Mapping*)
 ACT_IO();]]></ST>
@@ -69,34 +72,11 @@ ACT_IO();]]></ST>
         <ST><![CDATA[(*inputs*)
 iq_stValve.i_xOpnLS := 	i_xOpnLS;
 iq_stValve.i_xClsLS:=	i_xClsLS;
+iq_stValve.xOverrideMode := i_xOverrideMode;
 (*outputs*)
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
       </Implementation>
     </Action>
-    <Method Name="F_TURBO_VRC_ILK" Id="{13e97e4c-9278-46e1-8037-fcb3f7ade02d}">
-      <Declaration><![CDATA[METHOD PUBLIC F_TURBO_VRC_ILK : BOOL
-VAR_INPUT
-
-	i_xHiVac 	: BOOL;
-	i_xRunPTM	: BOOL;
-	i_xFLVac	: BOOL;
-
-END_VAR
-VAR
-
-	rHysterisis : REAL := 0;
-
-	xInterlock: BOOL;
-	rTolerance: REAL := 20;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[(* Close the vic if the roughing pump pirani loses its at-vac setpoint while the turbo is pumping *)
-F_TURBO_VRC_ILK := (NOT i_xHiVac AND NOT i_xRunPTM AND NOT i_xFLVac) OR
-					(NOT i_xRunPTM AND i_xFLVac) OR
-					(i_xRunPTM AND i_xFLVac);
-]]></ST>
-      </Implementation>
-    </Method>
     <LineIds Name="FB_VRC">
       <LineId Id="87" Count="0" />
       <LineId Id="3" Count="10" />
@@ -107,12 +87,10 @@ F_TURBO_VRC_ILK := (NOT i_xHiVac AND NOT i_xRunPTM AND NOT i_xFLVac) OR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VRC.ACT_IO">
-      <LineId Id="2" Count="3" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VRC.F_TURBO_VRC_ILK">
-      <LineId Id="6" Count="3" />
+      <LineId Id="2" Count="2" />
+      <LineId Id="6" Count="0" />
       <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

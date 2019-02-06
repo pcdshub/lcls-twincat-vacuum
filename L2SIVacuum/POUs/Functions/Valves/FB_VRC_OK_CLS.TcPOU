@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_VRC_OK_CLS" Id="{690d035f-3d97-4425-8805-1c0ab824e26b}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_VRC_OK_CLS
+    <Declaration><![CDATA[(* This function block is different from the regular VRC in that CLOSING must be permitted. *)
+FUNCTION_BLOCK FB_VRC_OK_CLS
 VAR_IN_OUT
 	iq_stValve : ST_VRC;
 END_VAR
@@ -18,7 +19,7 @@ rtOK	:	R_TRIG;
 
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* This fumction block is different from the regular VRC in that CLOSING must be permitted. *)
+      <ST><![CDATA[(* This function block is different from the regular VRC in that CLOSING must be permitted. *)
 (* Implemented for the funky valve 04 on LAMP *)
 IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
 iq_stValve.pv_xOPN_SW := FALSE;

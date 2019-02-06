@@ -17,10 +17,7 @@ STRUCT
     '}
 	i_xClsLS	:	BOOL;
 	
-	{attribute 'pytmc' := '
-    pv: POS_STATE
-	io: i
-    '}
+	{attribute 'pytmc' := 'pv: STATE io: i'}
 	eState	:	E_ValvePositionState := INVALID;
 
 (* Inputs *)
@@ -36,6 +33,8 @@ STRUCT
 	io: io
     '}
 	pv_xOvrdOpn	:	BOOL;
+	{attribute 'pytmc' := 'pv: OVRD_ON io: i'}
+	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 	//Calculated permissions to open valve
 	{attribute 'pytmc' := '
     pv: OPN_OK

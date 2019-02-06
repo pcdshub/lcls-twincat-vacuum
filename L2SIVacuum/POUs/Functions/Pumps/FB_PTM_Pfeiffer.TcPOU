@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_Pfeiffer" Id="{f61aaad0-85b4-4244-b8a7-58d7d76a340e}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_Pfeiffer
+    <Declaration><![CDATA[(* This function block does basic controls FOR the Pfeiffer Turbo pump connected to the TM700 and TC400 Controllers.
+ Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
+FUNCTION_BLOCK FB_PTM_Pfeiffer
 VAR_IN_OUT
 	{attribute 'pytmc' := '
     pv: 
 	'}
 	iq_stPTM : ST_PfeifferPTM;
-	iq_stPfeiffer_ctrl: ST_PfeifferControl;
-	iq_stPfeiffer_stat: ST_PfeifferStatus;
 END_VAR
 VAR_INPUT
 	i_xExtRunOk : BOOL; // Connect to external interlock logic, TRUE if not used.
@@ -16,51 +16,96 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	P_stComIn		AT %I*	:	EL6inData22B (*KL6inData22B*);
-	P_stComOut		AT %Q*	:	EL6outData22B (*KL6outData22B*);
-END_VAR]]></Declaration>
+	(*IO*)
+	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
+	i_xFaultNC AT%I*: BOOL; // Error
+ 	i_xWarn AT%I*: BOOL;
+	
+	q_RunDO AT%Q*: BOOL; // Start/Stop
+	q_PumpingStation AT%Q*: BOOL; // Start/Stop
+	q_xRemote AT%Q*: BOOL;
+END_VAR
+
+]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* This function block is used to map the IO points from the pfeiffer structures
-to the generic turbo structures *)
+      <ST><![CDATA[(* Basic pump supervisory section *)
 
-(* Controls *)
-iq_stPfeiffer_ctrl.xPumpingStation_010 := iq_stPTM.q_RunDO;
-iq_stPfeiffer_ctrl.xMotorPump_023 := 1; //Setting always true because parameter 10 alone can enable/disable the pump
-iq_stPfeiffer_ctrl.uiPowerPct_708 := iq_stPTM.q_uiPowerPct;
-
-(* Readbacks *)
-iq_stPTM.i_xAccel := iq_stPfeiffer_stat.xPumpAccelerating_307;
-iq_stPTM.i_xAtSpd := iq_stPfeiffer_stat.xRotationSpeedAttn_306;
-iq_stPTM.i_diCurSpd := iq_stPfeiffer_stat.diActiveRotationSpeed_309;
-iq_stPTM.i_diPwr := iq_stPfeiffer_stat.diDrivePower_316;
-iq_stPTM.i_diElecTemp := iq_stPfeiffer_stat.diTempElec_326;
-iq_stPTM.i_diBtmTemp := iq_stPfeiffer_stat.diTempPmpBot_330;
-iq_stPTM.i_diBrngTemp := iq_stPfeiffer_stat.diTempBearng_342;
-iq_stPTM.i_diMtrTemp := iq_stPfeiffer_stat.diTempMotor_346;
-iq_stPTM.i_uiPowerPctRbk := iq_stPfeiffer_stat.uiPowerPct_708;
-
-iq_stPTM.xCommTimeout	:=	iq_stPfeiffer_stat.xTimeout;
-iq_stPTM.i_iErrorCode := iq_stPfeiffer_stat.iErrorCode_303;
-iq_stPTM.i_iWarningCode := iq_stPfeiffer_stat.iWarningCode_303;
-
-(* Check that error acknowledgment is processed *)
-IF iq_stPfeiffer_stat.xErrorAcknowledged THEN
-	iq_stPfeiffer_stat.xErrorAcknowledged := FALSE;
-	iq_stPfeiffer_ctrl.xErrorAck_009 := FALSE;
+q_xRemote := TRUE;
+IF iq_stPTM.xExtRunOk THEN
+	q_PumpingStation:= TRUE;
+	ELSE 
+		q_PumpingStation:= FALSE;
 END_IF
 
-IF iq_stPfeiffer_stat.sErrorCode_303 = '' THEN
-	;
-ELSIF iq_stPfeiffer_stat.sErrorCode_303 <> '000000' THEN
-iq_stPTM.i_xFault := TRUE;
+IF iq_stPTM.xExtRunOk AND NOT (iq_stPTM.i_xFault OR iq_stPTM.i_xTempFault) THEN
+	iq_stPTM.q_RunDO:=iq_stPTM.xRunSW;
 ELSE
-iq_stPTM.i_xFault := FALSE;
+	iq_stPTM.xRunSW:=0;
+	iq_stPTM.q_RunDO:=FALSE;
 END_IF
-]]></ST>
+
+
+(*Pump STATE*)
+IF iq_stPtm.i_xFault THEN 
+	iq_stPtm.eState := pumpFAULT;
+
+ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
+	iq_stPtm.eState := pumpSTOPPED;
+ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpSTARTING;
+ELSIF iq_stPtm.i_xAtSpd AND iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpRUNNING;
+ELSE 
+	iq_stPtm.eState := pumpFAULT;
+END_IF
+
+
+(*Soft IO Mapping*)
+ACT_IO();]]></ST>
     </Implementation>
+    <Action Name="ACT_IO" Id="{6d730de1-568e-46c8-bd68-32cda7221400}">
+      <Implementation>
+        <ST><![CDATA[(*outputs*)
+q_RunDO := iq_stPTM.q_RunDO;
+//q_xRemote := iq_stPTM.
+//q_PumpingStation AT%Q*: BOOL; // Start/Stop
+	
+(*inputs*)
+iq_stPTM.i_xAtSpd:= i_xAtSpd;
+iq_stPTM.i_xFault:= NOT i_xFaultNC; 
+iq_stPTM.i_xWarn:=  	i_xWarn ;
+	
+	]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="FB_PTM_Pfeiffer">
-      <LineId Id="23" Count="35" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="120" Count="1" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="79" Count="4" />
       <LineId Id="2" Count="0" />
+      <LineId Id="104" Count="2" />
+      <LineId Id="109" Count="10" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="97" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Pfeiffer.ACT_IO">
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="3" Count="2" />
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

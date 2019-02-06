@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_PIP" Id="{3e94e806-a651-479f-afb3-d6455fe7a8d1}">
     <Declaration><![CDATA[TYPE ST_PIP :
 STRUCT
@@ -12,10 +12,7 @@ STRUCT
 	io: i
 	'}
    	xHV_ExtIlk : BOOL; 
-	{attribute 'pytmc' := '
-    pv: ENB_SP
-	io: io
-	'}
+	{attribute 'pytmc' := 'pv: AT_VAC_SPio: io'}
 	rHVEna_SP : REAL := 1.0E-4;	
 	
 (* EPICS Controls *)	

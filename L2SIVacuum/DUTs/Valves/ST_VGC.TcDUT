@@ -41,12 +41,16 @@ STRUCT
     '}
 	pv_xOvrdOpn	:	BOOL;
 
+	{attribute 'pytmc' := 'pv: OVRD_ON io: i'}
+	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
+
 (* Interlocks *)
 	{attribute 'pytmc' := '
     pv: DP_OK
 	io: i
     '}
 	xDP_OK	:	BOOL;	(* Managed by the VGC function (FB_VGC) *)// Indicates the valve can be opened because the differential pressure is low enough
+	{attribute 'pytmc' := 'pv: Ext_ILK_OK io: i '}
 	xEXT_OK	:	BOOL := FALSE;	(* External interlock for custom interlocking in addition to regular DP ilk, this must be set true, or the interlock condition before calling the FB_VGC *)
 	{attribute 'pytmc' := '
     pv: OPN_OK

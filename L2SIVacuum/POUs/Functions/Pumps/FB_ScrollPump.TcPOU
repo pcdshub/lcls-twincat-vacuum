@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_ScrollPump" Id="{95800034-a8e9-430e-af6e-1fa7a649fe90}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_ScrollPump
+    <Declaration><![CDATA[(* This Function block provides basic  control for Scroll Pumps *)
+(* Turn on scroll pump if the Turbo Vent Valve is closed. *)
+(* Cannot turn off scroll pump if turb is running. delay scroll off 150s.*)  
+
+FUNCTION_BLOCK FB_ScrollPump
 VAR_IN_OUT
 
 END_VAR

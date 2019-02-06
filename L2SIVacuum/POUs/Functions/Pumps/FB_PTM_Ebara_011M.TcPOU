@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_Ebara_011M" Id="{80002545-2d80-4798-8b5d-b360277946fd}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_Ebara_011M
+    <Declaration><![CDATA[(* This function block does basic controls FOR the Ebara Turbo pump connected to the ETC011M Controller.
+ Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
+FUNCTION_BLOCK FB_PTM_Ebara_011M
 VAR_IN_OUT
 END_VAR
 VAR_INPUT
@@ -56,6 +58,9 @@ Modified Nov 2018 by M. Ghaly
 (* Simple protection reset *)
 iq_stPtm.xExtRunOk:= i_xExtILKOk;
 iq_stPTM.q_xProtection := iq_stPTM.xExtRunOk;
+
+(*soft IO mapping*)
+ACT_IO();
 
 (* Basic pump supervisory section *)
 	(* If override mode, ignore everything else *)
@@ -142,6 +147,8 @@ iq_stPTM.i_xFault := NOT iq_stPTM.i_xNCFault; //??]]></ST>
       <LineId Id="163" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="20" Count="0" />
+      <LineId Id="205" Count="1" />
+      <LineId Id="204" Count="0" />
       <LineId Id="22" Count="3" />
       <LineId Id="122" Count="3" />
       <LineId Id="30" Count="6" />

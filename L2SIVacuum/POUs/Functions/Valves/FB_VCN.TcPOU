@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_VCN" Id="{b91718c1-ee94-477e-afdc-a1b96008e0fd}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_VCN
+    <Declaration><![CDATA[(* This function implements the Basic functions for the Pfeiffer EVR 116 needle valve*)
+FUNCTION_BLOCK FB_VCN
 VAR_INPUT
 	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
 	i_ReqPos	:	REAL; //Requested position
@@ -23,6 +24,7 @@ END_VAR
 VAR
 	// Requested voltage
 	rReqVoltage: REAL := 0;
+	// 
 	(*IO*)
 	q_iRawPosition AT%Q* :INT;
 END_VAR
@@ -48,46 +50,68 @@ Valve position/flow linearization
 Note: Raw position calc is based on 0.5 to 9V span, 32767 bits
 *)
 
-
-
-
 // Interlocking
 iq_stVCN.xIlkOK := i_xExtIlkOK;
+(*Checking wich Control mode is selected*)
 IF iq_stVCN.xIlkOK THEN
-	
 	IF iq_stVCN.eValveControl = OpenValve THEN
 		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;
+		rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
 	ELSIF iq_stVCN.eValveControl = CloseValve THEN
 		iq_stVCN.rReqPosition := 0;
-	ELSE
-		 ;
+		rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
+	ELSIF iq_stVCN.eValveControl = ManualControl THEN
+		iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
+		rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
+	ELSIF iq_stVCN.eValveControl = PressureControl THEN
+		 rReqVoltage := i_ReqPos * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
 	END_IF
 
 	//Raw position calc
-	iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
-	rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
+	//iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
+	
 	rReqVoltage := LIMIT(rCloseVoltage, rReqVoltage, rOpenVoltage); //The requested voltage should remain within this range
 	iq_stvcn.q_iRawPosition := REAL_TO_INT( 32767/10 * rReqVoltage);	
 ELSE
 	iq_stvcn.q_iRawPosition := 0;
 	iq_stVCN.rReqPosition := 0;
 	iq_stVCN.eValveControl := CloseValve;
-END_IF]]></ST>
+END_IF
+
+(*SOft IO Mapping*)
+ACT_IO();
+]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{897ec2aa-1321-4251-b360-05c31f40b449}">
       <Implementation>
         <ST><![CDATA[(*outputs*)
-q_iRawPosition := iq_stVCN.q_iRawPosition;]]></ST>
+q_iRawPosition := iq_stVCN.q_iRawPosition;
+(*inputs*)
+iq_stVCN.i_iPosition := iq_stvcn.q_iRawPosition;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_VCN">
-      <LineId Id="3" Count="24" />
-      <LineId Id="29" Count="18" />
+      <LineId Id="3" Count="18" />
+      <LineId Id="25" Count="2" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="75" Count="1" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="35" Count="12" />
       <LineId Id="2" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="73" Count="0" />
     </LineIds>
     <LineIds Name="FB_VCN.ACT_IO">
       <LineId Id="2" Count="0" />
       <LineId Id="1" Count="0" />
+      <LineId Id="3" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

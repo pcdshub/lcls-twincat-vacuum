@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS317" Id="{8a56f7a2-f285-4648-be2d-40acd79b269f}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS317
+    <Declaration><![CDATA[(* This function is for the Pirani MKS 317 connected to a 937A/B *)
+FUNCTION_BLOCK FB_MKS317
 VAR_IN_OUT
 	
 END_VAR

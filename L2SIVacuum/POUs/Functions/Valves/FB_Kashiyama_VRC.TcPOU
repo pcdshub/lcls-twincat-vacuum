@@ -1,7 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_Kashiyama_VRC" Id="{9bd36eef-72c0-4327-b6e1-2554c928689a}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Kashiyama_VRC
+    <Declaration><![CDATA[(* Main Kashiyama gate valve permit to be open when:
+		1. pump is NORMAL operating status, and
+	    2. chamber pressure is below HighSP or pump is at LowSpeed state.
+	it will close if chamber pressure is below than lowSP for 180s.	
+*)
+FUNCTION_BLOCK FB_Kashiyama_VRC
 VAR_IN_OUT
 	
 END_VAR
@@ -12,7 +17,7 @@ END_VAR
 VAR_INPUT
 	Pump : ST_KashiyamaDryPump;//Kashyiama pump
 	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
-	Gauge : ST_VG;	
+	Gauge : ST_VG;// Pressure Gauge	
 END_VAR
 VAR
 	At_HiVac : BOOL;

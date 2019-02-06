@@ -33,7 +33,7 @@ VG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));
 (* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
 (* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
 
-IF PG.rPRESS < VG.rPRO_SP THEN
+IF PG.rPRESS < VG.rPRO_SP THEN // might enable the gauge automatically, do we want that?
 
 VG.q_xHV_DIS := NOT VG.xHV_SW;
 
@@ -67,7 +67,9 @@ VG.xAT_VAC := (VG.eState =Valid) AND VG.rPRESS < VG.rVAC_SP;
 ]]></ST>
     </Implementation>
     <LineIds Name="FB_MKS_937B">
-      <LineId Id="3" Count="43" />
+      <LineId Id="3" Count="23" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="28" Count="18" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

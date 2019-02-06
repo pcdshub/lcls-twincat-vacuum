@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_TurbVentvalve_NO" Id="{13f6dcdf-6eaf-4953-b8b2-2ecf46768828}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_TurbVentvalve_NO
+    <Declaration><![CDATA[(* This function block impelemets Interlock for Agilent Turbo Vent Valve Normally Open*)
+FUNCTION_BLOCK FB_TurbVentvalve_NO
 VAR_OUTPUT
 	{attribute 'pytmc' :=' pv:'}
 	q_stValve : ST_VCC_NO;

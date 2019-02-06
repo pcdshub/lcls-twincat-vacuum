@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_PTM" Id="{4cff5a41-fc78-4938-9468-a980c788ccb5}">
     <Declaration><![CDATA[TYPE ST_PTM :
 STRUCT
@@ -11,15 +11,9 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 *)
 
 (* Controls *)
-	{attribute 'pytmc' := '
-    pv: Run_SW
-	io: io
-	'}
+	{attribute 'pytmc' := 'pv: RUN_SW io: io'}
 	xRunSW	:	BOOL;
-	{attribute 'pytmc' := '
-    pv: Reset_SW
-	io: io
-	'}
+	{attribute 'pytmc' := 'pv: RST_SW io: io'}
 	xResetSW	:	BOOL; //For resetting faults
 	{attribute 'pytmc' := '
     pv: RUN_DO
@@ -43,10 +37,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	io: i
 	'}
 	i_xAtSpd	:	BOOL;
-	{attribute 'pytmc' := '
-    pv: SPEED
-	io: i
-	'}
+	{attribute 'pytmc' := 'pv: SPEED_RDBK io: i'}
 	i_diCurSpd	:	DINT;
 	
 	xCommTimeout	:	BOOL := TRUE;  (* Initialized true since we haven't talked to pump yet *)
@@ -55,7 +46,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
     pv: FAULT
 	io: i
 	'}
-	i_xFault		:	BOOL; //Note, for Ebara this is *false* in a fault condition!
+	i_xFault		:	BOOL; (*FAULT*)
 	{attribute 'pytmc' := '
     pv: WARN
 	io: i
@@ -90,6 +81,10 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	io: i
 	'}	
 	eState	:	E_PumpState;
+	
+	{attribute 'pytmc' := 'pv: Current_MON io: i'}
+	i_iCurrentMon : INT; // Voltage to the output current of motor 0->5V 0->10A
+
 
 END_STRUCT
 END_TYPE]]></Declaration>

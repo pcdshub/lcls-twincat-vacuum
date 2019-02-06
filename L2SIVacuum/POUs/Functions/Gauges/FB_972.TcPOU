@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_972" Id="{02ad8586-ab8b-4c5e-9c1c-5db3b2c00a9f}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_972
 VAR_INPUT
@@ -32,7 +32,10 @@ IF rV > 1 THEN
 ELSE
 	VG.xPRESS_OK := FALSE;
 	VG.eState := -6;
-END_IF]]></ST>
+END_IF
+
+(* Soft IO Mapping*)
+ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{57edb1c8-c4ce-46a6-8329-dd1927c8ce8e}">
       <Implementation>
@@ -42,6 +45,9 @@ END_IF]]></ST>
     <LineIds Name="FB_972">
       <LineId Id="3" Count="11" />
       <LineId Id="2" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="0" />
     </LineIds>
     <LineIds Name="FB_972.ACT_IO">
       <LineId Id="1" Count="0" />

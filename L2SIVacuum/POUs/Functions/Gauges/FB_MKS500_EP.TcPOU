@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS500_EP" Id="{4da1e942-f359-4f6e-ab12-d5a0031e68e6}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS500_EP
+    <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EP boxes*)
+(*This function provides ILK and Set Point Protection for the Cold Cathode*)
+(* 500 Logarithmic Output Conversion, factory default configuration *)
+FUNCTION_BLOCK FB_MKS500_EP
 VAR_IN_OUT
 		
 END_VAR

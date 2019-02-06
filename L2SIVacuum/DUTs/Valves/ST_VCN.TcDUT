@@ -10,7 +10,7 @@ STRUCT
 	io: i
     '}
 	// Inputs
-	i_iPosition	:	INT; //Position readback (if it exists)
+	i_iPosition	:	REAL; //Position readback (if it exists)
 	
 	// Outputs
 	{attribute 'pytmc' := '
@@ -33,8 +33,10 @@ STRUCT
     '}
 	pv_xOPN_SW	: BOOL;
 	
-	rUpperLimit	:	REAL;	//Upper limit on valve open
+	rUpperLimit	:	REAL:=9.1;	//Upper limit on valve open
+	{attribute 'pytmc' := 'pv: POS_DES io: io '}
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
+	{attribute 'pytmc' := 'pv: STATE io: io'}
 	eValveControl	:	E_VCN := CloseValve; // Valve control state
 
 	ftIlk	:	F_TRIG;	

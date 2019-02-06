@@ -12,6 +12,8 @@ STRUCT
 	pv_xOPN_SW	: BOOL;
 	{attribute 'pytmc' := 'pv:FORCE_OPN io: io'}
 	xOvrdOpn	:	BOOL;
+	{attribute 'pytmc' := 'pv: OVRD_ON io: i'}
+	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 	{attribute 'pytmc' := '
     pv: OPN_OK
 	io: i

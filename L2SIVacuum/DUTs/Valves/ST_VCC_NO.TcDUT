@@ -12,7 +12,7 @@ STRUCT
 	'}
 	pv_xCLS_SW	: BOOL;
 	{attribute 'pytmc' := '
-    pv: OVRD_CLS
+    pv: FORCE_CLS
 	io: io
 	'}
 	pv_xOvrdCls	:	BOOL;
@@ -21,6 +21,9 @@ STRUCT
 	io: i
 	'}
 	xCLS_OK	: BOOL;
+	
+	{attribute 'pytmc' := 'pv: OVRD_ON io: i'}
+	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 
 (* Outputs *)
 {attribute 'pytmc' := '

@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_Agilent" Id="{30958a8b-73eb-4ef7-96d3-72fcd80f684d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_Agilent
+    <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TV Turbo pump. Turns off pump
+in the event of errors/ warnings. Provides interlocking interface.*)
+FUNCTION_BLOCK FB_PTM_Agilent
 VAR_IN_OUT
 	
 END_VAR
@@ -231,7 +233,7 @@ iq_stPtm.i_xFault:=	i_xFault;
 (*outputs*)
 q_RunDO := iq_stPtm.q_RunDO;
 q_xLSpd := iq_stPtm.q_xLSpd;
-i_iCurrentMon := iq_stPtm.i_iPumpCurrent;]]></ST>
+i_iCurrentMon := iq_stPtm.i_iCurrentMon;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_PTM_Agilent">

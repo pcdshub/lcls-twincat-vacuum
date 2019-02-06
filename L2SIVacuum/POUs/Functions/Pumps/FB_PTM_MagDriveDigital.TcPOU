@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_MagDriveDigital" Id="{50197c8d-2497-4812-a680-acd70b819f81}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_MagDriveDigital
+    <Declaration><![CDATA[(* This function block does basic controls FOR the Leybold connected to the MagDriveDigital Controller.
+ Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
+FUNCTION_BLOCK FB_PTM_MagDriveDigital
 VAR_IN_OUT
 	{attribute 'pytmc' := '
     pv: 

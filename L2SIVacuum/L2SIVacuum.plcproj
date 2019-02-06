@@ -97,7 +97,7 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_925.TcPOU">
+    <Compile Include="POUs\Functions\Gauges\FB_9XX.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_972.TcPOU">
@@ -142,6 +142,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Gauges\Interfaces\FB_Gauge_Interface.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_EbaraDryPump.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -169,6 +172,9 @@
     <Compile Include="POUs\Functions\Pumps\FB_PTM_TurboDrive.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\FB_PTM_TwisTorr.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_ScrollPump.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -191,6 +197,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VCC.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VCC_NO.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -225,6 +235,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\Interfaces\FB_Valve_Interface.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Version\Global_Version.TcGVL">
       <SubType>Code</SubType>
     </Compile>
@@ -237,10 +250,12 @@
     <Folder Include="GVLs" />
     <Folder Include="POUs\Functions" />
     <Folder Include="POUs\Functions\Gauges" />
+    <Folder Include="POUs\Functions\Gauges\Interfaces" />
     <Folder Include="POUs\Functions\Pumps\functions" />
     <Folder Include="POUs\Functions\Valves" />
     <Folder Include="POUs\Functions\Pumps" />
     <Folder Include="POUs\Functions\Valves\functions" />
+    <Folder Include="POUs\Functions\Valves\Interfaces" />
     <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />

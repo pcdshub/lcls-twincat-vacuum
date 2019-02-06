@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS248" Id="{dcc23c7e-d235-4f95-baec-6ff95237a2bd}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS248
+    <Declaration><![CDATA[(* MKS248 valve using MKS1249 Drive Module *)
+FUNCTION_BLOCK FB_MKS248
 VAR_INPUT
 	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
 	i_rReqPos	:	REAL; //Requested position
@@ -37,7 +38,10 @@ ELSE
 	iq_stvcn.q_iRawPosition := 0;
 	iq_stVCN.rReqPosition := 0;
 	iq_stVCN.eValveControl := CloseValve;
-END_IF]]></ST>
+END_IF
+
+(*IO Mapping*)
+ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{69f74d47-c8bc-4fd5-815e-84e03ce47480}">
       <Implementation>
@@ -51,6 +55,8 @@ q_iRawPosition := iq_stVCN.q_iRawPosition;]]></ST>
       <LineId Id="27" Count="3" />
       <LineId Id="40" Count="8" />
       <LineId Id="24" Count="0" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="69" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS248.ACT_IO">
       <LineId Id="2" Count="0" />
