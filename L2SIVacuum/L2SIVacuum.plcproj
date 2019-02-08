@@ -261,6 +261,10 @@
     <Folder Include="POUs" />
   </ItemGroup>
   <ItemGroup>
+    <PlaceholderReference Include="LCLS General">
+      <DefaultResolution>LCLS General, * (SLAC)</DefaultResolution>
+      <Namespace>LCLS_General</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="Tc2_EtherCAT">
       <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_EtherCAT</Namespace>
@@ -300,14 +304,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <LibraryReference Include="LCLS General,0.1.4,SLAC">
-      <Namespace>LCLS_General</Namespace>
-    </LibraryReference>
-  </ItemGroup>
-  <ItemGroup>
     <SubObject Include="FB_VGC.ACT_ResetAlarms">
       <LinkAlways>true</LinkAlways>
     </SubObject>
+  </ItemGroup>
+  <ItemGroup>
+    <PlaceholderResolution Include="LCLS General">
+      <Resolution>LCLS General, * (SLAC)</Resolution>
+    </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
