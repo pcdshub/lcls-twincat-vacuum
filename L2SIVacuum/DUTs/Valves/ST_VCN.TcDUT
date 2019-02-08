@@ -13,10 +13,7 @@ STRUCT
 	i_iPosition	:	REAL; //Position readback (if it exists)
 	
 	// Outputs
-	{attribute 'pytmc' := '
-    pv: POS_CTRL
-	io: io
-    '}
+	{attribute 'pytmc' := 'pv: POS_DES io: io '}
 	q_iRawPosition	:	INT; //Position control 
 	//For the EVR 116 this is 0-10V analog
 	
@@ -34,7 +31,7 @@ STRUCT
 	pv_xOPN_SW	: BOOL;
 	
 	rUpperLimit	:	REAL:=9.1;	//Upper limit on valve open
-	{attribute 'pytmc' := 'pv: POS_DES io: io '}
+	{attribute 'pytmc' := 'pv: POS_CTRL io: io '}
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
 	{attribute 'pytmc' := 'pv: STATE io: io'}
 	eValveControl	:	E_VCN := CloseValve; // Valve control state

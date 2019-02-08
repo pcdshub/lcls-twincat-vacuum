@@ -5,10 +5,8 @@
 STRUCT
 
 (* Inputs *)
-{attribute 'pytmc' := '
-    pv: OPN_SW
-	io: io
-	'}
+
+	{attribute 'pytmc' := 'pv: OPN_SW field: ZNAM CLOSE field: ONAM OPEN io: io '}
 	pv_xOPN_SW	: BOOL;
 	{attribute 'pytmc' := 'pv:FORCE_OPN io: io'}
 	xOvrdOpn	:	BOOL;

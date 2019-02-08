@@ -6,10 +6,7 @@ STRUCT
 
 (* A normally open valve needs permission to close! *)
 (* Inputs *)
-{attribute 'pytmc' := '
-    pv: CLS_SW
-	io: io
-	'}
+{attribute 'pytmc' := 'pv: CLS_SW field: ONAM CLOSE field: ZNAM OPEN io: io '}
 	pv_xCLS_SW	: BOOL;
 	{attribute 'pytmc' := '
     pv: FORCE_CLS

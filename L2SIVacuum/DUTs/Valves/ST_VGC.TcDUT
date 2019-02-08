@@ -25,10 +25,7 @@ STRUCT
 	
 	
 (* EPICS Controls *)
-	{attribute 'pytmc' := '
-    pv: OPN_SW
-	io: o
-    '}
+	{attribute 'pytmc' := 'pv: OPN_SW field: ZNAM CLOSE field: ONAM OPEN io: io '}
 	pv_xOPN_SW	: BOOL;
 	{attribute 'pytmc' := '
     pv: ALM_RST
