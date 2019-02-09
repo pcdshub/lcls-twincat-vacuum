@@ -9,7 +9,7 @@ VAR_IN_OUT
 END_VAR
 VAR_INPUT
 	i_xExtILK_OK:BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
-	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only*)
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '

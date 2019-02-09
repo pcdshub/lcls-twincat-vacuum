@@ -114,9 +114,9 @@ END_IF
 ///Check valve postion
 IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
 	iq_stValve.eState:=INVALID;
-ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=OPEN;
-ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=CLOSED;
 ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
 	iq_stValve.eState:=MOVING;
@@ -307,7 +307,9 @@ iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;]]></ST>
       <LineId Id="36" Count="1" />
       <LineId Id="199" Count="0" />
       <LineId Id="198" Count="0" />
-      <LineId Id="38" Count="23" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="696" Count="0" />
+      <LineId Id="40" Count="21" />
       <LineId Id="248" Count="0" />
       <LineId Id="246" Count="0" />
       <LineId Id="249" Count="0" />
