@@ -58,12 +58,10 @@ IO();
 (* use logarithmic Pressure calculation, Output= Normal and Offset = 0*)
 rV := 10*INT_TO_REAL(i_iPress)/32767;
 rPRESS := LREAL_TO_REAL(EXPT(10,(rV-0))); (*offset = 0*)
-
-IF (stPump.i_xSP_DI) THEN 
 	q_IG.rPRESS := rPRESS;
+IF (stPump.i_xSP_DI) OR ((q_IG.rPRESS < q_IG.rVAC_SP) AND (q_IG.rPRESS<>0)) THEN 
 	q_IG.xPRESS_OK := TRUE;
 	ELSE
-	q_IG.rPRESS := rPRESS;
 	q_IG.xPRESS_OK := FALSE;
 END_IF]]></ST>
       </Implementation>
@@ -97,11 +95,7 @@ q_xHVEna_DO:= NOT stPump.q_xHVEna_DO; //According to Manual pin should be ground
       <LineId Id="15" Count="0" />
       <LineId Id="10" Count="1" />
       <LineId Id="9" Count="0" />
-      <LineId Id="3" Count="1" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="5" Count="1" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="7" Count="0" />
+      <LineId Id="3" Count="4" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PIP_Gamma.IO">

@@ -77,6 +77,9 @@
     <Compile Include="DUTs\Valves\ST_VCC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Valves\ST_VVC.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Valves\ST_VCC_NO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -200,6 +203,13 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VFS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VVC.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VCC_NO.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -234,6 +244,9 @@
     <Compile Include="POUs\Functions\Valves\functions\F_VRC_DIODE_ILK.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\Interfaces\FB_FSV_Interface.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_Valve_Interface.TcPOU">
       <SubType>Code</SubType>

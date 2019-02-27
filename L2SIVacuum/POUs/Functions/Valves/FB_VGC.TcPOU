@@ -62,7 +62,7 @@ VAR
 	
 	
 	(* Timeouts*)
-	tTimeOutDuration: TIME:= T#180S;
+	tTimeOutDuration: TIME:= T#5S;
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
 	
@@ -97,7 +97,7 @@ Hysteresis is employed to ensure a smooth transition from vented/pumping down, t
 Finally, an override system is built in so you can bypass all the interlocking logic and 
 get back online.
 *)
-(* 10/1/2018 Margaret Ghaly included EPS, PMPS Checkes and MPS trigger signal*)
+(* 10/1/2018 Margaret Ghaly included EPS, PMPS Checkes and MPS trigger signals*)
 
 
 fbFSInit( CLK := TRUE, Q => xFirstPass);
@@ -234,7 +234,7 @@ END_IF
 //Override timer
 tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
-(* If Epics Command to close the Valve, check if MPS and EPS are ok, otherwise Keep command set to open valve *)
+(* If Epics Command to close the Valve, check if PMPS and EPS are ok, otherwise Keep command set to open valve *)
 IF NOT(iq_stValve.pv_xOPN_SW) AND ((NOT i_xPMPS_OK) OR (NOT i_xEPS_OK)) THEN
 	iq_stValve.pv_xOPN_SW := TRUE;
 END_IF
@@ -252,13 +252,15 @@ iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOv
 (* When the valve  is open MPS is OK*)
 xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS; 
 
-///Check valve postion timout
+///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE;
 ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
-	iq_stValve.bErrorPresent := TRUE;
+	iq_stValve.bErrorPresent := TRUE; 
 END_IF
-
+IF (iq_stValve.eState=INVALID) THEN
+	iq_stValve.bErrorPresent := TRUE; 
+END_IF
 (*Timers*)
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
 tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
@@ -337,7 +339,9 @@ iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;]]></ST>
       <LineId Id="158" Count="0" />
       <LineId Id="556" Count="0" />
       <LineId Id="406" Count="0" />
-      <LineId Id="335" Count="10" />
+      <LineId Id="335" Count="6" />
+      <LineId Id="769" Count="1" />
+      <LineId Id="342" Count="3" />
       <LineId Id="347" Count="3" />
       <LineId Id="487" Count="2" />
       <LineId Id="162" Count="2" />

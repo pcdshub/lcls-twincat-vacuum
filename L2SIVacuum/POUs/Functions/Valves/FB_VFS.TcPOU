@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_VFS" Id="{68519563-003c-4daf-ae0e-7245b1fe09af}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_VFS
+(* This function block implements basic functionality for Fast Shutter/Valves*)
+(* Fast Shutters do not function as complete isolation valves, but are intended to rapidly limit conductance 
+between vacuum regions.  They should be installed in conjunction with isolation gate valves.  The conductance 
+of the fast shutter in the closed state may be sufficiently low as to create an isolated vacuum region.  
+Thus, at least a pirani gauge, that can measure a pressure down to 1x10-4 Torr, needs to be installed between
+the shutter and the isolation gate valve.
+In the case where a gauge is not installed, the neigboring gate Valves should not be opened unless the shutter 
+is Open. 
+*)
+VAR_IN_OUT
+	
+END_VAR
+VAR_INPUT
+	{attribute 'pytmc' := 'pv: EPS_OK'}
+	i_xEPS_OK:	BOOL	:= TRUE; (*External EPS interlock, Set to TRUE when no EPS interlock is required, otherwise set to correct interlock signal*)
+	{attribute 'pytmc' := 'pv: PMPS_OK'}
+	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
+	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
+	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv:
+	'}
+	iq_stValve : ST_VGC; (* All valve data and states will be in this struct*)
+	
+	{attribute 'pytmc' := 'pv: MPS_OK'}
+	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
+	
+	
+END_VAR
+VAR
+	rDiffPressAllowed	:	REAL := 22.5; // Torr, Default value comes from Vat Valve Manual
+	rDiffPress : REAL;
+	set : BOOL;
+    reset: BOOL;
+	  
+	xFirstPass	:	BOOL;
+	fbFSInit		:	R_TRIG;
+	
+	tonDelOK : TON;
+	rtOK	:	R_TRIG;
+	tonOvrd	:	TON;
+	
+	tDelOK	:	TIME := T#60S;
+	tOvrd	:	TIME := T#10s;
+	
+	xClose: BOOL;
+	CloseTimer: TON;
+	TimDur: TIME := T#20MS;
+	
+	(* Timeouts*)
+	tTimeOutDuration: TIME:= T#1S;
+	tOPNtimeout: TON;
+	tCLStimeout:TON;
+	
+	
+	(*IO*)
+	i_xOpnLS	AT%I*: BOOL;
+	i_xClsLS	AT%I*: BOOL;
+	q_xClose_A	AT%Q*: BOOL;
+	q_xClose_B	AT%Q*: BOOL;
+	q_xClose_C	AT%Q*: BOOL;
+	q_xOPN_DO	AT%Q*: BOOL;
+	i_xTrigger	AT%I*: BOOL; // Could be Up to 4
+	{attribute 'pytmc' := 'pv: VAC_FAULT_OK'}
+	xVAC_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to Flase when there is Vacuum Fault*)
+	
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//TODO
+// Make it better
+//Test It
+//Fix PVs and IO links
+//Interface with neihboring valves.
+
+(* Fast Shutter/Valve Function Block*)
+(* M.Ghaly Feb 2019*)
+
+(* Fast Shutters do not function as complete isolation valves, but are intended to rapidly limit conductance 
+between vacuum regions.  They should be installed in conjunction with isolation gate valves.  The conductance 
+of the fast shutter in the closed state may be sufficiently low as to create an isolated vacuum region.  
+Thus, at least a pirani gauge, that can measure a pressure down to 1x10-4 Torr, needs to be installed between
+the shutter and the isolation gate valve.
+In the case where a gauge is not installed, the neigboring gate Valves should not be opened unless the shutter 
+is Open. 
+*)
+(* Soft IO Mapping*)
+IO();
+
+///Check valve postion
+IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
+	iq_stValve.eState:=INVALID;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
+	iq_stValve.eState:=OPEN;
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
+	iq_stValve.eState:=CLOSED;
+ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=MOVING;
+ELSE
+	iq_stValve.eState:=INVALID;
+END_IF
+
+(* Input Trigger to close the Fast Shutter*)
+(* Neighboring Valves Should also be triggered to Close*)
+IF (i_xTrigger) THEN 
+	xClose:= TRUE;
+	xVAC_FAULT_OK:= FALSE;
+	iq_stValve.xERR_LstVac := TRUE;
+END_IF
+IF (xClose) AND (NOT i_xClsLS) THEN
+	q_xClose_A := TRUE;
+	q_xClose_B := TRUE;
+	q_xClose_C := TRUE;
+END_IF
+IF(CloseTimer.Q) OR (i_xClsLS) THEN
+	q_xClose_A := FALSE;
+	q_xClose_B := FALSE;
+	q_xClose_C := FALSE;
+	xClose := FALSE;
+	iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
+
+(* Neighboring Valves Interlock bit is reset When the Vacuum event error is reset and the Shutter is opened *)
+IF (NOT i_xTrigger) AND (NOT iq_stValve.xERR_LstVac) AND i_xOpnLS THEN
+	xVAC_FAULT_OK := TRUE;
+END_IF
+
+(*OPN OK evaluation bit *)
+iq_stValve.xOPN_OK := (NOT iq_stValve.xERR_LstVac) AND NOT i_xTrigger;
+
+(* If Epics Command to close the Valve, check if PMPS and EPS are ok, otherwise Keep command set to open valve *)
+IF NOT(iq_stValve.pv_xOPN_SW) AND ((NOT i_xPMPS_OK) OR (NOT i_xEPS_OK) OR (NOT xVAC_FAULT_OK) ) THEN
+	iq_stValve.pv_xOPN_SW := TRUE;
+ELSE xClose := TRUE;
+END_IF
+
+(* Reset the EPICS command to open the valve if the interlock is lost *) 
+(* based on EPS ok state, EPS overrides OPN_OK*)
+IF NOT iq_stValve.xOPN_OK THEN
+	IF i_xEPS_OK THEN iq_stValve.pv_xOPN_SW := FALSE;
+	ELSE iq_stValve.pv_xOPN_SW := TRUE;		
+	END_IF
+END_IF
+
+(* Here's where the valve opens *)
+iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+
+(* When the valve  is open MPS is OK*)
+xMPS_OK := (iq_stValve.eState=OPEN) AND NOT i_xTrigger;//??????
+
+
+(* Override logic *)
+(* Goal: give ability to override, but do so in a way that people won't forget it.
+Solution: Override only after ten seconds of override, protect against blips,
+when the valve permission goes true for more than ten seconds consistently, remove override
+*)
+
+tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=tDelOK);
+rtOK(CLK:=tonDelOK.Q);
+IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN 
+	iq_stValve.pv_xOvrdOpn :=FALSE;
+	iq_stValve.pv_xOPN_SW := TRUE; //for seamless transition
+END_IF
+
+//Override timer
+tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
+
+
+
+///Check valve postion timout
+IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
+	iq_stValve.bErrorPresent := TRUE;
+ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
+	iq_stValve.bErrorPresent := TRUE;
+END_IF
+
+(*Timers*)
+CloseTimer ( IN:=xClose, PT:= TimDur, Q=>);
+tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
+tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
+
+(* Soft IO Mapping*)
+IO();
+// Alarm reset
+//////////////////////////////////////
+ACT_ResetAlarms();
+
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_ResetAlarms" Id="{5bc381e2-d93d-4e07-9868-4d1094f97e97}">
+      <Implementation>
+        <ST><![CDATA[iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
+
+iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;
+
+IF NOT i_xTrigger THEN
+	iq_stValve.xERR_LstVac R= iq_stValve.pv_xAlmRst;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="IO" Id="{be2b8137-473d-4278-9e2c-831399c62f45}">
+      <Implementation>
+        <ST><![CDATA[(*inputs*)
+iq_stValve.i_xOpnLS := 	i_xOpnLS;
+iq_stValve.i_xClsLS:=	i_xClsLS;
+iq_stValve.xEXT_OK := i_xEXT_OK;
+iq_stValve.xOverrideMode := i_xOverrideMode;
+(*outputs*)
+q_xOPN_DO:= iq_stValve.q_xOPN_DO;
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_VFS">
+      <LineId Id="226" Count="0" />
+      <LineId Id="228" Count="3" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="227" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="246" Count="3" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="140" Count="10" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="118" Count="1" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="132" Count="1" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="202" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="171" Count="5" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="178" Count="5" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="188" Count="4" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="157" Count="13" />
+      <LineId Id="155" Count="1" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="206" Count="8" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="215" Count="2" />
+      <LineId Id="242" Count="0" />
+      <LineId Id="218" Count="2" />
+      <LineId Id="115" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_VFS.ACT_ResetAlarms">
+      <LineId Id="2" Count="1" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="8" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_VFS.IO">
+      <LineId Id="2" Count="6" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

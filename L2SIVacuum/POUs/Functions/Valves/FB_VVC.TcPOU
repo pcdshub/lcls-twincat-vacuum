@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_VVC" Id="{a538d8bd-5f3e-49c2-b528-765b2211bef2}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for Vent Valves VVC *)
+(* Note Interlock Logic is External *)
+FUNCTION_BLOCK FB_VVC
+VAR_IN_OUT
+
+END_VAR
+VAR_INPUT
+	i_xExtILK_OK:BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
+	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only*)
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv:
+	'}
+	iq_stValve : ST_VVC;
+END_VAR
+VAR
+
+	tonOvrd	:	TON;
+	tonDelOK : TON;
+	rtOK	:	R_TRIG;
+
+	(*IO*)
+	q_xOPN_DO	AT%Q*: BOOL;
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+iq_stValve.xOPN_OK := i_xExtILK_OK;
+
+IF NOT iq_stValve.xOPN_OK THEN
+iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
+
+(* Override logic *)
+(* Goal: give ability to override, but do so in a way that people won't forget it.
+Solution: Override only after ten seconds of override, protect against blips,
+when the valve permission goes true for more than ten seconds consistently, remove override
+*)
+
+tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=T#10S);
+rtOK(CLK:=tonDelOK.Q);
+IF rtOK.Q THEN iq_stValve.xOvrdOpn :=FALSE; END_IF
+
+//Override timer
+tonOvrd(IN:=iq_stValve.xOvrdOpn, PT:=T#10S);
+
+(* Here's where the valve opens *)
+iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+
+(*IO Mapping*)
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{ffed0298-5cb5-4bca-838f-8066b1682c67}">
+      <Implementation>
+        <ST><![CDATA[(*inputs*)
+iq_stValve.xOverrideMode := i_xOverrideMode;
+(*outputs*)
+q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_VVC">
+      <LineId Id="70" Count="1" />
+      <LineId Id="3" Count="18" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VVC.ACT_IO">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
