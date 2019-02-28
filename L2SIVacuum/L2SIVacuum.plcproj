@@ -323,7 +323,7 @@
   </ItemGroup>
   <ItemGroup>
     <PlaceholderResolution Include="LCLS General">
-      <Resolution>LCLS General, * (SLAC)</Resolution>
+      <Resolution>LCLS General, 0.0.0 (SLAC)</Resolution>
     </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>

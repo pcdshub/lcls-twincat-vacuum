@@ -18,6 +18,7 @@ VAR_INPUT
 	Pump : ST_KashiyamaDryPump;//Kashyiama pump
 	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
 	Gauge : ST_VG;// Pressure Gauge	
+	i_xOverrideMode : BOOL;
 END_VAR
 VAR
 	At_HiVac : BOOL;
@@ -91,7 +92,7 @@ IF At_HiVac AND q_stValve.q_xOPN_DO AND NOT tmrTP.Q THEN
 END_IF
 
 (* Here's where the valve opens *)
-q_stValve.q_xOPN_DO := (q_stValve.pv_xOPN_SW AND q_stValve.xOPN_OK) OR (tonOvrd.Q AND g_stSystem.xOverrideMode); 
+q_stValve.q_xOPN_DO := (q_stValve.pv_xOPN_SW AND q_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode); 
 
 (*Soft IO Mapping*)
 ACT_IO();]]></ST>
