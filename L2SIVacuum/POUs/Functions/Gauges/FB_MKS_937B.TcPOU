@@ -1,22 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_MKS_937B" Id="{a7ec3968-3989-4c07-aeb2-4dc132212737}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS_937B
+    <Declaration><![CDATA[(* 937B Logarithmic Output Conversion *)
+(* 5-20-2016, Alex Wallace and Scott Stubbs *)
+(* This function will read the pressure from any gauge on a 937B. *)
+(* To be used when the specific device function block is not available *)
+FUNCTION_BLOCK FB_MKS_937B
 VAR_IN_OUT
 			
 END_VAR
 VAR_INPUT
-	PG	:	ST_VG := g_DummyVG;
+	PG	:	ST_VG := g_DummyVG; // Gauge Structure used to Interlock the ion gauges
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := pv: '}
-	VG : ST_VG;
+	VG : ST_VG; // Vacuum Gauge Data Structure
 	
 	
 
 END_VAR
 VAR
 	rV	:	REAL;
+	
+	
+		(*IOs to be linked*)
+	/// Controls and I/Os
+	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
+	q_xHV_DIS AT %Q* : BOOL; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -28,7 +39,7 @@ rV := 10*INT_TO_REAL(VG.i_iPRESS_R)/32767;
 VG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));
 
 
-(* Ion Gauge Protection Functions *)
+(* Gauge Protection Functions *)
 (* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
 (* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
 (* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
@@ -48,7 +59,7 @@ END_IF
 
 (* Pressure gauge OK checks *)
 VG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6);
-
+(* Pressure gauge State checks *)
 IF (rV <=9.7 ) AND (rV>=0.6) THEN
 	VG.eState := Valid; // normal
 ELSIF rV >= 0.18 AND rV <= 0.22 THEN
@@ -64,13 +75,30 @@ END_IF
 (* Setpoint evaluation *)
 VG.xAT_VAC := (VG.eState =Valid) AND VG.rPRESS < VG.rVAC_SP;
 
-]]></ST>
+
+(*Soft IO Linking*)
+// check ethercat Diagnostics
+ACT_IO();]]></ST>
     </Implementation>
+    <Action Name="ACT_IO" Id="{5aa09de8-d7fa-44b4-ab5d-607351733b1f}">
+      <Implementation>
+        <ST><![CDATA[(*soft link inputs*)
+VG.i_iPRESS_R:=	i_iPRESS_R; 
+
+(*soft link outputs*)
+q_xHV_DIS := VG.q_xHV_DIS;]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="FB_MKS_937B">
       <LineId Id="3" Count="23" />
       <LineId Id="64" Count="0" />
       <LineId Id="28" Count="18" />
+      <LineId Id="93" Count="2" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS_937B.ACT_IO">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

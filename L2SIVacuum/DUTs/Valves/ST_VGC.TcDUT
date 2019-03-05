@@ -1,12 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <DUT Name="ST_VGC" Id="{0b7dfc27-9760-4c7a-bad2-fa375ac628b8}">
     <Declaration><![CDATA[TYPE ST_VGC :
 STRUCT
 
 (* I/Os*)
 (* Readbacks *)
-	{attribute 'pytmc' := 'pv: OPN_DI io: i'}
+	{attribute 'pytmc' := '
+	pv: OPN_DI
+	io: i
+	'}
 	i_xOpnLS	: BOOL;
 	{attribute 'pytmc' := '
     pv: CLS_DI
@@ -22,7 +25,12 @@ STRUCT
 	
 	
 (* EPICS Controls *)
-	{attribute 'pytmc' := 'pv: OPN_SW field: ZNAM CLOSE field: ONAM OPEN io: io '}
+	{attribute 'pytmc' := '
+	pv: OPN_SW; 
+	field: ZNAM CLOSE; 
+	field: ONAM OPEN;
+	io: io 
+	'}
 	pv_xOPN_SW	: BOOL;
 	{attribute 'pytmc' := '
     pv: ALM_RST
@@ -35,7 +43,12 @@ STRUCT
     '}
 	pv_xOvrdOpn	:	BOOL;
 
-	{attribute 'pytmc' := 'pv: OVRD_ON field: ZNAM Override ON field: ONAM Override Off io: i'}
+	{attribute 'pytmc' := '
+	pv: OVRD_ON 
+	field: ZNAM Override ON 
+	field: ONAM Override Off
+	io: i
+	'}
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 
 (* Interlocks *)

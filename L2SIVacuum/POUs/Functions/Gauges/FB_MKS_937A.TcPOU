@@ -1,18 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_MKS_937A" Id="{0483146b-b0e8-4c2d-b90b-7317630633a1}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS_937A
+    <Declaration><![CDATA[(* 937A Logarithmic Output Conversion *)
+(* 7-15-2015 *)
+(* This function will read the pressure from any gauge on a 937A. *)
+(* To be used when the specific device function block is not available *)
+FUNCTION_BLOCK FB_MKS_937A
 VAR_IN_OUT
-	{attribute 'pytmc' := 'pv: '}
-	VG : ST_VG;
+	
 END_VAR
 VAR_INPUT
-	PG	:	ST_VG := g_DummyVG;
+	PG	:	ST_VG := g_DummyVG; // Gauge Structure used to Interlock the ion gauges
 END_VAR
 VAR_OUTPUT
+	{attribute 'pytmc' := 'pv: '}
+	VG : ST_VG; // Vacuum Gauge Data Structure
 END_VAR
 VAR
 	rV	:	REAL;
+		(*IOs to be linked*)
+	/// Controls and I/Os
+	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
+	q_xHV_DIS AT %Q* : BOOL; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -60,13 +70,29 @@ END_IF
 (* Setpoint evaluation *)
 VG.xAT_VAC := (VG.eState =Valid) AND VG.rPRESS < VG.rVAC_SP;
 
-
+(*Soft IO Linking*)
+ACT_IO();
 
 ]]></ST>
     </Implementation>
+    <Action Name="ACT_IO" Id="{0ba951d1-68de-4487-b7f2-e7fe9da02dd1}">
+      <Implementation>
+        <ST><![CDATA[(*soft link inputs*)
+VG.i_iPRESS_R:=	i_iPRESS_R; 
+
+(*soft link outputs*)
+q_xHV_DIS := VG.q_xHV_DIS;]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="FB_MKS_937A">
-      <LineId Id="3" Count="45" />
+      <LineId Id="3" Count="43" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="47" Count="1" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS_937A.ACT_IO">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

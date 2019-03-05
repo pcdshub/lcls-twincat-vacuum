@@ -230,10 +230,11 @@ iq_stPtm.i_xR1:=	i_xR1;
 iq_stPtm.i_xR2:=	i_xR2;
 iq_stPtm.i_xLSpd:=	i_xLSpd;
 iq_stPtm.i_xFault:=	i_xFault;
+iq_stPtm.i_iCurrentMon := i_iCurrentMon;
 (*outputs*)
 q_RunDO := iq_stPtm.q_RunDO;
 q_xLSpd := iq_stPtm.q_xLSpd;
-i_iCurrentMon := iq_stPtm.i_iCurrentMon;]]></ST>
+]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_PTM_Agilent">
@@ -358,7 +359,9 @@ i_iCurrentMon := iq_stPtm.i_iCurrentMon;]]></ST>
     <LineIds Name="FB_PTM_Agilent.IO">
       <LineId Id="7" Count="0" />
       <LineId Id="2" Count="3" />
-      <LineId Id="8" Count="3" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="9" Count="2" />
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
