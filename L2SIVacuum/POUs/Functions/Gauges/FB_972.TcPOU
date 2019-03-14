@@ -31,7 +31,7 @@ IF rV > 1 THEN
 	VG.eState := Valid; //Press OK
 ELSE
 	VG.xPRESS_OK := FALSE;
-	VG.eState := -6;
+	VG.eState := OoR;
 END_IF
 
 (* Soft IO Mapping*)

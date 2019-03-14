@@ -11,47 +11,59 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 *)
 
 (* Controls *)
-	{attribute 'pytmc' := 'pv: RUN_SW io: io'}
+	{attribute 'pytmc' := '
+	pv: RUN_SW;
+	io: io;
+	'}
 	xRunSW	:	BOOL;
-	{attribute 'pytmc' := 'pv: RST_SW io: io'}
+	{attribute 'pytmc' := '
+	pv: RST_SW;
+	io: io;
+	'}
 	xResetSW	:	BOOL; //For resetting faults
 	{attribute 'pytmc' := '
-    pv: RUN_DO
-	io: i
+    pv: RUN_DO;
+	io: i;
 	'}
 	q_RunDO 	:	BOOL;
 
 (* Readbacks *)
-    {attribute 'pytmc' := 'pv: ILK_OK io: i'}
+    {attribute 'pytmc' := '
+	pv: ILK_OK;
+	io: i;
+	'}
 	xExtRunOk	:	BOOL; (* also a control *)
 	{attribute 'pytmc' := '
-    pv: ACCEL
-	io: i
+    pv: ACCEL;
+	io: i;
 	'}
 	i_xAccel	:	BOOL;
 	{attribute 'pytmc' := '
-    pv: AT_SPD
-	io: i
+    pv: AT_SPD;
+	io: i;
 	'}
 	i_xAtSpd	:	BOOL;
-	{attribute 'pytmc' := 'pv: SPEED_RDBK io: i'}
+	{attribute 'pytmc' := '
+	pv: SPEED_RDBK;
+	io: i;
+	'}
 	i_diCurSpd	:	DINT;
 	
 	xCommTimeout	:	BOOL := TRUE;  (* Initialized true since we haven't talked to pump yet *)
 (* Alarm Outputs *)
 	{attribute 'pytmc' := '
-    pv: FAULT
-	io: i
+    pv: FAULT;
+	io: i;
 	'}
 	i_xFault		:	BOOL; (*FAULT*)
 	{attribute 'pytmc' := '
-    pv: WARN
-	io: i
+    pv: WARN;
+	io: i;
 	'}
 	i_xWarn		:	BOOL; (* warning *)
 	{attribute 'pytmc' := '
-    pv: ALARM
-	io: i
+    pv: ALARM;
+	io: i;
 	'}
 	i_xALARM	:	BOOL; (* ALARM *)
 	
@@ -63,28 +75,31 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	rForelineSP	:	REAL := 0.5;
 	
 	{attribute 'pytmc' := '
-    pv: BackingPressureSP
-	io: io
+    pv: BackingPressureSP;
+	io: io;
 	'}
 	rBackingPressureSP : REAL := 0.01;
 	{attribute 'pytmc' := '
-    pv: InletPressureSP
-	io: io
+    pv: InletPressureSP;
+	io: io;
 	'}
 	rInletPressureSP : REAL := 0.5;
 (*State*)	
 	{attribute 'pytmc' := '
-	pv: STATE
-	field: ZRST STOPPED
-	field: ONST STARTING
-	field: TWST RUNNING
-	field: THST FAULT
-	io: i
+	pv: STATE;
+	field: ZRST STOPPED;
+	field: ONST STARTING;
+	field: TWST RUNNING;
+	field: THST FAULT;
+	io: i;
 	'}
 
 	eState	:	E_PumpState;
 	
-	{attribute 'pytmc' := 'pv: Current_MON io: i'}
+	{attribute 'pytmc' := '
+	pv: Current_MON;
+	io: i;
+	'}
 	i_iCurrentMon : INT; // Voltage to the output current of motor 0->5V 0->10A
 
 

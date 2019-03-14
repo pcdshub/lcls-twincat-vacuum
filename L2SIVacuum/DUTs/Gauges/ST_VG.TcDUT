@@ -7,51 +7,55 @@ STRUCT
 	///These features aren't disabled, they just aren't used, think child/parent classes. 
 	/// 
 	{attribute 'pytmc' := '
-    pv: PRESS
-	io: i
+    pv: PRESS;
+	io: i;
     '}
 	rPRESS: REAL;  //This is the human-readable pressure
 	{attribute 'pytmc' := '
-    pv: AT_VAC
-	io: i
+    pv: AT_VAC;
+	io: i;
     '}
 	xAT_VAC: BOOL;
 	{attribute 'pytmc' := '
-    pv: PRESS_OK
-	io: i
+    pv: PRESS_OK;
+	field: ZNAM PRESS NOT OK; 
+	field: ONAM PRESS OK;
+	io: i;
     '}
 	xPRESS_OK: BOOL;
 	{attribute 'pytmc' := '
-    pv: STATE
-	io: i
+    pv: STATE;
+	io: i;
     '}
 	eState	:	E_PressureState;
 	(* EPICS Controls *)	
 	{attribute 'pytmc' := '
-    pv: HV_SW
-	io: io
+    pv: HV_SW;
+	io: io;
     '}
 	xHV_SW: BOOL; // High Voltage Switch from epics
 	
 	/// Controls and I/Os
 	{attribute 'pytmc' := '
-    pv: PRESS
-	io: i
+    pv: PRESS;
+	io: i;
     '}
 	i_iPRESS_R  :INT; // input Pressure // Link to analog Input
 	{attribute 'pytmc' := '
-    pv: HV_ON
-	io: i
+    pv: HV_ON;
+	io: i;
     '}
 	i_xHV_ON	: BOOL; //  True when High Voltage is on  
 	{attribute 'pytmc' := '
-    pv: DISC_ACTIVE
-	io: i
+    pv: DISC_ACTIVE;
+	field: ZNAM Discharge not active; 
+	field: ONAM Discharge Active;
+	io: i;
     '}
 	i_xDisc_Active : BOOL;// Discharge Current Active 
 	{attribute 'pytmc' := '
-    pv: HV_DIS
-	io: i
+    pv: HV_DIS;
+	io: i;
     '}
 	q_xHV_DIS : BOOL; // Enable High Voltage when True 
 	//
@@ -72,24 +76,25 @@ STRUCT
 	
 	iVacSp	:	INT;/// At vacuum setpoint for all gauges
 	{attribute 'pytmc' := '
-    pv: VAC_SP
-	io:io
+    pv: VAC_SP;
+	io:io;
     '}
 	rVAC_SP: REAL := 0.5; /// At vacuum setpoint for all gauges
 	/// Protection setpoint for ion gauges at which the gauge turns off, not used for pirani 
 	{attribute 'pytmc' := '
-    pv: PRO_SP
-	io: io
+    pv: PRO_SP;
+	io: io;
     '}
 	rPRO_SP: REAL := 0.0001;
 	{attribute 'pytmc' := '
-    pv: SP_HYS
-	io: io'}
+    pv: SP_HYS;
+	io: io;
+	'}
 	/// Protection setpoint hysteresis 
 	rHYS_PR: REAL := 0.001; 
 	{attribute 'pytmc' := '
-    pv: ILK_OK
-	io: i
+    pv: ILK_OK;
+	io: i;
 	'}
 	xILKOk	:	BOOL; (* also a control *)
 	

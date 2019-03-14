@@ -36,11 +36,11 @@ IG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));
 
 (* Pressure gauge State checks *)
 
-IF (rV <=9.7 ) AND (rV>=0.6) THEN
+IF (rV <=9.6 ) AND (rV>=0.6) THEN
 	IG.eState := Valid; // normal
 ELSIF rV >= 0.18 AND rV <= 0.22 THEN
 	IG.eState := ValidLo; //LO
-ELSIF rV > 9.7 AND rV<= 9.9 THEN
+ELSIF rV > 9.6 AND rV<= 9.9 THEN
 	IG.eState := ValidHi; //HIGH
 ELSIF rV < 0.18 THEN
 	IG.eState := GaugeDisconnected; //not on

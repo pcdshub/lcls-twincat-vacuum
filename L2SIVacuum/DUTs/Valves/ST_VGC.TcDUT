@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_VGC" Id="{0b7dfc27-9760-4c7a-bad2-fa375ac628b8}">
     <Declaration><![CDATA[TYPE ST_VGC :
 STRUCT
@@ -7,19 +7,19 @@ STRUCT
 (* I/Os*)
 (* Readbacks *)
 	{attribute 'pytmc' := '
-	pv: OPN_DI
-	io: i
+	pv: OPN_DI;
+	io: i;
 	'}
 	i_xOpnLS	: BOOL;
 	{attribute 'pytmc' := '
-    pv: CLS_DI
-	io: i
+    pv: CLS_DI;
+	io: i;
     '}
 	i_xClsLS	: BOOL;
 (* Controls *)
 	{attribute 'pytmc' := '
-    pv: OPN_DO
-	io: i
+    pv: OPN_DO;
+	io: i;
     '}
 	q_xOPN_DO	: BOOL;
 	
@@ -27,27 +27,27 @@ STRUCT
 (* EPICS Controls *)
 	{attribute 'pytmc' := '
 	pv: OPN_SW; 
-	field: ZNAM CLOSE; 
+	field: ZNAM CLOSED; 
 	field: ONAM OPEN;
-	io: io 
+	io: io ;
 	'}
 	pv_xOPN_SW	: BOOL;
 	{attribute 'pytmc' := '
-    pv: ALM_RST
-	io: o
+    pv: ALM_RST;
+	io: o;
     '}
 	pv_xAlmRst	: BOOL;
 	{attribute 'pytmc' := '
-    pv: FORCE_OPN
-	io: o
+    pv: FORCE_OPN;
+	io: o;
     '}
 	pv_xOvrdOpn	:	BOOL;
 
 	{attribute 'pytmc' := '
-	pv: OVRD_ON 
-	field: ZNAM Override ON 
-	field: ONAM Override Off
-	io: i
+	pv: OVRD_ON ;
+	field: ZNAM Override ON ;
+	field: ONAM Override OFF;
+	io: i;
 	'}
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 
@@ -55,41 +55,52 @@ STRUCT
 
 	
 {attribute 'pytmc' := 
-	'pv: Ext_ILK_OK 
-	field: ZNAM NOT OK 
-	field: ONAM OK 
-	io: i 
+	'pv: Ext_ILK_OK ;
+	field: ZNAM NOT OK ;
+	field: ONAM OK ;
+	io: i ;
 '}
 	xEXT_OK	:	BOOL := FALSE;	(* External interlock for custom interlocking in addition to regular DP ilk, this must be set true, or the interlock condition before calling the FB_VGC *)
 	
 	{attribute 'pytmc' := '
-    pv: DP_OK
-	io: i
+    pv: DP_OK;
+	field: ZNAM DP NOT OK ;
+	field: ONAM DP OK ;
+	io: i;
     '}
 	xDP_OK	:	BOOL;	(* Managed by the VGC function (FB_VGC) *)// Indicates the valve can be opened because the differential pressure is low enough
 
 {attribute 'pytmc' := '
-    pv: OPN_OK
-	io: i
+    pv: OPN_OK;
+	field: ZNAM OPN ILK NOT OK ;
+	field: ONAM OPN ILK OK ;
+	io: i;
  '}
 	xOPN_OK	:	BOOL;	(* Final SUM of DP_OK and EXT_OK, needed because it allows the DP ilk to be switched off, see FB_VGC.Dis_DPIlk *)
 	
-{attribute 'pytmc' := ' pv: AT_VAC_SP io: o '}
+	{attribute 'pytmc' := ' 
+	pv: AT_VAC_SP;
+	io: o;
+	'}
 	rAT_VAC_SP	:	REAL := 0.01;	// Interlock setpoint for gauges on both sides of valve
 	rAT_VAC_SP_LAST	:	REAL :=0.01 ;	// Interlock setpoint for gauges on both sides of valve
 	{attribute 'pytmc' := '
-    pv: AT_VAC_HYS
-	io: o
+    pv: AT_VAC_HYS;
+	io: o;
     '}
 	rAT_VAC_HYS	:	REAL :=0.01;	// Hysteresis of the vacuum sp
 	{attribute 'pytmc' := '
-    pv: HYST_PERC
-	io: o
+    pv: HYST_PERC ;
+	io: o;
     '}
 	rHYST_PERC	:	REAL := 0.80;	// Hysteresis percentage
 
-{attribute 'pytmc' := 'pv: AT_VAC ; io: i'}
-
+	{attribute 'pytmc' := '
+	pv: AT_VAC ; 
+	field: ZNAM NOT AT VAC ;
+	field: ONAM AT VAC ;
+	io: i;
+	'}
 	xAT_VAC	:	BOOL;	//At vacuum setpoint
 
 
@@ -99,33 +110,39 @@ STRUCT
 	xAlmSum			: 	BOOL;
 	
 	{attribute 'pytmc' := '
-    pv: Error
-	io: o
+    pv: Error;
+	field: ZNAM NO ERROR ;
+	field: ONAM ERROR PRESENT ;
+	io: o;
     '}
 	bErrorPresent : BOOL;
 	iErrorCode: INT;
+	{attribute 'pytmc' := '
+    pv: ErrMsg;
+	io: o;
+    '}
 	sErrorMessage: STRING;
 
 (*State*)	
 	{attribute 'pytmc' := '
-	pv: STATE
-	field: ZRST VENTED
-	field: ONST ATVACUUM
-	field: TWST ERR_DIF_PRESS
-	field: THST ERR_LOST_VAC
-	io: i
+	pv: STATE;
+	field: ZRST VENTED;
+	field: ONST ATVACUUM;
+	field: TWST ERR_DIF_PRESS;
+	field: THST ERR_LOST_VAC;
+	io: i;
 	'}
 	eVGC_State : E_VGC;
 	
-{attribute 'pytmc' := 
-	'pv: POS_STATE 
-	type: mbbi 
-	field: ZRST OPEN 
-	field: ONST CLOSED 
-	field: TWST MOVING 
-	field: THST INVALID 
+	{attribute 'pytmc' := 
+	'pv: POS_STATE ;
+	type: mbbi ;
+	field: ZRST OPEN ;
+	field: ONST CLOSED ;
+	field: TWST MOVING ;
+	field: THST INVALID ;
 	io: i
-'}
+	'}
 		
 	eState	:	E_ValvePositionState := INVALID;
 	

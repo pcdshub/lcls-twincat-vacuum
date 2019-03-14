@@ -38,7 +38,10 @@ iq_xSpeedSet    : BOOL; //Request to set speed
 	io: io
 	'}
 q_iSpeedSet   : DINT; //Requested speed (min. 100 RPM)
-	{attribute 'pytmc' := 'pv: OVRD_ON io: io'}
+	{attribute 'pytmc' := '
+	pv: OVRD_ON 
+	io: io
+	'}
 i_xOverride   : BOOL; //Override mode - ignores interlocks
 
 //Readbacks - also has Accel/At speed/Decel/Fault/Cur Speed (min 100RPM)
