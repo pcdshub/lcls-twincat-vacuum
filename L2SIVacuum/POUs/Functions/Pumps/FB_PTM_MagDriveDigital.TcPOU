@@ -5,16 +5,17 @@
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
 FUNCTION_BLOCK FB_PTM_MagDriveDigital
 VAR_IN_OUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	iq_stPtm	:	ST_LeyboldPTM;
+	
 END_VAR
 VAR_INPUT
+	
 	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
-
+{attribute 'pytmc' := '
+    pv: 
+	'}
+	iq_stPtm	:	ST_LeyboldPTM;
 END_VAR
 VAR
 	xRunOk	:	BOOL;

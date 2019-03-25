@@ -6,6 +6,7 @@ FUNCTION_BLOCK FB_VCN
 VAR_INPUT
 	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
 	i_ReqPos	:	REAL; //Requested position
+
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -18,15 +19,17 @@ VAR_IN_OUT
 END_VAR
 
 VAR CONSTANT
-	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual
-	rCloseVoltage	:	REAL := 0.4;	
+	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual, A Voltage of 9V it si completely Open
+	rCloseVoltage	:	REAL := 0.4;// a voltage <0.5 V the valve is closed	
 END_VAR
 VAR
 	// Requested voltage
 	rReqVoltage: REAL := 0;
+	iResolution: INT :=16;
 	// 
 	(*IO*)
 	q_iRawPosition AT%Q* :INT;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -52,31 +55,27 @@ Note: Raw position calc is based on 0.5 to 9V span, 32767 bits
 
 // Interlocking
 iq_stVCN.xIlkOK := i_xExtIlkOK;
-(*Checking wich Control mode is selected*)
+(*Checking which Control mode is selected*)
 IF iq_stVCN.xIlkOK THEN
 	IF iq_stVCN.eValveControl = OpenValve THEN
-		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;
-		rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
+		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;(*Percentage*)// iq_stVCN.rUpperLimit;
 	ELSIF iq_stVCN.eValveControl = CloseValve THEN
-		iq_stVCN.rReqPosition := 0;
-		rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
+		iq_stVCN.rReqPosition := 0; (*Percentage*)
 	ELSIF iq_stVCN.eValveControl = ManualControl THEN
 		iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
-		rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
 	ELSIF iq_stVCN.eValveControl = PressureControl THEN
-		 rReqVoltage := i_ReqPos * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
+		iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, iq_stVCN.rUpperLimit); 
 	END_IF
-
-	//Raw position calc
-	//iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
-	
-	rReqVoltage := LIMIT(rCloseVoltage, rReqVoltage, rOpenVoltage); //The requested voltage should remain within this range
-	iq_stvcn.q_iRawPosition := REAL_TO_INT( 32767/10 * rReqVoltage);	
 ELSE
-	iq_stvcn.q_iRawPosition := 0;
 	iq_stVCN.rReqPosition := 0;
 	iq_stVCN.eValveControl := CloseValve;
 END_IF
+
+// Requested Voltage calculation
+rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
+rReqVoltage := LIMIT(rCloseVoltage, rReqVoltage, rOpenVoltage); //The requested voltage should remain within this range
+//Raw position calc
+iq_stvcn.q_iRawPosition := REAL_TO_INT( 32767/10 * rReqVoltage);	
 
 (*SOft IO Mapping*)
 ACT_IO();
@@ -95,14 +94,14 @@ iq_stVCN.i_iPosition := iq_stvcn.q_iRawPosition;]]></ST>
       <LineId Id="25" Count="2" />
       <LineId Id="78" Count="0" />
       <LineId Id="29" Count="0" />
-      <LineId Id="31" Count="1" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="33" Count="1" />
-      <LineId Id="82" Count="0" />
+      <LineId Id="31" Count="3" />
       <LineId Id="75" Count="1" />
-      <LineId Id="83" Count="0" />
-      <LineId Id="35" Count="12" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="46" Count="1" />
       <LineId Id="2" Count="0" />
+      <LineId Id="120" Count="4" />
+      <LineId Id="119" Count="0" />
       <LineId Id="79" Count="0" />
       <LineId Id="74" Count="0" />
       <LineId Id="84" Count="0" />

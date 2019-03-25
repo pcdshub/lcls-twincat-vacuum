@@ -8,14 +8,16 @@ VAR_INPUT
 	i_stBPGauge	:	ST_VG; //booster pump interlock gauge
 	i_xVlvOpn	:	BOOL; //valve(s) to main system load are open
 	i_xExtIlkOK	:	BOOL;
+	
 END_VAR
 VAR_OUTPUT
-END_VAR
-VAR_IN_OUT
 	{attribute 'pytmc' := '
     pv: 
 	'}
 	stPump	:	ST_EbaraDryPump; //Ebara dry pump structure
+END_VAR
+VAR_IN_OUT
+	
 END_VAR
 VAR
 	(*IO*)

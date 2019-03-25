@@ -7,29 +7,29 @@ STRUCT
 (* Inputs *)
 	(* 24V in Ramp state; 0V for others *)
 	{attribute 'pytmc' := '
-    pv: START
-	io: i
+    pv: START;
+	io: i;
 	'}
     i_xSTART :	BOOL; 
 	
 	(* setpoint related to frequency *)
 	{attribute 'pytmc' := '
-    pv: R1Status
-	io: i
+    pv: R1Status;
+	io: i;
 	'}
 	i_xR1	:  BOOL;
 	
 	(* setpoint related to Power *)
 	{attribute 'pytmc' := '
-    pv: R2Status
-	io: i
+    pv: R2Status;
+	io: i;
 	'}
 	i_xR2	:  BOOL;
 	
 	(* low speed mode *)
 	{attribute 'pytmc' := '
-    pv: LSPD
-	io: i
+    pv: LSPD;
+	io: i;
 	'}
 	i_xLSpd	:  BOOL;
 	
@@ -46,22 +46,22 @@ STRUCT
 	
 	(* Low speed control *)
 	{attribute 'pytmc' := '
-    pv: LSPD_DO
-	io: i
+    pv: LSPD_DO;
+	io: i;
 	'}
 	q_xLSpd		:  BOOL; 
 	
 	(*Soft start *)
 	{attribute 'pytmc' := '
-    pv: XSS_DO
-	io: i
+    pv: XSS_DO;
+	io: i;
 	'}
 	q_xSS   	:  BOOL; 
 	
 	(* Run interlock*)
 	{attribute 'pytmc' := '
-    pv: ILK_STATUS
-	io: i
+    pv: ILK_STATUS;
+	io: i;
 	'}
 	xIlk : BOOL;
 	
@@ -70,15 +70,15 @@ STRUCT
 	
 	(*pump Lock*)
 	{attribute 'pytmc' := '
-    pv: FaultLock
-	io: i
+    pv: FaultLock;
+	io: i;
 	'}
 	xPumpFaultLock : BOOL := FALSE;
 	// i_xPumpLockReset: BOOL := FALSE; Inherit ST_PTM.xReset
 	// Error messages
 	{attribute 'pytmc' := '
-    pv: ErrorMessage
-	io: i
+    pv: ErrorMessage;
+	io: i;
 	'}
 	sError : STRING;
 

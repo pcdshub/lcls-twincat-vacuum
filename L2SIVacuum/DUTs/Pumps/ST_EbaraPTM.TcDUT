@@ -9,23 +9,25 @@ ETC series
 *)
 //Controls
 	{attribute 'pytmc' := '
-    pv: START
-	io: i
+    pv: START;
+	io: i;
 	'}
 q_xStart   : BOOL; //Outputs - FB decides if these are actually set
 	{attribute 'pytmc' := '
-    pv: STOP
-	io: i
+    pv: STOP;
+	io: i;
 	'}
 q_xStop    : BOOL;
 	{attribute 'pytmc' := '
-    pv: RESET
-	io: i
+    pv: RESET;
+	io: i;
 	'}
 q_xReset   : BOOL; // xReset is momentary reset switch - resets protection functions
 	{attribute 'pytmc' := '
-    pv: ILK
-	io: i
+    pv: ILK_OK;
+	field: ZNAM ILK ACTIVE;
+	field: ONAM ILK OK;
+	io: i;
 	'}
 q_xProtection : BOOL; //NC. If opened, pump will decelerate/not start
 	{attribute 'pytmc' := '

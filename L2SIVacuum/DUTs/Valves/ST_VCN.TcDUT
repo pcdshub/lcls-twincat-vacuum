@@ -6,34 +6,48 @@ STRUCT
 	(* VCN - Valve Controlled Needle
 	Used for Pfeiffer EVR 116 needle valves *)
 	{attribute 'pytmc' := '
-    pv: POS_RDBK
-	io: i
+    pv: POS_RDBK;
+	io: i;
     '}
 	// Inputs
 	i_iPosition	:	REAL; //Position readback (if it exists)
 	
 	// Outputs
-	{attribute 'pytmc' := 'pv: POS_DES io: io '}
+	{attribute 'pytmc' :=
+	pv: POS_DES;
+	io: io ;
+	'}
 	q_iRawPosition	:	INT; //Position control 
-	//For the EVR 116 this is 0-10V analog
+	//For the EVR 116 this is 0-10V analog 0.4 closed to 9.1 Closed
 	
 	//Softvariables
 	{attribute 'pytmc' := '
-    pv: ILK_OK
-	io: i
+    pv: ILK_OK;
+	io: i;
     '}
 	xIlkOK	:	BOOL := FALSE; // Interlock Bit
 	//Manually Pressing valve "Open/Close" on EDM
 	{attribute 'pytmc' := '
-    pv: OPN_SW
-	io: io
+    pv: OPN_SW;
+	io: io;
     '}
 	pv_xOPN_SW	: BOOL;
 	
-	rUpperLimit	:	REAL:=9.1;	//Upper limit on valve open
-	{attribute 'pytmc' := 'pv: POS_CTRL io: io '}
+	rUpperLimit	:	REAL:=100; // Percentage9.1;	//Upper limit on valve open
+	{attribute 'pytmc' := '
+	pv: POS_REQ;
+	io: io;
+	'}
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
-	{attribute 'pytmc' := 'pv: STATE io: io'}
+	{attribute 'pytmc' := 
+	'pv: POS_STATE ;
+	type: mbbi ;
+	field: ZRST OPEN ;
+	field: ONST CLOSED ;
+	field: TWST MOVING ;
+	field: THST INVALID ;
+	io: i
+	'}
 	eValveControl	:	E_VCN := CloseValve; // Valve control state
 
 	ftIlk	:	F_TRIG;	
