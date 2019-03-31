@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <DUT Name="ST_EbaraEVA" Id="{825d9563-9766-45be-b4c4-16a1335c1e21}">
+    <Declaration><![CDATA[TYPE ST_EbaraEVA EXTENDS ST_RoughPump:
+STRUCT
+
+(* Output *)	
+	//q_xRunDO 	:	BOOL; in Rough PUMP
+
+	
+(* Input *)
+{attribute 'pytmc' := '
+    pv: Remote
+	io: io
+    '}
+	q_xRemote	:	BOOL;
+	{attribute 'pytmc' := '
+    pv: ALARM_OK
+	io: i
+    '}
+	i_xAlarmOK	:	BOOL;
+	
+	{attribute 'pytmc' := '
+    pv: RUN_DI
+	io: i
+    '}
+	i_xIsRun		:	BOOL;
+
+
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

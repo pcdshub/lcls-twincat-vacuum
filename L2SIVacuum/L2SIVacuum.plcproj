@@ -38,6 +38,9 @@
     <Compile Include="DUTs\Pumps\ST_EbaraDryPump.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Pumps\ST_EbaraEVA.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Pumps\ST_EbaraPTM.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -155,6 +158,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_EbaraDryPump.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Pumps\FB_EbaraEVA.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_KashiyamaPump.TcPOU">

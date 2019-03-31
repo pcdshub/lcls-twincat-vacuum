@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_EbaraEVA" Id="{fcf97f55-51a9-4ad7-88f0-a45e9e26409c}" SpecialFunc="None">
+    <Declaration><![CDATA[(*This function block does basic controls for the Ebara EV-A  pump. Turns off pump
+in the event of errors/ warnings. Provides interlocking interface.*)
+FUNCTION_BLOCK FB_EbaraEVA
+VAR_INPUT
+	i_xExtIlkOK	:	BOOL;
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	stPump	:	ST_EbaraEVA; //Ebara dry pump structure 
+END_VAR
+VAR
+	(*IO*)
+	q_xRunDo AT%Q* : BOOL; // Output signal
+	q_xRemote At%Q* :BOOL;// Remote/Local Control
+	i_xAlarmOK AT%I* :BOOL; // Normally closed Alarm bit
+	i_xIsRun   AT%I*:BOOL; // Input status
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+stPump.xIlkOK := i_xExtIlkOK AND stPump.i_xAlarmOK ;
+
+IF stPump.xIlkOK THEN
+
+	stPump.q_xRunDO := stPump.pv_xRunSW;
+	ELSE
+		stPump.PV_xRunSW := FALSE;
+        stPump.q_xRunDO := FALSE;	
+END_IF
+//IO Mapping
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{1807940c-3fbb-4008-9507-5845d2fff7d5}">
+      <Implementation>
+        <ST><![CDATA[stPump.i_xAlarmOK:=	NOT(i_xAlarmOK);
+stPump.i_xIsRun := i_xIsRun;
+(*outputs*)
+q_xRunDo:=stPump.q_xRunDo;
+q_xRemote:= stPump.q_xRemote;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_EbaraEVA">
+      <LineId Id="9" Count="0" />
+      <LineId Id="27" Count="2" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="30" Count="4" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="36" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_EbaraEVA.ACT_IO">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
