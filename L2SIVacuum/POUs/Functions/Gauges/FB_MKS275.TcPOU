@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS275" Id="{ffda77c7-a04b-4d4f-b9a5-3ec5d874c4e9}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS275
+    <Declaration><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
+ it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
+(* For MKS 275 mini-convectron *)
+FUNCTION_BLOCK FB_MKS275
 VAR_IN_OUT
 
 END_VAR

@@ -1,59 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_VRC" Id="{ee6efa67-7be0-4e42-b045-50546d4578bb}">
     <Declaration><![CDATA[TYPE ST_VRC :
 STRUCT
 (* Readbacks *)
 	//If True, Valve is Open
 	{attribute 'pytmc' := '
-    pv: OPN_DI
-	io: i
+    pv: OPN_DI;
+	io: i;
     '}
 	i_xOpnLS	:	BOOL;
 	//If True, Valve is Closed
 	{attribute 'pytmc' := '
-    pv: CLS_DI
-	io: i
+    pv: CLS_DI;
+	io: i;
     '}
 	i_xClsLS	:	BOOL;
 	
 	{attribute 'pytmc' := '
-    pv: POS_STATE
-	io: i
-    '}
+	pv: STATE;
+	io: i;
+	'}
 	eState	:	E_ValvePositionState := INVALID;
 
 (* Inputs *)
 	//Manually Pressing valve "Open/Close" on EDM
 	{attribute 'pytmc' := '
-    pv: OPN_SW
-	io: io
-    '}
+	pv: OPN_SW;
+	field: ZNAM CLOSE;
+	field: ONAM OPEN;
+	io: io;
+	'}
 	pv_xOPN_SW	: BOOL;
 	//Manually toggling valve Local "ILK on button" on EDM
 	{attribute 'pytmc' := '
-    pv: OVRD_OPN
-	io: io
+    pv: FORCE_OPN;
+	io: io;
     '}
 	pv_xOvrdOpn	:	BOOL;
+	{attribute 'pytmc' := '
+	pv: OVRD_ON;
+	io: i;
+	'}
+	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 	//Calculated permissions to open valve
 	{attribute 'pytmc' := '
-    pv: OPN_OK
-	io: i
+    pv: OPN_OK;
+	io: i;
     '}
 	xOPN_OK	: BOOL;
 	//In case VRC is normally open
 	{attribute 'pytmc' := '
-    pv: CLS_OK
-	io: i
+    pv: CLS_OK;
+	io: i;
     '}
 	xCLS_OK : BOOL := TRUE;
 (* Outputs *)
 	//When True, Opens valve
 	//When False, Closes valve
 	{attribute 'pytmc' := '
-    pv: OPN_DO
-	io: i
+    pv: OPN_DO;
+	io: i;
     '}
 	q_xOPN_DO	: BOOL;
 

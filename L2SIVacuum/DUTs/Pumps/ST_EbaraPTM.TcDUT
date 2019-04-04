@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_EbaraPTM" Id="{00dd7679-7d3a-464d-8613-c714e423a1cf}">
     <Declaration><![CDATA[TYPE ST_EbaraPTM EXTENDS ST_PTM :
 STRUCT
@@ -9,41 +9,41 @@ ETC series
 *)
 //Controls
 	{attribute 'pytmc' := '
-    pv: START_SW
-	io: io
-	'}
-i_xStart   : BOOL; //Momentary start switch
-	{attribute 'pytmc' := '
-    pv: STOP_SW
-	io: io
-	'}
-i_xStop    : BOOL; //Momentary stop switch
-// i_xReset is momentary reset switch - resets protection functions
-
-	{attribute 'pytmc' := '
-    pv: START
-	io: i
+    pv: START;
+	io: i;
 	'}
 q_xStart   : BOOL; //Outputs - FB decides if these are actually set
 	{attribute 'pytmc' := '
-    pv: STOP
-	io: i
+    pv: STOP;
+	io: i;
 	'}
 q_xStop    : BOOL;
 	{attribute 'pytmc' := '
-    pv: RESET
-	io: i
+    pv: RESET;
+	io: i;
 	'}
-q_xReset   : BOOL;
+q_xReset   : BOOL; // xReset is momentary reset switch - resets protection functions
 	{attribute 'pytmc' := '
-    pv: ILK
-	io: i
+    pv: ILK_OK;
+	field: ZNAM ILK ACTIVE;
+	field: ONAM ILK OK;
+	io: i;
 	'}
 q_xProtection : BOOL; //NC. If opened, pump will decelerate/not start
-
+	{attribute 'pytmc' := '
+    pv: SETSPEED
+	io: io
+	'}
 iq_xSpeedSet    : BOOL; //Request to set speed
+	{attribute 'pytmc' := '
+    pv: SPEED
+	io: io
+	'}
 q_iSpeedSet   : DINT; //Requested speed (min. 100 RPM)
-
+	{attribute 'pytmc' := '
+	pv: OVRD_ON 
+	io: io
+	'}
 i_xOverride   : BOOL; //Override mode - ignores interlocks
 
 //Readbacks - also has Accel/At speed/Decel/Fault/Cur Speed (min 100RPM)
@@ -62,11 +62,12 @@ i_xDecel  : BOOL; //If closed, brake engaged (pump decelerating)
 	io: i
 	'}
 i_xNCFault  : BOOL; //Normally closed fault wiring. If false, there is a fault, or cable is unplugged.
-	{attribute 'pytmc' := '
-    pv: SPEED
+
+{attribute 'pytmc' := '
+    pv: TEMP_MON
 	io: i
 	'}
-i_iRawSpeed	:	INT; //Raw pump speed from analog input
+i_iTempMon	:	INT; //Voltage according to the pump temprature 0->5V 0->100C
 
 END_STRUCT
 END_TYPE

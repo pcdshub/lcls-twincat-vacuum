@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_AgilentPTM" Id="{cabd0058-3dd4-4905-9b15-54411322c9ff}">
     <Declaration><![CDATA[TYPE ST_AgilentPTM EXTENDS ST_PTM :
 STRUCT
@@ -7,37 +7,33 @@ STRUCT
 (* Inputs *)
 	(* 24V in Ramp state; 0V for others *)
 	{attribute 'pytmc' := '
-    pv: START
-	io: i
+    pv: START;
+	io: i;
 	'}
     i_xSTART :	BOOL; 
 	
 	(* setpoint related to frequency *)
 	{attribute 'pytmc' := '
-    pv: R1Status
-	io: i
+    pv: R1Status;
+	io: i;
 	'}
 	i_xR1	:  BOOL;
 	
 	(* setpoint related to Power *)
 	{attribute 'pytmc' := '
-    pv: R2Status
-	io: i
+    pv: R2Status;
+	io: i;
 	'}
 	i_xR2	:  BOOL;
 	
 	(* low speed mode *)
 	{attribute 'pytmc' := '
-    pv: LSPD
-	io: i
+    pv: LSPD;
+	io: i;
 	'}
 	i_xLSpd	:  BOOL;
 	
-	{attribute 'pytmc' := '
-    pv: PUMP_CURRENT
-	io: i
-	'}
-	i_iPumpCurrent: INT;
+	
 	(* Fault input*)
 	//i_xFault : BOOL;  Inherit ST_PTM.xFault
 	
@@ -50,54 +46,39 @@ STRUCT
 	
 	(* Low speed control *)
 	{attribute 'pytmc' := '
-    pv: LSPD_DO
-	io: i
+    pv: LSPD_DO;
+	io: i;
 	'}
 	q_xLSpd		:  BOOL; 
 	
 	(*Soft start *)
 	{attribute 'pytmc' := '
-    pv: XSS_DO
-	io: i
+    pv: XSS_DO;
+	io: i;
 	'}
 	q_xSS   	:  BOOL; 
 	
 	(* Run interlock*)
 	{attribute 'pytmc' := '
-    pv: ILK_STATUS
-	io: i
+    pv: ILK_STATUS;
+	io: i;
 	'}
 	xIlk : BOOL;
 	
-	{attribute 'pytmc' := '
-    pv: STATE
-	io: i
-	'}	
-	eState	:	E_PumpState;
 	
-	{attribute 'pytmc' := '
-    pv: BackingPressureSP
-	io: io
-	'}
-	rBackingPressureSP : REAL := 0.01;
-	{attribute 'pytmc' := '
-    pv: InletPressureSP
-	io: io
-	'}
-	rInletPressureSP : REAL := 0.5;
 	
 	
 	(*pump Lock*)
 	{attribute 'pytmc' := '
-    pv: FaultLock
-	io: i
+    pv: FaultLock;
+	io: i;
 	'}
 	xPumpFaultLock : BOOL := FALSE;
 	// i_xPumpLockReset: BOOL := FALSE; Inherit ST_PTM.xReset
 	// Error messages
 	{attribute 'pytmc' := '
-    pv: ErrorMessage
-	io: i
+    pv: ErrorMessage;
+	io: i;
 	'}
 	sError : STRING;
 

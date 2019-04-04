@@ -1,14 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_GCM" Id="{d03d0435-a8a4-4ab2-9d39-a304a183952d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_GCM
+    <Declaration><![CDATA[(* For Baratron Pressure Gauge *)
+(*The full-scale pressure times the ratio of the meas.
+voltage to full-scale voltage (10V).
+The minimum pressure is always going to be 5e-4 * F.S.V.*)
+FUNCTION_BLOCK FB_GCM
 VAR_IN_OUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	VG	:	ST_VG;
+
 END_VAR
 VAR_OUTPUT
+	{attribute 'pytmc' := 'pv:'}
+	VG	:	ST_VG;
+END_VAR
+VAR_INPUT
+	i_rFULL_SCALE : REAL;
 END_VAR
 VAR
 	rMinPressure: REAL;
@@ -25,11 +31,12 @@ A. Wallace
 The full-scale pressure times the ratio of the meas.
 voltage to full-scale voltage (10V).
 The minimum pressure is always going to be 5e-4 * F.S.V.*)
-
+VG.rFULL_SCALE := i_rFULL_SCALE;
 rMinPressure := VG.rFULL_SCALE * 5E-4;
 
 
 rV :=MAX((10*INT_TO_REAL(VG.i_iPRESS_R)/32767),0);
+
 VG.rPRESS := (VG.rFULL_SCALE/10)*rV;
 IF VG.rPRESS > rMinPressure THEN
 	VG.xPRESS_OK := TRUE;
@@ -46,7 +53,9 @@ ACT_IO();]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_GCM">
-      <LineId Id="3" Count="15" />
+      <LineId Id="3" Count="9" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="13" Count="5" />
       <LineId Id="35" Count="2" />
       <LineId Id="2" Count="0" />
     </LineIds>

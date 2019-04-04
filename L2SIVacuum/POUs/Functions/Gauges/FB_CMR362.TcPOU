@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_CMR362" Id="{829c6b91-5e76-4127-a78c-3990b7df60a3}" SpecialFunc="None">
+    <Declaration><![CDATA[(* For Pfeiffer CMR 362 *)
+FUNCTION_BLOCK FB_CMR362
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+		{attribute 'pytmc' := 'pv:'}
+		VG : ST_VG;
+END_VAR
+VAR
+	MinPressure: REAL := 7.5E-3; //Torr
+	FullScale : REAL := 75.0 ; //Torr
+	V : REAL;
+	
+	(*IO*)
+	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* For Pfeiffer CMR 362 *)
+(*Soft IO Mapping*)
+ACT_IO();
+
+(* Real-value calculation *)
+
+ V := 10*INT_TO_REAL(VG.i_iPRESS_R)/32767;
+	
+
+IF V < 0.4 THEN
+
+	VG.eState := GaugeDisconnected; //Most likely not connected
+
+ELSIF V >= 0.4 AND V <= 1.0 THEN
+	VG.rPRESS := MinPressure;
+	VG.eState := ValidLo;
+
+ELSIF V > 1 AND V <= 9.8 THEN
+
+	VG.rPRESS := LREAL_TO_REAL((V-1)*0.125*FullScale);
+	VG.eState := Valid;
+
+ELSE
+	
+VG.eState := OoR; //Larger voltage, probably out of range?
+
+END_IF
+
+
+(* Pressure OK check *)
+VG.xPRESS_OK := (VG.rPRESS >= MinPressure);
+
+(*Soft IO Mapping*)
+ACT_IO();
+
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{f7bdedec-d365-42ba-8021-29225073f9cd}">
+      <Implementation>
+        <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_CMR362">
+      <LineId Id="10" Count="1" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="12" Count="27" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_CMR362.ACT_IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

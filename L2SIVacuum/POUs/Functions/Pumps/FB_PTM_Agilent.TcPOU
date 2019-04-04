@@ -1,17 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_Agilent" Id="{30958a8b-73eb-4ef7-96d3-72fcd80f684d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_Agilent
+    <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TV Turbo pump. Turns off pump
+in the event of errors/ warnings. Provides interlocking interface.*)
+FUNCTION_BLOCK FB_PTM_Agilent
 VAR_IN_OUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	iq_stPtm	:	ST_AgilentPTM;	
+	
 END_VAR
 VAR_INPUT
+	i_xExtILKOk : BOOL; // Connect to external interlock logic(e.g TURBO_ILK Function), TRUE if not used.
 	i_stGauge	:	ST_VG; //Pirani backing gauge for pump interlock 
+	i_rMaxBackingPressure : REAL;
 END_VAR
 VAR_OUTPUT
+	{attribute 'pytmc' :=' pv:'}
+	iq_stPtm	:	ST_AgilentPTM;	
 	
 END_VAR
 VAR
@@ -27,7 +30,6 @@ VAR
 	tR1TimeOut: TON;
 	step : INT :=0;
 	nErrorCode: INT :=0;
-	
 	xBackingPressureOK: BOOL;
 	
 	
@@ -36,7 +38,8 @@ VAR
 	i_xR1	AT%I*	:  BOOL;// 'TcLinkTo' (EL1088) ^Input
 	i_xR2	AT%I*	:  BOOL;// 'TcLinkTo' (EL1088) ^Input
 	i_xLSpd	AT%I*:  BOOL;// 'TcLinkTo' (EL1088) ^Input
-	i_iPumpCurrent AT%I*: INT;
+	i_iCurrentMon AT%I*: INT;
+	i_iRawSpeed AT %I* : INT; // Link to Analog input
 	i_xFault AT%I*	:	BOOL;
 	q_RunDO AT%Q*	:	BOOL;
 	q_xLSpd	AT%Q*	:  BOOL;
@@ -46,6 +49,10 @@ END_VAR
     <Implementation>
       <ST><![CDATA[(* Basic Agilent Turbo Controls *)
 (* M. Ghaly, 2018-9-26 *)
+
+(*connect External interlock to structure variable*)
+iq_stPtm.xExtRunOk := i_xExtILKOk;
+
 (* state machine *)
 CASE (step) OF
 (*Pump Stopped State*)
@@ -143,8 +150,8 @@ END_IF
 
 
 (*Pump Lock Reset bit*)
-IF (iq_stPtm.xReset ) THEN
-	iq_stPtm.xReset := FALSE;
+IF (iq_stPtm.xResetSW ) THEN
+	iq_stPtm.xResetSW := FALSE;
 	iq_stPtm.xPumpFaultLock := FALSE;
 END_IF
 
@@ -171,10 +178,25 @@ tR1Fault(IN:= (step = 60), PT:=tR1FaultDuration);
 tStartTimeOut(IN := (step=20), PT:=tTimeOutDuration);
 tR1TimeOut(IN := (step=40), PT:=tTimeOutDuration);
 
+IO();
 (*Assign Error Message*)
 iq_stPtm.sError := ErrorMessage(nErrorCode, iq_stPtm.eState);
+(*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
+iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
+
 ]]></ST>
     </Implementation>
+    <Method Name="BackingPressureSetPoint" Id="{21dc29bb-1bb2-48c6-a7d3-4f43435484d9}">
+      <Declaration><![CDATA[METHOD BackingPressureSetPoint : REAL
+VAR_INPUT
+	i_SetPoint : REAL;
+	rMaxBackingPressure: REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[BackingPressureSetPoint := Min(i_SetPoint , rMaxBackingPressure);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ErrorMessage" Id="{633e028f-b2ab-4c53-99a2-60784964c3ea}">
       <Declaration><![CDATA[METHOD PUBLIC ErrorMessage : STRING
 VAR_INPUT
@@ -183,7 +205,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF (eState := pumpFAULT ) THEN
+        <ST><![CDATA[IF (eState = pumpFAULT ) THEN
 	CASE nErrorCode OF
 		950:
 			ErrorMessage := 'Pump Starting Fault';
@@ -208,14 +230,18 @@ iq_stPtm.i_xR1:=	i_xR1;
 iq_stPtm.i_xR2:=	i_xR2;
 iq_stPtm.i_xLSpd:=	i_xLSpd;
 iq_stPtm.i_xFault:=	i_xFault;
+iq_stPtm.i_iCurrentMon := i_iCurrentMon;
 (*outputs*)
 q_RunDO := iq_stPtm.q_RunDO;
 q_xLSpd := iq_stPtm.q_xLSpd;
-i_iPumpCurrent := iq_stPtm.i_iPumpCurrent;]]></ST>
+]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_PTM_Agilent">
       <LineId Id="21" Count="0" />
+      <LineId Id="592" Count="0" />
+      <LineId Id="594" Count="1" />
+      <LineId Id="593" Count="0" />
       <LineId Id="70" Count="0" />
       <LineId Id="79" Count="0" />
       <LineId Id="268" Count="0" />
@@ -312,9 +338,16 @@ i_iPumpCurrent := iq_stPtm.i_iPumpCurrent;]]></ST>
       <LineId Id="213" Count="0" />
       <LineId Id="216" Count="0" />
       <LineId Id="301" Count="0" />
-      <LineId Id="458" Count="2" />
+      <LineId Id="458" Count="0" />
+      <LineId Id="546" Count="0" />
+      <LineId Id="459" Count="1" />
       <LineId Id="71" Count="0" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="547" Count="1" />
       <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.BackingPressureSetPoint">
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Agilent.ErrorMessage">
       <LineId Id="10" Count="1" />
@@ -326,7 +359,9 @@ i_iPumpCurrent := iq_stPtm.i_iPumpCurrent;]]></ST>
     <LineIds Name="FB_PTM_Agilent.IO">
       <LineId Id="7" Count="0" />
       <LineId Id="2" Count="3" />
-      <LineId Id="8" Count="3" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="9" Count="2" />
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

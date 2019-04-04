@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_PTM_TwisTorr" Id="{91de0c91-34da-4736-bacc-23eca1b0004f}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TwisTorr 304 FS with on board Controller.
+ Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
+FUNCTION_BLOCK FB_PTM_TwisTorr
+VAR_INPUT
+	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
+	
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := ' pv: '}
+	iq_stPtm	:	ST_PTM;
+END_VAR
+VAR
+	xRunOk	:	BOOL;
+	(*IO*)
+	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
+	i_xFault AT%I*: BOOL; // Error
+
+	q_RunDO AT%Q*: BOOL; // Start/Stop
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* Interlock Sum *)
+iq_stPtm.xExtRunOk:= i_xExtILKOk;
+xRunOk := iq_stPtm.xExtRunOk AND NOT iq_stPtm.i_xFault;
+
+(* Basic pump supervisory section *)
+IF xRunOk THEN
+	iq_stPtm.q_RunDO := iq_stPTM.xRunSW;
+ELSE
+	iq_stPtm.xRunSW:=FALSE;
+	iq_stPtm.q_RunDO:=FALSE;
+END_IF
+
+(*Pump STATE*)
+IF iq_stPtm.i_xFault THEN 
+	iq_stPtm.eState := pumpFAULT;
+
+ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
+	iq_stPtm.eState := pumpSTOPPED;
+ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpSTARTING;
+ELSIF iq_stPtm.i_xAtSpd AND iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpRUNNING;
+ELSE 
+	iq_stPtm.eState := pumpFAULT;
+END_IF
+
+(*I/O soft mapping*)
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{dc6a943d-ff3d-49ac-8d8c-5de521211d0a}">
+      <Implementation>
+        <ST><![CDATA[(*Inputs*)
+iq_stPtm.i_xAtSpd := i_xAtSpd;
+iq_stPtm.i_xFault := NOT i_xFault;
+
+
+(*Outputs*)
+q_RunDO := iq_stPtm.q_RunDO;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_PTM_TwisTorr">
+      <LineId Id="29" Count="11" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="47" Count="12" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TwisTorr.ACT_IO">
+      <LineId Id="2" Count="2" />
+      <LineId Id="7" Count="3" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

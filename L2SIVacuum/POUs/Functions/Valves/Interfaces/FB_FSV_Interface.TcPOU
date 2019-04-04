@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_FSV_Interface" Id="{57bc9317-df03-4829-82d4-3e35e70264fe}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
+(* They have to be linked to the custom created variables on the EL6692/5 primary side*)
+FUNCTION_BLOCK FB_FSV_Interface
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'pytmc' := 'pv: VFS_FAULT_OK'}
+	xVFS_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to Flase when there is Vacuum Fault*)
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <LineIds Name="FB_FSV_Interface">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,15 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_TurbVentvalve_NO" Id="{13f6dcdf-6eaf-4953-b8b2-2ecf46768828}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_TurbVentvalve_NO
-VAR_IN_OUT
-	iq_stValve : ST_VCC_NO;
+    <Declaration><![CDATA[(* This function block impelemets Interlock for Agilent Turbo Vent Valve Normally Open*)
+FUNCTION_BLOCK FB_TurbVentvalve_NO
+VAR_OUTPUT
+	{attribute 'pytmc' :=' pv:'}
+	q_stValve : ST_VCC_NO;
 END_VAR
 VAR_INPUT
-	i_stPTM	: ST_AgilentPTM;
+	i_stPTM	: ST_AgilentPTM; //Agilent Turbo Pump
 END_VAR
 VAR
 	tofTmr 		: 	TOF;
+	
+	(*Output*)
+	q_xCLS_DO AT%Q* : BOOL;
 END_VAR
 
 (*If the turbo is on, you cannot open the valve. In order to open the valve, you have to allow the turbopump
@@ -205,7 +210,7 @@ If the code looks confusing please use a truth table to verify*)]]></Declaration
                       <o n="OutputItems" t="OutputItemList">
                         <l2 n="OutputItems" cet="Operand">
                           <o>
-                            <v n="Operand">"iq_stValve.xCLS_DO"</v>
+                            <v n="Operand">"q_stValve.xCLS_DO"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -276,7 +281,7 @@ If the code looks confusing please use a truth table to verify*)]]></Declaration
                           </o>
                           <o>
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"iq_stValve.pv_xCLS_SW"</v>
+                              <v n="Operand">"q_stValve.pv_xCLS_SW"</v>
                               <v n="Type">"BOOL"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -455,7 +460,7 @@ If the code looks confusing please use a truth table to verify*)]]></Declaration
                       <o n="OutputItems" t="OutputItemList">
                         <l2 n="OutputItems" cet="Operand">
                           <o>
-                            <v n="Operand">"iq_stValve.xCLS_SW"</v>
+                            <v n="Operand">"q_stValve.pv_xCLS_SW"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -479,7 +484,7 @@ If the code looks confusing please use a truth table to verify*)]]></Declaration
                       </o>
                       <o n="RValue" t="BoxTreeOperand">
                         <o n="Operand" t="Operand">
-                          <v n="Operand">"iq_stValve.xCLS_DO"</v>
+                          <v n="Operand">"q_stValve.xCLS_DO"</v>
                           <v n="Type">"BOOL"</v>
                           <v n="Comment">""</v>
                           <v n="SymbolComment">""</v>
@@ -501,6 +506,67 @@ If the code looks confusing please use a truth table to verify*)]]></Declaration
                   </l2>
                   <l2 n="Connectors" />
                   <v n="Id">109L</v>
+                </o>
+                <o>
+                  <v n="ILActive">false</v>
+                  <v n="FBDValid">false</v>
+                  <v n="ILValid">false</v>
+                  <l2 n="ILLines" />
+                  <v n="Comment">""</v>
+                  <v n="Title">""</v>
+                  <v n="Label">""</v>
+                  <v n="OutCommented">false</v>
+                  <l2 n="NetworkItems" cet="BoxTreeAssign">
+                    <o>
+                      <o n="OutputItems" t="OutputItemList">
+                        <l2 n="OutputItems" cet="Operand">
+                          <o>
+                            <v n="Operand">"q_xCLS_DO"</v>
+                            <v n="Type">"BOOL"</v>
+                            <v n="Comment">""</v>
+                            <v n="SymbolComment">""</v>
+                            <v n="Address">""</v>
+                            <o n="Flags" t="Flags">
+                              <v n="Flags">0</v>
+                              <v n="Fixed">false</v>
+                              <v n="Extensible">false</v>
+                            </o>
+                            <v n="LValue">true</v>
+                            <v n="Boolean">true</v>
+                            <v n="IsInstance">false</v>
+                            <v n="Id">135L</v>
+                          </o>
+                        </l2>
+                      </o>
+                      <o n="Flags" t="Flags">
+                        <v n="Flags">0</v>
+                        <v n="Fixed">false</v>
+                        <v n="Extensible">false</v>
+                      </o>
+                      <o n="RValue" t="BoxTreeOperand">
+                        <o n="Operand" t="Operand">
+                          <v n="Operand">"q_stValve.xCLS_DO"</v>
+                          <v n="Type">"BOOL"</v>
+                          <v n="Comment">""</v>
+                          <v n="SymbolComment">""</v>
+                          <v n="Address">""</v>
+                          <o n="Flags" t="Flags">
+                            <v n="Flags">0</v>
+                            <v n="Fixed">true</v>
+                            <v n="Extensible">false</v>
+                          </o>
+                          <v n="LValue">false</v>
+                          <v n="Boolean">true</v>
+                          <v n="IsInstance">false</v>
+                          <v n="Id">134L</v>
+                        </o>
+                        <v n="Id">133L</v>
+                      </o>
+                      <v n="Id">136L</v>
+                    </o>
+                  </l2>
+                  <l2 n="Connectors" />
+                  <v n="Id">132L</v>
                 </o>
               </l2>
               <v n="BranchCounter">0</v>
@@ -526,5 +592,15 @@ If the code looks confusing please use a truth table to verify*)]]></Declaration
         </XmlArchive>
       </NWL>
     </Implementation>
+    <Action Name="ACT_IO" Id="{10c4199c-404d-42f2-a93b-68c98ae69b96}">
+      <Implementation>
+        <ST><![CDATA[(*outputs*)
+q_xCLS_DO:= q_stValve.xCLS_DO;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_TurbVentvalve_NO.ACT_IO">
+      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

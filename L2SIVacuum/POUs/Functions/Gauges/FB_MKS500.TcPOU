@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS500" Id="{7585aac8-a989-4785-918b-438600204b3a}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS500
+    <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EL terminals*)
+(* 500 Logarithmic Output Conversion, factory default configuration *)
+(*This function provides ILK and Set Point Protection for the Cold Cathode*)
+FUNCTION_BLOCK FB_MKS500
 VAR_IN_OUT
 
 END_VAR
 VAR_INPUT
-
 	PG	:	ST_VG;
 END_VAR
 VAR_OUTPUT
@@ -36,9 +38,6 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* 500 Logarithmic Output Conversion, factory default configuration *)
-
-
-(*check health of the ethercat terminal*)
 
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
 
@@ -77,10 +76,8 @@ END_IF
 
 
 
-IF PG.rPRESS < IG.rPRO_SP AND PG.xPRESS_OK THEN
-
+IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
 	IG.q_xHV_DIS := IG.xHV_SW;
-
 ELSIF IG.q_xHV_DIS THEN
 	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
 		IG.q_xHV_DIS := FALSE;
@@ -102,6 +99,8 @@ IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
 (* Setpoint evaluation *)
 IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid) ;
 
+(*Inlk Evaluation*)
+IG.xILKOk := (PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK);
 
 (*Soft IO Linking*)
 // check ethercat Diagnostics
@@ -110,7 +109,8 @@ IO();
     </Implementation>
     <Action Name="IO" Id="{d5dcbb30-1e72-4867-8faf-91e37cf07851}">
       <Implementation>
-        <ST><![CDATA[(*soft link inputs*)
+        <ST><![CDATA[(*check health of the ethercat terminal*) //todo
+(*soft link inputs*)
 IG.i_iPRESS_R:=	i_iPRESS_R; 
 IG.i_xHV_ON:= i_xHV_ON;
 IG.i_xDisc_Active:=i_xDisc_Active; 
@@ -119,19 +119,19 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_MKS500">
-      <LineId Id="31" Count="0" />
-      <LineId Id="190" Count="1" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="32" Count="1" />
+      <LineId Id="31" Count="2" />
       <LineId Id="36" Count="1" />
       <LineId Id="40" Count="9" />
       <LineId Id="148" Count="4" />
       <LineId Id="163" Count="2" />
       <LineId Id="153" Count="2" />
       <LineId Id="159" Count="0" />
-      <LineId Id="50" Count="29" />
+      <LineId Id="50" Count="12" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="66" Count="13" />
       <LineId Id="81" Count="4" />
       <LineId Id="107" Count="0" />
+      <LineId Id="274" Count="1" />
       <LineId Id="121" Count="0" />
       <LineId Id="242" Count="0" />
       <LineId Id="219" Count="1" />
@@ -139,6 +139,7 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS500.IO">
+      <LineId Id="8" Count="0" />
       <LineId Id="6" Count="0" />
       <LineId Id="2" Count="3" />
       <LineId Id="1" Count="0" />

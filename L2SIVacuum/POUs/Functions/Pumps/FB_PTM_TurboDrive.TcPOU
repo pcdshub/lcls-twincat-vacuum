@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_PTM_TurboDrive" Id="{dfc77842-243a-4cfe-b1b5-b7fe350ab6a4}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This Function block provides basic turbo control for Leybold Turbo Drive 300, Turbo Drive 400 *)
+(* TD20 Classic Via Remote X1 Connector 9-way PLC interface*)
+FUNCTION_BLOCK FB_PTM_TurboDrive
+VAR_IN_OUT
+	
+END_VAR
+VAR_INPUT
+	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
+END_VAR
+VAR_OUTPUT
+{attribute 'pytmc' := '
+    pv: 
+	'}
+	iq_stPtm	:	ST_LeyboldPTM;
+END_VAR
+VAR
+	xRunOk	:	BOOL;
+	tofRemoteDelay	:	TOF;
+	
+	
+	(*IO*)
+	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
+	i_xFaultNC AT%I*: BOOL; // Error Active when no Error is present
+	q_RunDO AT%Q*: BOOL; // Start/Stop
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Basic Turbo Control *)
+(* This Function block provides basic turbo control for Leybold Turbo Drive 300, Turbo Drive 400 *)
+(* TD20 Classic Via Remote X1 Connector 9-way PLC interface*)
+(* M. Ghaly Jan. 2019 *)
+
+(* Interlock Sum *)
+iq_stPtm.xExtRunOk:= i_xExtILKOk;
+xRunOk := iq_stPtm.xExtRunOk AND iq_stPtm.i_xNCError;
+
+(* Basic pump supervisory section *)
+IF xRunOk THEN
+	iq_stPtm.q_RunDO := iq_stPTM.xRunSW;
+ELSE
+	iq_stPtm.xRunSW:=FALSE;
+	iq_stPtm.q_RunDO:=FALSE;
+END_IF
+
+(*Pump States*)
+IF (iq_stPtm.i_xFault) THEN
+		iq_stPtm.eState := pumpFAULT;
+		iq_stPtm.xRunSW:=FALSE;
+		iq_stPtm.q_RunDO:=FALSE;
+	ELSIF (iq_stPtm.q_RunDO) AND (iq_stPtm.i_xAtSpd) THEN
+		iq_stPtm.eState := pumpRUNNING;
+	ELSIF (iq_stPtm.q_RunDO) AND NOT (iq_stPtm.i_xAtSpd) THEN
+		iq_stPtm.eState := pumpSTARTING; 
+	ELSIF NOT (iq_stPtm.q_RunDO) THEN
+		iq_stPtm.eState := pumpSTOPPED; 	
+END_IF;
+			
+
+(*I/O soft mapping*)
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{4cbb30e0-b539-45c8-81cf-4305f479bf38}">
+      <Implementation>
+        <ST><![CDATA[(*Inputs*)
+iq_stPtm.i_xAtSpd := i_xAtSpd;
+iq_stPtm.i_xNCError := i_xFaultNC;
+iq_stPtm.i_xFault := NOT i_xFaultNC;
+
+
+
+(*Outputs*)
+q_RunDO := iq_stPtm.q_RunDO;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_PTM_TurboDrive">
+      <LineId Id="96" Count="1" />
+      <LineId Id="65" Count="13" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="89" Count="4" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="79" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TurboDrive.ACT_IO">
+      <LineId Id="2" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="7" Count="2" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

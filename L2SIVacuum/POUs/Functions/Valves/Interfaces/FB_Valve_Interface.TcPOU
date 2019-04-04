@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_Valve_Interface" Id="{c5b8ea4d-1b20-4749-a515-04ce9b19bc46}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
+(* Not all the fields in the original structure is required, just few signals *)
+(* They have to be linked to the custom created variables on the EL6692/5 primary side*)
+
+FUNCTION_BLOCK FB_Valve_Interface
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := 'pv: '}
+	VGC:ST_VGC;
+END_VAR
+VAR
+	i_xOpnLS AT%I*	: BOOL;
+	i_xClsLS AT%I*	: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This function block is created for interface devices between different PLC*)
+(* Not all the fields in the original structure is required, just few signals *)
+(* They have to be linked to the custom created variables on the EL6692/5 primary side*)
+
+
+VGC.i_xClsLS := i_xClsLS;
+VGC.i_xOpnLS := i_xOpnLS;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Valve_Interface">
+      <LineId Id="10" Count="2" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="42" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

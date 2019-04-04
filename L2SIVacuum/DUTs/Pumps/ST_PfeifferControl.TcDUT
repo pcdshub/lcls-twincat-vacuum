@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <DUT Name="ST_PfeifferControl" Id="{731036f1-36a4-4d41-854c-61674db7f8df}">
+    <Declaration><![CDATA[TYPE ST_PfeifferControl :
+STRUCT
+	/// enables communication 
+	xEnableComm: BOOL;
+	/// RS-485 Address 
+	iSerialAddress: INT;
+	/// pumping station (equivalent to ilk bit for varian) 
+	xPumpingStation_010: BOOL;
+	/// RUN_DO bit 
+	xMotorPump_023: BOOL;
+	iGasMode_027: INT;
+	/// interlock bit 
+	xIlk: BOOL;
+	/// run/start bit 
+	xRunSW: BOOL;
+	/// error acknowledgement/reset bit
+	xErrorAck_009: BOOL;
+	/// power consumption setting in % (normally 100%)
+	uiPowerPct_708: UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

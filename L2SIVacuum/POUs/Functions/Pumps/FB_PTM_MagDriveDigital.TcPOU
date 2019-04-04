@@ -1,17 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_MagDriveDigital" Id="{50197c8d-2497-4812-a680-acd70b819f81}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_MagDriveDigital
+    <Declaration><![CDATA[(* This function block does basic controls FOR the Leybold connected to the MagDriveDigital Controller.
+ Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
+FUNCTION_BLOCK FB_PTM_MagDriveDigital
 VAR_IN_OUT
-	{attribute 'pytmc' := '
+	
+END_VAR
+VAR_INPUT
+	
+	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
+END_VAR
+VAR_OUTPUT
+{attribute 'pytmc' := '
     pv: 
 	'}
 	iq_stPtm	:	ST_LeyboldPTM;
-END_VAR
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-
 END_VAR
 VAR
 	xRunOk	:	BOOL;
@@ -19,13 +23,13 @@ VAR
 	
 	
 	(*IO*)
-	i_xAtSpd AT%I*: BOOL;
-	i_xFault AT%I*: BOOL;
+	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
+	i_xFault AT%I*: BOOL; // Error
     i_xAccel AT%I*: BOOL;
  	i_xDecel AT%I*: BOOL;
  	i_xWarn AT%I*: BOOL;
 	
-	q_RunDO AT%Q*: BOOL;
+	q_RunDO AT%Q*: BOOL; // Start/Stop
 	q_xRemote AT%Q*: BOOL;
 END_VAR
 ]]></Declaration>
@@ -38,6 +42,7 @@ tofRemoteDelay(IN:=iq_stPtm.q_RunDO, PT:=T#5S);
 iq_stPtm.q_xRemote := tofRemoteDelay.Q;
 
 (* Interlock Sum *)
+iq_stPtm.xExtRunOk:= i_xExtILKOk;
 xRunOk := iq_stPtm.xExtRunOk AND NOT iq_stPtm.i_xFault;
 
 (* Basic pump supervisory section *)
@@ -67,7 +72,9 @@ q_xRemote := iq_stPtm.q_xRemote; // remote out]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_PTM_MagDriveDigital">
-      <LineId Id="3" Count="15" />
+      <LineId Id="3" Count="6" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="10" Count="8" />
       <LineId Id="40" Count="1" />
       <LineId Id="47" Count="0" />
       <LineId Id="42" Count="0" />

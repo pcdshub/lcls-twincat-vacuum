@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_972" Id="{02ad8586-ab8b-4c5e-9c1c-5db3b2c00a9f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_972
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	VG	: ST_VG;
+END_VAR
+VAR_IN_OUT
+	
+END_VAR
+VAR
+	rV : REAL;
+	(*IO*)
+	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Standard MKS 9XX series conversion *)
+(* works for 972 and 925 *)
+
+rV := 10*INT_TO_REAL(VG.i_iPRESS_R)/32767;
+
+IF rV > 1 THEN
+	VG.rPRESS := LREAL_TO_REAL(EXPT(10, 2*rV-11));
+	VG.xPRESS_OK := TRUE;
+	VG.eState := Valid; //Press OK
+ELSE
+	VG.xPRESS_OK := FALSE;
+	VG.eState := OoR;
+END_IF
+
+(* Soft IO Mapping*)
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{57edb1c8-c4ce-46a6-8329-dd1927c8ce8e}">
+      <Implementation>
+        <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_972">
+      <LineId Id="3" Count="11" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="34" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_972.ACT_IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

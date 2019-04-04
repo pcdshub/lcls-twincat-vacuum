@@ -1,22 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS422" Id="{2e4ef3e9-09c8-44c2-b5f5-464ffb8c18a0}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_MKS422
+    <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 422 connected to a 937A/B *)
+(*This function provides ILK and Set Point Protection for the Cold Cathode*)
+FUNCTION_BLOCK FB_MKS422
 VAR_IN_OUT
-	
-	
+		
 END_VAR
 VAR_INPUT
-		PG	:	ST_VG;
+		PG	:	ST_VG; // Pirani Gauge Structure used to Interlock the Cold Cathode
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: GCC
-	'}
-	IG : ST_VG;
-	
-	
-
+	{attribute 'pytmc' := 'pv:'}
+	IG : ST_VG; // The Cold Cathode Data Structure
 END_VAR
 VAR
 	rV	:	REAL;
@@ -24,7 +20,7 @@ VAR
 	(*IOs to be linked*)
 	/// Controls and I/Os
 	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
-	q_xHV_DIS AT %Q* : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EL2624) ^Output
+	q_xHV_DIS AT %Q* : BOOL; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
 	
 	
 END_VAR
@@ -38,13 +34,13 @@ END_VAR
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
 IG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));
 
+(* Pressure gauge State checks *)
 
-
-IF (rV <=9.7 ) AND (rV>=0.6) THEN
+IF (rV <=9.6 ) AND (rV>=0.6) THEN
 	IG.eState := Valid; // normal
 ELSIF rV >= 0.18 AND rV <= 0.22 THEN
 	IG.eState := ValidLo; //LO
-ELSIF rV > 9.7 AND rV<= 9.9 THEN
+ELSIF rV > 9.6 AND rV<= 9.9 THEN
 	IG.eState := ValidHi; //HIGH
 ELSIF rV < 0.18 THEN
 	IG.eState := GaugeDisconnected; //not on
@@ -57,18 +53,21 @@ END_IF
 (* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
 (* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
 (* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
-
-IF PG.rPRESS < IG.rPRO_SP THEN
-	IG.q_xHV_DIS := IG.xHV_SW;
-
-ELSIF IG.q_xHV_DIS THEN
-	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
-		IG.q_xHV_DIS := FALSE;
-		IG.xHV_SW := FALSE;
+ IF (IG.xHV_SW) THEN
+	 IF (PG.rPRESS <= IG.rPRO_SP) THEN
+		 IG.q_xHV_DIS := NOT IG.xHV_SW;
 	END_IF
-ELSE
+	IF NOT IG.q_xHV_DIS THEN
+		IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+		IG.q_xHV_DIS := TRUE;
+		IG.xHV_SW := FALSE;
+		END_IF
+  	END_IF
+ ELSE 
+	IG.q_xHV_DIS := TRUE;
 	IG.xHV_SW := FALSE;
-END_IF
+ END_IF
+
 
 (* Pressure gauge OK checks *)
 IG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6);
@@ -100,12 +99,18 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="107" Count="0" />
       <LineId Id="110" Count="11" />
       <LineId Id="108" Count="0" />
-      <LineId Id="9" Count="7" />
-      <LineId Id="18" Count="3" />
-      <LineId Id="123" Count="0" />
-      <LineId Id="22" Count="1" />
-      <LineId Id="124" Count="0" />
-      <LineId Id="25" Count="2" />
+      <LineId Id="9" Count="5" />
+      <LineId Id="204" Count="1" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="212" Count="2" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="216" Count="1" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="26" Count="1" />
       <LineId Id="122" Count="0" />
       <LineId Id="28" Count="0" />
       <LineId Id="42" Count="1" />

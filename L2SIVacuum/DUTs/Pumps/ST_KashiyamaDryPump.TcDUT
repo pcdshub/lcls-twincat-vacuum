@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <DUT Name="ST_KashiyamaDryPump" Id="{ea7dbd39-0b45-44ec-97c9-3ee5cc59d920}">
+    <Declaration><![CDATA[TYPE ST_KashiyamaDryPump EXTENDS ST_RoughPump:
+STRUCT
+
+(* Output *)	
+	//q_xRunDO 	:	BOOL; in Rough PUMP
+	{attribute 'pytmc' := '
+    pv: RESET_DO
+	io: i
+	'}
+	q_xResetDo	: 	BOOL;
+	{attribute 'pytmc' := '
+    pv: LSPD_DO
+	io: i
+	'}
+	q_xLspdDo	: 	BOOL;
+	
+(* Input *)
+{attribute 'pytmc' := '
+    pv: Remote
+	io: i
+    '}
+	i_xLocal	:	BOOL;
+	{attribute 'pytmc' := '
+    pv: ALARM_OK
+	io: i
+    '}
+	i_xAlarm	:	BOOL;
+	{attribute 'pytmc' := '
+    pv: WARN_OK
+	io: i
+    '}
+	i_xWarning	:	BOOL;
+	{attribute 'pytmc' := '
+    pv: RUN_DI
+	io: i
+    '}
+	i_xIsRun		:	BOOL;
+
+(* Logic status *)
+
+	xLspd_IlkENA:   BOOL;
+
+(* EPICS *)
+	//xRunSW		:	BOOL; in Rough PUMP
+	{attribute 'pytmc' := '
+    pv: RESET_SW
+	io: io
+	'}
+	xResetSW	:	BOOL; //For resetting faults
+	{attribute 'pytmc' := '
+    pv: LSPD_SW
+	io: io
+	'}
+	xLspdSW     :   BOOL;
+	LowSP  :   REAL := 0.02; //Torr
+	HighSP :   REAL; //Torr
+    RdyTmr : REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

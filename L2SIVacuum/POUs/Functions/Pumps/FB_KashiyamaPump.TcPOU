@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_KashiyamaPump" Id="{c252a3ee-f366-44ed-9d74-8c0f474d15b1}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block does basic controls FOR the Kashiyama pump. Turns off pump
+in the event of errors/ warnings. Provides interlocking interface.*)
+FUNCTION_BLOCK FB_KashiyamaPump
+VAR_IN_OUT
+
+END_VAR
+VAR_INPUT
+	
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := 'pv:'}
+	q_stPump : ST_KashiyamaDryPump;
+END_VAR
+VAR
+	TONtmr : TON;
+	resetTmr : TON;
+	
+	(* Output *)	
+	q_xRunDO 	AT%Q*:	BOOL;
+	q_xResetDo	AT%Q*: 	BOOL;
+	q_xLspdDo	AT%Q*: 	BOOL;
+	
+(* Input *)
+	i_xLocal	AT%I*:	BOOL;
+	i_xAlarm	AT%I*:	BOOL;
+	i_xWarning	AT%I*:	BOOL;
+	i_xIsRun	AT%I*:	BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+//Kashiyama Dry pump outputs at high level indicate no warning, no alarm and remotely
+q_stPump.xIlkOK := q_stPump.i_xLocal AND q_stPump.i_xWarning AND q_stPump.i_xAlarm;
+
+IF q_stPump.xIlkOK THEN
+	q_stPump.q_xRunDO := q_stPump.pv_xRunSW;
+	ELSE
+		q_stPump.PV_xRunSW := FALSE;
+        q_stPump.q_xRunDO := FALSE;	
+END_IF
+ 
+q_stPump.xLspd_IlkENA := q_stPump.q_xRunDO;
+
+IF q_stPump.xLspd_IlkENA THEN
+	q_stPump.q_xLspdDo := q_stPump.xLspdSW;
+	ELSE
+		q_stPump.xLspdSW := FALSE;
+        q_stPump.q_xLspdDo := FALSE;	
+END_IF
+
+//resetTmr (In := iq_stPump.xResetSW, PT := T#2S);
+//IF resetTmr.Q THEN
+//	iq_stPump.xResetSW := FALSE;
+//END_IF
+
+q_stPump.q_xResetDo := NOT q_stPump.i_xIsRun AND q_stPump.xResetSW;
+
+//countdown Timer
+TONtmr (IN := q_stPump.i_xIsRun, PT := T#20S);
+q_stPump.RdyTmr := TO_REAL(TONtmr.PT) - TO_REAL(TONtmr.ET);
+
+
+//Mapping
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{03052d11-e75b-497b-a08a-11e5ae7ae948}">
+      <Implementation>
+        <ST><![CDATA[(* Output *)	
+	q_xRunDO 	:= q_stPump.q_xRunDO;
+	q_xResetDo := q_stPump.q_xResetDo;;
+	q_xLspdDo := q_stPump.q_xLspdDo;;
+	
+(* Input *)
+	q_stPump.i_xLocal := i_xLocal;
+	q_stPump.i_xAlarm :=	i_xAlarm;
+	q_stPump.i_xWarning :=	i_xWarning;
+	q_stPump.i_xIsRun :=	i_xIsRun;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_KashiyamaPump">
+      <LineId Id="67" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="22" Count="25" />
+      <LineId Id="63" Count="2" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_KashiyamaPump.ACT_IO">
+      <LineId Id="2" Count="8" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_MKS248" Id="{dcc23c7e-d235-4f95-baec-6ff95237a2bd}" SpecialFunc="None">
+    <Declaration><![CDATA[(* MKS248 valve using MKS1249 Drive Module *)
+FUNCTION_BLOCK FB_MKS248
+VAR_INPUT
+	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
+	i_rReqPos	:	REAL; //Requested position
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := 'pv:'}
+	iq_stVCN	:	ST_VCN; //Needle valve structure
+END_VAR
+VAR CONSTANT
+	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual
+	rCloseVoltage	:	REAL := 0.4;	
+END_VAR
+VAR
+	// Requested voltage
+	rReqVoltage: REAL := 0;
+	(*IO*)
+	q_iRawPosition AT%Q* :INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* MKS248 valve using MKS1249 Drive Module *)
+
+
+// Interlocking
+iq_stVCN.xIlkOK := i_xExtIlkOK;
+IF iq_stVCN.xIlkOK THEN
+	//Raw position calc
+	iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
+	rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
+	rReqVoltage := LIMIT(rCloseVoltage, rReqVoltage, rOpenVoltage); //The requested voltage should remain within this range
+	iq_stvcn.q_iRawPosition := REAL_TO_INT( 32767/10 * rReqVoltage);	
+ELSE
+	iq_stvcn.q_iRawPosition := 0;
+	iq_stVCN.rReqPosition := 0;
+	iq_stVCN.eValveControl := CloseValve;
+END_IF
+
+(*IO Mapping*)
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{69f74d47-c8bc-4fd5-815e-84e03ce47480}">
+      <Implementation>
+        <ST><![CDATA[(*outputs*)
+q_iRawPosition := iq_stVCN.q_iRawPosition;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_MKS248">
+      <LineId Id="9" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="27" Count="3" />
+      <LineId Id="40" Count="8" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="69" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS248.ACT_IO">
+      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

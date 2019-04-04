@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_EbaraDryPump" Id="{55a0bc2c-4199-48dd-89d3-0255c23678ea}">
     <Declaration><![CDATA[TYPE ST_EbaraDryPump EXTENDS ST_RoughPump :
 STRUCT
@@ -13,13 +13,13 @@ EV-S200
 
 //Controls
 {attribute 'pytmc' := '
-    pv: MPStart
-	io: i
+    pv: MPStart;
+	io: i;
     '}
 q_xMPStart	:	BOOL; //Main Pump start
 {attribute 'pytmc' := '
-    pv: BPStart
-	io: i
+    pv: BPStart;
+	io: i;
     '}
 q_xBPStart	:	BOOL; // Booster Pump start (this can be started by the pump automatically)
 
@@ -30,28 +30,28 @@ tonBP	:	TON := (PT:=T#5S); //Timer for pressure and valve stability
 
 //Readbacks
 {attribute 'pytmc' := '
-    pv: MPStatus
-	io: i
+    pv: MPStatus;
+	io: i;
     '}
 i_xMPStatus	:	BOOL; //MP status
 {attribute 'pytmc' := '
-    pv: BPStatus
-	io: i
+    pv: BPStatus;
+	io: i;
     '}
 i_xBPStatus	:	BOOL; //BP status
 {attribute 'pytmc' := '
-    pv: WARN
-	io: i
+    pv: WARN;
+	io: i;
     '}
 i_xWarning	:	BOOL; //Warning status
 {attribute 'pytmc' := '
-    pv: ALARM
-	io: i
+    pv: ALARM;
+	io: i;
     '}
 i_xAlarm	:	BOOL; //Alarm, maps to error
 {attribute 'pytmc' := '
-    pv: Remote
-	io: i
+    pv: REMOTE;
+	io: i;
     '}
 i_xRemote	:	BOOL; //Remote control status
 
