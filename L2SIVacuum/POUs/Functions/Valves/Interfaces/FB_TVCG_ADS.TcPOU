@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_TVCG_ADS" Id="{84085701-3a86-43d0-96fb-51ae4e0cc36d}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
+(* Not all the fields in the original structure is required, just few signals *)
+FUNCTION_BLOCK FB_TVCG_ADS
+VAR_INPUT
+	sNetId : String; //NetID of the Destination PLC controller
+	nPort : int; // port number
+	sVarName : string;// the variable name of the declared gauge function block.
+
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := 'pv: '}
+	VGC:ST_VGC;
+END_VAR
+VAR
+	xOpnLS 	: BOOL;
+	xClsLS 	: BOOL;
+	
+	fb_Read_xOpnLS: FB_ReadAdsSymByName;
+	fb_Read_xClsLS: FB_ReadAdsSymByName;
+	ftReset_xOpnLS: F_TRIG;
+	ftReset_xClsLS: F_TRIG;
+	xFirstPass: bool:= true;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ftReset_xOpnLS(CLK:= fb_Read_xOpnLS.bBusy OR xFirstPass);
+ftReset_xClsLS(CLK:= fb_Read_xClsLS.bBusy OR xFirstPass);
+(*calling ADS read function*)
+fb_Read_xOpnLS(
+	bRead:= ftReset_xOpnLS.Q, 
+	sNetId:= sNetId, 
+	nPort:= nPort, 
+	sVarName:= CONCAT(sVarName,'iq_stValve.i_xOpnLS'), 
+	nDestAddr:= ADR(xOpnLS), 
+	nLen:= SIZEOF(xOpnLS), 
+	tTimeout:= , 
+	eComMode:= , 
+	bBusy=> , 
+	bError=> , 
+	nErrorId=> );
+	
+fb_Read_xClsLS(
+	bRead:= ftReset_xClsLS.Q, 
+	sNetId:= sNetId, 
+	nPort:= nPort, 
+	sVarName:= CONCAT(sVarName,'iq_stValve.i_xClsLS'), 
+	nDestAddr:= ADR(xClsLS), 
+	nLen:= SIZEOF(xClsLS), 
+	tTimeout:= , 
+	eComMode:= , 
+	bBusy=> , 
+	bError=> , 
+	nErrorId=> );
+
+(*Soft Io mapping*)
+VGC.i_xClsLS := xClsLS;
+VGC.i_xOpnLS := xOpnLS;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_TVCG_ADS">
+      <LineId Id="18" Count="1" />
+      <LineId Id="34" Count="12" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="47" Count="10" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

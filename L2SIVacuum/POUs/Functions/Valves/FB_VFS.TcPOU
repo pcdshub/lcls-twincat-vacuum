@@ -15,8 +15,6 @@ VAR_IN_OUT
 	
 END_VAR
 VAR_INPUT
-	{attribute 'pytmc' := 'pv: EPS_OK'}
-	i_xEPS_OK:	BOOL	:= TRUE; (*External EPS interlock, Set to TRUE when no EPS interlock is required, otherwise set to correct interlock signal*)
 	{attribute 'pytmc' := 'pv: PMPS_OK'}
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
 	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
@@ -76,7 +74,8 @@ END_VAR]]></Declaration>
 // Make it better
 //Test It
 //Fix PVs and IO links
-//Interface with neihboring valves.
+//Interface with neighboring valves.
+//PMPS requirement ??
 
 (* Fast Shutter/Valve Function Block*)
 (* M.Ghaly Feb 2019*)
@@ -133,19 +132,10 @@ END_IF
 (*OPN OK evaluation bit *)
 iq_stValve.xOPN_OK := (NOT iq_stValve.xERR_LstVac) AND NOT i_xTrigger;
 
-(* If Epics Command to close the Valve, check if PMPS and EPS are ok, otherwise Keep command set to open valve *)
-IF NOT(iq_stValve.pv_xOPN_SW) AND ((NOT i_xPMPS_OK) OR (NOT i_xEPS_OK) OR (NOT xVAC_FAULT_OK) ) THEN
-	iq_stValve.pv_xOPN_SW := TRUE;
-ELSE xClose := TRUE;
-END_IF
+(* If Epics Command to close the Valve, check if PMPS, otherwise Keep command set to open valve *)
+// is there really a PMPS requirment.
 
-(* Reset the EPICS command to open the valve if the interlock is lost *) 
-(* based on EPS ok state, EPS overrides OPN_OK*)
-IF NOT iq_stValve.xOPN_OK THEN
-	IF i_xEPS_OK THEN iq_stValve.pv_xOPN_SW := FALSE;
-	ELSE iq_stValve.pv_xOPN_SW := TRUE;		
-	END_IF
-END_IF
+
 
 (* Here's where the valve opens *)
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
@@ -218,6 +208,7 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     <LineIds Name="FB_VFS">
       <LineId Id="226" Count="0" />
       <LineId Id="228" Count="3" />
+      <LineId Id="325" Count="0" />
       <LineId Id="243" Count="0" />
       <LineId Id="227" Count="0" />
       <LineId Id="244" Count="0" />
@@ -254,11 +245,9 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;
       <LineId Id="238" Count="0" />
       <LineId Id="237" Count="0" />
       <LineId Id="152" Count="0" />
-      <LineId Id="171" Count="5" />
-      <LineId Id="225" Count="0" />
+      <LineId Id="171" Count="3" />
       <LineId Id="177" Count="0" />
       <LineId Id="224" Count="0" />
-      <LineId Id="178" Count="5" />
       <LineId Id="153" Count="0" />
       <LineId Id="185" Count="0" />
       <LineId Id="188" Count="4" />

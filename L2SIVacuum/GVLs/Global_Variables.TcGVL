@@ -12,6 +12,8 @@
 	
 	
 	 fbGetCurTaskIdx : GETCURTASKINDEX;
+	 
+
 
 END_VAR
 ]]></Declaration>

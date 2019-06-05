@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_TGCC_ADS" Id="{873a2ff9-f17a-4be7-ac16-f378eb2ba14b}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
+(* Not all the Variables in the original structure is required, just few signals *)
+(* The variable values are read bia ADS using the symbol name*)
+FUNCTION_BLOCK FB_TGCC_ADS
+VAR_INPUT
+	sNetId : String; //NetID of the Destination PLC controller
+	nPort : int; // port number
+	sVarName : string;// the variable name of the declared gauge function block.
+
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := 'pv:'}
+	VG : ST_VG;
+END_VAR
+VAR
+	rPRESS : REAL;  //This is the human-readable pressure
+	xAT_VAC : BOOL;
+	xPRESS_OK : BOOL;
+	fb_Read_rPress: FB_ReadAdsSymByName;
+	fb_Read_AT_VAC: FB_ReadAdsSymByName;
+	fb_Read_Press_OK: FB_ReadAdsSymByName;
+	ftReset_rPress: F_TRIG;
+	ftReset_AT_VAC: F_TRIG;
+	ftReset_PressOK: F_TRIG;
+	xFirstPass: bool:= true;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+ftReset_rPress(CLK:= fb_Read_rPress.bBusy OR xFirstPass);
+ftReset_AT_VAC(CLK:= fb_Read_AT_VAC.bBusy OR xFirstPass);
+ftReset_PressOK(CLK:= fb_Read_Press_OK.bBusy OR xFirstPass);
+
+(*calling ADS read function*)
+fb_Read_rPress(
+	bRead:= ftReset_rPress.Q, 
+	sNetId:= sNetId, 
+	nPort:= nPort, 
+	sVarName:= CONCAT(sVarName,'IG.rPRESS'), 
+	nDestAddr:= ADR(rPRESS), 
+	nLen:= SIZEOF(rPRESS), 
+	tTimeout:= , 
+	eComMode:= , 
+	bBusy=> , 
+	bError=> , 
+	nErrorId=> );
+	
+
+fb_Read_AT_VAC(
+	bRead:= ftReset_AT_VAC.Q, 
+	sNetId:= sNetId, 
+	nPort:= nPort, 
+	sVarName:= CONCAT(sVarName,'IG.xAT_VAC'), 
+	nDestAddr:= ADR(xAT_VAC), 
+	nLen:= SIZEOF(xAT_VAC), 
+	tTimeout:= , 
+	eComMode:= , 
+	bBusy=> , 
+	bError=> , 
+	nErrorId=> );	
+	
+fb_Read_Press_OK(
+	bRead:=ftReset_PressOK.Q , 
+	sNetId:= sNetId, 
+	nPort:= nPort, 
+	sVarName:= CONCAT(sVarName,'IG.xPRESS_OK'), 
+	nDestAddr:= ADR(xPRESS_OK), 
+	nLen:= SIZEOF(xPRESS_OK), 
+	tTimeout:= , 
+	eComMode:= , 
+	bBusy=> , 
+	bError=> , 
+	nErrorId=> );	
+	
+(*soft io mapping*)
+VG.rPRESS := rPRESS;
+VG.xAT_VAC := xAT_VAC;
+VG.xPRESS_OK := xPRESS_OK;
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_TGCC_ADS">
+      <LineId Id="74" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="78" Count="2" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="28" Count="10" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="48" Count="11" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="62" Count="10" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

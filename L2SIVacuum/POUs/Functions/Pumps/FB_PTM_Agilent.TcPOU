@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_PTM_Agilent" Id="{30958a8b-73eb-4ef7-96d3-72fcd80f684d}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TV Turbo pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -31,7 +31,9 @@ VAR
 	step : INT :=0;
 	nErrorCode: INT :=0;
 	xBackingPressureOK: BOOL;
-	
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	sPath: STRING;
 	
 	(*I/Os*)
 	i_xSTART 	AT%I*:	BOOL; // 'TcLinkTo' (EL1088) ^Input
@@ -208,15 +210,15 @@ END_VAR
         <ST><![CDATA[IF (eState = pumpFAULT ) THEN
 	CASE nErrorCode OF
 		950:
-			ErrorMessage := 'Pump Starting Fault';
+			ErrorMessage := CONCAT(sPath,': Pump Starting Fault');
 		930: 
-			ErrorMessage := 'R1 Signal Timeout at Startup';
+			ErrorMessage := CONCAT(sPath,': R1 Signal Timeout at Startup');
 	
 		920:
-			ErrorMessage := 'R1 signal lost multiple times';
+			ErrorMessage := CONCAT(sPath,': R1 signal lost multiple times');
 
 		900:
-			ErrorMessage := 'Pump Controller Fault';	
+			ErrorMessage := CONCAT(sPath,': Pump Controller Fault');	
 	END_CASE
 	
 END_IF]]></ST>

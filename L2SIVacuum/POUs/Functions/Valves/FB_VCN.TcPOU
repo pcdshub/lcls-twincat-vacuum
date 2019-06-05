@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_VCN" Id="{b91718c1-ee94-477e-afdc-a1b96008e0fd}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function implements the Basic functions for the Pfeiffer EVR 116 needle valve*)
 FUNCTION_BLOCK FB_VCN
@@ -19,7 +19,7 @@ VAR_IN_OUT
 END_VAR
 
 VAR CONSTANT
-	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual, A Voltage of 9V it si completely Open
+	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual, A Voltage of 9V it is completely Open
 	rCloseVoltage	:	REAL := 0.4;// a voltage <0.5 V the valve is closed	
 END_VAR
 VAR

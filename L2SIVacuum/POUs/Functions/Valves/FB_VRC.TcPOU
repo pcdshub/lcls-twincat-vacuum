@@ -77,6 +77,17 @@ iq_stValve.xOverrideMode := i_xOverrideMode;
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Set_OPN_SW" Id="{87b0c242-3ded-4d47-af63-cf02c359390b}">
+      <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+METHOD PUBLIC M_Set_OPN_SW : BOOL
+VAR_INPUT
+	value:BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_VRC">
       <LineId Id="87" Count="0" />
       <LineId Id="3" Count="10" />
@@ -91,6 +102,9 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
       <LineId Id="6" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.M_Set_OPN_SW">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -62,6 +62,47 @@ iq_stValve.xOverrideMode := i_xOverrideMode;
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_IsClosed" Id="{01a9d73c-fa4d-4cbb-8f1d-032d6c8e6684}">
+      <Declaration><![CDATA[// Method Returns True if the Valve is closed, i.e. the open digital output is not active
+METHOD PUBLIC M_IsClosed : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsClosed := NOT This^.q_xOPN_DO;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsOpen" Id="{baefc52d-c554-4c1d-a7d8-483b83575ac0}">
+      <Declaration><![CDATA[// Method Returns True if the Valve is open, i.e. the open digital output is active
+METHOD PUBLIC M_IsOpen : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsOpen := This^.q_xOPN_DO;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Open" Id="{d474e7d3-5328-4b96-aefd-0d239f7cb017}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Open : BOOL
+VAR_INPUT
+	open: bool; //Set to true to open the valvue, false to close
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Set_OPN_SW" Id="{6bb3ce16-a9f1-46bd-80bc-4a279a4b4310}">
+      <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+METHOD PUBLIC M_Set_OPN_SW : BOOL
+VAR_INPUT
+	value:BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_VVC">
       <LineId Id="70" Count="1" />
       <LineId Id="3" Count="18" />
@@ -72,6 +113,18 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
       <LineId Id="6" Count="1" />
       <LineId Id="5" Count="0" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VVC.M_IsClosed">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VVC.M_IsOpen">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VVC.M_Open">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VVC.M_Set_OPN_SW">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

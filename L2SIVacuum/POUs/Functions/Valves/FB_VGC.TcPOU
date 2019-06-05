@@ -44,6 +44,9 @@ VAR_OUTPUT
 	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
 END_VAR
 VAR
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	sPath: STRING;
 	
 	rDiffPressAllowed	:	REAL := 22.5; // Torr, Default value comes from Vat Valve Manual
 	rDiffPress : REAL;
@@ -236,13 +239,13 @@ tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
 (* If Epics Command to close the Valve, check if PMPS and EPS are ok, otherwise Keep command set to open valve *)
 IF NOT(iq_stValve.pv_xOPN_SW) AND ((NOT i_xPMPS_OK) OR (NOT i_xEPS_OK)) THEN
-	iq_stValve.pv_xOPN_SW := TRUE;
+	iq_stValve.pv_xOPN_SW := TRUE; // plc to only reset never to set this signal
 END_IF
 (* Reset the EPICS command to open the valve if the interlock is lost *) 
 (* based on EPS ok state, EPS overrides OPN_OK*)
 IF NOT iq_stValve.xOPN_OK THEN
-	IF i_xEPS_OK THEN iq_stValve.pv_xOPN_SW := FALSE;
-	ELSE iq_stValve.pv_xOPN_SW := TRUE;		
+	IF i_xEPS_OK THEN iq_stValve.pv_xOPN_SW := FALSE; iq_stValve.sErrorMessage := 'ILK Active';
+	ELSE iq_stValve.pv_xOPN_SW := TRUE;		// plc to only reset never to set this signal
 	END_IF
 END_IF
 
@@ -255,11 +258,14 @@ xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS;
 ///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE;
+	iq_stValve.sErrorMessage := ': Close Timeout';
 ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE; 
+	iq_stValve.sErrorMessage := ': Open Timeout';
 END_IF
 IF (iq_stValve.eState=INVALID) THEN
 	iq_stValve.bErrorPresent := TRUE; 
+	iq_stValve.sErrorMessage := CONCAT(sPath,': Invalid Valve Position');
 END_IF
 (*Timers*)
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
@@ -272,6 +278,7 @@ ACT_ResetAlarms();
 
 (*IO Mapping*)
 ACT_IO();
+
 
 
 ]]></ST>
@@ -292,9 +299,24 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;
       <Implementation>
         <ST><![CDATA[iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
 iq_stValve.xERR_LstVac R= iq_stValve.pv_xAlmRst;
-iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;]]></ST>
+iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;
+
+IF ( iq_stValve.pv_xAlmRst) THEN
+	iq_stValve.sErrorMessage :='';
+END_IF]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Set_OPN_SW" Id="{f6195612-456a-4d04-8760-e32635972cb2}">
+      <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+METHOD PUBLIC M_Set_OPN_SW : BOOL
+VAR_INPUT
+		value:BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_VGC">
       <LineId Id="3" Count="21" />
       <LineId Id="361" Count="0" />
@@ -339,12 +361,19 @@ iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;]]></ST>
       <LineId Id="158" Count="0" />
       <LineId Id="556" Count="0" />
       <LineId Id="406" Count="0" />
-      <LineId Id="335" Count="6" />
+      <LineId Id="335" Count="3" />
+      <LineId Id="846" Count="1" />
+      <LineId Id="340" Count="0" />
+      <LineId Id="848" Count="0" />
+      <LineId Id="341" Count="0" />
       <LineId Id="769" Count="1" />
+      <LineId Id="849" Count="0" />
       <LineId Id="342" Count="3" />
       <LineId Id="347" Count="3" />
       <LineId Id="487" Count="2" />
-      <LineId Id="162" Count="2" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="852" Count="0" />
+      <LineId Id="163" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC.ACT_IO">
@@ -358,6 +387,12 @@ iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;]]></ST>
     <LineIds Name="FB_VGC.ACT_ResetAlarms">
       <LineId Id="2" Count="1" />
       <LineId Id="1" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="6" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_VGC.M_Set_OPN_SW">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

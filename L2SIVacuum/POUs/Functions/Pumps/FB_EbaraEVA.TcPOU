@@ -17,6 +17,7 @@ VAR
 	(*IO*)
 	q_xRunDo AT%Q* : BOOL; // Output signal
 	q_xRemote At%Q* :BOOL;// Remote/Local Control
+	q_xResetAlarm At%Q* :BOOL;// Remote/Local Control
 	i_xAlarmOK AT%I* :BOOL; // Normally closed Alarm bit
 	i_xIsRun   AT%I*:BOOL; // Input status
 END_VAR
