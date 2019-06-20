@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_Agilent" Id="{30958a8b-73eb-4ef7-96d3-72fcd80f684d}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TV Turbo pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -239,6 +239,26 @@ q_xLSpd := iq_stPtm.q_xLSpd;
 ]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{9db5903b-b46e-480a-a164-d8ceb38a2676}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.iq_stPtm.xRunSW := run;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_TurboIsOn" Id="{fd80a5ac-8a80-41d5-8e07-a92996986023}">
+      <Declaration><![CDATA[METHOD PUBLIC M_TurboIsOn : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_TurboIsOn := (This^.iq_stPtm.eState =  E_PumpState.pumpSTARTING ) OR (This^.iq_stPtm.eState =  E_PumpState.pumpRUNNING );]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_PTM_Agilent">
       <LineId Id="21" Count="0" />
       <LineId Id="592" Count="0" />
@@ -365,6 +385,13 @@ q_xLSpd := iq_stPtm.q_xLSpd;
       <LineId Id="12" Count="0" />
       <LineId Id="9" Count="2" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_Run">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_TurboIsOn">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

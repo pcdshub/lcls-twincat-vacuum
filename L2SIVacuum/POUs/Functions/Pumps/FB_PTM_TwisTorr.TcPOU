@@ -64,6 +64,17 @@ iq_stPtm.i_xFault := NOT i_xFault;
 q_RunDO := iq_stPtm.q_RunDO;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{8ab9be14-b507-4653-a3e8-b3b1fd16bb91}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.iq_stPtm.xRunSW := run;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_PTM_TwisTorr">
       <LineId Id="29" Count="11" />
       <LineId Id="44" Count="0" />
@@ -74,6 +85,10 @@ q_RunDO := iq_stPtm.q_RunDO;]]></ST>
     <LineIds Name="FB_PTM_TwisTorr.ACT_IO">
       <LineId Id="2" Count="2" />
       <LineId Id="7" Count="3" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TwisTorr.M_Run">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -14,8 +14,8 @@ STRUCT
 	
 	// Outputs
 	{attribute 'pytmc' :=
-	pv: POS_DES;
-	io: io ;
+	pv: POS_OUT;
+	io: i ;
 	'}
 	q_iRawPosition	:	INT; //Position control 
 	//For the EVR 116 this is 0-10V analog 0.4 closed to 9.1 Closed
@@ -26,12 +26,6 @@ STRUCT
 	io: i;
     '}
 	xIlkOK	:	BOOL := FALSE; // Interlock Bit
-	//Manually Pressing valve "Open/Close" on EDM
-	{attribute 'pytmc' := '
-    pv: OPN_SW;
-	io: io;
-    '}
-	pv_xOPN_SW	: BOOL;
 	
 	rUpperLimit	:	REAL:=100; // Percentage9.1;	//Upper limit on valve open
 	{attribute 'pytmc' := '
@@ -40,12 +34,12 @@ STRUCT
 	'}
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
 	{attribute 'pytmc' := 
-	'pv: POS_STATE ;
+	'pv: CNTRL_STATE ;
 	type: mbbi ;
-	field: ZRST OPEN ;
-	field: ONST CLOSED ;
-	field: TWST MOVING ;
-	field: THST INVALID ;
+	field: ZRST CLOSE_SW ;
+	field: ONST OPEN_SW;
+	field: TWST PRESS CNTRL ;
+	field: THST MANUAL CNTRL ;
 	io: i
 	'}
 	eValveControl	:	E_VCN := CloseValve; // Valve control state

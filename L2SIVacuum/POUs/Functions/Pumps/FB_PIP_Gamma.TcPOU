@@ -76,6 +76,18 @@ stPump.i_xSP_DI:=	i_xSP_DI;
 q_xHVEna_DO:= NOT stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activae function]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{55fab705-c400-4b7f-9779-42233f752de0}">
+      <Declaration><![CDATA[
+METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.stPump.xHVEna_SW := run;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_PIP_Gamma">
       <LineId Id="10" Count="0" />
       <LineId Id="165" Count="0" />
@@ -102,6 +114,10 @@ q_xHVEna_DO:= NOT stPump.q_xHVEna_DO; //According to Manual pin should be ground
       <LineId Id="2" Count="1" />
       <LineId Id="5" Count="2" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.M_Run">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

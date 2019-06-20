@@ -9,11 +9,15 @@ STRUCT
 	{attribute 'pytmc' := '
 	pv: OPN_DI;
 	io: i;
+	field: ZNAM FALSE;
+	field: ONAM OPEN;
 	'}
 	i_xOpnLS	: BOOL;
 	{attribute 'pytmc' := '
     pv: CLS_DI;
 	io: i;
+	field: ZNAM FALSE;
+	field: ONAM CLOSE;
     '}
 	i_xClsLS	: BOOL;
 (* Controls *)
@@ -27,7 +31,7 @@ STRUCT
 (* EPICS Controls *)
 	{attribute 'pytmc' := '
 	pv: OPN_SW; 
-	field: ZNAM CLOSED; 
+	field: ZNAM CLOSE; 
 	field: ONAM OPEN;
 	io: io ;
 	'}
@@ -40,6 +44,8 @@ STRUCT
 	{attribute 'pytmc' := '
     pv: FORCE_OPN;
 	io: o;
+	field: ZNAM FALSE;
+	field: ONAM OPEN;
     '}
 	pv_xOvrdOpn	:	BOOL;
 

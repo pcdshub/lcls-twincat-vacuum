@@ -59,6 +59,17 @@ IO();
         <ST><![CDATA[q_xRunDo:= iq_stPFO.q_xRunDo;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{eba797a4-1012-42f7-b194-fa0d2f89ba57}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.iq_stPFO.pv_xRunSW := run;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_ScrollPump">
       <LineId Id="26" Count="0" />
       <LineId Id="22" Count="1" />
@@ -80,6 +91,10 @@ IO();
     </LineIds>
     <LineIds Name="FB_ScrollPump.IO">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ScrollPump.M_Run">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

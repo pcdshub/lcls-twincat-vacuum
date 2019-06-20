@@ -221,6 +221,14 @@
     <Compile Include="POUs\Functions\Valves\FB_VFS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VGC_EBD.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VRC_EBD.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VVC.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -344,6 +352,9 @@
   </ItemGroup>
   <ItemGroup>
     <SubObject Include="FB_VGC.ACT_ResetAlarms">
+      <LinkAlways>true</LinkAlways>
+    </SubObject>
+    <SubObject Include="FB_VGC_EBD.ACT_ResetAlarms">
       <LinkAlways>true</LinkAlways>
     </SubObject>
   </ItemGroup>
