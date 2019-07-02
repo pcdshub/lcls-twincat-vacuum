@@ -27,7 +27,7 @@ VAR
 	i_xMPStatus	AT%I*:	BOOL; //MP status
 	i_xBPStatus	AT%I*:	BOOL; //BP status
 	i_xWarning	AT%I*:	BOOL; //Warning status
-	i_xAlarm	AT%I*:	BOOL; //Alarm, maps to error
+	i_xAlarmOK	AT%I*:	BOOL; //Alarm, maps to error
 	i_xRemote	AT%I*:	BOOL; //Remote control status
 END_VAR
 ]]></Declaration>
@@ -86,7 +86,7 @@ q_xBPStart	:= stPump.q_xBPStart;
 stPump.i_xMPStatus:=	i_xMPStatus;
 stPump.i_xBPStatus:=	i_xBPStatus;
 stPump.i_xWarning:= i_xWarning	;
-stPump.i_xAlarm:=	i_xAlarm;
+stPump.i_xAlarm:=	NOT(i_xAlarmOK);
 stPump.i_xRemote:= i_xRemote;]]></ST>
       </Implementation>
     </Action>

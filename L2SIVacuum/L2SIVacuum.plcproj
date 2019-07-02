@@ -205,6 +205,9 @@
     <Compile Include="POUs\Functions\Pumps\functions\F_TurboExtILKLogic.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\functions\F_TurboExtILKLogic_2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_Kashiyama_VRC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
