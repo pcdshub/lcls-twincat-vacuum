@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <DUT Name="ST_VG" Id="{e8999049-eca7-4ca1-9a7c-26918f6aba1e}">
     <Declaration><![CDATA[TYPE ST_VG :
 STRUCT
@@ -37,7 +37,7 @@ STRUCT
 	
 	/// Controls and I/Os
 	{attribute 'pytmc' := '
-    pv: PRESS;
+    pv: PRESS_AI;
 	io: i;
     '}
 	i_iPRESS_R  :INT; // input Pressure // Link to analog Input
@@ -54,7 +54,7 @@ STRUCT
     '}
 	i_xDisc_Active : BOOL;// Discharge Current Active 
 	{attribute 'pytmc' := '
-    pv: HV_DIS;
+    pv: HV_DIS_DO;
 	io: i;
     '}
 	q_xHV_DIS : BOOL; // Enable High Voltage when True 

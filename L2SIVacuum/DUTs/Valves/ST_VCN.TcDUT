@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <DUT Name="ST_VCN" Id="{09a4fd4d-af49-4c30-8fb9-576bd4a65636}">
     <Declaration><![CDATA[TYPE ST_VCN :
 STRUCT
@@ -14,7 +14,7 @@ STRUCT
 	
 	// Outputs
 	{attribute 'pytmc' :=
-	pv: POS_DES;
+	pv: POS_AO;
 	io: io ;
 	'}
 	q_iRawPosition	:	INT; //Position control 
@@ -40,12 +40,12 @@ STRUCT
 	'}
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
 	{attribute 'pytmc' := 
-	'pv: POS_STATE ;
+	'pv: STATE ;
 	type: mbbi ;
-	field: ZRST OPEN ;
-	field: ONST CLOSED ;
-	field: TWST MOVING ;
-	field: THST INVALID ;
+	field: ZRST CLOSE ;
+	field: ONST OPEN ;
+	field: TWST PRESSURE CONTROL ;
+	field: THST MANUAL CONTROL ;
 	io: i
 	'}
 	eValveControl	:	E_VCN := CloseValve; // Valve control state

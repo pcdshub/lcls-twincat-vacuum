@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <DUT Name="ST_LeyboldPTM" Id="{928359f7-41f5-4b97-ac89-aed21155294b}">
     <Declaration><![CDATA[TYPE ST_LeyboldPTM EXTENDS ST_PTM :
 STRUCT
@@ -35,7 +35,7 @@ More?
 
 //Controls
 	{attribute 'pytmc' := '
-    pv: Remote_EN;
+    pv: REMOTE;
 	io: io;
 	'}
 	q_xRemote : BOOL; (* Remote control enabled *)
