@@ -23,17 +23,19 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[(*MG 2019*)
 stPump.xIlkOK := i_xExtIlkOK AND stPump.i_xAlarmOK ;
+// Enable the remote signal when the interlock evaluation is ok
+//stPump.q_xRemote := stPump.xIlkOK;
 
 IF stPump.xIlkOK THEN
-
 	stPump.q_xRunDO := stPump.pv_xRunSW;
 	ELSE
 		stPump.PV_xRunSW := FALSE;
         stPump.q_xRunDO := FALSE;	
 END_IF
-//IO Mapping
+
+//Soft IO Mapping
 ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{1807940c-3fbb-4008-9507-5845d2fff7d5}">
@@ -47,9 +49,12 @@ q_xRemote:= stPump.q_xRemote;]]></ST>
     </Action>
     <LineIds Name="FB_EbaraEVA">
       <LineId Id="9" Count="0" />
-      <LineId Id="27" Count="2" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="30" Count="4" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="29" Count="5" />
+      <LineId Id="62" Count="0" />
       <LineId Id="25" Count="0" />
       <LineId Id="36" Count="0" />
     </LineIds>

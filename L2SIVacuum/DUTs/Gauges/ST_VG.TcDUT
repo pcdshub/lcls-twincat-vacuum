@@ -37,7 +37,7 @@ STRUCT
 	
 	/// Controls and I/Os
 	{attribute 'pytmc' := '
-    pv: PRESS;
+    pv: PRESS_R;
 	io: i;
     '}
 	i_iPRESS_R  :INT; // input Pressure // Link to analog Input

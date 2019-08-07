@@ -17,10 +17,12 @@ END_VAR
 VAR
 	rV	:	REAL;
 	
+	timer:TON;
+	
 	(*IOs to be linked*)
 	/// Controls and I/Os
 	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
-	q_xHV_DIS AT %Q* : BOOL; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
+	q_xHV_DIS AT %Q* : BOOL := True; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
 	
 	
 END_VAR
@@ -31,11 +33,15 @@ END_VAR
 (* 09-28-2018, Margaret Ghaly *)
 (* This function will read the pressure from any gauge on a 937B. *)
 
+(*Soft IO Linking*)
+IO();
+
+(*Pressure readbacks*)
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
 IG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));
+	
 
 (* Pressure gauge State checks *)
-
 IF (rV <=9.6 ) AND (rV>=0.6) THEN
 	IG.eState := Valid; // normal
 ELSIF rV >= 0.18 AND rV <= 0.22 THEN
@@ -53,22 +59,22 @@ END_IF
 (* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
 (* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
 (* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
- IF (IG.xHV_SW) THEN
-	 IF (PG.rPRESS <= IG.rPRO_SP) THEN
+
+	IF (PG.rPRESS <= IG.rPRO_SP) THEN
 		 IG.q_xHV_DIS := NOT IG.xHV_SW;
-	END_IF
-	IF NOT IG.q_xHV_DIS THEN
+	ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
 		IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
 		IG.q_xHV_DIS := TRUE;
 		IG.xHV_SW := FALSE;
 		END_IF
-  	END_IF
- ELSE 
-	IG.q_xHV_DIS := TRUE;
-	IG.xHV_SW := FALSE;
- END_IF
+	ELSE 
+		IG.q_xHV_DIS := TRUE;
+		IG.xHV_SW := FALSE;
+ 	END_IF
+ 
 
 
+ 
 (* Pressure gauge OK checks *)
 IG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6);
 
@@ -80,6 +86,8 @@ IG.xAT_VAC := IG.xPRESS_OK AND IG.rPRESS < IG.rVAC_SP;
 (*Soft IO Linking*)
 // check ethercat Diagnostics
 IO();
+
+timer(IN:= NOT IG.q_xHV_DIS, PT:= T#3s);
 
 ]]></ST>
     </Implementation>
@@ -95,22 +103,29 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
     <LineIds Name="FB_MKS422">
       <LineId Id="3" Count="0" />
       <LineId Id="104" Count="0" />
-      <LineId Id="4" Count="4" />
+      <LineId Id="4" Count="1" />
+      <LineId Id="264" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="268" Count="0" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="242" Count="1" />
       <LineId Id="107" Count="0" />
-      <LineId Id="110" Count="11" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="112" Count="9" />
       <LineId Id="108" Count="0" />
       <LineId Id="9" Count="5" />
       <LineId Id="204" Count="1" />
       <LineId Id="208" Count="0" />
-      <LineId Id="215" Count="0" />
       <LineId Id="210" Count="0" />
       <LineId Id="212" Count="2" />
       <LineId Id="211" Count="0" />
-      <LineId Id="209" Count="0" />
-      <LineId Id="207" Count="0" />
-      <LineId Id="216" Count="1" />
+      <LineId Id="261" Count="2" />
+      <LineId Id="260" Count="0" />
       <LineId Id="206" Count="0" />
-      <LineId Id="26" Count="1" />
+      <LineId Id="258" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="248" Count="0" />
       <LineId Id="122" Count="0" />
       <LineId Id="28" Count="0" />
       <LineId Id="42" Count="1" />
@@ -119,7 +134,10 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="44" Count="0" />
       <LineId Id="105" Count="0" />
       <LineId Id="180" Count="1" />
-      <LineId Id="45" Count="1" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="46" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS422.IO">

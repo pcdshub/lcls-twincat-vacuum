@@ -16,7 +16,7 @@ VAR
 	xRunOk	:	BOOL;
 	(*IO*)
 	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
-	i_xFault AT%I*: BOOL; // Error
+	i_xFault AT%I*: BOOL; // Error // this open collector output signal is ON when a system fault condition is detected
 
 	q_RunDO AT%Q*: BOOL; // Start/Stop
 
@@ -39,7 +39,6 @@ END_IF
 (*Pump STATE*)
 IF iq_stPtm.i_xFault THEN 
 	iq_stPtm.eState := pumpFAULT;
-
 ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
 	iq_stPtm.eState := pumpSTOPPED;
 ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO THEN
@@ -57,7 +56,7 @@ ACT_IO();]]></ST>
       <Implementation>
         <ST><![CDATA[(*Inputs*)
 iq_stPtm.i_xAtSpd := i_xAtSpd;
-iq_stPtm.i_xFault := NOT i_xFault;
+iq_stPtm.i_xFault := i_xFault;
 
 
 (*Outputs*)
@@ -78,7 +77,8 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
     <LineIds Name="FB_PTM_TwisTorr">
       <LineId Id="29" Count="11" />
       <LineId Id="44" Count="0" />
-      <LineId Id="47" Count="12" />
+      <LineId Id="47" Count="2" />
+      <LineId Id="51" Count="8" />
       <LineId Id="41" Count="1" />
       <LineId Id="9" Count="0" />
     </LineIds>
