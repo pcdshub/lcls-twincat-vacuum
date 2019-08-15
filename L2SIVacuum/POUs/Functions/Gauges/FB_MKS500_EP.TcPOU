@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS500_EP" Id="{4da1e942-f359-4f6e-ab12-d5a0031e68e6}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EP boxes*)
+    <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EP boxes.
+A separate function block is necessary for the MKS500-to-EP box interface beacuse the EP
+boxes do not natively support the 5v IO signals on the MKS500 gauge.*)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
 (* 500 Logarithmic Output Conversion, factory default configuration *)
 FUNCTION_BLOCK FB_MKS500_EP
