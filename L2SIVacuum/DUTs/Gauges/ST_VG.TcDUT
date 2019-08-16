@@ -37,7 +37,7 @@ STRUCT
 	
 	/// Controls and I/Os
 	{attribute 'pytmc' := '
-    pv: PRESS_R;
+    pv: PRESS_AI;
 	io: i;
     '}
 	i_iPRESS_R  :INT; // input Pressure // Link to analog Input
@@ -54,7 +54,7 @@ STRUCT
     '}
 	i_xDisc_Active : BOOL;// Discharge Current Active 
 	{attribute 'pytmc' := '
-    pv: HV_DIS;
+    pv: HV_DIS_DO;
 	io: i;
     '}
 	q_xHV_DIS : BOOL; // Enable High Voltage when True 

@@ -4,29 +4,7 @@
     <Declaration><![CDATA[TYPE ST_VGC :
 STRUCT
 
-(* I/Os*)
-(* Readbacks *)
-	{attribute 'pytmc' := '
-	pv: OPN_DI;
-	io: i;
-	field: ZNAM FALSE;
-	field: ONAM OPEN;
-	'}
-	i_xOpnLS	: BOOL;
-	{attribute 'pytmc' := '
-    pv: CLS_DI;
-	io: i;
-	field: ZNAM FALSE;
-	field: ONAM CLOSE;
-    '}
-	i_xClsLS	: BOOL;
-(* Controls *)
-	{attribute 'pytmc' := '
-    pv: OPN_DO;
-	io: i;
-    '}
-	q_xOPN_DO	: BOOL;
-	
+
 	
 (* EPICS Controls *)
 	{attribute 'pytmc' := '
@@ -57,6 +35,30 @@ STRUCT
 	'}
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 
+	
+	(* I/Os*)
+(* Readbacks *)
+	{attribute 'pytmc' := '
+	pv: OPN_DI;
+	io: i;
+	field: ZNAM FALSE;
+	field: ONAM OPEN;
+	'}
+	i_xOpnLS	: BOOL;
+	{attribute 'pytmc' := '
+    pv: CLS_DI;
+	io: i;
+	field: ZNAM FALSE;
+	field: ONAM CLOSE;
+    '}
+	i_xClsLS	: BOOL;
+(* Controls *)
+	{attribute 'pytmc' := '
+    pv: OPN_DO;
+	io: i;
+    '}
+	q_xOPN_DO	: BOOL;
+	
 (* Interlocks *)
 
 	

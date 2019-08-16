@@ -35,7 +35,7 @@ More?
 
 //Controls
 	{attribute 'pytmc' := '
-    pv: Remote_EN;
+    pv: REMOTE;
 	io: io;
 	'}
 	q_xRemote : BOOL; (* Remote control enabled *)

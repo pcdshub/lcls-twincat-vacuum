@@ -14,7 +14,7 @@ STRUCT
 	
 	// Outputs
 	{attribute 'pytmc' :=
-	pv: POS_OUT;
+	pv: POS_AO;
 	io: i ;
 	'}
 	q_iRawPosition	:	INT; //Position control 
@@ -36,8 +36,8 @@ STRUCT
 	{attribute 'pytmc' := 
 	'pv: STATE ;
 	type: mbbi ;
-	field: ZRST CLOSE_SW ;
-	field: ONST OPEN_SW;
+	field: ZRST CLOSE ;
+	field: ONST OPEN;
 	field: TWST PRESS CNTRL ;
 	field: THST MANUAL CNTRL ;
 	io: i

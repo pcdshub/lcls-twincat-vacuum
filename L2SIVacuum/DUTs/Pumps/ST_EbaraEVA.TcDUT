@@ -10,7 +10,7 @@ STRUCT
 	
 (* Input *)
 {attribute 'pytmc' := '
-    pv: Remote
+    pv: REMOTE
 	io: io
     '}
 	q_xRemote	:	BOOL;

@@ -60,7 +60,7 @@ STRUCT
 	
 	(* Run interlock*)
 	{attribute 'pytmc' := '
-    pv: ILK_STATUS;
+    pv: ILK_OK;
 	io: i;
 	'}
 	xIlk : BOOL;
