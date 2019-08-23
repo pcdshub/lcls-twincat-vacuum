@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_EbaraEVA" Id="{fcf97f55-51a9-4ad7-88f0-a45e9e26409c}" SpecialFunc="None">
     <Declaration><![CDATA[(*This function block does basic controls for the Ebara EV-A  pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -35,6 +35,19 @@ IF stPump.xIlkOK THEN
         stPump.q_xRunDO := FALSE;	
 END_IF
 
+(*State evaluation*)
+IF NOT(stPump.i_xAlarmOK ) THEN
+	stpump.eState := pumpFAULT;
+ELSIF NOT stpump.q_xRunDo AND stPump.i_xAlarmOK THEN
+		stpump.eState := pumpSTOPPED;	
+ELSIF NOT stpump.q_xRunDo AND NOT stPump.i_xIsRun THEN
+		stpump.eState := pumpSTARTING;	
+ELSIF stPump.i_xIsRun THEN
+		stpump.eState := pumpRUNNING;
+ELSE
+	stpump.eState := pumpFAULT;
+END_IF
+
 //Soft IO Mapping
 ACT_IO();]]></ST>
     </Implementation>
@@ -54,6 +67,16 @@ q_xRemote:= stPump.q_xRemote;]]></ST>
       <LineId Id="28" Count="0" />
       <LineId Id="61" Count="0" />
       <LineId Id="29" Count="5" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="85" Count="1" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="88" Count="2" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="87" Count="0" />
       <LineId Id="62" Count="0" />
       <LineId Id="25" Count="0" />
       <LineId Id="36" Count="0" />

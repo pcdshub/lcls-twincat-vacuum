@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <DUT Name="ST_VGC" Id="{0b7dfc27-9760-4c7a-bad2-fa375ac628b8}">
     <Declaration><![CDATA[TYPE ST_VGC :
 STRUCT
@@ -118,7 +118,7 @@ STRUCT
 	xAlmSum			: 	BOOL;
 	
 	{attribute 'pytmc' := '
-    pv: Error;
+    pv: ERROR;
 	field: ZNAM NO ERROR ;
 	field: ONAM ERROR PRESENT ;
 	io: o;

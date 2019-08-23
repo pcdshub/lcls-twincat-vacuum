@@ -15,7 +15,7 @@
     <LibraryReferences>{2bc9c512-7c1a-483c-9892-8f50f3778fb4}</LibraryReferences>
     <CombineIds>false</CombineIds>
     <Company>SLAC</Company>
-    <Released>true</Released>
+    <Released>false</Released>
     <Title>L2SI Vacuum Library</Title>
     <ProjectVersion>1.0.1</ProjectVersion>
   </PropertyGroup>
@@ -310,6 +310,10 @@
     <PlaceholderReference Include="LCLS General">
       <DefaultResolution>LCLS General, * (SLAC)</DefaultResolution>
       <Namespace>LCLS_General</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="LCLS PMPS">
+      <DefaultResolution>LCLS PMPS, * (SLAC)</DefaultResolution>
+      <Namespace>LCLS_PMPS</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_DataExchange">
       <DefaultResolution>Tc2_DataExchange, * (Beckhoff Automation GmbH)</DefaultResolution>

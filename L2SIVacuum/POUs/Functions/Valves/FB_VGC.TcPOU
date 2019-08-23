@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_VGC" Id="{e37ddbb4-4f83-44d0-bab6-047e5a609a6c}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves*)
 (* This function block interlock is as follows:
@@ -39,11 +39,15 @@ VAR_OUTPUT
 	iq_stValve : ST_VGC; (* All valve data and states will be in this struct*)
 	
 	{attribute 'pytmc' := '
-    pv: MPS_FAULT
+    pv: MPS_FAULT_OK
 	'}
 	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
 END_VAR
 VAR
+	// PMPS
+	fb_fast_fault : FB_FastFault;
+	//g_FastFaultOutput1	:	FB_HardwareFFOutput;	
+
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
 	sPath: STRING;
@@ -279,6 +283,9 @@ ACT_ResetAlarms();
 (*IO Mapping*)
 ACT_IO();
 
+(*FAST FAULT*)
+//fb_fast_fault(i_xOK:= xMPS_OK , i_xReset:= , o_xFFLine=> , io_fbFFHWO:= );
+
 
 
 ]]></ST>
@@ -390,6 +397,9 @@ END_VAR
       <LineId Id="347" Count="3" />
       <LineId Id="487" Count="2" />
       <LineId Id="162" Count="0" />
+      <LineId Id="932" Count="0" />
+      <LineId Id="931" Count="0" />
+      <LineId Id="934" Count="0" />
       <LineId Id="852" Count="0" />
       <LineId Id="163" Count="1" />
       <LineId Id="2" Count="0" />

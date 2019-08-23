@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_ScrollPump" Id="{95800034-a8e9-430e-af6e-1fa7a649fe90}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function block provides basic  control for Scroll Pumps *)
 (* Turn on scroll pump if the Turbo Vent Valve is closed. *)
@@ -45,7 +45,12 @@ END_IF
 
 iq_stPFO.pv_xRunSW := iq_stPFO.q_xRunDo;
 
-
+(*State evaluation*)
+IF NOT iq_stPFO.q_xRunDo THEN
+	iq_stPFO.eState := pumpSTOPPED;	
+ELSE
+	iq_stPFO.eState := pumpRUNNING;
+END_IF
 
 (*soft io Mapping*)
 IO();
@@ -83,7 +88,11 @@ this^.iq_stPFO.pv_xRunSW := run;]]></ST>
       <LineId Id="41" Count="0" />
       <LineId Id="71" Count="0" />
       <LineId Id="4" Count="0" />
-      <LineId Id="97" Count="3" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="132" Count="1" />
+      <LineId Id="138" Count="1" />
+      <LineId Id="99" Count="1" />
       <LineId Id="102" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="5" Count="2" />
