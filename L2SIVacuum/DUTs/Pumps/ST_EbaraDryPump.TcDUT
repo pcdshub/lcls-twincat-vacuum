@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <DUT Name="ST_EbaraDryPump" Id="{55a0bc2c-4199-48dd-89d3-0255c23678ea}">
     <Declaration><![CDATA[TYPE ST_EbaraDryPump EXTENDS ST_RoughPump :
 STRUCT
@@ -40,7 +40,7 @@ i_xMPStatus	:	BOOL; //MP status
     '}
 i_xBPStatus	:	BOOL; //BP status
 {attribute 'pytmc' := '
-    pv: WARN;
+    pv: WARN_DI;
 	io: i;
     '}
 i_xWarning	:	BOOL; //Warning status

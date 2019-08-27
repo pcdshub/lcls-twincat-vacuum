@@ -1,37 +1,27 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4022.27">
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4023.119">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{F27C2E36-F71A-4739-B9BA-8A892874FECC}" PersistentType="true">VacEventClass</Name>
-			<DisplayName TxtId="">
-				<![CDATA[NewEventClass_DisplayText]]>
-			</DisplayName>
+			<DisplayName TxtId=""><![CDATA[NewEventClass_DisplayText]]></DisplayName>
 			<EventId>
 				<Name Id="1">Error</Name>
-				<DisplayName TxtId="">
-					<![CDATA[General Error: {0}]]>
-				</DisplayName>
+				<DisplayName TxtId=""><![CDATA[General Error: {0}]]></DisplayName>
 				<Severity>Warning</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="2">ErrorTO</Name>
-				<DisplayName TxtId="">
-					<![CDATA[Timeout Error: {0}]]>
-				</DisplayName>
+				<DisplayName TxtId=""><![CDATA[Timeout Error: {0}]]></DisplayName>
 				<Severity>Warning</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="3">Setpoint</Name>
-				<DisplayName TxtId="">
-					<![CDATA[Setpoint out of range: {0}]]>
-				</DisplayName>
+				<DisplayName TxtId=""><![CDATA[Setpoint out of range: {0}]]></DisplayName>
 				<Severity>Info</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="4">Inlk_Active</Name>
-				<DisplayName TxtId="">
-					<![CDATA[Interlock Active: {0}]]>
-				</DisplayName>
+				<DisplayName TxtId=""><![CDATA[Interlock Active: {0}]]></DisplayName>
 				<Severity>Warning</Severity>
 			</EventId>
 			<Hides>

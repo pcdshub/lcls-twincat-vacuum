@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_PTM_Ebara_010M" Id="{db9fdbdf-85bb-4e58-96cc-808f2a65a0e5}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Ebara Turbo pump connected to the ETC010M Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)

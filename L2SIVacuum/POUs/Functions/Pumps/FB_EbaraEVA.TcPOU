@@ -54,6 +54,7 @@ ACT_IO();]]></ST>
     <Action Name="ACT_IO" Id="{1807940c-3fbb-4008-9507-5845d2fff7d5}">
       <Implementation>
         <ST><![CDATA[stPump.i_xAlarmOK:=	i_xAlarmOK;
+stPump.xErr:=	NOT(i_xAlarmOK);
 stPump.i_xIsRun := i_xIsRun;
 (*outputs*)
 q_xRunDo:=stPump.q_xRunDo;
@@ -82,7 +83,9 @@ q_xRemote:= stPump.q_xRemote;]]></ST>
       <LineId Id="36" Count="0" />
     </LineIds>
     <LineIds Name="FB_EbaraEVA.ACT_IO">
-      <LineId Id="2" Count="3" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="3" Count="2" />
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

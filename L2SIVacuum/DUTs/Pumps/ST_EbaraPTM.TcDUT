@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <DUT Name="ST_EbaraPTM" Id="{00dd7679-7d3a-464d-8613-c714e423a1cf}">
     <Declaration><![CDATA[TYPE ST_EbaraPTM EXTENDS ST_PTM :
 STRUCT
@@ -24,9 +24,7 @@ q_xStop    : BOOL;
 	'}
 q_xReset   : BOOL; // xReset is momentary reset switch - resets protection functions
 	{attribute 'pytmc' := '
-    pv: ILK_OK;
-	field: ZNAM ILK ACTIVE;
-	field: ONAM ILK OK;
+    pv: PROT;
 	io: i;
 	'}
 q_xProtection : BOOL; //NC. If opened, pump will decelerate/not start
