@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_EbaraDryPump" Id="{fa5a85fd-eab5-4a2b-a440-c1a901955592}" SpecialFunc="None">
     <Declaration><![CDATA[(*This function block does basic controls for the Ebara EV-S Dry pump. Starts booster pump when appropriate. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -85,7 +85,7 @@ q_xBPStart	:= stPump.q_xBPStart;
 (*Inputs*)
 stPump.i_xMPStatus:=	i_xMPStatus;
 stPump.i_xBPStatus:=	i_xBPStatus;
-stPump.i_xWarning:= i_xWarning	;
+stPump.iWrn:= i_xWarning	;
 stPump.i_xAlarm:=	i_xAlarm;
 stPump.i_xRemote:= i_xRemote;]]></ST>
       </Implementation>

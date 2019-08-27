@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_EbaraEVA" Id="{fcf97f55-51a9-4ad7-88f0-a45e9e26409c}" SpecialFunc="None">
     <Declaration><![CDATA[(*This function block does basic controls for the Ebara EV-A  pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -37,7 +37,8 @@ ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{1807940c-3fbb-4008-9507-5845d2fff7d5}">
       <Implementation>
-        <ST><![CDATA[stPump.i_xAlarmOK:=	NOT(i_xAlarmOK);
+        <ST><![CDATA[stPump.i_xAlarmOK:=	i_xAlarmOK;
+stPump.xErr := NOT(i_xAlarmOK);
 stPump.i_xIsRun := i_xIsRun;
 (*outputs*)
 q_xRunDo:=stPump.q_xRunDo;
@@ -53,7 +54,9 @@ q_xRemote:= stPump.q_xRemote;]]></ST>
       <LineId Id="36" Count="0" />
     </LineIds>
     <LineIds Name="FB_EbaraEVA.ACT_IO">
-      <LineId Id="2" Count="3" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="3" Count="2" />
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
