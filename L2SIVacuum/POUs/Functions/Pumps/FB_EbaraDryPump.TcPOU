@@ -59,7 +59,7 @@ ACT_IO();
 stPump.xExtIlk := NOT i_xExtIlkOK;
 // These are normally closed inputs
 stPump.xErr := NOT stPump.i_xAlarm;
-stPump.xWrn := NOT stPump.i_xWarning;
+//stPump.xWrn := NOT stPump.i_xWarning;
 
 
 //Interlock and error/warning
@@ -85,7 +85,7 @@ q_xBPStart	:= stPump.q_xBPStart;
 (*Inputs*)
 stPump.i_xMPStatus:=	i_xMPStatus;
 stPump.i_xBPStatus:=	i_xBPStatus;
-stPump.iWrn:= i_xWarning	;
+stPump.xWrn:= i_xWarning	;
 stPump.i_xAlarm:=	i_xAlarm;
 stPump.i_xRemote:= i_xRemote;]]></ST>
       </Implementation>
