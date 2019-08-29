@@ -40,7 +40,7 @@ STRUCT
 	'}
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
 	{attribute 'pytmc' := '
-	'pv: STATE ;
+	pv: STATE ;
 	type: mbbi ;
 	field: ZRST CLOSE ;
 	field: ONST OPEN ;
