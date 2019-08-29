@@ -13,7 +13,7 @@ STRUCT
 	i_iPosition	:	REAL; //Position readback (if it exists)
 	
 	// Outputs
-	{attribute 'pytmc' :=
+	{attribute 'pytmc' := '
 	pv: POS_AO;
 	io: io ;
 	'}
