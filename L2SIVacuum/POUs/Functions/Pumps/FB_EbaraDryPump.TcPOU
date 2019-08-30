@@ -100,9 +100,9 @@ q_xBPStart	:= stPump.q_xBPStart;
 stPump.i_xMPStatus:=	i_xMPStatus;
 stPump.i_xBPStatus:=	i_xBPStatus;
 stPump.i_xWarning:= i_xWarning	;
-stPump.iWrn := i_xWarning;
+stPump.xWrn := i_xWarning;
 stPump.i_xAlarm:=	NOT(i_xAlarmOK);
-StPump.iErr := NOT(i_xAlarmOK);
+StPump.xErr := NOT(i_xAlarmOK);
 stPump.i_xRemote:= i_xRemote;]]></ST>
       </Implementation>
     </Action>

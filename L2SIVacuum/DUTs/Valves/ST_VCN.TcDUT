@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <DUT Name="ST_VCN" Id="{09a4fd4d-af49-4c30-8fb9-576bd4a65636}">
     <Declaration><![CDATA[TYPE ST_VCN :
 STRUCT
@@ -13,7 +13,7 @@ STRUCT
 	i_iPosition	:	REAL; //Position readback (if it exists)
 	
 	// Outputs
-	{attribute 'pytmc' :=
+	{attribute 'pytmc' := '
 	pv: POS_AO;
 	io: i ;
 	'}
@@ -33,8 +33,8 @@ STRUCT
 	io: io;
 	'}
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
-	{attribute 'pytmc' := 
-	'pv: STATE ;
+	{attribute 'pytmc' :=  ' 
+	pv: STATE ;
 	type: mbbi ;
 	field: ZRST CLOSE ;
 	field: ONST OPEN;

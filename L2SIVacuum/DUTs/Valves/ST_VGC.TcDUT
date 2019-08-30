@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <DUT Name="ST_VGC" Id="{0b7dfc27-9760-4c7a-bad2-fa375ac628b8}">
     <Declaration><![CDATA[TYPE ST_VGC :
 STRUCT
@@ -62,8 +62,8 @@ STRUCT
 (* Interlocks *)
 
 	
-{attribute 'pytmc' := 
-	'pv: Ext_ILK_OK ;
+{attribute 'pytmc' := '
+	pv: Ext_ILK_OK ;
 	field: ZNAM NOT OK ;
 	field: ONAM OK ;
 	io: i ;
@@ -142,8 +142,8 @@ STRUCT
 	'}
 	eVGC_State : E_VGC;
 	
-	{attribute 'pytmc' := 
-	'pv: POS_STATE ;
+	{attribute 'pytmc' := '
+	pv: POS_STATE ;
 	type: mbbi ;
 	field: ZRST OPEN ;
 	field: ONST CLOSED ;

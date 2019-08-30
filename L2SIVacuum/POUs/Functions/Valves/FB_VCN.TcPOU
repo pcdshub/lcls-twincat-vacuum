@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_VCN" Id="{b91718c1-ee94-477e-afdc-a1b96008e0fd}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function implements the Basic functions for the Pfeiffer EVR 116 needle valve*)
 FUNCTION_BLOCK FB_VCN
@@ -89,6 +89,16 @@ q_iRawPosition := iq_stVCN.q_iRawPosition;
 iq_stVCN.i_iPosition := iq_stvcn.q_iRawPosition;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_ValveControl" Id="{cbcd5e0b-59b7-45f1-86d7-5c7278df4f56}">
+      <Declaration><![CDATA[METHOD M_ValveControl : BOOL
+VAR_INPUT
+	state:E_VCN; // Close, Open, Pressure, Manual
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stVCN.eValveControl := state;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_VCN">
       <LineId Id="3" Count="18" />
       <LineId Id="25" Count="2" />
@@ -111,6 +121,9 @@ iq_stVCN.i_iPosition := iq_stvcn.q_iRawPosition;]]></ST>
       <LineId Id="2" Count="0" />
       <LineId Id="1" Count="0" />
       <LineId Id="3" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_VCN.M_ValveControl">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

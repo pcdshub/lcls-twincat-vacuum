@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <DUT Name="ST_VRC" Id="{ee6efa67-7be0-4e42-b045-50546d4578bb}">
     <Declaration><![CDATA[TYPE ST_VRC :
 STRUCT
@@ -19,7 +19,12 @@ STRUCT
 	
 	{attribute 'pytmc' := '
 	pv: STATE;
-	io: i;
+	type: mbbi ;
+	field: ZRST OPEN ;
+	field: ONST CLOSED ;
+	field: TWST MOVING ;
+	field: THST INVALID ;
+	io: i0;
 	'}
 	eState	:	E_ValvePositionState := INVALID;
 
