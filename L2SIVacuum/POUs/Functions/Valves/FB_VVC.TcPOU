@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_VVC" Id="{a538d8bd-5f3e-49c2-b528-765b2211bef2}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for Vent Valves VVC *)
 (* Note Interlock Logic is External *)
@@ -89,7 +89,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := open;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Set_OPN_SW" Id="{6bb3ce16-a9f1-46bd-80bc-4a279a4b4310}">
