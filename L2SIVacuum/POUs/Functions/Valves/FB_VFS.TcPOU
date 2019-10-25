@@ -1,15 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_VFS" Id="{68519563-003c-4daf-ae0e-7245b1fe09af}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VFS
 (* This function block implements basic functionality for Fast Shutter/Valves*)
-(* Fast Shutters do not function as complete isolation valves, but are intended to rapidly limit conductance 
-between vacuum regions.  They should be installed in conjunction with isolation gate valves.  The conductance 
-of the fast shutter in the closed state may be sufficiently low as to create an isolated vacuum region.  
-Thus, at least a pirani gauge, that can measure a pressure down to 1x10-4 Torr, needs to be installed between
-the shutter and the isolation gate valve.
-In the case where a gauge is not installed, the neigboring gate Valves should not be opened unless the shutter 
-is Open. 
+(* Create a separate virtual PLC for the fast shutter logic, and tie/map this task to the FAST I/O portion of the ethercat bus,
+ so we can scan these I/Os faster than the rest of the vacuum I/Os.
+The Fast shutter was tested with PLC task Cycle Base Time 50us with cycle time 0.050ms.
 *)
 VAR_IN_OUT
 	
@@ -19,6 +15,7 @@ VAR_INPUT
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
 	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+	i_xPress_OK :BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -52,7 +49,7 @@ VAR
 	TimDur: TIME := T#20MS;
 	
 	(* Timeouts*)
-	tTimeOutDuration: TIME:= T#1S;
+	tTimeOutDuration: TIME:= T#0.5S;
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
 	
@@ -106,8 +103,9 @@ END_IF
 
 (* Input Trigger to close the Fast Shutter*)
 (* Neighboring Valves Should also be triggered to Close*)
-IF (i_xTrigger) THEN 
+IF (i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK)  OR NOT (iq_stValve.pv_xOPN_SW)  THEN 
 	xClose:= TRUE;
+	iq_stValve.pv_xOPN_SW := FALSE;
 	xVAC_FAULT_OK:= FALSE;
 	iq_stValve.xERR_LstVac := TRUE;
 END_IF
@@ -141,7 +139,7 @@ iq_stValve.xOPN_OK := (NOT iq_stValve.xERR_LstVac) AND NOT i_xTrigger;
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (* When the valve  is open MPS is OK*)
-xMPS_OK := (iq_stValve.eState=OPEN) AND NOT i_xTrigger;//??????
+xMPS_OK := (iq_stValve.eState=OPEN) AND NOT i_xTrigger AND i_xPress_OK;//gause is connected
 
 
 (* Override logic *)
@@ -227,6 +225,7 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;
       <LineId Id="9" Count="0" />
       <LineId Id="232" Count="0" />
       <LineId Id="118" Count="1" />
+      <LineId Id="399" Count="0" />
       <LineId Id="186" Count="0" />
       <LineId Id="223" Count="0" />
       <LineId Id="120" Count="0" />
@@ -250,7 +249,8 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;
       <LineId Id="224" Count="0" />
       <LineId Id="153" Count="0" />
       <LineId Id="185" Count="0" />
-      <LineId Id="188" Count="4" />
+      <LineId Id="188" Count="3" />
+      <LineId Id="398" Count="0" />
       <LineId Id="184" Count="0" />
       <LineId Id="154" Count="0" />
       <LineId Id="157" Count="13" />
