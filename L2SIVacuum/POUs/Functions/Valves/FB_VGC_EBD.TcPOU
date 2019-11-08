@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_VGC_EBD" Id="{103f9e7d-0b94-44cb-ad01-1b51d8921220}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is similar to the FB_VGC, except it has 2 outputs to actuate the Valve*)
 (* This function block implements basic functionality for Isolation Gate Valves*)
@@ -32,6 +32,11 @@ VAR_INPUT
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
 	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+	// Reset fault
+	{attribute 'pytmc' := '
+    pv: FF_Reset
+	'}
+    i_xReset: BOOL;
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -43,8 +48,14 @@ VAR_OUTPUT
     pv: MPS_FAULT
 	'}
 	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
+		io_fbFFHWO    :    FB_HardwareFFOutput;
 END_VAR
 VAR
+	// PMPS
+	fbFF    :    FB_FastFault :=(
+        i_DevName := 'VGC',
+        i_Desc := 'Fault occurs when the valve is not in open state',
+        i_TypeCode := 16#1010);
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
 	sPath: STRING;
@@ -281,6 +292,11 @@ ACT_ResetAlarms();
 (*IO Mapping*)
 ACT_IO();
 
+(*FAST FAULT*)
+fbFF(i_xOK := xMPS_OK,
+    i_xReset := i_xReset,
+    io_fbFFHWO := io_fbFFHWO);
+
 
 
 ]]></ST>
@@ -394,6 +410,8 @@ END_VAR
       <LineId Id="347" Count="3" />
       <LineId Id="487" Count="2" />
       <LineId Id="162" Count="0" />
+      <LineId Id="930" Count="3" />
+      <LineId Id="929" Count="0" />
       <LineId Id="852" Count="0" />
       <LineId Id="163" Count="1" />
       <LineId Id="2" Count="0" />

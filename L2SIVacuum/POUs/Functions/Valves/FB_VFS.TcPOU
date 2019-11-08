@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_VFS" Id="{68519563-003c-4daf-ae0e-7245b1fe09af}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VFS
 (* This function block implements basic functionality for Fast Shutter/Valves*)
@@ -16,6 +16,11 @@ VAR_INPUT
 	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 	i_xPress_OK :BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
+	// Reset fault
+	{attribute 'pytmc' := '
+    pv: FF_Reset
+	'}
+    i_xReset: BOOL;
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -25,10 +30,17 @@ VAR_OUTPUT
 	
 	{attribute 'pytmc' := 'pv: MPS_OK'}
 	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
-	
+
+	io_fbFFHWO    :    FB_HardwareFFOutput;
 	
 END_VAR
 VAR
+	// PMPS
+	fbFF    :    FB_FastFault :=(
+        i_DevName := 'VGC',
+        i_Desc := 'Fault occurs when fast sensor trips or the valve is not in open state',
+        i_TypeCode := 16#1010);
+	
 	rDiffPressAllowed	:	REAL := 22.5; // Torr, Default value comes from Vat Valve Manual
 	rDiffPress : REAL;
 	set : BOOL;
@@ -139,7 +151,7 @@ iq_stValve.xOPN_OK := (NOT iq_stValve.xERR_LstVac) AND NOT i_xTrigger;
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (* When the valve  is open MPS is OK*)
-xMPS_OK := (iq_stValve.eState=OPEN) AND NOT i_xTrigger AND i_xPress_OK;//gause is connected
+xMPS_OK := (iq_stValve.eState=OPEN) AND NOT i_xTrigger AND i_xPress_OK;//gauge is connected
 
 
 (* Override logic *)
@@ -177,6 +189,12 @@ IO();
 // Alarm reset
 //////////////////////////////////////
 ACT_ResetAlarms();
+
+
+(*FAST FAULT*)
+fbFF(i_xOK := xMPS_OK,
+    i_xReset := i_xReset,
+    io_fbFFHWO := io_fbFFHWO);
 
 ]]></ST>
     </Implementation>
@@ -261,7 +279,10 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;
       <LineId Id="215" Count="2" />
       <LineId Id="242" Count="0" />
       <LineId Id="218" Count="2" />
-      <LineId Id="115" Count="2" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="485" Count="4" />
+      <LineId Id="484" Count="0" />
+      <LineId Id="116" Count="1" />
     </LineIds>
     <LineIds Name="FB_VFS.ACT_ResetAlarms">
       <LineId Id="2" Count="1" />

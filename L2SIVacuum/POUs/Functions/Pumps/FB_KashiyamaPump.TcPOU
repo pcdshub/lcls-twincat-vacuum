@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_KashiyamaPump" Id="{c252a3ee-f366-44ed-9d74-8c0f474d15b1}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Kashiyama pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -92,6 +92,17 @@ ACT_IO();]]></ST>
 	q_stPump.i_xIsRun :=	i_xIsRun;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{56315e99-177b-4dfb-94ee-8835f17aed2f}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.q_stPump.pv_xRunSW := run;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_KashiyamaPump">
       <LineId Id="67" Count="0" />
       <LineId Id="20" Count="1" />
@@ -106,6 +117,10 @@ ACT_IO();]]></ST>
     <LineIds Name="FB_KashiyamaPump.ACT_IO">
       <LineId Id="2" Count="8" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_KashiyamaPump.M_Run">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

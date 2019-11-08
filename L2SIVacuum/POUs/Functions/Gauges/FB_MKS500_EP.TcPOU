@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_MKS500_EP" Id="{4da1e942-f359-4f6e-ab12-d5a0031e68e6}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EP boxes.
 A separate function block is necessary for the MKS500-to-EP box interface beacuse the EP
@@ -105,6 +105,17 @@ IG.i_iPRESS_R:=	i_iPRESS_R;
 q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_HVE" Id="{5c5dd30f-1cf9-426d-9ab9-5103df771146}">
+      <Declaration><![CDATA[METHOD M_HVE : BOOL
+VAR_INPUT
+		enable:bool; // set to true to enable, false to disable;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.IG.xHV_SW:= NOT(enable);]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_MKS500_EP">
       <LineId Id="31" Count="0" />
       <LineId Id="190" Count="1" />
@@ -125,6 +136,10 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="6" Count="0" />
       <LineId Id="4" Count="1" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500_EP.M_HVE">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

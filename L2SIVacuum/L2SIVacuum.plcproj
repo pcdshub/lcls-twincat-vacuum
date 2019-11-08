@@ -314,9 +314,9 @@
       <DefaultResolution>LCLS General, * (SLAC)</DefaultResolution>
       <Namespace>LCLS_General</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="LCLS PMPS">
-      <DefaultResolution>LCLS PMPS, * (SLAC)</DefaultResolution>
-      <Namespace>LCLS_PMPS</Namespace>
+    <PlaceholderReference Include="PMPS">
+      <DefaultResolution>PMPS, * (SLAC - LCLS)</DefaultResolution>
+      <Namespace>PMPS</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_DataExchange">
       <DefaultResolution>Tc2_DataExchange, * (Beckhoff Automation GmbH)</DefaultResolution>
@@ -371,6 +371,9 @@
   <ItemGroup>
     <PlaceholderResolution Include="LCLS General">
       <Resolution>LCLS General, 0.0.0 (SLAC)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="PMPS">
+      <Resolution>PMPS, * (SLAC - LCLS)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc3_EventLogger">
       <Resolution>Tc3_EventLogger, * (Beckhoff Automation GmbH)</Resolution>

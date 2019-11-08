@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PTM_Pfeiffer" Id="{f61aaad0-85b4-4244-b8a7-58d7d76a340e}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Pfeiffer Turbo pump connected to the TM700 and TC400 Controllers.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
@@ -24,7 +24,7 @@ VAR
  	i_xRemote AT%I*: BOOL;
 	
 	q_RunDO AT%Q*: BOOL; // Start/Stop
-	q_PumpingStation AT%Q*: BOOL; // Start/Stop
+	q_PumpingStation AT%Q*: BOOL; // Start/Stop interlock
 	q_xRemote AT%Q*: BOOL;
 END_VAR
 

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_MKS500" Id="{7585aac8-a989-4785-918b-438600204b3a}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EL terminals*)
 (* 500 Logarithmic Output Conversion, factory default configuration *)
@@ -118,6 +118,17 @@ IG.i_xDisc_Active:=i_xDisc_Active;
 q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_HVE" Id="{c11659a5-8a50-4170-9e43-162518265fbf}">
+      <Declaration><![CDATA[METHOD M_HVE : BOOL
+VAR_INPUT
+		enable:bool; // set to true to enable, false to disable;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.IG.xHV_SW:= NOT(enable);]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_MKS500">
       <LineId Id="31" Count="2" />
       <LineId Id="36" Count="1" />
@@ -143,6 +154,10 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="6" Count="0" />
       <LineId Id="2" Count="3" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500.M_HVE">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

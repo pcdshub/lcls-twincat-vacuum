@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_MKS422" Id="{2e4ef3e9-09c8-44c2-b5f5-464ffb8c18a0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 422 connected to a 937A/B *)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
@@ -100,6 +100,17 @@ IG.i_iPRESS_R:=	i_iPRESS_R;
 q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_HVE" Id="{96e3d628-6b52-491b-8d3c-14f027a8981f}">
+      <Declaration><![CDATA[METHOD M_HVE : BOOL
+VAR_INPUT
+		enable:bool; // set to true to enable, false to disable;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.IG.xHV_SW:= NOT(enable);]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_MKS422">
       <LineId Id="3" Count="0" />
       <LineId Id="104" Count="0" />
@@ -144,6 +155,10 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="2" Count="1" />
       <LineId Id="5" Count="1" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.M_HVE">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
