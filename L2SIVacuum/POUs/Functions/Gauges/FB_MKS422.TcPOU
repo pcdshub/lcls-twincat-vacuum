@@ -11,7 +11,9 @@ VAR_INPUT
 		PG	:	ST_VG; // Pirani Gauge Structure used to Interlock the Cold Cathode
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := 'pv:'}
+	{attribute 'pytmc' := '
+    pv: 
+	'}
 	IG : ST_VG; // The Cold Cathode Data Structure
 END_VAR
 VAR

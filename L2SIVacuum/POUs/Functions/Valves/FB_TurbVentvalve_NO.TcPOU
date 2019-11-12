@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_TurbVentvalve_NO" Id="{13f6dcdf-6eaf-4953-b8b2-2ecf46768828}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block impelemets Interlock for Agilent Turbo Vent Valve Normally Open*)
 FUNCTION_BLOCK FB_TurbVentvalve_NO
@@ -598,9 +598,22 @@ If the code looks confusing please use a truth table to verify*)]]></Declaration
 q_xCLS_DO:= q_stValve.xCLS_DO;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Close" Id="{f952aee4-b56f-449f-acf0-34ee976bf562}">
+      <Declaration><![CDATA[METHOD M_Close : BOOL
+VAR_INPUT
+		close:BOOL; //True to CLose, False to OPEN
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.q_stValve.pv_xCLS_SW :=Close;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_TurbVentvalve_NO.ACT_IO">
       <LineId Id="2" Count="0" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TurbVentvalve_NO.M_Close">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

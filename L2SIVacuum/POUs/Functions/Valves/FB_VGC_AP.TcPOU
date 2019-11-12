@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
-  <POU Name="FB_VGC_EBD" Id="{103f9e7d-0b94-44cb-ad01-1b51d8921220}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function block is similar to the FB_VGC, except it has 2 outputs to actuate the Valve*)
-(* This function block implements basic functionality for Isolation Gate Valves*)
+  <POU Name="FB_VGC_AP" Id="{35834045-fb1e-4ba9-a4dc-abf7b4af153b}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves with Appertures*)
 (* This function block interlock is as follows:
 1. The valve can be opened when the difference between the pressures on both sides is
 less than the maximum differential pressure.
 2. This rule persists until the pressures on both sides are lower than the vacuum-setpoint.
 3. Once at-vac, the valve will close if the pressure on either side rises above the setpoint.*)
 (*This function block also implements PMPS and EPS interlocks, as well as Fast MPS trigger*)
-FUNCTION_BLOCK FB_VGC_EBD
+(* MPS is triggered differently than the VGC *)
+FUNCTION_BLOCK FB_VGC_AP
 VAR_IN_OUT
 	
 END_VAR
@@ -30,7 +30,7 @@ VAR_INPUT
     pv: MPS_OK
 	'}
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
-	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
+	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required. If this Valve is neigboring a Fast Shutter this should be linked to the fast shutter xVAC_FAULT_OK*)
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 	// Reset fault
 	{attribute 'pytmc' := '
@@ -45,7 +45,7 @@ VAR_OUTPUT
 	iq_stValve : ST_VGC; (* All valve data and states will be in this struct*)
 	
 	{attribute 'pytmc' := '
-    pv: MPS_FAULT
+    pv: MPS_FAULT_OK
 	'}
 	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
 	io_fbFFHWO    :    FB_HardwareFFOutput;
@@ -56,6 +56,8 @@ VAR
         i_DevName := 'VGC',
         i_Desc := 'Fault occurs when the valve is not in open state',
         i_TypeCode := 16#1010);
+	//g_FastFaultOutput1	:	FB_HardwareFFOutput;	
+
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
 	sPath: STRING;
@@ -86,7 +88,6 @@ VAR
 	i_xOpnLS	AT%I*: BOOL;
 	i_xClsLS	AT%I*: BOOL;
 	q_xOPN_DO	AT%Q*: BOOL;
-	q_xOPN_DO_2	AT%Q*: BOOL;
 	
 END_VAR]]></Declaration>
     <Implementation>
@@ -266,7 +267,7 @@ END_IF
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (* When the valve  is open MPS is OK*)
-xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS; 
+xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS; 
 
 ///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
@@ -301,7 +302,7 @@ fbFF(i_xOK := xMPS_OK,
 
 ]]></ST>
     </Implementation>
-    <Action Name="ACT_IO" Id="{edfb5dff-1bfb-4f61-9099-0671d88b61e7}">
+    <Action Name="ACT_IO" Id="{fdfcbf57-1d2e-4413-b507-8c0672c63a49}">
       <Implementation>
         <ST><![CDATA[(*inputs*)
 iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -310,12 +311,10 @@ iq_stValve.xEXT_OK := i_xEXT_OK;
 iq_stValve.xOverrideMode := i_xOverrideMode;
 (*outputs*)
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;
-q_xOPN_DO_2:= iq_stValve.q_xOPN_DO;
-
 ]]></ST>
       </Implementation>
     </Action>
-    <Action Name="ACT_ResetAlarms" Id="{bba83e80-8aa9-4c0f-a4a6-1ac50845b5ca}">
+    <Action Name="ACT_ResetAlarms" Id="{53ee3409-6578-42bb-8ea8-4762a90c4a9f}">
       <Implementation>
         <ST><![CDATA[iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
 iq_stValve.xERR_LstVac R= iq_stValve.pv_xAlmRst;
@@ -326,7 +325,7 @@ IF ( iq_stValve.pv_xAlmRst) THEN
 END_IF]]></ST>
       </Implementation>
     </Action>
-    <Method Name="M_IsClosed" Id="{589d6b24-0923-4746-9171-316f148dac27}">
+    <Method Name="M_IsClosed" Id="{00a56216-cd88-43d0-b959-1db3549fe830}">
       <Declaration><![CDATA[METHOD PUBLIC M_IsClosed : BOOL
 VAR_INPUT
 END_VAR
@@ -335,7 +334,7 @@ END_VAR
         <ST><![CDATA[M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_IsOpen" Id="{a4778b3d-b64f-44fe-ad91-aa8d6800c3ca}">
+    <Method Name="M_IsOpen" Id="{f1d13c03-0f38-4146-8d62-aa644c4f9e15}">
       <Declaration><![CDATA[METHOD PUBLIC M_IsOpen : BOOL
 VAR_INPUT
 END_VAR
@@ -344,7 +343,7 @@ END_VAR
         <ST><![CDATA[M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Set_OPN_SW" Id="{c69ce1c5-7bbf-4844-831d-a30b840ea055}">
+    <Method Name="M_Set_OPN_SW" Id="{a2f40390-2d20-4513-86b2-1628e6f16d69}">
       <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
 METHOD PUBLIC M_Set_OPN_SW : BOOL
 VAR_INPUT
@@ -355,7 +354,7 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VGC_EBD">
+    <LineIds Name="FB_VGC_AP">
       <LineId Id="3" Count="21" />
       <LineId Id="361" Count="0" />
       <LineId Id="25" Count="2" />
@@ -410,36 +409,36 @@ END_VAR
       <LineId Id="347" Count="3" />
       <LineId Id="487" Count="2" />
       <LineId Id="162" Count="0" />
-      <LineId Id="930" Count="3" />
-      <LineId Id="929" Count="0" />
+      <LineId Id="932" Count="0" />
+      <LineId Id="931" Count="0" />
+      <LineId Id="1024" Count="1" />
+      <LineId Id="934" Count="0" />
       <LineId Id="852" Count="0" />
       <LineId Id="163" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="FB_VGC_EBD.ACT_IO">
+    <LineIds Name="FB_VGC_AP.ACT_IO">
       <LineId Id="2" Count="1" />
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="1" />
       <LineId Id="4" Count="0" />
       <LineId Id="6" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_VGC_EBD.ACT_ResetAlarms">
+    <LineIds Name="FB_VGC_AP.ACT_ResetAlarms">
       <LineId Id="2" Count="1" />
       <LineId Id="1" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="4" Count="0" />
       <LineId Id="6" Count="1" />
     </LineIds>
-    <LineIds Name="FB_VGC_EBD.M_IsClosed">
+    <LineIds Name="FB_VGC_AP.M_IsClosed">
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_VGC_EBD.M_IsOpen">
+    <LineIds Name="FB_VGC_AP.M_IsOpen">
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_VGC_EBD.M_Set_OPN_SW">
+    <LineIds Name="FB_VGC_AP.M_Set_OPN_SW">
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
