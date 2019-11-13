@@ -79,7 +79,7 @@ STRUCT
     pv: VAC_SP;
 	io:io;
     '}
-	rVAC_SP: REAL := 0.5; /// At vacuum setpoint for all gauges
+	rVAC_SP: REAL := 0.01; /// At vacuum setpoint for all gauges
 	/// Protection setpoint for ion gauges at which the gauge turns off, not used for pirani 
 	{attribute 'pytmc' := '
     pv: PRO_SP;

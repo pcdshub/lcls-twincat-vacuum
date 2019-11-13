@@ -157,6 +157,9 @@
     <Compile Include="POUs\Functions\Gauges\Interfaces\FB_Gauge_Interface.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Gauges\Interfaces\FB_GFS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Gauges\Interfaces\FB_TGCC_ADS.TcPOU">
       <SubType>Code</SubType>
     </Compile>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_GFS" Id="{781a56cb-c763-46ed-9ac5-b2e690be9ff4}" SpecialFunc="None">
+    <Declaration><![CDATA[(*Used as soft IO mapping to creat a psuedo gague to communicate over two taks on the same PLC.*) 
+(*for FAST shutter control*)
+FUNCTION_BLOCK FB_GFS
+VAR_INPUT
+	IG : ST_VG; // The Cold Cathode Data Structure
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	(*inputs*)
+	i_xTrigger AT %I* : BOOL;
+
+	(*outputs*)
+	q_xTrigger AT %Q* : BOOL;
+	q_xAT_VAC AT%Q*: BOOL;
+	q_xPRESS_OK AT%Q*: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(*soft IO Mapping*)
+q_xTrigger := i_xTrigger;
+q_xAT_VAC:= IG.xAT_VAC;
+q_xPRESS_OK := IG.xPRESS_OK;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_GFS">
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

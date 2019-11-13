@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_VFS" Id="{68519563-003c-4daf-ae0e-7245b1fe09af}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VFS
 (* This function block implements basic functionality for Fast Shutter/Valves*)
@@ -15,12 +15,11 @@ VAR_INPUT
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
 	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
-	i_xPress_OK :BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
 	// Reset fault
 	{attribute 'pytmc' := '
     pv: FF_Reset
 	'}
-    i_xReset: BOOL;
+    i_xFFReset: BOOL;
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -28,8 +27,7 @@ VAR_OUTPUT
 	'}
 	iq_stValve : ST_VGC; (* All valve data and states will be in this struct*)
 	
-	{attribute 'pytmc' := 'pv: MPS_OK'}
-	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
+	
 
 	io_fbFFHWO    :    FB_HardwareFFOutput;
 	
@@ -67,6 +65,7 @@ VAR
 	
 	
 	(*IO*)
+	i_xPress_OK AT%I*:BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
 	i_xOpnLS	AT%I*: BOOL;
 	i_xClsLS	AT%I*: BOOL;
 	q_xClose_A	AT%Q*: BOOL;
@@ -74,8 +73,10 @@ VAR
 	q_xClose_C	AT%Q*: BOOL;
 	q_xOPN_DO	AT%Q*: BOOL;
 	i_xTrigger	AT%I*: BOOL; // Could be Up to 4
+	{attribute 'pytmc' := 'pv: MPS_OK'}
+	xMPS_OK	 AT%Q*:	BOOL; (*MPS Fast OK, is set when the Valve is Open and there is no trigger*)
 	{attribute 'pytmc' := 'pv: VAC_FAULT_OK'}
-	xVAC_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to Flase when there is Vacuum Fault*)
+	xVAC_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 	
 END_VAR]]></Declaration>
     <Implementation>
@@ -193,7 +194,7 @@ ACT_ResetAlarms();
 
 (*FAST FAULT*)
 fbFF(i_xOK := xMPS_OK,
-    i_xReset := i_xReset,
+    i_xReset := i_xFFReset,
     io_fbFFHWO := io_fbFFHWO);
 
 ]]></ST>
