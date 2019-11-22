@@ -53,7 +53,7 @@ END_VAR
 (* M. Ghaly, 2018-9-26 *)
 
 (*connect External interlock to structure variable*)
-iq_stPtm.xExtRunOk := i_xExtILKOk;
+//iq_stPtm.xExtRunOk := i_xExtILKOk;
 
 (* state machine *)
 CASE (step) OF
@@ -71,7 +71,7 @@ CASE (step) OF
 		step :=10;
 (*Idle State waiting to start*)	
 	10: // Idle State, waiting for the xRunSwitch
-		IF iq_stPtm.xIlk  AND iq_stPTM.xRunSW THEN
+		IF iq_stPtm.xExtRunOk  AND iq_stPTM.xRunSW THEN
 			iq_stPtm.q_RunDO := iq_stPTM.xRunSW; //
 			step:=20;
 		END_IF
@@ -161,9 +161,9 @@ END_IF
 //xBackingPressureOK := i_stGauge.xPRESS_OK AND ( i_stGauge.rPRESS < iq_stPtm.rBackingPressureSP);
 
 (* Interlock Sum *)
-iq_stPtm.xIlk := iq_stPtm.xExtRunOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock;// AND xBackingPressureOK;
+iq_stPtm.xExtRunOk := i_xExtILKOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock;// AND xBackingPressureOK;
 
-IF NOT iq_stPtm.xIlk AND (NOT (step >= 90)) THEN
+IF NOT iq_stPtm.xExtRunOk AND (NOT (step >= 90)) THEN
 	step:=0; 
 END_IF
 

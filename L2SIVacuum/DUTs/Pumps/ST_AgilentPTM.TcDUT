@@ -58,12 +58,7 @@ STRUCT
 	'}
 	q_xSS   	:  BOOL; 
 	
-	(* Run interlock*)
-	{attribute 'pytmc' := '
-    pv: ILK_OK;
-	io: i;
-	'}
-	xIlk : BOOL;
+	
 	
 	
 	
