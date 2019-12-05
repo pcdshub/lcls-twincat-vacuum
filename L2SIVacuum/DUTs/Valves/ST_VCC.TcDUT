@@ -32,7 +32,8 @@ STRUCT
 (* Outputs *)
 	{attribute 'pytmc' := '
 	pv: OPN_DO;
-	io: i;'}
+	io: i;
+	'}
 	q_xOPN_DO	: BOOL;
 
 END_STRUCT

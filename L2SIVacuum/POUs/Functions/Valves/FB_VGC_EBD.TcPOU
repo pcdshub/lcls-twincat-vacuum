@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_VGC_EBD" Id="{103f9e7d-0b94-44cb-ad01-1b51d8921220}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is similar to the FB_VGC, except it has 2 outputs to actuate the Valve*)
 (* This function block implements basic functionality for Isolation Gate Valves*)
@@ -48,6 +48,8 @@ VAR_OUTPUT
     pv: MPS_FAULT
 	'}
 	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
+END_VAR
+VAR_IN_OUT
 	io_fbFFHWO    :    FB_HardwareFFOutput;
 END_VAR
 VAR

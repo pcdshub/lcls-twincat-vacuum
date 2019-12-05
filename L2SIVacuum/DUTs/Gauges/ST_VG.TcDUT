@@ -8,6 +8,10 @@ STRUCT
 	/// 
 	{attribute 'pytmc' := '
     pv: PRESS;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
 	io: i;
     '}
 	rPRESS: REAL;  //This is the human-readable pressure
@@ -32,6 +36,8 @@ STRUCT
 	{attribute 'pytmc' := '
     pv: HV_SW;
 	io: io;
+	field: ZNAM HV OFF; 
+	field: ONAM HV ON;
     '}
 	xHV_SW: BOOL; // High Voltage Switch from epics
 	
