@@ -20,7 +20,7 @@ STRUCT
 	xOvrdOpn	:	BOOL;
 	{attribute 'pytmc' := '
 	pv: OVRD_ON;
-	io: i;
+	io: io;
 	'}
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 	{attribute 'pytmc' := '

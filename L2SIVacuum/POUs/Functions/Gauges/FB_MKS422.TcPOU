@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS422" Id="{2e4ef3e9-09c8-44c2-b5f5-464ffb8c18a0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 422 connected to a 937A/B *)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
@@ -89,7 +89,7 @@ IG.xAT_VAC := IG.xPRESS_OK AND IG.rPRESS < IG.rVAC_SP;
 // check ethercat Diagnostics
 IO();
 
-timer(IN:= NOT IG.q_xHV_DIS, PT:= T#3s);
+timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
 
 ]]></ST>
     </Implementation>
@@ -102,6 +102,15 @@ IG.i_iPRESS_R:=	i_iPRESS_R;
 q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_AutoOn" Id="{06245f08-bb9d-49ef-bd4d-3fe48276b865}">
+      <Declaration><![CDATA[METHOD M_AutoOn : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.IG.xHV_SW:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_HVE" Id="{96e3d628-6b52-491b-8d3c-14f027a8981f}">
       <Declaration><![CDATA[METHOD M_HVE : BOOL
 VAR_INPUT
@@ -110,7 +119,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-this^.IG.xHV_SW:= NOT(enable);]]></ST>
+this^.IG.xHV_SW:= (enable);]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_MKS422">
@@ -157,6 +166,9 @@ this^.IG.xHV_SW:= NOT(enable);]]></ST>
       <LineId Id="2" Count="1" />
       <LineId Id="5" Count="1" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.M_AutoOn">
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS422.M_HVE">
       <LineId Id="7" Count="0" />

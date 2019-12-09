@@ -22,8 +22,8 @@ STRUCT
 	xAT_VAC: BOOL;
 	{attribute 'pytmc' := '
     pv: PRESS_OK;
-	field: ZNAM PRESS NOT OK; 
-	field: ONAM PRESS OK;
+	field: ZNAM On; 
+	field: ONAM Off;
 	io: i;
     '}
 	xPRESS_OK: BOOL;
@@ -36,8 +36,8 @@ STRUCT
 	{attribute 'pytmc' := '
     pv: HV_SW;
 	io: io;
-	field: ZNAM HV OFF; 
-	field: ONAM HV ON;
+	field: ZNAM Off; 
+	field: ONAM On;
     '}
 	xHV_SW: BOOL; // High Voltage Switch from epics
 	
@@ -54,8 +54,8 @@ STRUCT
 	i_xHV_ON	: BOOL; //  True when High Voltage is on  
 	{attribute 'pytmc' := '
     pv: DISC_ACTIVE;
-	field: ZNAM Discharge not active; 
-	field: ONAM Discharge Active;
+	field: ZNAM NO DISC; 
+	field: ONAM DISC ACTIVE;
 	io: i;
     '}
 	i_xDisc_Active : BOOL;// Discharge Current Active 
@@ -85,7 +85,7 @@ STRUCT
     pv: VAC_SP;
 	io:io;
     '}
-	rVAC_SP: REAL := 0.01; /// At vacuum setpoint for all gauges
+	rVAC_SP: REAL := 0.001; /// At vacuum setpoint for all gauges
 	/// Protection setpoint for ion gauges at which the gauge turns off, not used for pirani 
 	{attribute 'pytmc' := '
     pv: PRO_SP;

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_VCN" Id="{b91718c1-ee94-477e-afdc-a1b96008e0fd}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function implements the Basic functions for the Pfeiffer EVR 116 needle valve*)
 FUNCTION_BLOCK FB_VCN
@@ -61,7 +61,7 @@ IF iq_stVCN.xIlkOK THEN
 		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;(*Percentage*)// iq_stVCN.rUpperLimit;
 	ELSIF iq_stVCN.eValveControl = CloseValve THEN
 		iq_stVCN.rReqPosition := 0; (*Percentage*)
-	ELSIF iq_stVCN.eValveControl = ManualControl THEN
+	ELSIF (iq_stVCN.eValveControl = ManualControl) (*AND (iq_stVCN.xOPN_SW)*) THEN
 		iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
 	ELSIF iq_stVCN.eValveControl = PressureControl THEN
 		iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, iq_stVCN.rUpperLimit); 

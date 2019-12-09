@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_VRC" Id="{ee6efa67-7be0-4e42-b045-50546d4578bb}">
     <Declaration><![CDATA[TYPE ST_VRC :
 STRUCT
@@ -45,7 +45,7 @@ STRUCT
 	pv_xOvrdOpn	:	BOOL;
 	{attribute 'pytmc' := '
 	pv: OVRD_ON;
-	io: i;
+	io: io;
 	'}
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 	//Calculated permissions to open valve
@@ -68,6 +68,15 @@ STRUCT
 	io: i;
     '}
 	q_xOPN_DO	: BOOL;
+	
+	{attribute 'pytmc' := '
+    pv: ERROR;
+	field: ZNAM NO ERROR ;
+	field: ONAM ERROR PRESENT ;
+	io: o;
+    '}
+	bErrorPresent : BOOL;
+	
 
 END_STRUCT
 END_TYPE]]></Declaration>

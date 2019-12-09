@@ -29,7 +29,7 @@ VAR_INPUT
     pv: MPS_OK
 	'}
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
-	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required. If this Valve is neigboring a Fast Shutter this should be linked to the fast shutter xVAC_FAULT_OK*)
+		i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required. If this Valve is neigboring a Fast Shutter this should be linked to the fast shutter xVAC_FAULT_OK*)
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 	// Reset fault
 	{attribute 'pytmc' := '
@@ -184,7 +184,7 @@ CASE iq_stValve.eVGC_State OF
 	Vented: (* The Vented state is used during pump down *)
 		(* Assuming the pump down went well, we are now at vacuum on both sides,
 		so we move to the vacuum state, otherwise remain in the vented state *)
-		IF iq_stValve.xAT_VAC THEN
+		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND NOT (NOT (iq_stValve.xERR_SP)) and NOT (NOT (iq_stValve.xERR_ExtFault))THEN
 		iq_stValve.eVGC_State := AtVacuum;
 		ELSE
 		iq_stValve.eVGC_State := Vented;
@@ -196,34 +196,45 @@ CASE iq_stValve.eVGC_State OF
 		then enable the differential pressure interlock, regardless of the valve state
 		assuming we're using some kind of ion gauge where a pressure setpoint cannot be higher than 1E-4 T *)
 		iq_stValve.eVGC_State := AtVacuum;
+				
 		ELSE
 		
 			(* If the valve is open (or in an unknown state) and either gauge is not at it's vacuum setpoint,
 			we have a loss of vacuum error *)
 			IF (iq_stValve.i_xOpnLS OR (NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.i_xClsLS)) THEN
-			iq_stValve.eVGC_State := ERR_LostVac;
+				iq_stValve.eVGC_State := ERR_LostVac;
+				iq_stValve.xERR_DifPres := TRUE;
 		
 			(* Alternatively, if the valve is already closed and we lose pressure on one side,
 			it was probably intentional venting, so we calmly move back to venting mode, and
 			disable the differential pressure interlock *) //?? 
 			ELSIF iq_stValve.i_xClsLS THEN
-			iq_stValve.eVGC_State := Vented;
+				iq_stValve.eVGC_State := Vented;
 			END_IF
 		
 		END_IF
 	
 	ERR_DiffPress:
-		iq_stValve.eVGC_State := Vented;
-		iq_stValve.xERR_DifPres := TRUE;
+		IF NOT (iq_stValve.xERR_DifPres) THEN
+			iq_stValve.eVGC_State := Vented;
+		END_IF
+		
 	
 	ERR_LostVac:
-		iq_stValve.eVGC_State := Vented;
-		iq_stValve.xERR_LstVac := TRUE;
-	
-	END_CASE
+		IF NOT (iq_stValve.xERR_SP) THEN
+			iq_stValve.eVGC_State := Vented;
+		END_IF
+		
+	ERR_ExtFault:
+		IF NOT (iq_stValve.xERR_ExtFault) AND (NOT i_xExt_OK) THEN
+			iq_stValve.eVGC_State := Vented;
+		END_IF
+END_CASE
 
-
-
+IF (NOT i_xExt_OK) THEN
+	iq_stValve.eVGC_State := ERR_ExtFault;
+	iq_stValve.xERR_ExtFault := TRUE;
+END_IF
 
 // Interlock evaluation - with bypass for DP ILK bypass
 ///////////////////////////////////////////////
@@ -318,7 +329,7 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     <Action Name="ACT_ResetAlarms" Id="{8962b369-e8aa-42c4-9c4c-4249c380363a}">
       <Implementation>
         <ST><![CDATA[iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
-iq_stValve.xERR_LstVac R= iq_stValve.pv_xAlmRst;
+iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
 iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;
 
 IF ( iq_stValve.pv_xAlmRst) THEN
@@ -378,7 +389,24 @@ END_VAR
       <LineId Id="63" Count="0" />
       <LineId Id="241" Count="0" />
       <LineId Id="244" Count="0" />
-      <LineId Id="66" Count="64" />
+      <LineId Id="66" Count="33" />
+      <LineId Id="1115" Count="0" />
+      <LineId Id="100" Count="5" />
+      <LineId Id="1217" Count="0" />
+      <LineId Id="106" Count="9" />
+      <LineId Id="1127" Count="0" />
+      <LineId Id="1218" Count="1" />
+      <LineId Id="117" Count="3" />
+      <LineId Id="1221" Count="1" />
+      <LineId Id="1220" Count="0" />
+      <LineId Id="1119" Count="1" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="1125" Count="1" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="1118" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="1122" Count="0" />
+      <LineId Id="127" Count="3" />
       <LineId Id="285" Count="0" />
       <LineId Id="287" Count="1" />
       <LineId Id="286" Count="0" />

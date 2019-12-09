@@ -1,10 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_VCN" Id="{09a4fd4d-af49-4c30-8fb9-576bd4a65636}">
     <Declaration><![CDATA[TYPE ST_VCN :
 STRUCT
 	(* VCN - Valve Controlled Needle
 	Used for Pfeiffer EVR 116 needle valves *)
+	{attribute 'pytmc' := '
+	pv: OPN_SW; 
+	field: ZNAM CLOSE; 
+	field: ONAM OPEN;
+	io: io ;
+	'}
+	xOPN_SW	: BOOL;
 	{attribute 'pytmc' := '
     pv: POS_RDBK;
 	io: i;
@@ -36,10 +43,10 @@ STRUCT
 	{attribute 'pytmc' :=  ' 
 	pv: STATE ;
 	type: mbbi ;
-	field: ZRST CLOSE ;
-	field: ONST OPEN;
-	field: TWST PRESS CNTRL ;
-	field: THST MANUAL CNTRL ;
+	field: ZRST Close ;
+	field: ONST Open;
+	field: TWST PressureControl ;
+	field: THST ManualControl ;
 	io: i
 	'}
 	eValveControl	:	E_VCN := CloseValve; // Valve control state

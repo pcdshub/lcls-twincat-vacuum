@@ -219,7 +219,7 @@ CASE iq_stValve.eVGC_State OF
 	
 	ERR_LostVac:
 		iq_stValve.eVGC_State := Vented;
-		iq_stValve.xERR_LstVac := TRUE;
+		iq_stValve.xERR_SP := TRUE;
 	
 	END_CASE
 
@@ -319,7 +319,7 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     <Action Name="ACT_ResetAlarms" Id="{53ee3409-6578-42bb-8ea8-4762a90c4a9f}">
       <Implementation>
         <ST><![CDATA[iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
-iq_stValve.xERR_LstVac R= iq_stValve.pv_xAlmRst;
+iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
 iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;
 
 IF ( iq_stValve.pv_xAlmRst) THEN

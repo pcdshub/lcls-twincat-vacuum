@@ -79,12 +79,12 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	rForelineSP	:	REAL := 0.5;
 	
 	{attribute 'pytmc' := '
-    pv: BackingPressureSP;
+    pv: BP_SP;
 	io: io;
 	'}
 	rBackingPressureSP : REAL := 0.01;
 	{attribute 'pytmc' := '
-    pv: InletPressureSP;
+    pv: IP_SP;
 	io: io;
 	'}
 	rInletPressureSP : REAL := 0.5;

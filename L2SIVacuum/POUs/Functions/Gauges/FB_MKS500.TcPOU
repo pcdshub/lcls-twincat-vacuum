@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS500" Id="{7585aac8-a989-4785-918b-438600204b3a}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EL terminals*)
 (* 500 Logarithmic Output Conversion, factory default configuration *)
@@ -25,7 +25,7 @@ VAR
 	GaugeTurnOnTmr : TON;
 	MinPressure: REAL := 1E-10;
 	cDefaultPressure : REAL := 0;
-	
+	timer:TON;
 	
 	(*IOs to be linked*)
 	/// Controls and I/Os
@@ -77,14 +77,14 @@ END_IF
 
 
 IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
-	IG.q_xHV_DIS := IG.xHV_SW;
-ELSIF IG.q_xHV_DIS THEN
+	IG.q_xHV_DIS := NOT (IG.xHV_SW);
+ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN 
 	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
-		IG.q_xHV_DIS := FALSE;
+		IG.q_xHV_DIS := TRUE;
 		IG.xHV_SW := FALSE;
 	END_IF
 ELSE
-	IG.q_xHV_DIS := FALSE;
+	IG.q_xHV_DIS := TRUE;
 	IG.xHV_SW := FALSE;
 END_IF
 
@@ -105,6 +105,8 @@ IG.xILKOk := (PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK);
 (*Soft IO Linking*)
 // check ethercat Diagnostics
 IO();
+timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
+
 ]]></ST>
     </Implementation>
     <Action Name="IO" Id="{d5dcbb30-1e72-4867-8faf-91e37cf07851}">
@@ -118,6 +120,15 @@ IG.i_xDisc_Active:=i_xDisc_Active;
 q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_AutoOn" Id="{ca22a2df-417e-4d6a-bc4d-3fb0fe75c5bf}">
+      <Declaration><![CDATA[METHOD M_AutoOn : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.IG.xHV_SW:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_HVE" Id="{c11659a5-8a50-4170-9e43-162518265fbf}">
       <Declaration><![CDATA[METHOD M_HVE : BOOL
 VAR_INPUT
@@ -126,7 +137,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-this^.IG.xHV_SW:= NOT(enable);]]></ST>
+this^.IG.xHV_SW:= (enable);]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_MKS500">
@@ -147,6 +158,8 @@ this^.IG.xHV_SW:= NOT(enable);]]></ST>
       <LineId Id="242" Count="0" />
       <LineId Id="219" Count="1" />
       <LineId Id="108" Count="0" />
+      <LineId Id="311" Count="0" />
+      <LineId Id="310" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS500.IO">
@@ -154,6 +167,9 @@ this^.IG.xHV_SW:= NOT(enable);]]></ST>
       <LineId Id="6" Count="0" />
       <LineId Id="2" Count="3" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500.M_AutoOn">
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS500.M_HVE">
       <LineId Id="7" Count="0" />

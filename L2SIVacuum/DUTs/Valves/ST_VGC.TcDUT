@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="ST_VGC" Id="{0b7dfc27-9760-4c7a-bad2-fa375ac628b8}">
     <Declaration><![CDATA[TYPE ST_VGC :
 STRUCT
@@ -31,7 +31,7 @@ STRUCT
 	pv: OVRD_ON ;
 	field: ZNAM Override ON ;
 	field: ONAM Override OFF;
-	io: i;
+	io: io;
 	'}
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 
@@ -61,13 +61,12 @@ STRUCT
 	
 (* Interlocks *)
 
-	
-{attribute 'pytmc' := '
-	pv: Ext_ILK_OK ;
+	{attribute 'pytmc' := '
+	pv: EXT_ILK_OK ;
 	field: ZNAM NOT OK ;
 	field: ONAM OK ;
 	io: i ;
-'}
+	'}
 	xEXT_OK	:	BOOL := FALSE;	(* External interlock for custom interlocking in addition to regular DP ilk, this must be set true, or the interlock condition before calling the FB_VGC *)
 	
 	{attribute 'pytmc' := '
@@ -78,12 +77,12 @@ STRUCT
     '}
 	xDP_OK	:	BOOL;	(* Managed by the VGC function (FB_VGC) *)// Indicates the valve can be opened because the differential pressure is low enough
 
-{attribute 'pytmc' := '
+	{attribute 'pytmc' := '
     pv: OPN_OK;
 	field: ZNAM OPN ILK NOT OK ;
 	field: ONAM OPN ILK OK ;
 	io: i;
- '}
+ 	'}
 	xOPN_OK	:	BOOL;	(* Final SUM of DP_OK and EXT_OK, needed because it allows the DP ilk to be switched off, see FB_VGC.Dis_DPIlk *)
 	
 	{attribute 'pytmc' := ' 
@@ -113,12 +112,31 @@ STRUCT
 
 
 (* Alarm Outputs *)
+	{attribute 'pytmc' := '
+    pv: ERR_DifPres;
+	field: ZNAM NO ERROR ;
+	field: ONAM Diffrential error present ;
+	io: o;
+    '}
 	xERR_DifPres		: 	BOOL;
-	xERR_LstVac		: 	BOOL;
+	{attribute 'pytmc' := '
+    pv: ERR_SP;
+	field: ZNAM NO ERROR ;
+	field: ONAM Setpoint error present ;
+	io: o;
+    '}
+	xERR_SP			: 	BOOL;
+	{attribute 'pytmc' := '
+    pv: ERR_Ext;
+	field: ZNAM NO ERROR ;
+	field: ONAM External error present ;
+	io: o;
+    '}
+	xERR_ExtFault		: 	BOOL;
 	xAlmSum			: 	BOOL;
 	
 	{attribute 'pytmc' := '
-    pv: ERROR;
+    pv: ERR;
 	field: ZNAM NO ERROR ;
 	field: ONAM ERROR PRESENT ;
 	io: o;
@@ -134,10 +152,11 @@ STRUCT
 (*State*)	
 	{attribute 'pytmc' := '
 	pv: STATE;
-	field: ZRST VENTED;
-	field: ONST ATVACUUM;
-	field: TWST ERR_DIF_PRESS;
-	field: THST ERR_LOST_VAC;
+	field: ZRST Vented;
+	field: ONST At Vacuum;
+	field: TWST Differential Pressure;
+	field: THST Lost Vacuum;
+	field: FRST Ext Fault;
 	io: i;
 	'}
 	eVGC_State : E_VGC;
