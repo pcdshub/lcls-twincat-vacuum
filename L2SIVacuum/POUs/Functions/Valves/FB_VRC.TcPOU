@@ -26,7 +26,8 @@ VAR_OUTPUT
 	iq_stValve : ST_VRC;
 END_VAR
 VAR
-
+	xFirstPass	:	BOOL;
+	fbFSInit		:	R_TRIG;
 	tonOvrd	:	TON;
 	tonDelOK : TON;
 	rtOK	:	R_TRIG;
@@ -38,11 +39,22 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
+(* On first PLC pass, put valve into vented state, which implies a closed valve *)
+fbFSInit( CLK := TRUE, Q => xFirstPass);
+IF xFirstPass THEN
+	iq_stValve.eVGC_State := Vented;
+	iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
+
+
+
 
 ///Check valve postion
-IF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
+IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
+	iq_stValve.eState:=INVALID;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=OPEN;
-ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=CLOSED;
 ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
 	iq_stValve.eState:=MOVING;
@@ -50,11 +62,18 @@ ELSE
 	iq_stValve.eState:=INVALID;
 END_IF
 
+
 (*evaluate Valve open external interlock*)
 iq_stValve.xOPN_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
 	iq_stValve.pv_xOPN_SW := FALSE;
+	iq_stValve.eVGC_State := ERR_ExtFault;
 END_IF
+
+IF (iq_stValve.q_xOPN_DO) AND (iq_stValve.xOPN_OK) THEN
+	iq_stValve.eVGC_State := AtVacuum;
+END_IF
+	
 
 (* Override logic *)
 (* Goal: give ability to override, but do so in a way that people won't forget it.
@@ -98,9 +117,23 @@ END_VAR
     </Method>
     <LineIds Name="FB_VRC">
       <LineId Id="87" Count="0" />
-      <LineId Id="3" Count="10" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="129" Count="3" />
+      <LineId Id="125" Count="2" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="135" Count="10" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="146" Count="0" />
       <LineId Id="89" Count="1" />
-      <LineId Id="14" Count="18" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="152" Count="1" />
+      <LineId Id="150" Count="1" />
+      <LineId Id="19" Count="13" />
       <LineId Id="55" Count="1" />
       <LineId Id="62" Count="0" />
       <LineId Id="2" Count="0" />

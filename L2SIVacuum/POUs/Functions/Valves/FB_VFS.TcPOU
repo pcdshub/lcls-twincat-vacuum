@@ -28,7 +28,8 @@ VAR_OUTPUT
 	iq_stValve : ST_VGC; (* All valve data and states will be in this struct*)
 	
 	
-
+END_VAR	
+VAR_IN_OUT
 	io_fbFFHWO    :    FB_HardwareFFOutput;
 	
 END_VAR

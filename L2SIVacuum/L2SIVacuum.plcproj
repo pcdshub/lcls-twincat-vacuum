@@ -119,6 +119,10 @@
     <Compile Include="POUs\Functions\Gauges\FB_ITR90.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_MKS317A.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS392.TcPOU">
       <SubType>Code</SubType>
     </Compile>

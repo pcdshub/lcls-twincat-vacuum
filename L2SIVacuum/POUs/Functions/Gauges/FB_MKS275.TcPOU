@@ -46,34 +46,28 @@ V := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;
 Vlowest := MIN(V, Vlowest);
 
 IF V > rDisconnectedBoundary AND V < rValidLoBoundary THEN
-
-PG.rPRESS := MinPressure;
-PG.eState := ValidLo;
+	PG.rPRESS := MinPressure;
+	PG.eState := ValidLo;
 
 ELSIF V >= rValidLoBoundary AND V < 2.842 THEN
-
-PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
-PG.eState := Valid;
+	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+	PG.eState := Valid;
 
 ELSIF V >= 2.842 AND V < 4.945 THEN
-
-PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
-PG.eState := Valid;
+	PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
+	PG.eState := Valid;
 
 ELSIF V >= 4.945 AND V < rValidHiBoundary THEN
-
-PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
-PG.eState := Valid;
+	PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
+	PG.eState := Valid;
 
 ELSIF V <= rDisconnectedBoundary THEN
-
-PG.eState := GaugeDisconnected; //Most likely not connected
-PG.rPRESS := -1;;
+	PG.eState := GaugeDisconnected; //Most likely not connected
+	PG.rPRESS := -1;
 
 ELSE
-	
-PG.eState := OoR; //Larger voltage, probably out of range?
-PG.rPRESS := -1;
+	PG.eState := OoR; //Larger voltage, probably out of range?
+	PG.rPRESS := -1;
 END_IF
 
 (* Protection Functions *)
@@ -97,13 +91,16 @@ IO();
       </Implementation>
     </Action>
     <LineIds Name="FB_MKS275">
-      <LineId Id="24" Count="26" />
+      <LineId Id="24" Count="15" />
+      <LineId Id="41" Count="3" />
+      <LineId Id="46" Count="3" />
       <LineId Id="125" Count="0" />
-      <LineId Id="52" Count="3" />
+      <LineId Id="52" Count="2" />
       <LineId Id="126" Count="0" />
-      <LineId Id="57" Count="3" />
+      <LineId Id="57" Count="2" />
       <LineId Id="127" Count="0" />
-      <LineId Id="62" Count="16" />
+      <LineId Id="62" Count="2" />
+      <LineId Id="66" Count="12" />
       <LineId Id="95" Count="1" />
       <LineId Id="152" Count="0" />
       <LineId Id="97" Count="0" />

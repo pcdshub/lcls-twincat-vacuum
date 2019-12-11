@@ -52,8 +52,10 @@ ELSIF rV > 9.6 AND rV<= 9.9 THEN
 	IG.eState := ValidHi; //HIGH
 ELSIF rV < 0.18 THEN
 	IG.eState := GaugeDisconnected; //not on
+	IG.rPRESS :=0;
 ELSE
 	IG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+	IG.rPRESS :=0;
 END_IF
 
 
@@ -134,7 +136,10 @@ this^.IG.xHV_SW:= (enable);]]></ST>
       <LineId Id="242" Count="1" />
       <LineId Id="107" Count="0" />
       <LineId Id="110" Count="0" />
-      <LineId Id="112" Count="9" />
+      <LineId Id="112" Count="7" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="120" Count="1" />
+      <LineId Id="301" Count="0" />
       <LineId Id="108" Count="0" />
       <LineId Id="9" Count="5" />
       <LineId Id="204" Count="1" />

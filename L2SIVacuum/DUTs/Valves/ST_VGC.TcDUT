@@ -16,12 +16,12 @@ STRUCT
 	pv_xOPN_SW	: BOOL;
 	{attribute 'pytmc' := '
     pv: ALM_RST;
-	io: o;
+	io: io;
     '}
 	pv_xAlmRst	: BOOL;
 	{attribute 'pytmc' := '
     pv: FORCE_OPN;
-	io: o;
+	io: io;
 	field: ZNAM FALSE;
 	field: ONAM OPEN;
     '}
