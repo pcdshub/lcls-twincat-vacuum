@@ -31,7 +31,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 
 (* Readbacks *)
     {attribute 'pytmc' := '
-	pv: ILK_OK;
+	pv: ILK_STATUS;
 	field: ZNAM ILK ACTIVE;
 	field: ONAM ILK OK;
 	io: i;
@@ -48,7 +48,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	'}
 	i_xAtSpd	:	BOOL;
 	{attribute 'pytmc' := '
-	pv: SPEED_RDBK;
+	pv: SPEED;
 	io: i;
 	'}
 	i_diCurSpd	:	DINT;
@@ -101,7 +101,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	eState	:	E_PumpState;
 	
 	{attribute 'pytmc' := '
-	pv: Current_MON;
+	pv: CURR_MON;
 	io: i;
 	'}
 	i_iCurrentMon : INT; // Voltage to the output current of motor 0->5V 0->10A

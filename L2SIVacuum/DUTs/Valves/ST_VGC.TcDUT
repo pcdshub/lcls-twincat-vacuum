@@ -136,7 +136,7 @@ STRUCT
 	xAlmSum			: 	BOOL;
 	
 	{attribute 'pytmc' := '
-    pv: ERR;
+    pv: ERROR;
 	field: ZNAM NO ERROR ;
 	field: ONAM ERROR PRESENT ;
 	io: o;

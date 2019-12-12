@@ -32,6 +32,13 @@ VAR
 	io: io ;
 	'}
 	i_xVFS_Closed AT %I* : BOOL;
+	{attribute 'pytmc' := '
+	pv: FAULT_OK; 
+	field: ZNAM FAULT ; 
+	field: ONAM FAULT OK;
+	io: io ;
+	'}
+	xVAC_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 
 	(*outputs*)
 	q_xPRESS_OK AT%Q*: BOOL;

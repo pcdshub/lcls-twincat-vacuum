@@ -75,9 +75,9 @@ VAR
 	q_xOPN_DO	AT%Q*: BOOL;
 	i_xTrigger	AT%I*: BOOL; // Could be Up to 4
 	q_xTrigger	AT%Q*: BOOL; // Could be Up to 4
-	{attribute 'pytmc' := 'pv: MPS_OK'}
+	
 	xMPS_OK	 AT%Q*:	BOOL; (*MPS Fast OK, is set when the Valve is Open and there is no trigger*)
-	{attribute 'pytmc' := 'pv: VAC_FAULT_OK'}
+	
 	xVAC_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 	
 END_VAR]]></Declaration>
@@ -122,7 +122,7 @@ IF (i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK)  OR NOT (iq_stValve.pv_x
 	xClose:= TRUE;
 	iq_stValve.pv_xOPN_SW := FALSE;
 	xVAC_FAULT_OK:= FALSE;
-	iq_stValve.xERR_LstVac := TRUE;
+	iq_stValve.xERR_ExtFault := TRUE;
 END_IF
 IF (xClose) AND (NOT i_xClsLS) THEN
 	q_xClose_A := TRUE;
@@ -138,12 +138,12 @@ IF(CloseTimer.Q) OR (i_xClsLS) THEN
 END_IF
 
 (* Neighboring Valves Interlock bit is reset When the Vacuum event error is reset and the Shutter is opened *)
-IF (NOT i_xTrigger) AND (NOT iq_stValve.xERR_LstVac) AND i_xOpnLS THEN
+IF (NOT i_xTrigger) AND (NOT iq_stValve.xERR_ExtFault) AND i_xOpnLS THEN
 	xVAC_FAULT_OK := TRUE;
 END_IF
 
 (*OPN OK evaluation bit *)
-iq_stValve.xOPN_OK := (NOT iq_stValve.xERR_LstVac) AND NOT i_xTrigger;
+iq_stValve.xOPN_OK := (NOT iq_stValve.xERR_ExtFault) AND NOT i_xTrigger;
 
 (* If Epics Command to close the Valve, check if PMPS, otherwise Keep command set to open valve *)
 // is there really a PMPS requirment.
@@ -208,7 +208,7 @@ fbFF(i_xOK := xMPS_OK,
 iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;
 
 IF NOT i_xTrigger THEN
-	iq_stValve.xERR_LstVac R= iq_stValve.pv_xAlmRst;
+	iq_stValve.xERR_ExtFault R= iq_stValve.pv_xAlmRst;
 END_IF]]></ST>
       </Implementation>
     </Action>
