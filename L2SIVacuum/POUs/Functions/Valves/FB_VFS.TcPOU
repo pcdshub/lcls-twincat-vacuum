@@ -74,6 +74,7 @@ VAR
 	q_xClose_C	AT%Q*: BOOL;
 	q_xOPN_DO	AT%Q*: BOOL;
 	i_xTrigger	AT%I*: BOOL; // Could be Up to 4
+	q_xTrigger	AT%Q*: BOOL; // Could be Up to 4
 	{attribute 'pytmc' := 'pv: MPS_OK'}
 	xMPS_OK	 AT%Q*:	BOOL; (*MPS Fast OK, is set when the Valve is Open and there is no trigger*)
 	{attribute 'pytmc' := 'pv: VAC_FAULT_OK'}
@@ -220,6 +221,7 @@ iq_stValve.xEXT_OK := i_xEXT_OK;
 iq_stValve.xOverrideMode := i_xOverrideMode;
 (*outputs*)
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;
+q_xTrigger:=i_xTrigger;
 ]]></ST>
       </Implementation>
     </Action>
@@ -293,7 +295,7 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;
       <LineId Id="8" Count="1" />
     </LineIds>
     <LineIds Name="FB_VFS.IO">
-      <LineId Id="2" Count="6" />
+      <LineId Id="2" Count="7" />
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

@@ -66,6 +66,7 @@ END_IF
 
 	IF (PG.rPRESS <= IG.rPRO_SP) THEN
 		 IG.q_xHV_DIS := NOT IG.xHV_SW;
+		 IG.xILKOk := TRUE;
 	ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
 		IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
 		IG.q_xHV_DIS := TRUE;
@@ -74,6 +75,7 @@ END_IF
 	ELSE 
 		IG.q_xHV_DIS := TRUE;
 		IG.xHV_SW := FALSE;
+		IG.xILKOk := FALSE;
  	END_IF
  
 
@@ -85,6 +87,7 @@ IG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6);
 
 (* Setpoint evaluation *)
 IG.xAT_VAC := IG.xPRESS_OK AND IG.rPRESS < IG.rVAC_SP;
+
 
 
 (*Soft IO Linking*)
@@ -144,10 +147,12 @@ this^.IG.xHV_SW:= (enable);]]></ST>
       <LineId Id="9" Count="5" />
       <LineId Id="204" Count="1" />
       <LineId Id="208" Count="0" />
+      <LineId Id="330" Count="0" />
       <LineId Id="210" Count="0" />
       <LineId Id="212" Count="2" />
       <LineId Id="211" Count="0" />
       <LineId Id="261" Count="2" />
+      <LineId Id="331" Count="0" />
       <LineId Id="260" Count="0" />
       <LineId Id="206" Count="0" />
       <LineId Id="258" Count="0" />
@@ -158,6 +163,7 @@ this^.IG.xHV_SW:= (enable);]]></ST>
       <LineId Id="42" Count="1" />
       <LineId Id="147" Count="0" />
       <LineId Id="150" Count="0" />
+      <LineId Id="329" Count="0" />
       <LineId Id="44" Count="0" />
       <LineId Id="105" Count="0" />
       <LineId Id="180" Count="1" />

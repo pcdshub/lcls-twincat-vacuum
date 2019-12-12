@@ -91,7 +91,7 @@ STRUCT
     pv: PRO_SP;
 	io: io;
     '}
-	rPRO_SP: REAL := 0.0001;
+	rPRO_SP: REAL := 0.001;
 	{attribute 'pytmc' := '
     pv: SP_HYS;
 	io: io;

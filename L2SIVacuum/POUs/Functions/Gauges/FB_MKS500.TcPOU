@@ -78,6 +78,7 @@ END_IF
 
 IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
 	IG.q_xHV_DIS := NOT (IG.xHV_SW);
+	IG.xILKOk := TRUE;
 ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN 
 	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
 		IG.q_xHV_DIS := TRUE;
@@ -86,6 +87,7 @@ ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
 ELSE
 	IG.q_xHV_DIS := TRUE;
 	IG.xHV_SW := FALSE;
+	IG.xILKOk := FALSE;
 END_IF
 
 (* Pressure gauge OK checks *)
@@ -150,7 +152,10 @@ this^.IG.xHV_SW:= (enable);]]></ST>
       <LineId Id="159" Count="0" />
       <LineId Id="50" Count="12" />
       <LineId Id="64" Count="0" />
-      <LineId Id="66" Count="13" />
+      <LineId Id="346" Count="0" />
+      <LineId Id="66" Count="7" />
+      <LineId Id="347" Count="0" />
+      <LineId Id="74" Count="5" />
       <LineId Id="81" Count="4" />
       <LineId Id="107" Count="0" />
       <LineId Id="274" Count="1" />

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_MKS500_EP" Id="{4da1e942-f359-4f6e-ab12-d5a0031e68e6}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EP boxes.
 A separate function block is necessary for the MKS500-to-EP box interface beacuse the EP
@@ -69,7 +69,7 @@ END_IF
 IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
 
 	IG.q_xHV_DIS := IG.xHV_SW;
-
+	IG.xILKOk := TRUE;
 ELSIF IG.q_xHV_DIS THEN
 	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
 		IG.q_xHV_DIS := FALSE;
@@ -78,6 +78,7 @@ ELSIF IG.q_xHV_DIS THEN
 ELSE
 	IG.q_xHV_DIS := FALSE;
 	IG.xHV_SW := FALSE;
+	IG.xILKOk := FALSE;
 END_IF
 
 (* Pressure gauge OK checks *)
@@ -123,7 +124,9 @@ this^.IG.xHV_SW:= NOT(enable);]]></ST>
       <LineId Id="32" Count="1" />
       <LineId Id="36" Count="1" />
       <LineId Id="275" Count="8" />
-      <LineId Id="51" Count="28" />
+      <LineId Id="51" Count="22" />
+      <LineId Id="319" Count="0" />
+      <LineId Id="74" Count="5" />
       <LineId Id="81" Count="4" />
       <LineId Id="107" Count="0" />
       <LineId Id="121" Count="0" />
