@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <DUT Name="ST_RoughPump" Id="{e8dd9b37-7fd0-43c2-b8a5-8831bd77891b}">
     <Declaration><![CDATA[TYPE ST_RoughPump :
 STRUCT

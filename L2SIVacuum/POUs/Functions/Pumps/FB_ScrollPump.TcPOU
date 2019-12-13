@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_ScrollPump" Id="{95800034-a8e9-430e-af6e-1fa7a649fe90}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function block provides basic  control for Scroll Pumps *)
 (* Turn on scroll pump if the Turbo Vent Valve is closed. *)
@@ -18,6 +18,7 @@ END_VAR
 VAR_INPUT
 	TurboIsON : BOOL;
 	VentValve	: ST_VCC_NO; // type of vent valve might change
+	xExtIlk : BOOL := TRUE;
 END_VAR
 VAR
 	Tmr_TOF : TOF;
@@ -33,11 +34,11 @@ END_VAR
 // pumping air and accomplishing nothing
 
 // cannot turn off scroll pump if turb is running. delay scroll off 150s.  
-
+iq_stPFO.xIlkOK := xExtIlk;
 
 Tmr_TOF(IN:=TurboIsON, PT := tTimerDuration);
 
-IF VentValve.xCLS_DO THEN
+IF iq_stPFO.xIlkOK THEN
 	iq_stPFO.q_xRunDo := (Tmr_TOF.Q OR iq_stPFO.pv_xRunSW);
 ELSE
 	iq_stPFO.q_xRunDo := FALSE;
@@ -91,7 +92,8 @@ this^.iq_stPFO.pv_xRunSW := run;]]></ST>
       <LineId Id="97" Count="1" />
       <LineId Id="129" Count="0" />
       <LineId Id="132" Count="1" />
-      <LineId Id="138" Count="1" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="168" Count="0" />
       <LineId Id="99" Count="1" />
       <LineId Id="102" Count="0" />
       <LineId Id="101" Count="0" />

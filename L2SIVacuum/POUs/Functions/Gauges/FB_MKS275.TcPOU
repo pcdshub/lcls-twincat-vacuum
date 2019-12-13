@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_MKS275" Id="{ffda77c7-a04b-4d4f-b9a5-3ec5d874c4e9}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
@@ -21,6 +21,7 @@ VAR
 	MinPressure: REAL := 1E-4;
 	V : REAL;
 	Vlowest: REAL := 10;
+	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 	
 	rValidLoBoundary	:	REAL := 0.375; // manual page 27
 	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
@@ -41,7 +42,7 @@ END_IF
 
 (* Real-value calculation *)
 
-V := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;	
+V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;	
 
 Vlowest := MIN(V, Vlowest);
 
@@ -90,6 +91,16 @@ IO();
         <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_SetBits" Id="{7eec6aef-b03d-405c-b5cc-5b0319852803}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_MKS275">
       <LineId Id="24" Count="15" />
       <LineId Id="41" Count="3" />
@@ -108,6 +119,9 @@ IO();
     </LineIds>
     <LineIds Name="FB_MKS275.IO">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS275.M_SetBits">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
