@@ -17,8 +17,7 @@ VAR_OUTPUT
 END_VAR
 VAR_INPUT
 	TurboIsON : BOOL;
-	VentValve	: ST_VCC_NO; // type of vent valve might change
-	xExtIlk : BOOL := TRUE;
+	xExtIlk : BOOL;
 END_VAR
 VAR
 	Tmr_TOF : TOF;
@@ -34,7 +33,7 @@ END_VAR
 // pumping air and accomplishing nothing
 
 // cannot turn off scroll pump if turb is running. delay scroll off 150s.  
-iq_stPFO.xIlkOK := xExtIlk;
+iq_stPFO.xIlkOK := xExtIlk and NOT Tmr_TOF.Q;
 
 Tmr_TOF(IN:=TurboIsON, PT := tTimerDuration);
 

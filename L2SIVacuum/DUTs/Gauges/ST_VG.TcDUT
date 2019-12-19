@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <DUT Name="ST_VG" Id="{e8999049-eca7-4ca1-9a7c-26918f6aba1e}">
     <Declaration><![CDATA[TYPE ST_VG :
 STRUCT
@@ -22,8 +22,8 @@ STRUCT
 	xAT_VAC: BOOL;
 	{attribute 'pytmc' := '
     pv: PRESS_OK;
-	field: ZNAM On; 
-	field: ONAM Off;
+	field: ZNAM OFF; 
+	field: ONAM ON;
 	io: i;
     '}
 	xPRESS_OK: BOOL;

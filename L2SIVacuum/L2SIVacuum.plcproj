@@ -77,9 +77,6 @@
     <Compile Include="DUTs\Valves\E_VGC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\Valves\ST_VCC.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DUTs\Valves\ST_VVC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -111,6 +108,9 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_CMR362.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_Gauge.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_GCM.TcPOU">
@@ -370,17 +370,6 @@
     <None Include="L2SIVacuum.tmc">
       <SubType>Content</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <SubObject Include="FB_VGC.ACT_ResetAlarms">
-      <LinkAlways>true</LinkAlways>
-    </SubObject>
-    <SubObject Include="FB_VGC_AP.ACT_ResetAlarms">
-      <LinkAlways>true</LinkAlways>
-    </SubObject>
-    <SubObject Include="FB_VGC_EBD.ACT_ResetAlarms">
-      <LinkAlways>true</LinkAlways>
-    </SubObject>
   </ItemGroup>
   <ItemGroup>
     <PlaceholderResolution Include="LCLS General">

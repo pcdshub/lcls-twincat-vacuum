@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_VCC" Id="{5ba1a6cc-24ff-4014-aa5e-6a7b6226a38e}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for Vent Valves VVC *)
 (* Note Interlock Logic is External *)
@@ -15,7 +15,7 @@ VAR_OUTPUT
 	{attribute 'pytmc' := '
     pv:
 	'}
-	iq_stValve : ST_VCC;
+	iq_stValve : ST_VVC;
 END_VAR
 VAR
 

@@ -25,6 +25,8 @@ STRUCT
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 	{attribute 'pytmc' := '
     pv: OPN_OK;
+	field: ZNAM OPN ILK NOT OK ;
+	field: ONAM OPN ILK OK ;
 	io: i;
 	'}
 	xOPN_OK	: BOOL;
@@ -32,6 +34,8 @@ STRUCT
 (* Outputs *)
 	{attribute 'pytmc' := '
 	pv: OPN_DO;
+	field: ZNAM CLOSE;
+	field: ONAM OPEN;
 	io: i;
 	'}
 	q_xOPN_DO	: BOOL;

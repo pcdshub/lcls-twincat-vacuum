@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_PIP_Gamma" Id="{c735b214-fb8d-491c-9d35-e2f8609cfbf0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the ION pump connected to a Gamma QPCe controller.
  Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
@@ -22,7 +22,7 @@ VAR
  rV : REAL;
  rHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
  (* IO Controls *)
- q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when FALSE // 'TcLinkTo' (EL1124) ^Input
+ q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when TRUE
  i_iPRESS  AT %I*: INT;  //
  i_xSP_DI  AT %I* : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
 
@@ -74,7 +74,7 @@ END_IF]]></ST>
 stPump.i_iPRESS:=	i_iPRESS;  
 stPump.i_xSP_DI:=	i_xSP_DI;
 (*output*)
-q_xHVEna_DO:= NOT stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activae function]]></ST>
+q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_Run" Id="{55fab705-c400-4b7f-9779-42233f752de0}">
