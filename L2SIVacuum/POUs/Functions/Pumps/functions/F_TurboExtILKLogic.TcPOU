@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="F_TurboExtILKLogic" Id="{7245688f-5d30-4f2c-88b0-ff2e5b5ffecc}" SpecialFunc="None">
     <Declaration><![CDATA[
 (* This function evaluates the Turbo ILK logic*)
@@ -11,7 +11,7 @@ VAR_INPUT
 	Turbo		:	ST_PTM;
 	BackingGauge:	ST_VG;
 	InletGauge	:	ST_VG;
-	VentValve	:	ST_VCC;
+	VentValve	:	ST_VVC;
 	ScrollPump	:	ST_RoughPump;
 END_VAR
 
