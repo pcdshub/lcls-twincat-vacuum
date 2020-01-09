@@ -19,7 +19,7 @@ END_VAR
     <Implementation>
       <ST><![CDATA[(* This Function Block evaluates the ILK condition of the Turbo Gate valve *)
 (* The logic Protects the Turbo pump from inlet pressure above the SP*)
-F_TurboGateValve_ILK := (NOT (i_Turbo.eState = pumpSTOPPED) AND NOT (i_Turbo.eState = pumpFAULT))
+F_TurboGateValve_Protection_ILK := (NOT (i_Turbo.eState = pumpSTOPPED) AND NOT (i_Turbo.eState = pumpFAULT))
 						AND (i_stISG.xPRESS_OK AND i_stISG.rPRESS < i_Turbo.rInletPressureSP)
 						AND (i_stBSG.xPRESS_OK AND i_stBSG.rPRESS < i_Turbo.rBackingPressureSP)
 						AND (ScrollPump.eState = pumpRUNNING);
