@@ -26,7 +26,7 @@ VAR
 	MinPressure: REAL := 1E-10;
 	cDefaultPressure : REAL := 0;
 	timer:TON;
-	
+		iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 	(*IOs to be linked*)
 	/// Controls and I/Os
 	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
@@ -39,7 +39,7 @@ END_VAR
     <Implementation>
       <ST><![CDATA[(* 500 Logarithmic Output Conversion, factory default configuration *)
 
-rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
+rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (*
 IF rV >= 0.49 AND rV < 0.52  THEN
@@ -142,6 +142,16 @@ END_VAR
 this^.IG.xHV_SW:= (enable);]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_SetBits" Id="{045c52f1-d059-4db3-a35f-c5604ec4a648}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_MKS500">
       <LineId Id="31" Count="2" />
       <LineId Id="36" Count="1" />
@@ -178,6 +188,9 @@ this^.IG.xHV_SW:= (enable);]]></ST>
     </LineIds>
     <LineIds Name="FB_MKS500.M_HVE">
       <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500.M_SetBits">
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

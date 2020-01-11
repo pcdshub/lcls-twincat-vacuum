@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_ITR90" Id="{d1491968-690d-4aa1-ab30-fd64b81089f0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements the Oerlikon Leybold IONVAC Hot Cathode ITR 90*)
 FUNCTION_BLOCK FB_ITR90
@@ -15,6 +15,7 @@ VAR
 	rV : REAL;	// input voltage
 	rC: REAL := -0.125; // a constant in the manual (pressure unit dependent)
 	rK: REAL := 1.0;// Calibration factor C (gas type dependent)
+	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 	(*IO*)
 	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
@@ -24,7 +25,7 @@ END_VAR
 
 (* Real-value calculation *)
 
-rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;	
+rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;	
 PG.rPRESS := (LREAL_TO_REAL(EXPT(10,(rV-7.75)/0.75+rC))) * rK;
 
 
@@ -61,6 +62,16 @@ ACT_IO();
         <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_SetBits" Id="{2b56ae4c-1065-4c58-8da0-22d0f327520b}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_ITR90">
       <LineId Id="9" Count="0" />
       <LineId Id="18" Count="2" />
@@ -72,6 +83,9 @@ ACT_IO();
     </LineIds>
     <LineIds Name="FB_ITR90.ACT_IO">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ITR90.M_SetBits">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
