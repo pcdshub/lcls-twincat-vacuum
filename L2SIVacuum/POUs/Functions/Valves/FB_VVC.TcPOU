@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_VVC" Id="{a538d8bd-5f3e-49c2-b528-765b2211bef2}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for Vent Valves VVC *)
+    <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for Vent Valves VVC.
+
+	This function block is also intended for the general use case of solenoid driven (non-variable) valves that lack status readbacks or position indicators. 
+*)
 (* Note Interlock Logic is External *)
 FUNCTION_BLOCK FB_VVC
 VAR_IN_OUT

@@ -267,6 +267,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\functions\F_RoughPumpInlet_ILK.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\functions\F_TurboGateValve_ILK.TcPOU">
       <SubType>Code</SubType>
     </Compile>
