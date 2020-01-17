@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_TVCG_ADS" Id="{84085701-3a86-43d0-96fb-51ae4e0cc36d}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
 (* Not all the fields in the original structure is required, just few signals *)
@@ -28,12 +28,13 @@ END_VAR
     <Implementation>
       <ST><![CDATA[ftReset_xOpnLS(CLK:= fb_Read_xOpnLS.bBusy OR xFirstPass);
 ftReset_xClsLS(CLK:= fb_Read_xClsLS.bBusy OR xFirstPass);
+xFirstPass:=false;
 (*calling ADS read function*)
 fb_Read_xOpnLS(
 	bRead:= ftReset_xOpnLS.Q, 
 	sNetId:= sNetId, 
 	nPort:= nPort, 
-	sVarName:= CONCAT(sVarName,'iq_stValve.i_xOpnLS'), 
+	sVarName:= CONCAT(sVarName,'.iq_stValve.i_xOpnLS'), 
 	nDestAddr:= ADR(xOpnLS), 
 	nLen:= SIZEOF(xOpnLS), 
 	tTimeout:= , 
@@ -46,7 +47,7 @@ fb_Read_xClsLS(
 	bRead:= ftReset_xClsLS.Q, 
 	sNetId:= sNetId, 
 	nPort:= nPort, 
-	sVarName:= CONCAT(sVarName,'iq_stValve.i_xClsLS'), 
+	sVarName:= CONCAT(sVarName,'.iq_stValve.i_xClsLS'), 
 	nDestAddr:= ADR(xClsLS), 
 	nLen:= SIZEOF(xClsLS), 
 	tTimeout:= , 
@@ -61,6 +62,7 @@ VGC.i_xOpnLS := xOpnLS;]]></ST>
     </Implementation>
     <LineIds Name="FB_TVCG_ADS">
       <LineId Id="18" Count="1" />
+      <LineId Id="82" Count="0" />
       <LineId Id="34" Count="12" />
       <LineId Id="58" Count="0" />
       <LineId Id="47" Count="10" />

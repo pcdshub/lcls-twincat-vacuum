@@ -33,13 +33,13 @@ END_VAR
 ftReset_rPress(CLK:= fb_Read_rPress.bBusy OR xFirstPass);
 ftReset_AT_VAC(CLK:= fb_Read_AT_VAC.bBusy OR xFirstPass);
 ftReset_PressOK(CLK:= fb_Read_Press_OK.bBusy OR xFirstPass);
-
+xFirstPass:=false;
 (*calling ADS read function*)
 fb_Read_rPress(
 	bRead:= ftReset_rPress.Q, 
 	sNetId:= sNetId, 
 	nPort:= nPort, 
-	sVarName:= CONCAT(sVarName,'IG.rPRESS'), 
+	sVarName:= CONCAT(sVarName,'.IG.rPRESS'), 
 	nDestAddr:= ADR(rPRESS), 
 	nLen:= SIZEOF(rPRESS), 
 	tTimeout:= , 
@@ -53,7 +53,7 @@ fb_Read_AT_VAC(
 	bRead:= ftReset_AT_VAC.Q, 
 	sNetId:= sNetId, 
 	nPort:= nPort, 
-	sVarName:= CONCAT(sVarName,'IG.xAT_VAC'), 
+	sVarName:= CONCAT(sVarName,'.IG.xAT_VAC'), 
 	nDestAddr:= ADR(xAT_VAC), 
 	nLen:= SIZEOF(xAT_VAC), 
 	tTimeout:= , 
@@ -66,7 +66,7 @@ fb_Read_Press_OK(
 	bRead:=ftReset_PressOK.Q , 
 	sNetId:= sNetId, 
 	nPort:= nPort, 
-	sVarName:= CONCAT(sVarName,'IG.xPRESS_OK'), 
+	sVarName:= CONCAT(sVarName,'.IG.xPRESS_OK'), 
 	nDestAddr:= ADR(xPRESS_OK), 
 	nLen:= SIZEOF(xPRESS_OK), 
 	tTimeout:= , 
