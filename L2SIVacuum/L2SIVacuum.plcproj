@@ -100,6 +100,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\ADS\FB_ADS_WATCHDOG.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_9XX.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -291,7 +294,7 @@
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_FSV_Interface.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\Interfaces\FB_TVCG_ADS.TcPOU">
+    <Compile Include="POUs\Functions\Valves\Interfaces\FB_TVGC_ADS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_Valve_Interface.TcPOU">

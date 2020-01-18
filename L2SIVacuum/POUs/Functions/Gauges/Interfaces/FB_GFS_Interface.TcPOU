@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_GFS_Interface" Id="{781a56cb-c763-46ed-9ac5-b2e690be9ff4}" SpecialFunc="None">
-    <Declaration><![CDATA[(*Used as soft IO mapping to creat a psuedo gague to communicate over two taks on the same PLC.*) 
+    <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo gague to communicate over two taks on the same PLC.*) 
 (*for FAST shutter control*)
 FUNCTION_BLOCK FB_GFS_Interface
 VAR_INPUT
@@ -10,6 +10,16 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+	(*outputs*)
+	q_xPRESS_OK AT%Q*: BOOL;	
+
+	{attribute 'pytmc' := '
+	pv: FAULT_RESET; 
+	io: io ;
+	'}
+	q_xVAC_FAULT_Reset AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+
+	
 	(*inputs*)
 	{attribute 'pytmc' := '
 	pv: TRIG; 
@@ -38,10 +48,9 @@ VAR
 	field: ONAM FAULT OK;
 	io: io ;
 	'}
-	xVAC_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 
-	(*outputs*)
-	q_xPRESS_OK AT%Q*: BOOL;
+
 END_VAR
 ]]></Declaration>
     <Implementation>

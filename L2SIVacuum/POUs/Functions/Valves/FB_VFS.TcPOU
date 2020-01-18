@@ -66,7 +66,6 @@ VAR
 	
 	
 	(*IO*)
-	i_xPress_OK AT%I*:BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
 	i_xOpnLS	AT%I*: BOOL;
 	i_xClsLS	AT%I*: BOOL;
 	q_xClose_A	AT%Q*: BOOL;
@@ -74,11 +73,16 @@ VAR
 	q_xClose_C	AT%Q*: BOOL;
 	q_xOPN_DO	AT%Q*: BOOL;
 	i_xTrigger	AT%I*: BOOL; // Could be Up to 4
-	q_xTrigger	AT%Q*: BOOL; // Could be Up to 4
 	
-	xMPS_OK	 AT%Q*:	BOOL; (*MPS Fast OK, is set when the Valve is Open and there is no trigger*)
-	
-	xVAC_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+	// Interface
+	i_xPress_OK AT%I*:BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
+	i_xResetFault	AT%I*: BOOL;
+	q_xTrigger	AT%Q*: BOOL; 
+	q_xVFS_Open AT%Q*: BOOL;
+	q_xVFS_Closed AT%Q*: BOOL;
+	q_xMPS_OK	 AT%Q*:	BOOL; (*MPS Fast OK, is set when the Valve is Open and there is no trigger*)
+	q_xVAC_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+
 	
 END_VAR]]></Declaration>
     <Implementation>
@@ -121,7 +125,7 @@ END_IF
 IF (i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK)  OR NOT (iq_stValve.pv_xOPN_SW)  THEN 
 	xClose:= TRUE;
 	iq_stValve.pv_xOPN_SW := FALSE;
-	xVAC_FAULT_OK:= FALSE;
+	q_xVAC_FAULT_OK:= FALSE;
 	iq_stValve.xERR_ExtFault := TRUE;
 END_IF
 IF (xClose) AND (NOT i_xClsLS) THEN
@@ -139,7 +143,7 @@ END_IF
 
 (* Neighboring Valves Interlock bit is reset When the Vacuum event error is reset and the Shutter is opened *)
 IF (NOT i_xTrigger) AND (NOT iq_stValve.xERR_ExtFault) AND i_xOpnLS THEN
-	xVAC_FAULT_OK := TRUE;
+	q_xVAC_FAULT_OK := TRUE;
 END_IF
 
 (*OPN OK evaluation bit *)
@@ -154,7 +158,7 @@ iq_stValve.xOPN_OK := (NOT iq_stValve.xERR_ExtFault) AND NOT i_xTrigger;
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (* When the valve  is open MPS is OK*)
-xMPS_OK := (iq_stValve.eState=OPEN) AND NOT i_xTrigger AND i_xPress_OK;//gauge is connected
+q_xMPS_OK := (iq_stValve.eState=OPEN) AND NOT i_xTrigger AND i_xPress_OK;//gauge is connected
 
 
 (* Override logic *)
@@ -195,7 +199,7 @@ ACT_ResetAlarms();
 
 
 (*FAST FAULT*)
-fbFF(i_xOK := xMPS_OK,
+fbFF(i_xOK := q_xMPS_OK,
     i_xReset := i_xFFReset,
     io_fbFFHWO := io_fbFFHWO);
 
@@ -203,12 +207,12 @@ fbFF(i_xOK := xMPS_OK,
     </Implementation>
     <Action Name="ACT_ResetAlarms" Id="{5bc381e2-d93d-4e07-9868-4d1094f97e97}">
       <Implementation>
-        <ST><![CDATA[iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
+        <ST><![CDATA[iq_stValve.xERR_DifPres R= i_xResetFault;
 
-iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;
+iq_stValve.bErrorPresent R= i_xResetFault;
 
-IF NOT i_xTrigger THEN
-	iq_stValve.xERR_ExtFault R= iq_stValve.pv_xAlmRst;
+IF NOT i_xTrigger  THEN
+	iq_stValve.xERR_ExtFault R= i_xResetFault;
 END_IF]]></ST>
       </Implementation>
     </Action>
