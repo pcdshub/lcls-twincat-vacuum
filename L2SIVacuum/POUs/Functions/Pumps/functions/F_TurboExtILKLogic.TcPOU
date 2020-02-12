@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="F_TurboExtILKLogic" Id="{7245688f-5d30-4f2c-88b0-ff2e5b5ffecc}" SpecialFunc="None">
     <Declaration><![CDATA[
 (* This function evaluates the Turbo ILK logic*)
@@ -40,20 +40,20 @@ END_VAR
                       <o n="OutputItems" t="OutputItemList">
                         <l2 n="OutputItems" cet="Operand">
                           <o>
-                            <v n="Operand">"???"</v>
+                            <v n="Operand">"F_TurboExtILKLogic"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
                             <o n="Flags" t="Flags">
-                              <v n="Flags">8</v>
+                              <v n="Flags">0</v>
                               <v n="Fixed">false</v>
                               <v n="Extensible">false</v>
                             </o>
                             <v n="LValue">true</v>
                             <v n="Boolean">false</v>
                             <v n="IsInstance">false</v>
-                            <v n="Id">47L</v>
+                            <v n="Id">87L</v>
                           </o>
                         </l2>
                       </o>

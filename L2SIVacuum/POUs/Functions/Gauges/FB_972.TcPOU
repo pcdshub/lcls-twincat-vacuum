@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_972" Id="{02ad8586-ab8b-4c5e-9c1c-5db3b2c00a9f}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_972
 VAR_INPUT
@@ -15,6 +15,7 @@ VAR_IN_OUT
 END_VAR
 VAR
 	rV : REAL;
+	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 	(*IO*)
 	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
@@ -23,7 +24,7 @@ END_VAR
       <ST><![CDATA[(* Standard MKS 9XX series conversion *)
 (* works for 972 and 925 *)
 
-rV := 10*INT_TO_REAL(VG.i_iPRESS_R)/32767;
+rV := 10*INT_TO_REAL(VG.i_iPRESS_R)/iTermBits;
 
 IF rV > 1 THEN
 	VG.rPRESS := LREAL_TO_REAL(EXPT(10, 2*rV-11));
@@ -42,6 +43,16 @@ ACT_IO();]]></ST>
         <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_SetBits" Id="{c873eda2-ce3a-4d08-a1f9-e53b8f43dbd9}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_972">
       <LineId Id="3" Count="11" />
       <LineId Id="2" Count="0" />
@@ -51,6 +62,9 @@ ACT_IO();]]></ST>
     </LineIds>
     <LineIds Name="FB_972.ACT_IO">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_972.M_SetBits">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

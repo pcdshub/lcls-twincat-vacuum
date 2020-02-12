@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_EbaraPTM" Id="{00dd7679-7d3a-464d-8613-c714e423a1cf}">
     <Declaration><![CDATA[TYPE ST_EbaraPTM EXTENDS ST_PTM :
 STRUCT
@@ -34,7 +34,7 @@ q_xProtection : BOOL; //NC. If opened, pump will decelerate/not start
 	'}
 iq_xSpeedSet    : BOOL; //Request to set speed
 	{attribute 'pytmc' := '
-    pv: SPEED
+    pv: SPEED_REQ
 	io: io
 	'}
 q_iSpeedSet   : DINT; //Requested speed (min. 100 RPM)

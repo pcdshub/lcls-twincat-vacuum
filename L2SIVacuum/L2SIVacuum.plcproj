@@ -113,9 +113,6 @@
     <Compile Include="POUs\Functions\Gauges\FB_CMR362.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_Gauge.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_GCM.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -162,9 +159,6 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\Interfaces\FB_Gauge_Interface.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Functions\Gauges\Interfaces\FB_GFS_Interface.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\Interfaces\FB_TGCC_ADS.TcPOU">
@@ -291,7 +285,7 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\Interfaces\FB_FSV_Interface.TcPOU">
+    <Compile Include="POUs\Functions\Valves\Interfaces\FB_VFS_Interface.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_TVGC_ADS.TcPOU">

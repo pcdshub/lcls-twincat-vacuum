@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS275" Id="{ffda77c7-a04b-4d4f-b9a5-3ec5d874c4e9}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
@@ -80,7 +80,7 @@ END_IF
 PG.xPRESS_OK := (PG.rPRESS >= MinPressure);
 
 (* Setpoint evaluation *)
-PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS<PG.rVAC_SP);
+PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS<=PG.rVAC_SP);
 
 (*Soft IO Mapping *)
 IO();

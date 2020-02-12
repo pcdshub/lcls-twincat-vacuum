@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_CMR362" Id="{829c6b91-5e76-4127-a78c-3990b7df60a3}" SpecialFunc="None">
     <Declaration><![CDATA[(* For Pfeiffer CMR 362 *)
 FUNCTION_BLOCK FB_CMR362
@@ -13,7 +13,7 @@ VAR
 	MinPressure: REAL := 7.5E-3; //Torr
 	FullScale : REAL := 75.0 ; //Torr
 	V : REAL;
-	
+	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 	(*IO*)
 	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
@@ -26,7 +26,7 @@ ACT_IO();
 
 (* Real-value calculation *)
 
- V := 10*INT_TO_REAL(VG.i_iPRESS_R)/32767;
+ V := 10*INT_TO_REAL(VG.i_iPRESS_R)/iTermBits;
 	
 
 IF V < 0.4 THEN
@@ -62,6 +62,16 @@ ACT_IO();
         <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_SetBits" Id="{945a4b7c-0383-4407-a003-10a045f5720a}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_CMR362">
       <LineId Id="10" Count="1" />
       <LineId Id="54" Count="0" />
@@ -75,6 +85,9 @@ ACT_IO();
     </LineIds>
     <LineIds Name="FB_CMR362.ACT_IO">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_CMR362.M_SetBits">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

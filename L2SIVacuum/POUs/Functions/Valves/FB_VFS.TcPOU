@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VFS" Id="{68519563-003c-4daf-ae0e-7245b1fe09af}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VFS
 (* This function block implements basic functionality for Fast Shutter/Valves*)
@@ -11,34 +11,25 @@ VAR_IN_OUT
 	
 END_VAR
 VAR_INPUT
-	{attribute 'pytmc' := 'pv: PMPS_OK'}
+
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
 	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
-	// Reset fault
-	{attribute 'pytmc' := '
-    pv: FF_Reset
-	'}
-    i_xFFReset: BOOL;
+	
+
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv:
-	'}
+
 	iq_stValve : ST_VGC; (* All valve data and states will be in this struct*)
 	
 	
 END_VAR	
 VAR_IN_OUT
-	io_fbFFHWO    :    FB_HardwareFFOutput;
+	
 	
 END_VAR
 VAR
-	// PMPS
-	fbFF    :    FB_FastFault :=(
-        i_DevName := 'VGC',
-        i_Desc := 'Fault occurs when fast sensor trips or the valve is not in open state',
-        i_TypeCode := 16#1010);
+	
 	
 	rDiffPressAllowed	:	REAL := 22.5; // Torr, Default value comes from Vat Valve Manual
 	rDiffPress : REAL;
@@ -64,7 +55,8 @@ VAR
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
 	
-	
+
+	i_xCLS_SW AT%I*:BOOL; (*external open signal e.g epics*)
 	(*IO*)
 	i_xOpnLS	AT%I*: BOOL;
 	i_xClsLS	AT%I*: BOOL;
@@ -76,13 +68,13 @@ VAR
 	
 	// Interface
 	i_xPress_OK AT%I*:BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
-	i_xResetFault	AT%I*: BOOL;
-	q_xTrigger	AT%Q*: BOOL; 
-	q_xVFS_Open AT%Q*: BOOL;
-	q_xVFS_Closed AT%Q*: BOOL;
-	q_xMPS_OK	 AT%Q*:	BOOL; (*MPS Fast OK, is set when the Valve is Open and there is no trigger*)
+	i_xResetFault	AT%I*: BOOL;(*FFO iReset*)
+	q_xTrigger	AT%Q*: BOOL; (*Interface*)
+	q_xVFS_Open AT%Q*: BOOL; (*Interface*)
+	q_xVFS_Closed AT%Q*: BOOL; (*Interface*)
 	q_xVAC_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
-
+	q_xMPS_OK	 AT%Q*:	BOOL; (*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
+	
 	
 END_VAR]]></Declaration>
     <Implementation>
@@ -122,11 +114,11 @@ END_IF
 
 (* Input Trigger to close the Fast Shutter*)
 (* Neighboring Valves Should also be triggered to Close*)
-IF (i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK)  OR NOT (iq_stValve.pv_xOPN_SW)  THEN 
+IF (i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK)  OR i_xCLS_SW  THEN 
 	xClose:= TRUE;
 	iq_stValve.pv_xOPN_SW := FALSE;
 	q_xVAC_FAULT_OK:= FALSE;
-	iq_stValve.xERR_ExtFault := TRUE;
+	IF NOT (i_xCLS_SW) THEN iq_stValve.xERR_ExtFault := TRUE; END_IF
 END_IF
 IF (xClose) AND (NOT i_xClsLS) THEN
 	q_xClose_A := TRUE;
@@ -155,7 +147,7 @@ iq_stValve.xOPN_OK := (NOT iq_stValve.xERR_ExtFault) AND NOT i_xTrigger;
 
 
 (* Here's where the valve opens *)
-iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+iq_stValve.q_xOPN_DO := (NOT(i_xCLS_SW) AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (* When the valve  is open MPS is OK*)
 q_xMPS_OK := (iq_stValve.eState=OPEN) AND NOT i_xTrigger AND i_xPress_OK;//gauge is connected
@@ -198,10 +190,7 @@ IO();
 ACT_ResetAlarms();
 
 
-(*FAST FAULT*)
-fbFF(i_xOK := q_xMPS_OK,
-    i_xReset := i_xFFReset,
-    io_fbFFHWO := io_fbFFHWO);
+
 
 ]]></ST>
     </Implementation>
@@ -226,7 +215,11 @@ iq_stValve.xOverrideMode := i_xOverrideMode;
 (*outputs*)
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;
 q_xTrigger:=i_xTrigger;
-]]></ST>
+
+//iq_stValve.pv_xOPN_SW:= i_xOPN_SW;
+
+q_xVFS_Closed:= iq_stValve.i_xClsLS;
+q_xVFS_Open:= iq_stValve.i_xOpnLS;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_VFS">
@@ -288,7 +281,7 @@ q_xTrigger:=i_xTrigger;
       <LineId Id="242" Count="0" />
       <LineId Id="218" Count="2" />
       <LineId Id="115" Count="0" />
-      <LineId Id="485" Count="4" />
+      <LineId Id="485" Count="1" />
       <LineId Id="484" Count="0" />
       <LineId Id="116" Count="1" />
     </LineIds>
@@ -300,7 +293,11 @@ q_xTrigger:=i_xTrigger;
     </LineIds>
     <LineIds Name="FB_VFS.IO">
       <LineId Id="2" Count="7" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
       <LineId Id="1" Count="0" />
+      <LineId Id="13" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
