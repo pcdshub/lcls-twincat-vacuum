@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_PIP" Id="{3e94e806-a651-479f-afb3-d6455fe7a8d1}">
     <Declaration><![CDATA[TYPE ST_PIP :
 STRUCT
@@ -33,6 +33,15 @@ STRUCT
 	q_xHVEna_DO : BOOL;	// Enable High Voltage when True // 'TcLinkTo' (EL1124) ^Input
 	{attribute 'pytmc' := '
     pv: PRESS;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
+	io: i;
+    '}
+	rPRESS: REAL;  //
+	{attribute 'pytmc' := '
+    pv: PRESS_AI;
 	io: i;
     '}
 	i_iPRESS: REAL;  //

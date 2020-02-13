@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PIP_Gamma" Id="{c735b214-fb8d-491c-9d35-e2f8609cfbf0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the ION pump connected to a Gamma QPCe controller.
  Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
@@ -60,6 +60,7 @@ IO();
 rV := 10*INT_TO_REAL(i_iPress)/32767;
 rPRESS := LREAL_TO_REAL(EXPT(10,(rV-iOffset))); (*offset = 11*)
 	q_IG.rPRESS := rPRESS;
+	stPump.rPRESS := rPRESS;
 IF (stPump.i_xSP_DI) OR ((q_IG.rPRESS < q_IG.rVAC_SP) AND (q_IG.rPRESS<>0)) THEN 
 	q_IG.xPRESS_OK := TRUE;
 	ELSE
@@ -108,7 +109,9 @@ this^.stPump.xHVEna_SW := run;]]></ST>
       <LineId Id="15" Count="0" />
       <LineId Id="10" Count="1" />
       <LineId Id="9" Count="0" />
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="4" Count="3" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PIP_Gamma.IO">
