@@ -24,14 +24,16 @@ STRUCT
 	{attribute 'pytmc' := '
     pv: HV_SW;
 	io: io;
-	field: ZNAM Off; 
-	field: ONAM On;
+	field: ZNAM OFF; 
+	field: ONAM ON;
     '}
 	xHVEna_SW : BOOL; 
 	
 (* IO Controls *)
 	{attribute 'pytmc' := '
     pv: HV_DO;
+	field: ZNAM OFF; 
+	field: ONAM ON;
 	io: i;
     '}
 	q_xHVEna_DO : BOOL;	// Enable High Voltage when True // 'TcLinkTo' (EL1124) ^Input
@@ -51,6 +53,8 @@ STRUCT
 	i_iPRESS: REAL;  //
 	{attribute 'pytmc' := '
     pv: SP_DI;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io:i;
     '}
 	i_xSP_DI : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
