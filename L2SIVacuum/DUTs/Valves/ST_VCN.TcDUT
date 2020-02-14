@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_VCN" Id="{09a4fd4d-af49-4c30-8fb9-576bd4a65636}">
     <Declaration><![CDATA[TYPE ST_VCN :
 STRUCT
@@ -30,6 +30,8 @@ STRUCT
 	//Softvariables
 	{attribute 'pytmc' := '
     pv: ILK_OK;
+	field: ZNAM NOT OK ;
+	field: ONAM OK ;
 	io: i;
     '}
 	xIlkOK	:	BOOL := FALSE; // Interlock Bit

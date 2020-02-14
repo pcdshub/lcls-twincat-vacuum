@@ -9,6 +9,8 @@ STRUCT
 (* Interlock *)
 	{attribute 'pytmc' := '
     pv: ILK_OK;
+	field: ZNAM NOT OK ;
+	field: ONAM OK ;
 	io: i;
 	'}
    	xHV_ExtIlk : BOOL; 
@@ -22,6 +24,8 @@ STRUCT
 	{attribute 'pytmc' := '
     pv: HV_SW;
 	io: io;
+	field: ZNAM Off; 
+	field: ONAM On;
     '}
 	xHVEna_SW : BOOL; 
 	

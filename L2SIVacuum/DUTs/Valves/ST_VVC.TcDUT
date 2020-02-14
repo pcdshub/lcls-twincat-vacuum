@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_VVC" Id="{a152c6b9-ef88-42e5-9666-d628fde4b1a2}">
     <Declaration><![CDATA[TYPE ST_VVC :
 STRUCT
@@ -15,11 +15,15 @@ STRUCT
 	pv_xOPN_SW	: BOOL;
 	{attribute 'pytmc' := '
 	pv:FORCE_OPN;
+	field: ZNAM FALSE;
+	field: ONAM OPEN;
 	io: io;
 	'}
 	xOvrdOpn	:	BOOL;
 	{attribute 'pytmc' := '
 	pv: OVRD_ON;
+	field: ZNAM Override ON ;
+	field: ONAM Override OFF;
 	io: io;
 	'}
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
