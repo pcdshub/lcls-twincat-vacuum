@@ -20,10 +20,11 @@ VAR
 	(*IO*)
 	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
 	i_xFaultNC AT%I*: BOOL; // Error
- 	i_xWarn AT%I*: BOOL;
+	i_xWarn AT%I*: BOOL;
+ 	i_xRemote AT%I*: BOOL;
 	
 	q_RunDO AT%Q*: BOOL; // Start/Stop
-	q_PumpingStation AT%Q*: BOOL; // Start/Stop
+	q_PumpingStation AT%Q*: BOOL; // Start/Stop interlock
 	q_xRemote AT%Q*: BOOL;
 END_VAR
 
@@ -79,6 +80,17 @@ iq_stPTM.i_xWarn:=  	i_xWarn ;
 	]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{2c4aa976-1aba-482a-991c-f510aadc9928}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.iq_stPtm.xRunSW := run;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_PTM_Pfeiffer">
       <LineId Id="78" Count="0" />
       <LineId Id="103" Count="0" />
@@ -107,6 +119,10 @@ iq_stPTM.i_xWarn:=  	i_xWarn ;
       <LineId Id="12" Count="1" />
       <LineId Id="3" Count="2" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Pfeiffer.M_Run">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

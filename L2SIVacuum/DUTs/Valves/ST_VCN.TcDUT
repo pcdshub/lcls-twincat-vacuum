@@ -1,10 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_VCN" Id="{09a4fd4d-af49-4c30-8fb9-576bd4a65636}">
     <Declaration><![CDATA[TYPE ST_VCN :
 STRUCT
 	(* VCN - Valve Controlled Needle
 	Used for Pfeiffer EVR 116 needle valves *)
+	{attribute 'pytmc' := '
+	pv: OPN_SW; 
+	field: ZNAM CLOSE; 
+	field: ONAM OPEN;
+	io: io ;
+	'}
+	xOPN_SW	: BOOL;
 	{attribute 'pytmc' := '
     pv: POS_RDBK;
 	io: i;
@@ -15,7 +22,7 @@ STRUCT
 	// Outputs
 	{attribute 'pytmc' := '
 	pv: POS_AO;
-	io: io ;
+	io: i ;
 	'}
 	q_iRawPosition	:	INT; //Position control 
 	//For the EVR 116 this is 0-10V analog 0.4 closed to 9.1 Closed
@@ -23,15 +30,11 @@ STRUCT
 	//Softvariables
 	{attribute 'pytmc' := '
     pv: ILK_OK;
+	field: ZNAM NOT OK ;
+	field: ONAM OK ;
 	io: i;
     '}
 	xIlkOK	:	BOOL := FALSE; // Interlock Bit
-	//Manually Pressing valve "Open/Close" on EDM
-	{attribute 'pytmc' := '
-    pv: OPN_SW;
-	io: io;
-    '}
-	pv_xOPN_SW	: BOOL;
 	
 	rUpperLimit	:	REAL:=100; // Percentage9.1;	//Upper limit on valve open
 	{attribute 'pytmc' := '
@@ -39,13 +42,13 @@ STRUCT
 	io: io;
 	'}
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
-	{attribute 'pytmc' := '
+	{attribute 'pytmc' :=  ' 
 	pv: STATE ;
 	type: mbbi ;
-	field: ZRST CLOSE ;
-	field: ONST OPEN ;
-	field: TWST PRESSURE CONTROL ;
-	field: THST MANUAL CONTROL ;
+	field: ZRST Close ;
+	field: ONST Open;
+	field: TWST PressureControl ;
+	field: THST ManualControl ;
 	io: i
 	'}
 	eValveControl	:	E_VCN := CloseValve; // Valve control state

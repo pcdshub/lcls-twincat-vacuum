@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_GCM" Id="{d03d0435-a8a4-4ab2-9d39-a304a183952d}" SpecialFunc="None">
     <Declaration><![CDATA[(* For Baratron Pressure Gauge *)
 (*The full-scale pressure times the ratio of the meas.
@@ -18,8 +18,9 @@ VAR_INPUT
 END_VAR
 VAR
 	rMinPressure: REAL;
+	rHYST_PERC	:	REAL := 0.80;	// Hysteresis percentage
 	rV	:REAL;
-	
+	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 	(*IO*)
 	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
@@ -35,10 +36,10 @@ VG.rFULL_SCALE := i_rFULL_SCALE;
 rMinPressure := VG.rFULL_SCALE * 5E-4;
 
 
-rV :=MAX((10*INT_TO_REAL(VG.i_iPRESS_R)/32767),0);
+rV :=MAX((10*INT_TO_REAL(VG.i_iPRESS_R)/iTermBits),0);
 
 VG.rPRESS := (VG.rFULL_SCALE/10)*rV;
-IF VG.rPRESS > rMinPressure THEN
+IF VG.rPRESS > (rMinPressure)THEN
 	VG.xPRESS_OK := TRUE;
 ELSE
 	VG.xPRESS_OK := FALSE;
@@ -52,6 +53,16 @@ ACT_IO();]]></ST>
         <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_SetBits" Id="{ef0f5032-cc49-4110-b8a4-5e654a7699b0}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_GCM">
       <LineId Id="3" Count="9" />
       <LineId Id="55" Count="0" />
@@ -61,6 +72,9 @@ ACT_IO();]]></ST>
     </LineIds>
     <LineIds Name="FB_GCM.ACT_IO">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GCM.M_SetBits">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

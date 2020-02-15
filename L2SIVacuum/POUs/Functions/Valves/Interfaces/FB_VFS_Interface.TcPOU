@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_VFS_Interface" Id="{57bc9317-df03-4829-82d4-3e35e70264fe}" SpecialFunc="None">
+    <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo valve to communicate over two task on the same PLC.*) 
+(*for FAST shutter control*)
+FUNCTION_BLOCK FB_VFS_Interface
+VAR_INPUT
+	IG : ST_VG; // The Cold Cathode Data Structure
+	{attribute 'pytmc' := '
+    pv: FF_Reset
+	'}
+    i_xFFReset: BOOL;
+END_VAR
+VAR_IN_OUT
+	io_fbFFHWO    :    FB_HardwareFFOutput;
+END_VAR
+VAR
+	// PMPS
+	fbFF    :    FB_FastFault :=(
+        i_DevName := 'VGC',
+        i_Desc := 'Fault occurs when fast sensor trips or the valve is not in open state',
+        i_TypeCode := 16#1010);
+
+	(*outputs*)
+	q_xPRESS_OK AT%Q*: BOOL;
+	{attribute 'pytmc' := '
+	pv: CLS_SW; 
+	io: io ;
+	'}
+	q_xCLS_SW AT%Q*:BOOL; (*external open signal e.g epics*)
+	{attribute 'pytmc' := '
+	pv: FAULT_RESET; 
+	io: io ;
+	'}
+	q_xVAC_FAULT_Reset AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+
+	
+	(*inputs*)
+	{attribute 'pytmc' := '
+	pv: TRIG; 
+	field: ZNAM TRIG_OFF; 
+	field: ONAM TRIG_ON;
+	io: io ;
+	'}
+	i_xTrigger AT %I* : BOOL;
+	{attribute 'pytmc' := '
+	pv: OPEN; 
+	field: ZNAM NOT OPEN; 
+	field: ONAM OPEN;
+	io: io ;
+	'}
+	i_xVFS_Open AT %I* : BOOL;
+	{attribute 'pytmc' := '
+	pv: CLS; 
+	field: ZNAM NOT CLOSED; 
+	field: ONAM CLOSE;
+	io: io ;
+	'}
+	i_xVFS_Closed AT %I* : BOOL;
+	{attribute 'pytmc' := '
+	pv: FAULT_OK; 
+	field: ZNAM FAULT ; 
+	field: ONAM FAULT OK;
+	io: io ;
+	'}
+	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+	{attribute 'pytmc' := '
+	pv: FFO_OK; 
+	field: ZNAM FAULT ; 
+	field: ONAM FAULT OK;
+	io: io ;
+	'}
+	i_xMPS_OK AT%I*: BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*soft IO Mapping*)
+
+q_xPRESS_OK := IG.xPRESS_OK;
+
+(*FAST FAULT*)
+fbFF(i_xOK := i_xMPS_OK,
+    i_xReset := i_xFFReset,
+    io_fbFFHWO := io_fbFFHWO);]]></ST>
+    </Implementation>
+    <LineIds Name="FB_VFS_Interface">
+      <LineId Id="68" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="72" Count="3" />
+      <LineId Id="71" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

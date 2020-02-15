@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_PTM_Ebara_010M" Id="{db9fdbdf-85bb-4e58-96cc-808f2a65a0e5}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Ebara Turbo pump connected to the ETC010M Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
@@ -170,6 +170,17 @@ END_VAR
         <ST><![CDATA[BackingPressureSetPoint := Min(i_SetPoint , rMaxBackingPressure);]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_Run" Id="{21c4e19f-7518-4c48-b0d6-d73a0e6962d9}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.iq_stPtm.xRunSW := run;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_PTM_Ebara_010M">
       <LineId Id="3" Count="0" />
       <LineId Id="136" Count="0" />
@@ -234,6 +245,10 @@ END_VAR
       <LineId Id="52" Count="1" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_010M.BackingPressureSetPoint">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Ebara_010M.M_Run">
+      <LineId Id="10" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

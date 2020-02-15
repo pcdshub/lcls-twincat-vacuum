@@ -17,7 +17,7 @@
     <Company>SLAC</Company>
     <Released>false</Released>
     <Title>L2SI Vacuum Library</Title>
-    <ProjectVersion>0.0.0</ProjectVersion>
+    <ProjectVersion>1.0.1</ProjectVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\Gauges\E_PressureState.TcDUT">
@@ -77,9 +77,6 @@
     <Compile Include="DUTs\Valves\E_VGC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\Valves\ST_VCC.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DUTs\Valves\ST_VVC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -103,6 +100,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\ADS\FB_ADS_WATCHDOG.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_9XX.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -118,6 +118,10 @@
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_ITR90.TcPOU">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_MKS317A.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS392.TcPOU">
       <SubType>Code</SubType>
@@ -155,6 +159,9 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\Interfaces\FB_Gauge_Interface.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Gauges\Interfaces\FB_TGCC_ADS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_EbaraDryPump.TcPOU">
@@ -202,6 +209,9 @@
     <Compile Include="POUs\Functions\Pumps\functions\F_TurboExtILKLogic.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\functions\F_TurboExtILKLogic_2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_Kashiyama_VRC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -217,6 +227,18 @@
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VFS.TcPOU">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VGC_AP.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VGC_EBD.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VRC_EBD.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VVC.TcPOU">
       <SubType>Code</SubType>
@@ -242,7 +264,13 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\functions\F_RoughPumpInlet_ILK.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\functions\F_TurboGateValve_ILK.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\functions\F_TurboGateValve_Protection_ILK.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\functions\F_TURBO_VRC_ILK.TcPOU">
@@ -257,10 +285,19 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\Interfaces\FB_FSV_Interface.TcPOU">
+    <Compile Include="POUs\Functions\Valves\Interfaces\FB_VFS_Interface.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\Interfaces\FB_TVGC_ADS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_Valve_Interface.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\Interfaces\ITF_Valve.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Version\Global_Version.TcGVL">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -278,6 +315,8 @@
     <Folder Include="POUs\Functions\Pumps" />
     <Folder Include="POUs\Functions\Valves\functions" />
     <Folder Include="POUs\Functions\Valves\Interfaces" />
+    <Folder Include="POUs\ADS" />
+    <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
@@ -285,6 +324,14 @@
     <PlaceholderReference Include="LCLS General">
       <DefaultResolution>LCLS General, * (SLAC)</DefaultResolution>
       <Namespace>LCLS_General</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="PMPS">
+      <DefaultResolution>PMPS, * (SLAC - LCLS)</DefaultResolution>
+      <Namespace>PMPS</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_DataExchange">
+      <DefaultResolution>Tc2_DataExchange, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_DataExchange</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_EtherCAT">
       <DefaultResolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</DefaultResolution>
@@ -306,9 +353,9 @@
       <DefaultResolution>Tc2_Utilities, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_Utilities</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="Tc3_Interfaces">
-      <DefaultResolution>Tc3_Interfaces, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc3_Interfaces</Namespace>
+    <PlaceholderReference Include="Tc3_EventLogger">
+      <DefaultResolution>Tc3_EventLogger, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_EventLogger</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc3_Module">
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
@@ -321,13 +368,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <SubObject Include="FB_VGC.ACT_ResetAlarms">
-      <LinkAlways>true</LinkAlways>
-    </SubObject>
-  </ItemGroup>
-  <ItemGroup>
     <PlaceholderResolution Include="LCLS General">
       <Resolution>LCLS General, 0.0.0 (SLAC)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="PMPS">
+      <Resolution>PMPS, * (SLAC - LCLS)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="Tc3_EventLogger">
+      <Resolution>Tc3_EventLogger, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>

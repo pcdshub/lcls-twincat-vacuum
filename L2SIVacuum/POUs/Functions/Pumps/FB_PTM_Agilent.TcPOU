@@ -18,6 +18,9 @@ VAR_OUTPUT
 	
 END_VAR
 VAR
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	sPath: STRING;
 	//xRunOk	:	BOOL;
 	nMaxR1Fault: INT :=5;
 	nR1Fault : INT;
@@ -51,7 +54,7 @@ END_VAR
 (* M. Ghaly, 2018-9-26 *)
 
 (*connect External interlock to structure variable*)
-iq_stPtm.xExtRunOk := i_xExtILKOk;
+//iq_stPtm.xExtRunOk := i_xExtILKOk;
 
 (* state machine *)
 CASE (step) OF
@@ -69,7 +72,7 @@ CASE (step) OF
 		step :=10;
 (*Idle State waiting to start*)	
 	10: // Idle State, waiting for the xRunSwitch
-		IF iq_stPtm.xIlk  AND iq_stPTM.xRunSW THEN
+		IF iq_stPtm.xExtRunOk  AND iq_stPTM.xRunSW THEN
 			iq_stPtm.q_RunDO := iq_stPTM.xRunSW; //
 			step:=20;
 		END_IF
@@ -159,9 +162,9 @@ END_IF
 //xBackingPressureOK := i_stGauge.xPRESS_OK AND ( i_stGauge.rPRESS < iq_stPtm.rBackingPressureSP);
 
 (* Interlock Sum *)
-iq_stPtm.xIlk := iq_stPtm.xExtRunOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock;// AND xBackingPressureOK;
+iq_stPtm.xExtRunOk := i_xExtILKOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock;// AND xBackingPressureOK;
 
-IF NOT iq_stPtm.xIlk AND (NOT (step >= 90)) THEN
+IF NOT iq_stPtm.xExtRunOk AND (NOT (step >= 90)) THEN
 	step:=0; 
 END_IF
 
@@ -208,15 +211,15 @@ END_VAR
         <ST><![CDATA[IF (eState = pumpFAULT ) THEN
 	CASE nErrorCode OF
 		950:
-			ErrorMessage := 'Pump Starting Fault';
+			ErrorMessage := CONCAT(sPath,': Pump Starting Fault');
 		930: 
-			ErrorMessage := 'R1 Signal Timeout at Startup';
+			ErrorMessage := CONCAT(sPath,': R1 Signal Timeout at Startup');
 	
 		920:
-			ErrorMessage := 'R1 signal lost multiple times';
+			ErrorMessage := CONCAT(sPath,': R1 signal lost multiple times');
 
 		900:
-			ErrorMessage := 'Pump Controller Fault';	
+			ErrorMessage := CONCAT(sPath,': Pump Controller Fault');	
 	END_CASE
 	
 END_IF]]></ST>
@@ -237,6 +240,26 @@ q_xLSpd := iq_stPtm.q_xLSpd;
 ]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{9db5903b-b46e-480a-a164-d8ceb38a2676}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.iq_stPtm.xRunSW := run;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_TurboIsOn" Id="{fd80a5ac-8a80-41d5-8e07-a92996986023}">
+      <Declaration><![CDATA[METHOD PUBLIC M_TurboIsOn : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_TurboIsOn := (This^.iq_stPtm.eState =  E_PumpState.pumpSTARTING ) OR (This^.iq_stPtm.eState =  E_PumpState.pumpRUNNING );]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_PTM_Agilent">
       <LineId Id="21" Count="0" />
       <LineId Id="592" Count="0" />
@@ -363,6 +386,13 @@ q_xLSpd := iq_stPtm.q_xLSpd;
       <LineId Id="12" Count="0" />
       <LineId Id="9" Count="2" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_Run">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_TurboIsOn">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

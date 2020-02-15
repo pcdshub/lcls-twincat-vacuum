@@ -25,13 +25,15 @@ END_VAR
 
 VG.rPRESS := i_rPRESS;
 VG.xAT_VAC := i_xAT_VAC;
-VG.xPRESS_OK := i_xPRESS_OK;]]></ST>
+VG.xPRESS_OK := i_xPRESS_OK;
+]]></ST>
     </Implementation>
     <LineIds Name="FB_Gauge_Interface">
       <LineId Id="11" Count="2" />
       <LineId Id="24" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="25" Count="1" />
+      <LineId Id="43" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

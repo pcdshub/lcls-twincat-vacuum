@@ -1,13 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="FB_VRC" Id="{2db6a988-e12f-4920-baa1-9b034d8c1cf9}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for certain types of valves e.g Turbo Isolation valves, Apperture Valve *)
+    <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for certain types of valves e.g Turbo Isolation valves, Apperture Valve.
+This function block is interloked by an input (i_xExtILK_OK). This is so developers can interface with custom
+interlocking logic outside this function block.*)
 (* Note Interlock Logic is External *)
 FUNCTION_BLOCK FB_VRC
 VAR_IN_OUT
 	
 END_VAR
 VAR_INPUT
+	{attribute 'pytmc' := '
+	pv: EXT_ILK_OK ;
+	field: ZNAM NOT OK ;
+	field: ONAM OK ;
+	io: i ;
+	'}
 	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 END_VAR
@@ -18,7 +26,11 @@ VAR_OUTPUT
 	iq_stValve : ST_VRC;
 END_VAR
 VAR
-
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	sPath: STRING;
+	xFirstPass	:	BOOL;
+	fbFSInit		:	R_TRIG;
 	tonOvrd	:	TON;
 	tonDelOK : TON;
 	rtOK	:	R_TRIG;
@@ -30,11 +42,22 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
+(* On first PLC pass, put valve into vented state, which implies a closed valve *)
+fbFSInit( CLK := TRUE, Q => xFirstPass);
+IF xFirstPass THEN
+	iq_stValve.eVGC_State := Vented;
+	iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
+
+
+
 
 ///Check valve postion
-IF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
+IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
+	iq_stValve.eState:=INVALID;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=OPEN;
-ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=CLOSED;
 ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
 	iq_stValve.eState:=MOVING;
@@ -42,11 +65,18 @@ ELSE
 	iq_stValve.eState:=INVALID;
 END_IF
 
+
 (*evaluate Valve open external interlock*)
 iq_stValve.xOPN_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
 	iq_stValve.pv_xOPN_SW := FALSE;
+	iq_stValve.eVGC_State := ERR_ExtFault;
 END_IF
+
+IF (iq_stValve.q_xOPN_DO) AND (iq_stValve.xOPN_OK) THEN
+	iq_stValve.eVGC_State := AtVacuum;
+END_IF
+	
 
 (* Override logic *)
 (* Goal: give ability to override, but do so in a way that people won't forget it.
@@ -77,11 +107,36 @@ iq_stValve.xOverrideMode := i_xOverrideMode;
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Set_OPN_SW" Id="{87b0c242-3ded-4d47-af63-cf02c359390b}">
+      <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+METHOD PUBLIC M_Set_OPN_SW : BOOL
+VAR_INPUT
+	value:BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_VRC">
       <LineId Id="87" Count="0" />
-      <LineId Id="3" Count="10" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="129" Count="3" />
+      <LineId Id="125" Count="2" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="135" Count="10" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="146" Count="0" />
       <LineId Id="89" Count="1" />
-      <LineId Id="14" Count="18" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="152" Count="1" />
+      <LineId Id="150" Count="1" />
+      <LineId Id="19" Count="13" />
       <LineId Id="55" Count="1" />
       <LineId Id="62" Count="0" />
       <LineId Id="2" Count="0" />
@@ -91,6 +146,9 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
       <LineId Id="6" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.M_Set_OPN_SW">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

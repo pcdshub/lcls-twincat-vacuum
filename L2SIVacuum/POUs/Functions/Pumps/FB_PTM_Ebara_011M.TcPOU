@@ -140,6 +140,17 @@ END_IF
 iq_stPTM.i_xFault := NOT iq_stPTM.i_xNCFault; //??]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{c9c0a6c1-7b74-40d6-9159-49ad78962e29}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.iq_stPtm.xRunSW := run;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_PTM_Ebara_011M">
       <LineId Id="3" Count="0" />
       <LineId Id="71" Count="0" />
@@ -168,6 +179,10 @@ iq_stPTM.i_xFault := NOT iq_stPTM.i_xNCFault; //??]]></ST>
       <LineId Id="12" Count="20" />
       <LineId Id="36" Count="1" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Ebara_011M.M_Run">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

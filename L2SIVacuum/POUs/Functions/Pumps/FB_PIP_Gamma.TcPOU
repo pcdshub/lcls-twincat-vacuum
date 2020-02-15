@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PIP_Gamma" Id="{c735b214-fb8d-491c-9d35-e2f8609cfbf0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the ION pump connected to a Gamma QPCe controller.
  Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
@@ -18,10 +18,11 @@ VAR_IN_OUT
 END_VAR
 VAR
  rPRESS : REAL;
+ iOffset: INT:=11;
  rV : REAL;
  rHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
  (* IO Controls *)
- q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when FALSE // 'TcLinkTo' (EL1124) ^Input
+ q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when TRUE
  i_iPRESS  AT %I*: INT;  //
  i_xSP_DI  AT %I* : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
 
@@ -57,8 +58,9 @@ IO();
 (* convert the analog input into readable pressure*)
 (* use logarithmic Pressure calculation, Output= Normal and Offset = 0*)
 rV := 10*INT_TO_REAL(i_iPress)/32767;
-rPRESS := LREAL_TO_REAL(EXPT(10,(rV-0))); (*offset = 0*)
+rPRESS := LREAL_TO_REAL(EXPT(10,(rV-iOffset))); (*offset = 11*)
 	q_IG.rPRESS := rPRESS;
+	stPump.rPRESS := rPRESS;
 IF (stPump.i_xSP_DI) OR ((q_IG.rPRESS < q_IG.rVAC_SP) AND (q_IG.rPRESS<>0)) THEN 
 	q_IG.xPRESS_OK := TRUE;
 	ELSE
@@ -73,9 +75,21 @@ END_IF]]></ST>
 stPump.i_iPRESS:=	i_iPRESS;  
 stPump.i_xSP_DI:=	i_xSP_DI;
 (*output*)
-q_xHVEna_DO:= NOT stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activae function]]></ST>
+q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{55fab705-c400-4b7f-9779-42233f752de0}">
+      <Declaration><![CDATA[
+METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.stPump.xHVEna_SW := run;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_PIP_Gamma">
       <LineId Id="10" Count="0" />
       <LineId Id="165" Count="0" />
@@ -95,13 +109,19 @@ q_xHVEna_DO:= NOT stPump.q_xHVEna_DO; //According to Manual pin should be ground
       <LineId Id="15" Count="0" />
       <LineId Id="10" Count="1" />
       <LineId Id="9" Count="0" />
-      <LineId Id="3" Count="4" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="4" Count="3" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PIP_Gamma.IO">
       <LineId Id="2" Count="1" />
       <LineId Id="5" Count="2" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.M_Run">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

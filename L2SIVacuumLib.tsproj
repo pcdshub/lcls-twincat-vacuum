@@ -1,9 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4020.39">
-	<Project ProjectGUID="{607CA8E5-6515-4A1F-A434-6C029DB902EC}" ShowHideConfigurations="#x106">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4022.27">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{F27C2E36-F71A-4739-B9BA-8A892874FECC}" PersistentType="true">VacEventClass</Name>
+			<DisplayName TxtId="">
+				<![CDATA[NewEventClass_DisplayText]]>
+			</DisplayName>
+			<EventId>
+				<Name Id="1">Error</Name>
+				<DisplayName TxtId="">
+					<![CDATA[General Error: {0}]]>
+				</DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">ErrorTO</Name>
+				<DisplayName TxtId="">
+					<![CDATA[Timeout Error: {0}]]>
+				</DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">Setpoint</Name>
+				<DisplayName TxtId="">
+					<![CDATA[Setpoint out of range: {0}]]>
+				</DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">Inlk_Active</Name>
+				<DisplayName TxtId="">
+					<![CDATA[Interlock Active: {0}]]>
+				</DisplayName>
+				<Severity>Warning</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{248742CD-FD74-4594-BC44-C9FED2255621}"/>
+				<Hide GUID="{CCDD7DF5-CC19-4B0A-BD3D-E19496C0B581}"/>
+				<Hide GUID="{E397242B-EF99-4F1A-BB18-362C2DB089BD}"/>
+			</Hides>
+		</DataType>
+		<DataType>
+			<Name GUID="{7FA4D7A2-37EB-4E90-A544-6477EF83F57D}" PersistentType="true">DUT</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>i</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000006}">INT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+		</DataType>
+	</DataTypes>
+	<Project ProjectGUID="{607CA8E5-6515-4A1F-A434-6C029DB902EC}" Target64Bit="true" ShowHideConfigurations="#x106">
 		<Plc>
 			<Project GUID="{19F43C40-AA59-45D4-A14D-CFB75472AEBC}" Name="L2SIVacuum" PrjFilePath="L2SIVacuum\L2SIVacuum.plcproj" TmcFilePath="L2SIVacuum\L2SIVacuum.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e">
-				<Instance Id="#x01010010" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="L2SIVacuum\L2SIVacuum.tmc">
 					<Name>L2SIVacuum Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 				</Instance>

@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
   <POU Name="F_TurboExtILK_NO" Id="{3f22491e-9c00-45b3-979a-0a023cc045c2}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION F_TurboExtILK_NO : BOOL
+    <Declaration><![CDATA[(* This function Block interfaces with a NO turbo valve*)
+(* Mainly used in the FEE HXR GATT*)
+FUNCTION F_TurboExtILK_NO : BOOL
 VAR_INPUT
 	Turbo		:	ST_PTM;
 	BackingGauge:	ST_VG;
@@ -12,8 +14,7 @@ END_VAR
 
 VAR
 END_VAR
-(* This function Block interfaces with a NO turbo valve*)
-(* Mainly used in the FEE HXR GATT*)]]></Declaration>
+]]></Declaration>
     <Implementation>
       <NWL>
         <XmlArchive>
@@ -36,20 +37,20 @@ END_VAR
                       <o n="OutputItems" t="OutputItemList">
                         <l2 n="OutputItems" cet="Operand">
                           <o>
-                            <v n="Operand">"???"</v>
+                            <v n="Operand">"F_TurboExtILK_NO"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
                             <o n="Flags" t="Flags">
-                              <v n="Flags">8</v>
+                              <v n="Flags">0</v>
                               <v n="Fixed">false</v>
                               <v n="Extensible">false</v>
                             </o>
                             <v n="LValue">true</v>
                             <v n="Boolean">false</v>
                             <v n="IsInstance">false</v>
-                            <v n="Id">44L</v>
+                            <v n="Id">59L</v>
                           </o>
                         </l2>
                       </o>

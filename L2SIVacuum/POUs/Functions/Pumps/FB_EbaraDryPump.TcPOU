@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_EbaraDryPump" Id="{fa5a85fd-eab5-4a2b-a440-c1a901955592}" SpecialFunc="None">
     <Declaration><![CDATA[(*This function block does basic controls for the Ebara EV-S Dry pump. Starts booster pump when appropriate. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -27,7 +27,7 @@ VAR
 	i_xMPStatus	AT%I*:	BOOL; //MP status
 	i_xBPStatus	AT%I*:	BOOL; //BP status
 	i_xWarning	AT%I*:	BOOL; //Warning status
-	i_xAlarm	AT%I*:	BOOL; //Alarm, maps to error
+	i_xAlarmOK	AT%I*:	BOOL; //Alarm, maps to error
 	i_xRemote	AT%I*:	BOOL; //Remote control status
 END_VAR
 ]]></Declaration>
@@ -59,7 +59,7 @@ ACT_IO();
 stPump.xExtIlk := NOT i_xExtIlkOK;
 // These are normally closed inputs
 stPump.xErr := NOT stPump.i_xAlarm;
-//stPump.xWrn := NOT stPump.i_xWarning;
+stPump.xWrn := NOT stPump.i_xWarning;
 
 
 //Interlock and error/warning
@@ -75,7 +75,21 @@ END_IF
 //Booster pump
 stpump.xBPIlk := i_xVlvOpn AND stpump.i_xMPStatus AND (i_stBPGauge.rPRESS < stpump.rBPIlkSP) AND i_stbpgauge.xPRESS_OK;
 stpump.tonBP(IN:=stpump.xBPIlk);
-stpump.q_xBPStart := stpump.tonBP.Q;]]></ST>
+stpump.q_xBPStart := stpump.tonBP.Q;
+
+(*State evaluation*)
+IF stPump.i_xAlarm THEN
+	stpump.eState := pumpFAULT;
+ELSIF NOT stpump.q_xMPStart AND stPump.i_xAlarm THEN
+		stpump.eState := pumpSTOPPED;	
+ELSIF NOT stpump.q_xMPStart AND NOT stPump.i_xMPStatus THEN
+		stpump.eState := pumpSTARTING;	
+ELSIF stPump.i_xMPStatus THEN
+		stpump.eState := pumpRUNNING;
+ELSE
+	stpump.eState := pumpFAULT;
+END_IF
+]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{98533322-3808-41fc-88a0-2acd4df6d1ea}">
       <Implementation>
@@ -85,8 +99,10 @@ q_xBPStart	:= stPump.q_xBPStart;
 (*Inputs*)
 stPump.i_xMPStatus:=	i_xMPStatus;
 stPump.i_xBPStatus:=	i_xBPStatus;
-stPump.xWrn:= i_xWarning	;
-stPump.i_xAlarm:=	i_xAlarm;
+stPump.i_xWarning:= i_xWarning	;
+stPump.xWrn := i_xWarning;
+stPump.i_xAlarm:=	NOT(i_xAlarmOK);
+StPump.xErr := NOT(i_xAlarmOK);
 stPump.i_xRemote:= i_xRemote;]]></ST>
       </Implementation>
     </Action>
@@ -95,9 +111,15 @@ stPump.i_xRemote:= i_xRemote;]]></ST>
       <LineId Id="70" Count="0" />
       <LineId Id="27" Count="17" />
       <LineId Id="2" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="103" Count="11" />
+      <LineId Id="100" Count="0" />
     </LineIds>
     <LineIds Name="FB_EbaraDryPump.ACT_IO">
-      <LineId Id="2" Count="7" />
+      <LineId Id="2" Count="6" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
       <LineId Id="1" Count="0" />
     </LineIds>
   </POU>

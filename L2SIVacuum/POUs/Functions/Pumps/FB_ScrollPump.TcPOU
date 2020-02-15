@@ -17,7 +17,7 @@ VAR_OUTPUT
 END_VAR
 VAR_INPUT
 	TurboIsON : BOOL;
-	VentValve	: ST_VCC_NO; // type of vent valve might change
+	xExtIlk : BOOL;
 END_VAR
 VAR
 	Tmr_TOF : TOF;
@@ -33,11 +33,11 @@ END_VAR
 // pumping air and accomplishing nothing
 
 // cannot turn off scroll pump if turb is running. delay scroll off 150s.  
-
+iq_stPFO.xIlkOK := xExtIlk;// and NOT Tmr_TOF.Q;
 
 Tmr_TOF(IN:=TurboIsON, PT := tTimerDuration);
 
-IF VentValve.xCLS_DO THEN
+IF iq_stPFO.xIlkOK THEN
 	iq_stPFO.q_xRunDo := (Tmr_TOF.Q OR iq_stPFO.pv_xRunSW);
 ELSE
 	iq_stPFO.q_xRunDo := FALSE;
@@ -45,7 +45,12 @@ END_IF
 
 iq_stPFO.pv_xRunSW := iq_stPFO.q_xRunDo;
 
-
+(*State evaluation*)
+IF NOT iq_stPFO.q_xRunDo THEN
+	iq_stPFO.eState := pumpSTOPPED;	
+ELSE
+	iq_stPFO.eState := pumpRUNNING;
+END_IF
 
 (*soft io Mapping*)
 IO();
@@ -59,6 +64,17 @@ IO();
         <ST><![CDATA[q_xRunDo:= iq_stPFO.q_xRunDo;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{eba797a4-1012-42f7-b194-fa0d2f89ba57}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.iq_stPFO.pv_xRunSW := run;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_ScrollPump">
       <LineId Id="26" Count="0" />
       <LineId Id="22" Count="1" />
@@ -72,7 +88,12 @@ IO();
       <LineId Id="41" Count="0" />
       <LineId Id="71" Count="0" />
       <LineId Id="4" Count="0" />
-      <LineId Id="97" Count="3" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="132" Count="1" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="99" Count="1" />
       <LineId Id="102" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="5" Count="2" />
@@ -80,6 +101,10 @@ IO();
     </LineIds>
     <LineIds Name="FB_ScrollPump.IO">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ScrollPump.M_Run">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

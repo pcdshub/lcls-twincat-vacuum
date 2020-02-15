@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_VCC" Id="{5ba1a6cc-24ff-4014-aa5e-6a7b6226a38e}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for Vent Valves VVC *)
+    <Declaration><![CDATA[(* THE FB_VCC FUNCTION BLOCK IS DEPRECATED. USE FB_VVC INSTEAD. *)
+(* This Function Block Implements Basic Functionality for Vent Valves VVC *)
 (* Note Interlock Logic is External *)
 FUNCTION_BLOCK FB_VCC
 VAR_IN_OUT
@@ -15,7 +16,7 @@ VAR_OUTPUT
 	{attribute 'pytmc' := '
     pv:
 	'}
-	iq_stValve : ST_VCC;
+	iq_stValve : ST_VVC;
 END_VAR
 VAR
 
@@ -62,6 +63,35 @@ iq_stValve.xOverrideMode := i_xOverrideMode;
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_IsClosed" Id="{797d56d6-e736-4bd1-8e6d-f8a341c15bae}">
+      <Declaration><![CDATA[METHOD PUBLIC M_IsClosed : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsClosed := NOT This^.q_xOPN_DO;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsOpen" Id="{def52f34-99b7-48c7-9903-759cb85be175}">
+      <Declaration><![CDATA[METHOD PUBLIC M_IsOpen : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsOpen := This^.q_xOPN_DO;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Set_OPN_SW" Id="{7f5acd3f-8556-413a-b630-0f2034c75abd}">
+      <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+METHOD PUBLIC M_Set_OPN_SW : BOOL
+VAR_INPUT
+		value:BOOL;  //True to SET, False to RESET
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_VCC">
       <LineId Id="70" Count="1" />
       <LineId Id="3" Count="18" />
@@ -72,6 +102,15 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
       <LineId Id="6" Count="1" />
       <LineId Id="5" Count="0" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.M_IsClosed">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.M_IsOpen">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.M_Set_OPN_SW">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

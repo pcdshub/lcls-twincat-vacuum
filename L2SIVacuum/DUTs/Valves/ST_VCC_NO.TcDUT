@@ -6,26 +6,34 @@ STRUCT
 
 (* A normally open valve needs permission to close! *)
 (* Inputs *)
-{attribute 'pytmc' := 'pv: CLS_SW field: ONAM CLOSE field: ZNAM OPEN io: io '}
+	{attribute 'pytmc' := '
+	pv: CLS_SW ;
+	field: ONAM CLOSE; 
+	field: ZNAM OPEN;
+	io: io ;
+	'}
 	pv_xCLS_SW	: BOOL;
 	{attribute 'pytmc' := '
-    pv: FORCE_CLS
-	io: io
+    pv: FORCE_CLS;
+	io: io;
 	'}
 	pv_xOvrdCls	:	BOOL;
 	{attribute 'pytmc' := '
-    pv: CLS_OK
-	io: i
+    pv: CLS_OK;
+	io: i;
 	'}
 	xCLS_OK	: BOOL;
 	
-	{attribute 'pytmc' := 'pv: OVRD_ON io: i'}
+	{attribute 'pytmc' := '
+	pv: OVRD_ON;
+	io: io
+	'}
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 
 (* Outputs *)
-{attribute 'pytmc' := '
-    pv: CLS_DO
-	io: i
+	{attribute 'pytmc' := '
+    pv: CLS_DO;
+	io: i;
 	'}
 	xCLS_DO	: BOOL;
 

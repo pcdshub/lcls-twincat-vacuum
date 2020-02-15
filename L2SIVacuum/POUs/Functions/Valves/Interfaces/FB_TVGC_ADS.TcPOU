@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_TVGC_ADS" Id="{84085701-3a86-43d0-96fb-51ae4e0cc36d}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
+(* Not all the fields in the original structure is required, just few signals *)
+(*Use with FB_ADS_WATCHDOG on remotePLC*)
+FUNCTION_BLOCK FB_TVGC_ADS
+VAR_INPUT
+	sNetId : String; //NetID of the Destination PLC controller
+	nPort : int; // port number
+	sVarName : string;// the variable name of the (device) declared function block.
+	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := 'pv: '}
+	VGC:ST_VGC;
+	bError:BOOL;
+END_VAR
+VAR
+	fb_CheckWatchdog: FB_CheckWatchdog;
+	fb_Read_VGC: FB_ReadAdsSymByName;
+	ftReset: F_TRIG;
+	xFirstPass: bool:= true;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ftReset(CLK:= fb_Read_VGC.bBusy OR xFirstPass);
+xFirstPass:=false;
+(*calling ADS read function*)
+fb_Read_VGC(
+	bRead:= ftReset.Q, 
+	sNetId:= sNetId, 
+	nPort:= nPort, 
+	sVarName:= CONCAT(sVarName,'.iq_stValve'), 
+	nDestAddr:= ADR(VGC), 
+	nLen:= SIZEOF(VGC), 
+	tTimeout:= , 
+	eComMode:= eAdsComModeFastCom, 
+	bBusy=> , 
+	bError=> , 
+	nErrorId=> );
+	
+
+(*Error*)
+fb_CheckWatchdog(
+	bEnable:= TRUE, 
+	tWatchdogTime:= T#100ms, 
+	nCnt:= iWatchdog , 
+	bWatchdog=> , 
+	nLastCnt=> );
+bError:= fb_Read_VGC.bError OR fb_CheckWatchdog.bWatchdog;
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_TVGC_ADS">
+      <LineId Id="18" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="34" Count="12" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="107" Count="8" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

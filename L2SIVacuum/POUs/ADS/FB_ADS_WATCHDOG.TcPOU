@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+  <POU Name="FB_ADS_WATCHDOG" Id="{fa67c1d7-9960-48b3-9228-718e772a08ad}" SpecialFunc="None">
+    <Declaration><![CDATA[(*This function block is to be used whenever deivce data going to be read over ADS*)
+(*The remote plc has to instantiate this function block in order to write a watchdog cariable*)
+(*that the ADS read function expects*)
+FUNCTION_BLOCK FB_ADS_WATCHDOG
+VAR_INPUT
+	sNetId : String; //NetID of the Destination PLC controller
+	nPort : uint; // port number
+	sVarName : string;// the variable name of the watchdog on the remote plc.
+END_VAR
+VAR_OUTPUT
+	bError:BOOL;
+END_VAR
+VAR
+	
+	fb_WriteWatchdog:FB_WriteWatchdog;
+	ftReset_Watchdog: F_TRIG;
+	xFirstPass: BOOL:= true;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+ftReset_Watchdog(CLK:= fb_WriteWatchdog.bBusy OR xFirstPass);
+xFirstPass := false;
+
+(*calling ADS Watchdog function*)
+fb_WriteWatchdog(
+	bEnable:= TRUE , 
+	sNetId:= sNetId, 
+	nPort:= nPort, 
+	nIdxGrp:= , 
+	nIdxOffs:= , 
+	sVarName:= sVarName, 
+	tWatchdogTime:= t#30ms, 
+	bSendNow:= ftReset_Watchdog.Q , 
+	bBusy=> , 
+	nLastCnt=>  , 
+	bError=> bError, 
+	nErrorId=> );
+	
+
+
+	
+(*Error*)
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_ADS_WATCHDOG">
+      <LineId Id="26" Count="25" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

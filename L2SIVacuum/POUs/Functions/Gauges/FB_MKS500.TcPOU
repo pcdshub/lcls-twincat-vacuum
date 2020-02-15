@@ -9,13 +9,13 @@ VAR_IN_OUT
 
 END_VAR
 VAR_INPUT
-	PG	:	ST_VG;
+	PG	:	ST_VG; // Pirani Gauge Structure used to Interlock the Cold Cathode
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
     pv: 
 	'}
-	IG : ST_VG;
+	IG : ST_VG; // The Cold Cathode Data Structure
 END_VAR
 VAR
 	rV : REAL;
@@ -25,8 +25,8 @@ VAR
 	GaugeTurnOnTmr : TON;
 	MinPressure: REAL := 1E-10;
 	cDefaultPressure : REAL := 0;
-	
-	
+	timer:TON;
+		iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 	(*IOs to be linked*)
 	/// Controls and I/Os
 	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
@@ -39,7 +39,7 @@ END_VAR
     <Implementation>
       <ST><![CDATA[(* 500 Logarithmic Output Conversion, factory default configuration *)
 
-rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
+rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (*
 IF rV >= 0.49 AND rV < 0.52  THEN
@@ -77,15 +77,17 @@ END_IF
 
 
 IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
-	IG.q_xHV_DIS := IG.xHV_SW;
-ELSIF IG.q_xHV_DIS THEN
+	IG.q_xHV_DIS := NOT (IG.xHV_SW);
+	IG.xILKOk := TRUE;
+ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN 
 	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
-		IG.q_xHV_DIS := FALSE;
+		IG.q_xHV_DIS := TRUE;
 		IG.xHV_SW := FALSE;
 	END_IF
 ELSE
-	IG.q_xHV_DIS := FALSE;
+	IG.q_xHV_DIS := TRUE;
 	IG.xHV_SW := FALSE;
+	IG.xILKOk := FALSE;
 END_IF
 
 (* Pressure gauge OK checks *)
@@ -105,6 +107,8 @@ IG.xILKOk := (PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK);
 (*Soft IO Linking*)
 // check ethercat Diagnostics
 IO();
+timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
+
 ]]></ST>
     </Implementation>
     <Action Name="IO" Id="{d5dcbb30-1e72-4867-8faf-91e37cf07851}">
@@ -118,6 +122,36 @@ IG.i_xDisc_Active:=i_xDisc_Active;
 q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_AutoOn" Id="{ca22a2df-417e-4d6a-bc4d-3fb0fe75c5bf}">
+      <Declaration><![CDATA[METHOD M_AutoOn : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.IG.xHV_SW:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_HVE" Id="{c11659a5-8a50-4170-9e43-162518265fbf}">
+      <Declaration><![CDATA[METHOD M_HVE : BOOL
+VAR_INPUT
+		enable:bool; // set to true to enable, false to disable;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.IG.xHV_SW:= (enable);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetBits" Id="{045c52f1-d059-4db3-a35f-c5604ec4a648}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_MKS500">
       <LineId Id="31" Count="2" />
       <LineId Id="36" Count="1" />
@@ -128,7 +162,10 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="159" Count="0" />
       <LineId Id="50" Count="12" />
       <LineId Id="64" Count="0" />
-      <LineId Id="66" Count="13" />
+      <LineId Id="346" Count="0" />
+      <LineId Id="66" Count="7" />
+      <LineId Id="347" Count="0" />
+      <LineId Id="74" Count="5" />
       <LineId Id="81" Count="4" />
       <LineId Id="107" Count="0" />
       <LineId Id="274" Count="1" />
@@ -136,6 +173,8 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="242" Count="0" />
       <LineId Id="219" Count="1" />
       <LineId Id="108" Count="0" />
+      <LineId Id="311" Count="0" />
+      <LineId Id="310" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS500.IO">
@@ -143,6 +182,16 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <LineId Id="6" Count="0" />
       <LineId Id="2" Count="3" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500.M_AutoOn">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500.M_HVE">
+      <LineId Id="7" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500.M_SetBits">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS275" Id="{ffda77c7-a04b-4d4f-b9a5-3ec5d874c4e9}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
@@ -21,6 +21,7 @@ VAR
 	MinPressure: REAL := 1E-4;
 	V : REAL;
 	Vlowest: REAL := 10;
+	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 	
 	rValidLoBoundary	:	REAL := 0.375; // manual page 27
 	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
@@ -41,39 +42,33 @@ END_IF
 
 (* Real-value calculation *)
 
-V := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;	
+V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;	
 
 Vlowest := MIN(V, Vlowest);
 
 IF V > rDisconnectedBoundary AND V < rValidLoBoundary THEN
-
-PG.rPRESS := MinPressure;
-PG.eState := ValidLo;
+	PG.rPRESS := MinPressure;
+	PG.eState := ValidLo;
 
 ELSIF V >= rValidLoBoundary AND V < 2.842 THEN
-
-PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
-PG.eState := Valid;
+	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+	PG.eState := Valid;
 
 ELSIF V >= 2.842 AND V < 4.945 THEN
-
-PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
-PG.eState := Valid;
+	PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
+	PG.eState := Valid;
 
 ELSIF V >= 4.945 AND V < rValidHiBoundary THEN
-
-PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
-PG.eState := Valid;
+	PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
+	PG.eState := Valid;
 
 ELSIF V <= rDisconnectedBoundary THEN
-
-PG.eState := GaugeDisconnected; //Most likely not connected
-PG.rPRESS := -1;;
+	PG.eState := GaugeDisconnected; //Most likely not connected
+	PG.rPRESS := -1;
 
 ELSE
-	
-PG.eState := OoR; //Larger voltage, probably out of range?
-PG.rPRESS := -1;
+	PG.eState := OoR; //Larger voltage, probably out of range?
+	PG.rPRESS := -1;
 END_IF
 
 (* Protection Functions *)
@@ -85,7 +80,7 @@ END_IF
 PG.xPRESS_OK := (PG.rPRESS >= MinPressure);
 
 (* Setpoint evaluation *)
-PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS<PG.rVAC_SP);
+PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS<=PG.rVAC_SP);
 
 (*Soft IO Mapping *)
 IO();
@@ -96,14 +91,27 @@ IO();
         <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_SetBits" Id="{7eec6aef-b03d-405c-b5cc-5b0319852803}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_MKS275">
-      <LineId Id="24" Count="26" />
+      <LineId Id="24" Count="15" />
+      <LineId Id="41" Count="3" />
+      <LineId Id="46" Count="3" />
       <LineId Id="125" Count="0" />
-      <LineId Id="52" Count="3" />
+      <LineId Id="52" Count="2" />
       <LineId Id="126" Count="0" />
-      <LineId Id="57" Count="3" />
+      <LineId Id="57" Count="2" />
       <LineId Id="127" Count="0" />
-      <LineId Id="62" Count="16" />
+      <LineId Id="62" Count="2" />
+      <LineId Id="66" Count="12" />
       <LineId Id="95" Count="1" />
       <LineId Id="152" Count="0" />
       <LineId Id="97" Count="0" />
@@ -111,6 +119,9 @@ IO();
     </LineIds>
     <LineIds Name="FB_MKS275.IO">
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS275.M_SetBits">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

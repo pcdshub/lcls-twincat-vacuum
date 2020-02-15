@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_TurboExtLogic" Id="{1c568a9f-ee7d-4da0-9111-bdd0aa6cb7c8}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_TurboExtLogic
+    <Declaration><![CDATA[(*deprecated*)
+FUNCTION_BLOCK FB_TurboExtLogic
 VAR_IN_OUT
 	Turbo		:	ST_AgilentPTM;
 END_VAR

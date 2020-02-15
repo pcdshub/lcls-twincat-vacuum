@@ -71,6 +71,17 @@ q_RunDO := iq_stPtm.q_RunDO;
 q_xRemote := iq_stPtm.q_xRemote; // remote out]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_Run" Id="{4e6dd218-abd9-4d84-a501-462a869b0829}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.iq_stPtm.xRunSW := run;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_PTM_MagDriveDigital">
       <LineId Id="3" Count="6" />
       <LineId Id="76" Count="0" />
@@ -83,6 +94,10 @@ q_xRemote := iq_stPtm.q_xRemote; // remote out]]></ST>
     <LineIds Name="FB_PTM_MagDriveDigital.ACT_IO">
       <LineId Id="2" Count="8" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_MagDriveDigital.M_Run">
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

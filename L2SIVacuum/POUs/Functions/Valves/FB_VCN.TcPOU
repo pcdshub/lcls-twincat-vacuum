@@ -19,13 +19,13 @@ VAR_IN_OUT
 END_VAR
 
 VAR CONSTANT
-	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual, A Voltage of 9V it si completely Open
+	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual, A Voltage of 9V it is completely Open
 	rCloseVoltage	:	REAL := 0.4;// a voltage <0.5 V the valve is closed	
 END_VAR
 VAR
 	// Requested voltage
 	rReqVoltage: REAL := 0;
-	iResolution: INT :=16;
+	//iResolution: INT :=16;
 	// 
 	(*IO*)
 	q_iRawPosition AT%Q* :INT;
@@ -61,7 +61,7 @@ IF iq_stVCN.xIlkOK THEN
 		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;(*Percentage*)// iq_stVCN.rUpperLimit;
 	ELSIF iq_stVCN.eValveControl = CloseValve THEN
 		iq_stVCN.rReqPosition := 0; (*Percentage*)
-	ELSIF iq_stVCN.eValveControl = ManualControl THEN
+	ELSIF (iq_stVCN.eValveControl = ManualControl) (*AND (iq_stVCN.xOPN_SW)*) THEN
 		iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
 	ELSIF iq_stVCN.eValveControl = PressureControl THEN
 		iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, iq_stVCN.rUpperLimit); 
@@ -89,6 +89,16 @@ q_iRawPosition := iq_stVCN.q_iRawPosition;
 iq_stVCN.i_iPosition := iq_stvcn.q_iRawPosition;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_ValveControl" Id="{cbcd5e0b-59b7-45f1-86d7-5c7278df4f56}">
+      <Declaration><![CDATA[METHOD M_ValveControl : BOOL
+VAR_INPUT
+	state:E_VCN; // Close, Open, Pressure, Manual
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stVCN.eValveControl := state;]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="FB_VCN">
       <LineId Id="3" Count="18" />
       <LineId Id="25" Count="2" />
@@ -111,6 +121,9 @@ iq_stVCN.i_iPosition := iq_stvcn.q_iRawPosition;]]></ST>
       <LineId Id="2" Count="0" />
       <LineId Id="1" Count="0" />
       <LineId Id="3" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_VCN.M_ValveControl">
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

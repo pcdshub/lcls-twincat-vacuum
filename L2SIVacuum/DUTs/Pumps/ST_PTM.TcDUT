@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_PTM" Id="{4cff5a41-fc78-4938-9468-a980c788ccb5}">
     <Declaration><![CDATA[TYPE ST_PTM :
 STRUCT
@@ -13,6 +13,8 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 (* Controls *)
 	{attribute 'pytmc' := '
 	pv: RUN_SW;
+	field: ZNAM STOP; 
+	field: ONAM RUN;
 	io: io;
 	'}
 	xRunSW	:	BOOL;
@@ -29,7 +31,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 
 (* Readbacks *)
     {attribute 'pytmc' := '
-	pv: ILK_OK;
+	pv: ILK_STATUS;
 	field: ZNAM ILK ACTIVE;
 	field: ONAM ILK OK;
 	io: i;
@@ -46,7 +48,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	'}
 	i_xAtSpd	:	BOOL;
 	{attribute 'pytmc' := '
-	pv: SPEED_RDBK;
+	pv: SPEED;
 	io: i;
 	'}
 	i_diCurSpd	:	DINT;
@@ -77,15 +79,15 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	rForelineSP	:	REAL := 0.5;
 	
 	{attribute 'pytmc' := '
-    pv: BackingPressureSP;
+    pv: BP_SP;
 	io: io;
 	'}
 	rBackingPressureSP : REAL := 0.01;
 	{attribute 'pytmc' := '
-    pv: InletPressureSP;
+    pv: IP_SP;
 	io: io;
 	'}
-	rInletPressureSP : REAL := 0.5;
+	rInletPressureSP : REAL := 0.02; //20mTorr
 (*State*)	
 	{attribute 'pytmc' := '
 	pv: STATE;
@@ -99,7 +101,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	eState	:	E_PumpState;
 	
 	{attribute 'pytmc' := '
-	pv: Current_MON;
+	pv: CURR_MON;
 	io: i;
 	'}
 	i_iCurrentMon : INT; // Voltage to the output current of motor 0->5V 0->10A
