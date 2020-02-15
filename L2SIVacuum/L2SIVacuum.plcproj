@@ -15,9 +15,9 @@
     <LibraryReferences>{2bc9c512-7c1a-483c-9892-8f50f3778fb4}</LibraryReferences>
     <CombineIds>false</CombineIds>
     <Company>SLAC</Company>
-    <Released>true</Released>
+    <Released>false</Released>
     <Title>L2SI Vacuum Library</Title>
-    <ProjectVersion>1.0.1</ProjectVersion>
+    <ProjectVersion>0.0.0</ProjectVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\Gauges\E_PressureState.TcDUT">
@@ -263,9 +263,6 @@
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_Valve_Interface.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Version\Global_Version.TcGVL">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
@@ -281,7 +278,6 @@
     <Folder Include="POUs\Functions\Pumps" />
     <Folder Include="POUs\Functions\Valves\functions" />
     <Folder Include="POUs\Functions\Valves\Interfaces" />
-    <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
@@ -337,8 +333,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{8F99A816-E488-41E4-9FA3-846536012284}</v>
@@ -410,7 +406,6 @@
           <Type n="String">System.String</Type>
         </TypeList>
       </XmlArchive>
-
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>
