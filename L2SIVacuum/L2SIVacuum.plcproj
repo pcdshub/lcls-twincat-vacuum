@@ -17,7 +17,7 @@
     <Company>SLAC</Company>
     <Released>false</Released>
     <Title>L2SI Vacuum Library</Title>
-    <ProjectVersion>1.0.1</ProjectVersion>
+    <ProjectVersion>0.0.0</ProjectVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\Gauges\E_PressureState.TcDUT">
@@ -297,9 +297,6 @@
     <Compile Include="POUs\Functions\Valves\Interfaces\ITF_Valve.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Version\Global_Version.TcGVL">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
@@ -316,7 +313,6 @@
     <Folder Include="POUs\Functions\Valves\functions" />
     <Folder Include="POUs\Functions\Valves\Interfaces" />
     <Folder Include="POUs\ADS" />
-    <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
