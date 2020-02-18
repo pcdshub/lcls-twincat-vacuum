@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_KashiyamaPump" Id="{c252a3ee-f366-44ed-9d74-8c0f474d15b1}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Kashiyama pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -33,7 +33,7 @@ END_VAR
     <Implementation>
       <ST><![CDATA[
 //Kashiyama Dry pump outputs at high level indicate no warning, no alarm and remotely
-q_stPump.xIlkOK := q_stPump.i_xLocal AND q_stPump.i_xWarning AND q_stPump.i_xAlarm;
+q_stPump.xIlkOK := q_stPump.i_xLocal AND q_stPump.i_xWarningOK AND q_stPump.i_xAlarmOK;
 
 IF q_stPump.xIlkOK THEN
 	q_stPump.q_xRunDO := q_stPump.pv_xRunSW;
@@ -63,9 +63,9 @@ TONtmr (IN := q_stPump.i_xIsRun, PT := T#20S);
 q_stPump.RdyTmr := TO_REAL(TONtmr.PT) - TO_REAL(TONtmr.ET);
 
 (*State evaluation*)
-IF q_stPump.i_xAlarm THEN
+IF NOT q_stPump.i_xAlarmOK THEN
 	q_stPump.eState := pumpFAULT;
-ELSIF NOT q_stPump.q_xRunDo AND NOT(q_stPump.i_xAlarm) THEN
+ELSIF NOT q_stPump.q_xRunDo AND q_stPump.i_xAlarmOK THEN
 		q_stPump.eState := pumpSTOPPED;	
 ELSIF NOT q_stPump.q_xRunDo AND NOT q_stPump.i_xIsRun THEN
 		q_stPump.eState := pumpSTARTING;	
@@ -87,8 +87,8 @@ ACT_IO();]]></ST>
 	
 (* Input *)
 	q_stPump.i_xLocal := i_xLocal;
-	q_stPump.i_xAlarm :=	i_xAlarm;
-	q_stPump.i_xWarning :=	i_xWarning;
+	q_stPump.i_xAlarmOK :=	i_xAlarm;
+	q_stPump.i_xWarningOK :=	i_xWarning;
 	q_stPump.i_xIsRun :=	i_xIsRun;]]></ST>
       </Implementation>
     </Action>
