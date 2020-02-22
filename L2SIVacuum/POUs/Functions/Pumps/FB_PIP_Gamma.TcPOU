@@ -32,6 +32,7 @@ tAction : F_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
 tOverrideActivated : R_TRIG;
 
 tPumpStartTimeout : TON(PT:=T#10s); // Timeout pump start if pressure < 1E-11 for more than 10s.
+MinPressure : REAL:= 1E-11; // Minimum readback pressure, pump must register pressure above this to be considered running
  
 END_VAR
 ]]></Declaration>
@@ -44,7 +45,7 @@ IF (stPump.rHVEna_SP > rHVEna_SP) THEN
 END_IF
 
 (* Interlock *)
-stPump.xHV_ExtIlk  := (i_stGauge.xPRESS_OK AND (i_stGauge.rPRESS <= stPump.rHVEna_SP));
+stPump.xHV_ExtIlk  := (i_stGauge.xPRESS_OK AND (i_stGauge.rPRESS <= stPump.rHVEna_SP) AND NOT tPumpStartTimeout.Q);
 
 // Log pump turned off from loss of interlock
 tAction(CLK:= stPump.xHV_ExtIlk);
@@ -76,7 +77,7 @@ IF (stPump.i_xSP_DI) OR ((q_IG.rPRESS < q_IG.rVAC_SP) AND (q_IG.rPRESS<>0) AND s
 END_IF
 
 // TAW Experimental ion pump timeout
-tPumpStartTimeout(IN:=q_IG.rPRESS<=1E-11);]]></ST>
+tPumpStartTimeout(IN:=(q_IG.rPRESS<=MinPressure AND stPump.q_xHVEna_DO));]]></ST>
       </Implementation>
     </Action>
     <Action Name="IO" Id="{a9e5b5c0-3557-4ce9-a1b9-765648e955e7}">
