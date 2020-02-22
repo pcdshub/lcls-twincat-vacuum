@@ -31,7 +31,7 @@ fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
 tAction : F_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
 tOverrideActivated : R_TRIG;
 
-tPumpStartTimeout : TON(PT:=T#10s); // Timeout pump start if pressure < 1E-11 for more than 10s.
+tPumpStartTimeout : TON := (PT:=T#10s); // Timeout pump start if pressure < 1E-11 for more than 10s.
 MinPressure : REAL:= 1E-11; // Minimum readback pressure, pump must register pressure above this to be considered running
  
 END_VAR
