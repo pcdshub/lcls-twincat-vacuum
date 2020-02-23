@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_Agilent" Id="{30958a8b-73eb-4ef7-96d3-72fcd80f684d}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TV Turbo pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -32,7 +32,7 @@ VAR
 	tStartTimeOut : TON;
 	tR1TimeOut: TON;
 	step : INT :=0;
-	nErrorCode: INT :=0;
+	nErrorCode: UINT :=0;
 	xBackingPressureOK: BOOL;
 	
 	
@@ -46,6 +46,16 @@ VAR
 	i_xFault AT%I*	:	BOOL;
 	q_RunDO AT%Q*	:	BOOL;
 	q_xLSpd	AT%Q*	:  BOOL;
+    
+    
+    // For logging
+    fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
+    Msg : FB_FormatString;
+    fbJson : FB_JsonSaxWriter;
+    ePrevState : E_PumpState;
+    tErrorPresent : R_TRIG;
+    tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
+    tOverrideActivated : R_TRIG;
 	
 END_VAR
 ]]></Declaration>
@@ -70,6 +80,12 @@ CASE (step) OF
 		nR1Fault := 0;
 		iq_stPtm.eState := pumpSTOPPED;
 		step :=10;
+        
+        //Log new state
+        IF ePrevState <> iq_stPtm.eState THEN
+            fbLogger(sMsg:='Pump stopped/ stopping.', eSevr:=TcEventSeverity.Verbose);
+            ePrevState := iq_stPtm.eState;
+		END_IF
 (*Idle State waiting to start*)	
 	10: // Idle State, waiting for the xRunSwitch
 		IF iq_stPtm.xExtRunOk  AND iq_stPTM.xRunSW THEN
@@ -88,6 +104,12 @@ CASE (step) OF
 			nErrorCode:=950;
 		END_IF
 		// should check R1 ?? check Fault condition?
+        
+        //Log new state
+        IF ePrevState <> iq_stPtm.eState THEN
+            fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Verbose);
+            ePrevState := iq_stPtm.eState;
+		END_IF
 		
 	40: // Pump is starting
 		iq_stPtm.eState := pumpSTARTING;
@@ -102,6 +124,7 @@ CASE (step) OF
 			step:= 90;
 			iq_stPtm.xPumpFaultLock := TRUE;
 			nErrorCode:= 930; // R1 Signal at Start time out.
+            fbLogger(sMsg:='Timeout: Pump could not achieve running speed.', eSevr:=TcEventSeverity.Warning);
 		END_IF
 		
 	50: // Pump is Running (Normal Operation) ( R1 is True and STARTing is FALSE)
@@ -112,6 +135,12 @@ CASE (step) OF
 			//tR1Fault.IN := TRUE;
 			step :=60;
 		END_IF
+        
+        //Log new state
+        IF ePrevState <> iq_stPtm.eState THEN
+            fbLogger(sMsg:='Pump at speed.', eSevr:=TcEventSeverity.Verbose);
+            ePrevState := iq_stPtm.eState;
+		END_IF
 	
 	60: // Pump is Running (Not Nomral Operation) (R1 is False, pump not @ speed )
 		IF ((nR1Fault = nMaxR1Fault) AND NOT tFaultWindowElapsed.Q) OR (tR1Fault.Q) THEN // number of fault occured during the same time window
@@ -120,6 +149,7 @@ CASE (step) OF
 			tFaultWindowElapsed.IN := FALSE;
 			iq_stPtm.xPumpFaultLock := TRUE;
 			nErrorCode:= 920; // R1 Signal Lost multiple times.
+            fbLogger(sMsg:='Running signal Lost multiple times.', eSevr:=TcEventSeverity.Warning);
 		ELSIF tFaultWindowElapsed.Q  THEN
 			tFaultWindowElapsed.IN := FALSE;
 			nR1Fault := 0;
@@ -173,7 +203,17 @@ IF (NOT iq_stPtm.xRunSW) AND (NOT (step >= 90)) AND (NOT (step = 10)) THEN
 	step := 0;
 END_IF
 
-
+// Log faults
+tErrorPresent(CLK:=iq_stPtm.xPumpFaultLock);
+IF tErrorPresent.Q THEN
+    fbJson.StartObject();
+    fbJson.AddKey('vacuum_typecode');
+    fbJson.AddUdint(nErrorCode);
+    fbJson.EndObject();
+    fbLogger.sJson := fbJson.GetDocument();
+    fbLogger(sMsg:='Turbo control fault', eSevr:=TcEventSeverity.Warning);
+    fbJson.ResetDocument();
+END_IF
 
 (* Timers *)
 tFaultWindowElapsed(PT:=tFaultWindowDuration);
@@ -260,139 +300,5 @@ END_VAR
         <ST><![CDATA[M_TurboIsOn := (This^.iq_stPtm.eState =  E_PumpState.pumpSTARTING ) OR (This^.iq_stPtm.eState =  E_PumpState.pumpRUNNING );]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Agilent">
-      <LineId Id="21" Count="0" />
-      <LineId Id="592" Count="0" />
-      <LineId Id="594" Count="1" />
-      <LineId Id="593" Count="0" />
-      <LineId Id="70" Count="0" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="268" Count="0" />
-      <LineId Id="84" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="220" Count="0" />
-      <LineId Id="94" Count="2" />
-      <LineId Id="257" Count="0" />
-      <LineId Id="98" Count="0" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="112" Count="2" />
-      <LineId Id="106" Count="1" />
-      <LineId Id="109" Count="0" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="192" Count="1" />
-      <LineId Id="116" Count="2" />
-      <LineId Id="261" Count="0" />
-      <LineId Id="265" Count="0" />
-      <LineId Id="299" Count="0" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="183" Count="0" />
-      <LineId Id="259" Count="0" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="313" Count="0" />
-      <LineId Id="194" Count="0" />
-      <LineId Id="129" Count="0" />
-      <LineId Id="123" Count="0" />
-      <LineId Id="130" Count="0" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="269" Count="1" />
-      <LineId Id="274" Count="1" />
-      <LineId Id="271" Count="0" />
-      <LineId Id="128" Count="0" />
-      <LineId Id="88" Count="0" />
-      <LineId Id="312" Count="0" />
-      <LineId Id="136" Count="0" />
-      <LineId Id="139" Count="0" />
-      <LineId Id="314" Count="0" />
-      <LineId Id="212" Count="0" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="140" Count="0" />
-      <LineId Id="198" Count="0" />
-      <LineId Id="200" Count="0" />
-      <LineId Id="252" Count="0" />
-      <LineId Id="156" Count="0" />
-      <LineId Id="245" Count="0" />
-      <LineId Id="249" Count="0" />
-      <LineId Id="246" Count="0" />
-      <LineId Id="191" Count="0" />
-      <LineId Id="157" Count="0" />
-      <LineId Id="184" Count="0" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="209" Count="0" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="210" Count="0" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="251" Count="0" />
-      <LineId Id="90" Count="0" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="381" Count="3" />
-      <LineId Id="308" Count="1" />
-      <LineId Id="311" Count="0" />
-      <LineId Id="231" Count="0" />
-      <LineId Id="253" Count="1" />
-      <LineId Id="83" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="131" Count="0" />
-      <LineId Id="267" Count="0" />
-      <LineId Id="132" Count="1" />
-      <LineId Id="266" Count="0" />
-      <LineId Id="190" Count="0" />
-      <LineId Id="134" Count="1" />
-      <LineId Id="188" Count="0" />
-      <LineId Id="345" Count="0" />
-      <LineId Id="347" Count="4" />
-      <LineId Id="413" Count="1" />
-      <LineId Id="346" Count="0" />
-      <LineId Id="416" Count="0" />
-      <LineId Id="171" Count="0" />
-      <LineId Id="186" Count="1" />
-      <LineId Id="172" Count="0" />
-      <LineId Id="180" Count="0" />
-      <LineId Id="179" Count="0" />
-      <LineId Id="302" Count="1" />
-      <LineId Id="305" Count="2" />
-      <LineId Id="339" Count="0" />
-      <LineId Id="201" Count="0" />
-      <LineId Id="76" Count="2" />
-      <LineId Id="213" Count="0" />
-      <LineId Id="216" Count="0" />
-      <LineId Id="301" Count="0" />
-      <LineId Id="458" Count="0" />
-      <LineId Id="546" Count="0" />
-      <LineId Id="459" Count="1" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="504" Count="0" />
-      <LineId Id="547" Count="1" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.BackingPressureSetPoint">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.ErrorMessage">
-      <LineId Id="10" Count="1" />
-      <LineId Id="13" Count="8" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="8" Count="1" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.IO">
-      <LineId Id="7" Count="0" />
-      <LineId Id="2" Count="3" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="9" Count="2" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.M_Run">
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.M_TurboIsOn">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

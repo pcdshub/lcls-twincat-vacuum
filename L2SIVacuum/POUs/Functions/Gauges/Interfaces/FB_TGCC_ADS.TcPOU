@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_TGCC_ADS" Id="{873a2ff9-f17a-4be7-ac16-f378eb2ba14b}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
 (* Not all the Variables in the original structure is required, just few signals *)
 (* The variable values are read via ADS using the symbol name*)
-FUNCTION_BLOCK FB_TGCC_ADS_1
+FUNCTION_BLOCK FB_TGCC_ADS
 VAR_INPUT
 	sNetId : String; //NetID of the Destination PLC controller
 	nPort : uint; // port number
@@ -54,9 +54,5 @@ bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
 
 ]]></ST>
     </Implementation>
-    <LineIds Name="FB_TGCC_ADS">
-      <LineId Id="160" Count="27" />
-      <LineId Id="20" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
