@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_VGC" Id="{0b7dfc27-9760-4c7a-bad2-fa375ac628b8}">
     <Declaration><![CDATA[TYPE ST_VGC :
 STRUCT
@@ -29,8 +29,8 @@ STRUCT
 
 	{attribute 'pytmc' := '
 	pv: OVRD_ON ;
-	field: ZNAM Override ON ;
-	field: ONAM Override OFF;
+	field: ZNAM OVERRIDE ON ;
+	field: ONAM OVERRIDE OFF;
 	io: io;
 	'}
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
@@ -42,19 +42,21 @@ STRUCT
 	pv: OPN_DI;
 	io: i;
 	field: ZNAM FALSE;
-	field: ONAM OPEN;
+	field: ONAM OPENED;
 	'}
 	i_xOpnLS	: BOOL;
 	{attribute 'pytmc' := '
     pv: CLS_DI;
 	io: i;
 	field: ZNAM FALSE;
-	field: ONAM CLOSE;
+	field: ONAM CLOSED;
     '}
 	i_xClsLS	: BOOL;
 (* Controls *)
 	{attribute 'pytmc' := '
     pv: OPN_DO;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
     '}
 	q_xOPN_DO	: BOOL;
@@ -87,6 +89,8 @@ STRUCT
 	
 	{attribute 'pytmc' := ' 
 	pv: AT_VAC_SP;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: o;
 	'}
 	rAT_VAC_SP	:	REAL := 0.01;	// Interlock setpoint for gauges on both sides of valve
@@ -115,7 +119,7 @@ STRUCT
 	{attribute 'pytmc' := '
     pv: ERR_DifPres;
 	field: ZNAM NO ERROR ;
-	field: ONAM Diffrential error present ;
+	field: ONAM Differential error present ;
 	io: o;
     '}
 	xERR_DifPres		: 	BOOL;
