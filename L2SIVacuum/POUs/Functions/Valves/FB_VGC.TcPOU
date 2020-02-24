@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VGC" Id="{e37ddbb4-4f83-44d0-bab6-047e5a609a6c}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves*)
 (* This function block interlock is as follows:
@@ -89,6 +89,13 @@ VAR
 	i_xOpnLS	AT%I*: BOOL;
 	i_xClsLS	AT%I*: BOOL;
 	q_xOPN_DO	AT%Q*: BOOL;
+    
+    // For logging
+    fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
+    ePrevState : E_VGC;
+    tErrorPresent : R_TRIG;
+    tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
+    tOverrideActivated : R_TRIG;
 	
 END_VAR]]></Declaration>
     <Implementation>
@@ -176,21 +183,34 @@ END_IF
 		the state is unexpected and triggers a fault, because it suggests that something
 		is wrong with the valve, or gauges or mapping or there is a major leak on one side.*)
 		iq_stValve.eVGC_State := ERR_DiffPress;
+        iq_stValve.xERR_DifPres := TRUE;
 	END_IF
 
 // Valve state
 ///////////////////////////////////////////////////
 CASE iq_stValve.eVGC_State OF
 	Vented: (* The Vented state is used during pump down *)
+        //Log new state
+        IF ePrevState <> iq_stValve.eVGC_State THEN
+            fbLogger(sMsg:='Vented', eSevr:=TcEventSeverity.Info);
+            ePrevState := iq_stValve.eVGC_State;
+		END_IF
+        
 		(* Assuming the pump down went well, we are now at vacuum on both sides,
 		so we move to the vacuum state, otherwise remain in the vented state *)
 		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND NOT (NOT (iq_stValve.xERR_SP)) and NOT (NOT (iq_stValve.xERR_ExtFault))THEN
-		iq_stValve.eVGC_State := AtVacuum;
+		    iq_stValve.eVGC_State := AtVacuum;
 		ELSE
-		iq_stValve.eVGC_State := Vented;
+		    iq_stValve.eVGC_State := Vented;
 		END_IF
 	
 	AtVacuum:
+        //Log new state
+        IF ePrevState <> iq_stValve.eVGC_State THEN
+            fbLogger(sMsg:='Vacuum setpoint satisfied', eSevr:=TcEventSeverity.Info);
+            ePrevState := iq_stValve.eVGC_State;
+		END_IF
+        
 		IF iq_stValve.xAT_VAC THEN
 		(* If both pressure setpoints are made,
 		then enable the differential pressure interlock, regardless of the valve state
@@ -203,7 +223,7 @@ CASE iq_stValve.eVGC_State OF
 			we have a loss of vacuum error *)
 			IF (iq_stValve.i_xOpnLS OR (NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.i_xClsLS)) THEN
 				iq_stValve.eVGC_State := ERR_LostVac;
-				iq_stValve.xERR_DifPres := TRUE;
+				iq_stValve.xERR_SP := TRUE; //TAW changed this to the ERR_SP bool because I think that's what it was intended to be?
 		
 			(* Alternatively, if the valve is already closed and we lose pressure on one side,
 			it was probably intentional venting, so we calmly move back to venting mode, and
@@ -215,17 +235,33 @@ CASE iq_stValve.eVGC_State OF
 		END_IF
 	
 	ERR_DiffPress:
+        //Log new state
+        IF ePrevState <> iq_stValve.eVGC_State THEN
+            fbLogger(sMsg:='Potential accidental vent.', eSevr:=TcEventSeverity.Critical);
+            ePrevState := iq_stValve.eVGC_State;
+		END_IF
+        
 		IF NOT (iq_stValve.xERR_DifPres) THEN
 			iq_stValve.eVGC_State := Vented;
 		END_IF
 		
 	
 	ERR_LostVac:
+        //Log new state
+        IF ePrevState <> iq_stValve.eVGC_State THEN
+            fbLogger(sMsg:='Unexpected loss of vacuum while valve was open.', eSevr:=TcEventSeverity.Critical);
+            ePrevState := iq_stValve.eVGC_State;
+		END_IF
 		IF NOT (iq_stValve.xERR_SP) THEN
 			iq_stValve.eVGC_State := Vented;
 		END_IF
 		
 	ERR_ExtFault:
+        //Log new state
+        IF ePrevState <> iq_stValve.eVGC_State THEN
+            fbLogger(sMsg:='Lost external interlock while valve was open.', eSevr:=TcEventSeverity.Critical);
+            ePrevState := iq_stValve.eVGC_State;
+		END_IF
 		IF NOT (iq_stValve.xERR_ExtFault) AND (NOT i_xExt_OK) THEN
 			iq_stValve.eVGC_State := Vented;
 		END_IF
@@ -258,6 +294,10 @@ rtOK(CLK:=tonDelOK.Q);
 IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN 
 	iq_stValve.pv_xOvrdOpn :=FALSE;
 	iq_stValve.pv_xOPN_SW := TRUE; //for seamless transition
+    
+    //Log
+    fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
+    
 END_IF
 
 //Override timer
@@ -293,10 +333,23 @@ IF (iq_stValve.eState=INVALID) THEN
 	iq_stValve.bErrorPresent := TRUE; 
 	iq_stValve.sErrorMessage := CONCAT(sPath,': Invalid Valve Position');
 END_IF
+
+
 (*Timers*)
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
 tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
 
+// Log valve timeouts
+tErrorPresent(CLK:=iq_stValve.bErrorPresent);
+IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
+
+// Log valve open
+tAction(CLK:= iq_stValve.q_xOPN_DO);
+IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
+
+// Log override mode enabled
+tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
+IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 
 // Alarm reset
 //////////////////////////////////////
@@ -366,109 +419,5 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VGC">
-      <LineId Id="3" Count="21" />
-      <LineId Id="361" Count="0" />
-      <LineId Id="25" Count="2" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="621" Count="0" />
-      <LineId Id="620" Count="0" />
-      <LineId Id="327" Count="0" />
-      <LineId Id="329" Count="0" />
-      <LineId Id="362" Count="2" />
-      <LineId Id="325" Count="1" />
-      <LineId Id="36" Count="1" />
-      <LineId Id="199" Count="0" />
-      <LineId Id="198" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="696" Count="0" />
-      <LineId Id="40" Count="21" />
-      <LineId Id="248" Count="0" />
-      <LineId Id="246" Count="0" />
-      <LineId Id="249" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="241" Count="0" />
-      <LineId Id="244" Count="0" />
-      <LineId Id="66" Count="33" />
-      <LineId Id="1115" Count="0" />
-      <LineId Id="100" Count="5" />
-      <LineId Id="1217" Count="0" />
-      <LineId Id="106" Count="9" />
-      <LineId Id="1127" Count="0" />
-      <LineId Id="1218" Count="1" />
-      <LineId Id="117" Count="3" />
-      <LineId Id="1221" Count="1" />
-      <LineId Id="1220" Count="0" />
-      <LineId Id="1119" Count="1" />
-      <LineId Id="123" Count="0" />
-      <LineId Id="1125" Count="1" />
-      <LineId Id="124" Count="1" />
-      <LineId Id="1118" Count="0" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="1122" Count="0" />
-      <LineId Id="127" Count="3" />
-      <LineId Id="285" Count="0" />
-      <LineId Id="287" Count="1" />
-      <LineId Id="286" Count="0" />
-      <LineId Id="131" Count="4" />
-      <LineId Id="141" Count="14" />
-      <LineId Id="408" Count="0" />
-      <LineId Id="428" Count="0" />
-      <LineId Id="416" Count="1" />
-      <LineId Id="424" Count="0" />
-      <LineId Id="433" Count="0" />
-      <LineId Id="425" Count="1" />
-      <LineId Id="430" Count="0" />
-      <LineId Id="432" Count="0" />
-      <LineId Id="427" Count="0" />
-      <LineId Id="423" Count="0" />
-      <LineId Id="156" Count="1" />
-      <LineId Id="429" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="556" Count="0" />
-      <LineId Id="406" Count="0" />
-      <LineId Id="335" Count="3" />
-      <LineId Id="846" Count="1" />
-      <LineId Id="340" Count="0" />
-      <LineId Id="848" Count="0" />
-      <LineId Id="341" Count="0" />
-      <LineId Id="769" Count="1" />
-      <LineId Id="849" Count="0" />
-      <LineId Id="342" Count="3" />
-      <LineId Id="347" Count="3" />
-      <LineId Id="487" Count="2" />
-      <LineId Id="162" Count="0" />
-      <LineId Id="932" Count="0" />
-      <LineId Id="931" Count="0" />
-      <LineId Id="1024" Count="1" />
-      <LineId Id="934" Count="0" />
-      <LineId Id="852" Count="0" />
-      <LineId Id="163" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.ACT_IO">
-      <LineId Id="2" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.ACT_ResetAlarms">
-      <LineId Id="2" Count="1" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="6" Count="1" />
-    </LineIds>
-    <LineIds Name="FB_VGC.M_IsClosed">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.M_IsOpen">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.M_Set_OPN_SW">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
