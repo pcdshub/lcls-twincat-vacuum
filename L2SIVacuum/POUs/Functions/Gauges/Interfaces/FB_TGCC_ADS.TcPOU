@@ -54,5 +54,9 @@ bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
 
 ]]></ST>
     </Implementation>
+    <LineIds Name="FB_TGCC_ADS">
+      <LineId Id="3" Count="27" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

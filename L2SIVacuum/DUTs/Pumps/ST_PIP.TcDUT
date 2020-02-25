@@ -13,7 +13,10 @@ STRUCT
 	field: ONAM OK ;
 	io: i;
 	'}
-   	xHV_ExtIlk : BOOL; 
+   	xILKOk : BOOL; 
+	
+	
+	
 	{attribute 'pytmc' := '
 	pv: AT_VAC_SP;
 	io: io;
@@ -28,7 +31,12 @@ STRUCT
 	field: ONAM ON;
     '}
 	xHVEna_SW : BOOL; 
-	
+	{attribute 'pytmc' := '
+    pv: SP_HYS;
+	io: io;
+	'}
+	/// Protection setpoint hysteresis 
+	rHYS_PR: REAL := 0.001; 
 (* IO Controls *)
 	{attribute 'pytmc' := '
     pv: HV_DO;
@@ -52,14 +60,23 @@ STRUCT
     '}
 	i_iPRESS: REAL;  //
 	{attribute 'pytmc' := '
-    pv: SP_DI;
+    pv: HV_DI;
 	field: ZNAM FALSE; 
 	field: ONAM TRUE;
 	io:i;
     '}
-	i_xSP_DI : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
+	i_xHV_DI : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
 
+	{attribute 'pytmc' := '
+	pv: STATE;
+	field: ZRST STOPPED;
+	field: ONST STARTING;
+	field: TWST RUNNING;
+	field: THST FAULT;
+	io: i;
+	'}
 
+	eState	:	E_PumpState;
 
 END_STRUCT
 END_TYPE]]></Declaration>

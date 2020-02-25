@@ -24,11 +24,12 @@ VAR
  (* IO Controls *)
  q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when TRUE
  i_iPRESS  AT %I*: INT;  //
- i_xSP_DI  AT %I* : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
+ i_xSP_DI  AT %I* : BOOL; // NO contact //function of relay set on the QPC to HV output state
 
 // For logging
 fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
 tAction : F_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
+tTimeOutAction : F_TRIG;
 tOverrideActivated : R_TRIG;
 
 tPumpStartTimeout : TON := (PT:=T#10s); // Timeout pump start if pressure < 1E-11 for more than 10s.
@@ -45,15 +46,54 @@ IF (stPump.rHVEna_SP > rHVEna_SP) THEN
 END_IF
 
 (* Interlock *)
-stPump.xHV_ExtIlk  := (i_stGauge.xPRESS_OK AND (i_stGauge.rPRESS <= stPump.rHVEna_SP) AND NOT tPumpStartTimeout.Q);
-
-// Log pump turned off from loss of interlock
-tAction(CLK:= stPump.xHV_ExtIlk);
-IF tAction.Q AND stPump.xHVEna_SW THEN fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); END_IF
+//stPump.xHV_ExtIlk  := i_stGauge.xPRESS_OK AND (i_stGauge.rPRESS <= stPump.rHVEna_SP);//AND NOT tPumpStartTimeout.Q); //ADP
 
 (* Enable HV *)
-stPump.q_xHVEna_DO := stPump.xHVEna_SW AND stPump.xHV_ExtIlk;
-stPump.xHVEna_SW := stPump.q_xHVEna_DO;
+IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
+	stPump.q_xHVEna_DO := stPump.xHVEna_SW; 
+	stPump.xILKOk:= TRUE;
+ELSIF stPump.q_xHVEna_DO THEN 
+	IF i_stGauge.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN
+		stPump.q_xHVEna_DO := FALSE;
+		 stPump.xHVEna_SW := FALSE;
+		 stPump.xILKOk := FALSE;
+	END_IF
+ELSE
+	stPump.q_xHVEna_DO  := FALSE;
+	 stPump.xHVEna_SW := FALSE;
+	stPump.xILKOk := FALSE;
+END_IF
+
+
+//stPump.q_xHVEna_DO := stPump.xHVEna_SW AND stPump.xHV_ExtIlk;
+//stPump.xHVEna_SW := stPump.q_xHVEna_DO;
+
+
+
+// Log pump turned off from loss of interlock
+tAction(CLK:= stPump.xILKOk);
+IF tAction.Q AND stPump.xHVEna_SW THEN fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); END_IF
+// TAW Experimental ion pump timeout
+tPumpStartTimeout(IN:=(NOT stPump.i_xHV_DI AND stPump.q_xHVEna_DO));
+tTimeOutAction(CLK:=tPumpStartTimeout.Q);
+IF tTimeOutAction.Q THEN fbLogger(sMsg:='Pump time out.', eSevr:=TcEventSeverity.Critical); END_IF
+
+
+
+(*Pump STATE*)
+IF tPumpStartTimeout.Q THEN //Pump timeout
+	stPump.eState := pumpFAULT;
+ELSIF stPump.q_xHVEna_DO AND NOT stPump.i_xHV_DI THEN
+	stPump.eState := pumpSTARTING;
+ELSIF NOT stPump.q_xHVEna_DO AND NOT stPump.i_xHV_DI THEN
+	stPump.eState := pumpSTOPPED;
+ELSIF stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
+	stPump.eState := pumpRUNNING;
+ELSE 
+	stPump.eState := pumpFAULT;
+END_IF
+
+
 
 (*Update output gauge values*)
 ACT_SetGauge();
@@ -70,14 +110,12 @@ rV := 10*INT_TO_REAL(i_iPress)/32767;
 rPRESS := LREAL_TO_REAL(EXPT(10,(rV-iOffset))); (*offset = 11*)
 	q_IG.rPRESS := rPRESS;
 	stPump.rPRESS := rPRESS;
-IF (stPump.i_xSP_DI) OR ((q_IG.rPRESS < q_IG.rVAC_SP) AND (q_IG.rPRESS<>0) AND stPump.q_xHVEna_DO) THEN 
+IF (stPump.i_xHV_DI) AND (q_IG.rPRESS < q_IG.rVAC_SP) THEN //ADP// AND (q_IG.rPRESS<>0) AND stPump.q_xHVEna_DO) THEN 
 	q_IG.xPRESS_OK := TRUE;
 	ELSE
 	q_IG.xPRESS_OK := FALSE;
 END_IF
-
-// TAW Experimental ion pump timeout
-tPumpStartTimeout(IN:=(q_IG.rPRESS<=MinPressure AND stPump.q_xHVEna_DO));]]></ST>
+]]></ST>
       </Implementation>
     </Action>
     <Action Name="IO" Id="{a9e5b5c0-3557-4ce9-a1b9-765648e955e7}">
@@ -85,7 +123,7 @@ tPumpStartTimeout(IN:=(q_IG.rPRESS<=MinPressure AND stPump.q_xHVEna_DO));]]></ST
         <ST><![CDATA[
 (*inputs*)
 stPump.i_iPRESS:=	i_iPRESS;  
-stPump.i_xSP_DI:=	i_xSP_DI;
+stPump.i_xHV_DI:=	i_xSP_DI;
 (*output*)
 q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function]]></ST>
       </Implementation>
@@ -102,5 +140,44 @@ END_VAR
 this^.stPump.xHVEna_SW := run;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_PIP_Gamma">
+      <LineId Id="3" Count="8" />
+      <LineId Id="82" Count="1" />
+      <LineId Id="89" Count="6" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="96" Count="4" />
+      <LineId Id="84" Count="1" />
+      <LineId Id="101" Count="1" />
+      <LineId Id="86" Count="2" />
+      <LineId Id="12" Count="3" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="62" Count="2" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="69" Count="3" />
+      <LineId Id="60" Count="1" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="20" Count="4" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.ACT_SetGauge">
+      <LineId Id="2" Count="11" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.IO">
+      <LineId Id="2" Count="4" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.M_Run">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
