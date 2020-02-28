@@ -47,8 +47,11 @@ VAR
 	tOvrd	:	TIME := T#10s;
 	
 	xClose: BOOL;
+	xOpen: BOOL;
 	CloseTimer: TON;
 	TimDur: TIME := T#20MS;
+	OpenTimer: TON;
+	OpenTimDur: TIME := T#10S;
 	
 	(* Timeouts*)
 	tTimeOutDuration: TIME:= T#0.5S;
@@ -78,12 +81,7 @@ VAR
 	
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//TODO
-// Make it better
-//Test It
-//Fix PVs and IO links
-//Interface with neighboring valves.
-//PMPS requirement ??
+      <ST><![CDATA[
 
 (* Fast Shutter/Valve Function Block*)
 (* M.Ghaly Feb 2019*)
@@ -112,13 +110,25 @@ ELSE
 	iq_stValve.eState:=INVALID;
 END_IF
 
+
+(* Here's where the valve opens *)
+//iq_stValve.q_xOPN_DO := (NOT(i_xCLS_SW) AND iq_stValve.xOPN_OK AND NOT i_xOpnLS) OR (tonOvrd.Q AND i_xOverrideMode);
+
+
 (* Input Trigger to close the Fast Shutter*)
 (* Neighboring Valves Should also be triggered to Close*)
 IF (i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK)  OR i_xCLS_SW  THEN 
 	xClose:= TRUE;
 	iq_stValve.pv_xOPN_SW := FALSE;
 	q_xVAC_FAULT_OK:= FALSE;
-	IF NOT (i_xCLS_SW) THEN iq_stValve.xERR_ExtFault := TRUE; END_IF
+	IF (NOT i_xCLS_SW) THEN iq_stValve.xERR_ExtFault := TRUE; END_IF;
+	i_xCLS_SW := TRUE;
+	iq_stValve.q_xOPN_DO := FALSE;
+	iq_stValve.pv_xOPN_SW :=FALSE;
+	xOpen:=FALSE;
+ELSIF ((iq_stValve.pv_xOPN_SW) AND iq_stValve.xOPN_OK ) OR (tonOvrd.Q AND i_xOverrideMode) THEN
+	iq_stValve.q_xOPN_DO := TRUE;
+	xOpen:=TRUE;
 END_IF
 IF (xClose) AND (NOT i_xClsLS) THEN
 	q_xClose_A := TRUE;
@@ -131,6 +141,12 @@ IF(CloseTimer.Q) OR (i_xClsLS) THEN
 	q_xClose_C := FALSE;
 	xClose := FALSE;
 	iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
+
+IF(OpenTimer.Q) AND (i_xOpnLS) THEN
+	iq_stValve.q_xOPN_DO :=  FALSE;
+	iq_stValve.pv_xOPN_SW := FALSE;
+	xOpen:=FALSE;
 END_IF
 
 (* Neighboring Valves Interlock bit is reset When the Vacuum event error is reset and the Shutter is opened *)
@@ -146,9 +162,6 @@ iq_stValve.xOPN_OK := (NOT iq_stValve.xERR_ExtFault) AND NOT i_xTrigger;
 
 
 
-(* Here's where the valve opens *)
-iq_stValve.q_xOPN_DO := (NOT(i_xCLS_SW) AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
-
 (* When the valve  is open MPS is OK*)
 q_xMPS_OK := (iq_stValve.eState=OPEN) AND NOT i_xTrigger AND i_xPress_OK;//gauge is connected
 
@@ -163,7 +176,7 @@ tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=tDelOK);
 rtOK(CLK:=tonDelOK.Q);
 IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN 
 	iq_stValve.pv_xOvrdOpn :=FALSE;
-	iq_stValve.pv_xOPN_SW := TRUE; //for seamless transition
+	//iq_stValve.pv_xOPN_SW := TRUE; //for seamless transition
 END_IF
 
 //Override timer
@@ -180,6 +193,7 @@ END_IF
 
 (*Timers*)
 CloseTimer ( IN:=xClose, PT:= TimDur, Q=>);
+OpenTimer ( IN:=xOpen, PT:= OpenTimDur, Q=>);
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
 tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
 
@@ -223,67 +237,8 @@ q_xVFS_Open:= iq_stValve.i_xOpnLS;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_VFS">
-      <LineId Id="226" Count="0" />
-      <LineId Id="228" Count="3" />
-      <LineId Id="325" Count="0" />
-      <LineId Id="243" Count="0" />
-      <LineId Id="227" Count="0" />
-      <LineId Id="244" Count="0" />
-      <LineId Id="246" Count="3" />
-      <LineId Id="245" Count="0" />
-      <LineId Id="252" Count="0" />
-      <LineId Id="251" Count="0" />
-      <LineId Id="254" Count="0" />
-      <LineId Id="250" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="136" Count="0" />
-      <LineId Id="140" Count="10" />
-      <LineId Id="137" Count="0" />
-      <LineId Id="112" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="232" Count="0" />
-      <LineId Id="118" Count="1" />
-      <LineId Id="399" Count="0" />
-      <LineId Id="186" Count="0" />
-      <LineId Id="223" Count="0" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="122" Count="0" />
-      <LineId Id="126" Count="1" />
-      <LineId Id="124" Count="1" />
-      <LineId Id="128" Count="0" />
-      <LineId Id="132" Count="1" />
-      <LineId Id="130" Count="0" />
-      <LineId Id="204" Count="0" />
-      <LineId Id="255" Count="0" />
-      <LineId Id="131" Count="0" />
-      <LineId Id="239" Count="0" />
-      <LineId Id="202" Count="0" />
-      <LineId Id="201" Count="0" />
-      <LineId Id="238" Count="0" />
-      <LineId Id="237" Count="0" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="171" Count="3" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="224" Count="0" />
-      <LineId Id="153" Count="0" />
-      <LineId Id="185" Count="0" />
-      <LineId Id="188" Count="3" />
-      <LineId Id="398" Count="0" />
-      <LineId Id="184" Count="0" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="157" Count="13" />
-      <LineId Id="155" Count="1" />
-      <LineId Id="103" Count="0" />
-      <LineId Id="206" Count="8" />
-      <LineId Id="221" Count="0" />
-      <LineId Id="215" Count="2" />
-      <LineId Id="242" Count="0" />
-      <LineId Id="218" Count="2" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="485" Count="1" />
-      <LineId Id="484" Count="0" />
-      <LineId Id="116" Count="1" />
+      <LineId Id="567" Count="124" />
+      <LineId Id="117" Count="0" />
     </LineIds>
     <LineIds Name="FB_VFS.ACT_ResetAlarms">
       <LineId Id="2" Count="1" />
