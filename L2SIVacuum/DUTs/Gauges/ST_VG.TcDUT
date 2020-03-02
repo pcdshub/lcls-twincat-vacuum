@@ -88,17 +88,29 @@ STRUCT
 	{attribute 'pytmc' := '
     pv: VAC_SP;
 	io:io;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
     '}
 	rVAC_SP: REAL := 0.001; /// At vacuum setpoint for all gauges
 	/// Protection setpoint for ion gauges at which the gauge turns off, not used for pirani 
 	{attribute 'pytmc' := '
     pv: PRO_SP;
 	io: io;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
     '}
 	rPRO_SP: REAL := 0.001;
 	{attribute 'pytmc' := '
     pv: SP_HYS;
 	io: io;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
 	'}
 	/// Protection setpoint hysteresis 
 	rHYS_PR: REAL := 0.001; 

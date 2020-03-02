@@ -90,12 +90,20 @@ STRUCT
 	{attribute 'pytmc' := ' 
 	pv: AT_VAC_SP;
 	io: o;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
 	'}
 	rAT_VAC_SP	:	REAL := 0.01;	// Interlock setpoint for gauges on both sides of valve
 	rAT_VAC_SP_LAST	:	REAL :=0.01 ;	// Interlock setpoint for gauges on both sides of valve
 	{attribute 'pytmc' := '
     pv: AT_VAC_HYS;
 	io: o;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
     '}
 	rAT_VAC_HYS	:	REAL :=0.01;	// Hysteresis of the vacuum sp
 	{attribute 'pytmc' := '

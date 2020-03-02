@@ -20,6 +20,10 @@ STRUCT
 	{attribute 'pytmc' := '
 	pv: AT_VAC_SP;
 	io: io;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
 	'}
 	rHVEna_SP : REAL := 1.0E-4;	
 	
@@ -34,6 +38,10 @@ STRUCT
 	{attribute 'pytmc' := '
     pv: SP_HYS;
 	io: io;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
 	'}
 	/// Protection setpoint hysteresis 
 	rHYS_PR: REAL := 0.001; 

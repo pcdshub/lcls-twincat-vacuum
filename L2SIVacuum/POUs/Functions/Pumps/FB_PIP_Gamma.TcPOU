@@ -57,6 +57,8 @@ ELSIF stPump.q_xHVEna_DO THEN
 		stPump.q_xHVEna_DO := FALSE;
 		 stPump.xHVEna_SW := FALSE;
 		 stPump.xILKOk := FALSE;
+	ELSE
+		stPump.q_xHVEna_DO := stPump.xHVEna_SW; 
 	END_IF
 ELSE
 	stPump.q_xHVEna_DO  := FALSE;
@@ -147,7 +149,8 @@ this^.stPump.xHVEna_SW := run;]]></ST>
       <LineId Id="82" Count="1" />
       <LineId Id="89" Count="6" />
       <LineId Id="103" Count="0" />
-      <LineId Id="96" Count="4" />
+      <LineId Id="106" Count="2" />
+      <LineId Id="97" Count="3" />
       <LineId Id="84" Count="1" />
       <LineId Id="101" Count="1" />
       <LineId Id="86" Count="2" />
