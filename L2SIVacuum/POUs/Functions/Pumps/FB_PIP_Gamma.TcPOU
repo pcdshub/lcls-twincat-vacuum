@@ -72,7 +72,7 @@ END_IF
 
 // Log pump turned off from loss of interlock
 tAction(CLK:= stPump.xILKOk);
-IF tAction.Q AND stPump.xHVEna_SW THEN fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); END_IF
+IF tAction.Q AND ((stPump.eState = pumpRUNNING) OR (stPump.eState = pumpSTARTING)) THEN fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); END_IF
 // TAW Experimental ion pump timeout
 tPumpStartTimeout(IN:=(NOT stPump.i_xHV_DI AND stPump.q_xHVEna_DO));
 tTimeOutAction(CLK:=tPumpStartTimeout.Q);
@@ -89,6 +89,8 @@ ELSIF NOT stPump.q_xHVEna_DO AND NOT stPump.i_xHV_DI THEN
 	stPump.eState := pumpSTOPPED;
 ELSIF stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
 	stPump.eState := pumpRUNNING;
+ELSIF NOT stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
+	stPump.eState := pumpSTARTING; // need to change to an additional state pumpSTOPPING
 ELSE 
 	stPump.eState := pumpFAULT;
 END_IF
@@ -161,7 +163,9 @@ this^.stPump.xHVEna_SW := run;]]></ST>
       <LineId Id="76" Count="0" />
       <LineId Id="75" Count="0" />
       <LineId Id="65" Count="1" />
-      <LineId Id="69" Count="3" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="71" Count="1" />
       <LineId Id="60" Count="1" />
       <LineId Id="73" Count="0" />
       <LineId Id="20" Count="4" />
