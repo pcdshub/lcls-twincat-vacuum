@@ -92,7 +92,7 @@ ELSIF NOT stPump.q_xHVEna_DO AND NOT stPump.i_xHV_DI THEN
 ELSIF stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
 	stPump.eState := pumpRUNNING;
 ELSIF NOT stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
-	stPump.eState := pumpSTARTING; // need to change to an additional state pumpSTOPPING
+	stPump.eState := pumpSTOPPING;
 ELSE 
 	stPump.eState := pumpFAULT;
 END_IF
