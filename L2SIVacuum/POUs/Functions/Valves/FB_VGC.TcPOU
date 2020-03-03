@@ -45,6 +45,8 @@ VAR_OUTPUT
 	
 	{attribute 'pytmc' := '
     pv: MPS_FAULT_OK
+	field: ZNAM MPS FAULT ;
+	field: ONAM MPS OK ;
 	'}
 	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
 END_VAR
