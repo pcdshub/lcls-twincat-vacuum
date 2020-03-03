@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_VGC" Id="{0b7dfc27-9760-4c7a-bad2-fa375ac628b8}">
     <Declaration><![CDATA[TYPE ST_VGC :
 STRUCT
@@ -56,6 +56,8 @@ STRUCT
 	{attribute 'pytmc' := '
     pv: OPN_DO;
 	io: i;
+	field: ZNAM FALSE;
+	field: ONAM TRUE;
     '}
 	q_xOPN_DO	: BOOL;
 	
@@ -88,12 +90,20 @@ STRUCT
 	{attribute 'pytmc' := ' 
 	pv: AT_VAC_SP;
 	io: o;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
 	'}
 	rAT_VAC_SP	:	REAL := 0.01;	// Interlock setpoint for gauges on both sides of valve
 	rAT_VAC_SP_LAST	:	REAL :=0.01 ;	// Interlock setpoint for gauges on both sides of valve
 	{attribute 'pytmc' := '
     pv: AT_VAC_HYS;
 	io: o;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
     '}
 	rAT_VAC_HYS	:	REAL :=0.01;	// Hysteresis of the vacuum sp
 	{attribute 'pytmc' := '

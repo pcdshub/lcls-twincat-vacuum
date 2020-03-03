@@ -45,6 +45,8 @@ VAR_OUTPUT
 	
 	{attribute 'pytmc' := '
     pv: MPS_FAULT_OK
+	field: ZNAM MPS FAULT ;
+	field: ONAM MPS OK ;
 	'}
 	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
 END_VAR
@@ -419,5 +421,26 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VGC">
+      <LineId Id="3" Count="265" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC.ACT_IO">
+      <LineId Id="2" Count="6" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC.ACT_ResetAlarms">
+      <LineId Id="2" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC.M_Set_OPN_SW">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

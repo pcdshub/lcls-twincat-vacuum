@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_KashiyamaDryPump" Id="{ea7dbd39-0b45-44ec-97c9-3ee5cc59d920}">
     <Declaration><![CDATA[TYPE ST_KashiyamaDryPump EXTENDS ST_RoughPump:
 STRUCT
@@ -27,12 +27,12 @@ STRUCT
     pv: ALARM_OK
 	io: i
     '}
-	i_xAlarm	:	BOOL;
+	i_xAlarmOK	:	BOOL;
 	{attribute 'pytmc' := '
     pv: WARN_OK
 	io: i
     '}
-	i_xWarning	:	BOOL;
+	i_xWarningOK	:	BOOL;
 	{attribute 'pytmc' := '
     pv: RUN_DI
 	io: i

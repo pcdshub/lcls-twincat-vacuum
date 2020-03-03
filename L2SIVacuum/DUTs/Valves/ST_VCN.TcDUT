@@ -44,12 +44,11 @@ STRUCT
 	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
 	{attribute 'pytmc' :=  ' 
 	pv: STATE ;
-	type: mbbi ;
 	field: ZRST Close ;
 	field: ONST Open;
 	field: TWST PressureControl ;
 	field: THST ManualControl ;
-	io: i
+	io: io
 	'}
 	eValveControl	:	E_VCN := CloseValve; // Valve control state
 

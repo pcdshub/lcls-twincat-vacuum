@@ -300,5 +300,27 @@ END_VAR
         <ST><![CDATA[M_TurboIsOn := (This^.iq_stPtm.eState =  E_PumpState.pumpSTARTING ) OR (This^.iq_stPtm.eState =  E_PumpState.pumpRUNNING );]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_PTM_Agilent">
+      <LineId Id="3" Count="166" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.BackingPressureSetPoint">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.ErrorMessage">
+      <LineId Id="3" Count="13" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.IO">
+      <LineId Id="2" Count="9" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_Run">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_TurboIsOn">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
