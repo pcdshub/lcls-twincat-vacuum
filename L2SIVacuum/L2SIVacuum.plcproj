@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version='1.0' encoding='UTF-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <FileVersion>1.0.0.0</FileVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -17,12 +17,14 @@
     <Company>SLAC</Company>
     <Released>false</Released>
     <Title>L2SI Vacuum Library</Title>
-    <ProjectVersion>0.0.0</ProjectVersion>
+    <ProjectVersion>1.1.1</ProjectVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\Gauges\E_PressureState.TcDUT">
       <SubType>Code</SubType>
-    </Compile>
+    </Compile><Compile Include="Version\Global_Version.TcGVL">
+            <SubType>Code</SubType>
+        </Compile>
     <Compile Include="DUTs\Gauges\Gauge_Type.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -299,22 +301,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DUTs" />
-    <Folder Include="DUTs\Gauges" />
-    <Folder Include="DUTs\Pumps" />
-    <Folder Include="DUTs\Valves" />
-    <Folder Include="GVLs" />
-    <Folder Include="POUs\Functions" />
-    <Folder Include="POUs\Functions\Gauges" />
-    <Folder Include="POUs\Functions\Gauges\Interfaces" />
-    <Folder Include="POUs\Functions\Pumps\functions" />
-    <Folder Include="POUs\Functions\Valves" />
-    <Folder Include="POUs\Functions\Pumps" />
-    <Folder Include="POUs\Functions\Valves\functions" />
-    <Folder Include="POUs\Functions\Valves\Interfaces" />
-    <Folder Include="POUs\ADS" />
-    <Folder Include="VISUs" />
-    <Folder Include="POUs" />
+    <Folder Include="DUTs"/><Folder Include="Version"/>
+    <Folder Include="DUTs\Gauges"/>
+    <Folder Include="DUTs\Pumps"/>
+    <Folder Include="DUTs\Valves"/>
+    <Folder Include="GVLs"/>
+    <Folder Include="POUs\Functions"/>
+    <Folder Include="POUs\Functions\Gauges"/>
+    <Folder Include="POUs\Functions\Gauges\Interfaces"/>
+    <Folder Include="POUs\Functions\Pumps\functions"/>
+    <Folder Include="POUs\Functions\Valves"/>
+    <Folder Include="POUs\Functions\Pumps"/>
+    <Folder Include="POUs\Functions\Valves\functions"/>
+    <Folder Include="POUs\Functions\Valves\Interfaces"/>
+    <Folder Include="POUs\ADS"/>
+    <Folder Include="VISUs"/>
+    <Folder Include="POUs"/>
   </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="LCLS General">
@@ -430,8 +432,8 @@
         <v>{8F99A816-E488-41E4-9FA3-846536012284}</v>
         <o>
           <v n="Name">"{8F99A816-E488-41E4-9FA3-846536012284}"</v>
-          <d n="SubKeys" t="Hashtable" />
-          <d n="Values" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
+          <d n="Values" t="Hashtable"/>
         </o>
         <v>{29BD8D0C-3586-4548-BB48-497B9A01693F}</v>
         <o>
@@ -440,16 +442,16 @@
             <v>Rules</v>
             <o>
               <v n="Name">"Rules"</v>
-              <d n="SubKeys" t="Hashtable" />
-              <d n="Values" t="Hashtable" />
+              <d n="SubKeys" t="Hashtable"/>
+              <d n="Values" t="Hashtable"/>
             </o>
           </d>
-          <d n="Values" t="Hashtable" />
+          <d n="Values" t="Hashtable"/>
         </o>
         <v>{40450F57-0AA3-4216-96F3-5444ECB29763}</v>
         <o>
           <v n="Name">"{40450F57-0AA3-4216-96F3-5444ECB29763}"</v>
-          <d n="SubKeys" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
           <d n="Values" t="Hashtable" ckt="String">
             <v>ActiveVisuExtensionsLength</v>
             <v>0</v>
@@ -461,7 +463,7 @@
         <o>
           <v n="Name">"{40450F57-0AA3-4216-96F3-5444ECB29763}"</v>
 
-          <d n="SubKeys" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
           <d n="Values" t="Hashtable" ckt="String">
             <v>ActiveVisuExtensionsLength</v>
             <v>0</v>
@@ -472,13 +474,13 @@
         <v>{F66C7017-BDD8-4114-926C-81D6D687E35F}</v>
         <o>
           <v n="Name">"{F66C7017-BDD8-4114-926C-81D6D687E35F}"</v>
-          <d n="SubKeys" t="Hashtable" />
-          <d n="Values" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
+          <d n="Values" t="Hashtable"/>
         </o>
         <v>{246001F4-279D-43AC-B241-948EB31120E1}</v>
         <o>
           <v n="Name">"{246001F4-279D-43AC-B241-948EB31120E1}"</v>
-          <d n="SubKeys" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
           <d n="Values" t="Hashtable" ckt="String" cvt="String">
             <v>GlobalVisuImageFilePath</v>
             <v>%APPLICATIONPATH%</v>
@@ -486,7 +488,7 @@
 
         </o>
       </d>
-      <d n="Values" t="Hashtable" />
+      <d n="Values" t="Hashtable"/>
     </o>
         </Data>
         <TypeList>
