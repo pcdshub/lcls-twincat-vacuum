@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_Ebara_011M" Id="{80002545-2d80-4798-8b5d-b360277946fd}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Ebara Turbo pump connected to the ETC011M Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
@@ -100,6 +100,19 @@ iq_stPTM.q_xStart := iq_stPTM.q_xStop := iq_stPTM.q_RunDO;
 	iq_stPTM.xResetSW := FALSE; 
  END_IF
  
+ 
+ (*Pump STATE*)
+IF iq_stPtm.i_xFault THEN 
+	iq_stPtm.eState := pumpFAULT;
+ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
+	iq_stPtm.eState := pumpSTOPPED;
+ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpSTARTING;
+ELSIF iq_stPtm.i_xAtSpd AND iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpRUNNING;
+ELSE 
+	iq_stPtm.eState := pumpFAULT;
+END_IF
 
 (*soft IO mapping*)
 ACT_IO();
@@ -169,6 +182,9 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="105" Count="1" />
       <LineId Id="104" Count="0" />
       <LineId Id="107" Count="12" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="248" Count="10" />
+      <LineId Id="247" Count="0" />
       <LineId Id="50" Count="0" />
       <LineId Id="120" Count="1" />
       <LineId Id="2" Count="0" />

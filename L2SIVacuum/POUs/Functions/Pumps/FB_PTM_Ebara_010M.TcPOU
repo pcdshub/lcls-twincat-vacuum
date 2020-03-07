@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_Ebara_010M" Id="{db9fdbdf-85bb-4e58-96cc-808f2a65a0e5}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Ebara Turbo pump connected to the ETC010M Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
@@ -22,7 +22,7 @@ VAR_OUTPUT
 END_VAR
 VAR
 	i_iADCBits : UINT := 15;
-	
+	RTRIG_INLK: R_TRIG;
 	TOF_RESET: TOF :=(PT:=T#1S);
 	TOF_SetSpeed: TOF :=(PT:=T#1S);
 	
@@ -31,10 +31,9 @@ VAR
 	i_xDecel AT %I* : BOOL; //Link to brake input
 	i_xAccel AT %I* : BOOL;
 	i_xRotate AT %I* : BOOL;
-	i_xNCFault AT %I* : BOOL;// remove?
+	i_xNCFault AT %I* : BOOL;// 
 	i_xAtSpd AT %I* : BOOL;
 	i_iRawSpeed AT %I* : INT; // Link to Analog input
-	i_xAlarm AT %I* : BOOL;
 	i_iTempMon AT %I* : INT; // Link to Analog input -- input Voltage according to the pump temprature 0->5V 0->100C
 	i_iCurrentMon AT %I* : INT; //Link to Analog -- input Voltage to the output current of motor 0->5V 0->10A
 	
@@ -45,7 +44,7 @@ VAR
 	q_xProtection AT %Q* : BOOL;
 	q_xSetSpeed AT %Q* : BOOL;
 	q_iSpeedSet AT %Q* :INT;	//Link to analog Output
-	//more?
+
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Ebara ETC control FB
@@ -71,26 +70,23 @@ IF iq_stPTM.i_xOverride THEN
 		iq_stPTM.q_RunDO:=FALSE;
 	END_IF
 	//Handle faults 
-ELSIF iq_stPTM.i_xFault OR iq_stPTM.i_xALARM OR ( NOT iq_stPTM.xExtRunOk) THEN
+ELSIF iq_stPTM.i_xFault OR ( NOT iq_stPTM.xExtRunOk) THEN
 	iq_stPTM.q_RunDO:=FALSE;
 	iq_stPTM.xRunSW:=FALSE;
-	iq_stPTM.eState := pumpFAULT;
 	//And one for when we need to start the pump normally. Only allows pump to be started if ILK ok.
 ELSIF iq_stPTM.xRunSW AND iq_stPTM.xExtRunOk THEN
 	iq_stPTM.q_RunDO:=TRUE;
-	IF (iq_stPTM.i_xAtSpd) THEN iq_stPTM.eState := pumpRUNNING;
-		ELSE  iq_stPTM.eState := pumpSTARTING;
-		END_IF
 END_IF
 //One section for when pump is told to stop
 IF NOT iq_stPTM.xRunSW THEN
 		iq_stPTM.q_RunDO:=FALSE;
-		IF (NOT iq_stPTM.i_xFault) AND (NOT iq_stPTM.i_xALARM) THEN iq_stPTM.eState := pumpSTOPPED; END_IF;
+		//IF (NOT iq_stPTM.i_xFault)(* AND (NOT iq_stPTM.i_xALARM) *)THEN iq_stPTM.eState := pumpSTOPPED; END_IF;
 END_IF 
 
 //Set the Start and Stop outputs to Run do . check manual alternate START/STOP
 iq_stPTM.q_xStart := iq_stPTM.q_RunDO;
-iq_stPTM.q_xStop := iq_stPTM.q_RunDO;
+iq_stPTM.q_xStop := iq_stPTM.q_RunDO; 
+
 
 
  (* to reset the Input speed OK bit *)
@@ -105,10 +101,33 @@ iq_stPTM.q_xStop := iq_stPTM.q_RunDO;
 	iq_stPTM.q_xReset:= FALSE;
 	iq_stPTM.xResetSW := FALSE; 
  END_IF
+ (*When the Protection signal is lost, Error bit doesn't show, but the controller still needs to be reset*)
+RTRIG_INLK(CLK:= iq_stPTM.q_xProtection );
+ IF (RTRIG_INLK.Q) AND (iq_stPTM.i_xNCFault) THEN
+	 iq_stPTM.q_xReset := TRUE; 
+ END_IF
  
 
+ 
 (*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
 iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
+
+
+ (*Pump STATE*)
+IF iq_stPtm.i_xFault THEN 
+	iq_stPtm.eState := pumpFAULT;
+ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
+	iq_stPtm.eState := pumpSTOPPED;
+ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO AND iq_stPTM.i_xAccel THEN
+	iq_stPtm.eState := pumpSTARTING;
+ELSIF iq_stPtm.i_xAtSpd AND iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpRUNNING;
+ELSIF iq_stPTM.i_xDecel AND NOT iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpSTOPPING;
+ELSE 
+	iq_stPtm.eState := pumpFAULT;
+END_IF
+
 (*soft IO mapping*)
 ACT_IO();
 ]]></ST>
@@ -120,12 +139,13 @@ ACT_IO();
 	iq_stPTM.i_xDecel := i_xDecel ;
 	iq_stPTM.i_xAccel :=	i_xAccel ;
 	iq_stPTM.i_xRotate :=	i_xRotate;
+	iq_stPTM.i_xFault := NOT iq_stPTM.i_xNCFault; 	//Normally closed fault handling
 	iq_stPTM.i_xNCFault :=	i_xNCFault ;
-	iq_stPTM.i_xALARM:= i_xALARM;
+	iq_stPTM.i_xALARM:= NOT i_xNCFault;
 	iq_stPTM.i_xAtSpd := i_xAtSpd;
-	iq_stPTM.i_iTempMon := i_iTempMon;
-	iq_stPTM.i_iCurrentMon := i_iCurrentMon;
-//V (AI/32767*10) * (33600 {Max RPM} - 100) / 5
+	iq_stPTM.i_iTempMon := 100*LREAL_TO_INT(i_iTempMon/16383);// Manual page 28(DC 0 to 5V -> 0 to 100 DegC)
+	iq_stPTM.i_iCurrentMon := 10*LREAL_TO_INT(i_iCurrentMon/16383);// Manual page 28 (DC 0 to 5V -> 0 to 10 A)
+	iq_stPTM.i_diCurSpd := 100*LREAL_TO_DINT(i_iRawSpeed/16383);// Manual page 28 (DC 0 to 5V -> 0 to 100HZ)
 (*outputs*)
 	q_xStart:= iq_stPTM.q_xStart;
 	q_xStop := iq_stPTM.q_xStop;
@@ -137,26 +157,20 @@ ACT_IO();
 (*Validate Set Speed within range *) 
 IF iq_stPTM.q_iSpeedSet  >= i_iMinSpeedRPM AND iq_stPTM.q_iSpeedSet  <=i_iMaxSpeedRPM THEN 
 	q_iSpeedSet  := LIMIT(0, DINT_TO_INT((iq_stPTM.q_iSpeedSet - i_iMinSpeedRPM) / i_iMaxSpeedRPM *16383/5),16383); //Max 5V
-	//:= DINT_TO_INT((q_iSpeedSet-i_iMinSpeedRPM) / i_iMaxSpeedRPM *32767/2); //Max 5V
 END_IF
 
 (* Pump speed calculation *)
-IF i_iRawSpeed / (EXPT(2,i_iADCBits)-1) * 10 >= 0.2 THEN //Speed reading appears to zero at ~0.16V
+(*IF i_iRawSpeed / (EXPT(2,i_iADCBits)-1) * 10 >= 0.2 THEN //Speed reading appears to zero at ~0.16V
 	iq_stPTM.i_diCurSpd := LREAL_TO_DINT(i_iRawSpeed/(EXPT(2,i_iADCBits)-1)*67000);
 //V (AI/(2^{# ADC bits} -1 ) * 10[ADC 10V scaling]) * (33600 [Max RPM] - 100) / 5
 ELSE
 	iq_stPTM.i_diCurSpd := 0;
-END_IF
+END_IF*)
 
-//Normally closed fault handling
-iq_stPTM.i_xFault := NOT iq_stPTM.i_xNCFault;
-// RUN_DO
-iq_stPTM.q_RunDO := iq_stPTM.q_xStart AND iq_stPTM.q_xStop;
 
-(* Pump temp calculation *) //todo
-(* Pump current calculation *) //todo
-iq_stPTM.i_iTempMon := LREAL_TO_INT(iq_stPTM.i_iTempMon/(EXPT(2,i_iADCBits)-1)*67000);
-iq_stPTM.i_iCurrentMon := LREAL_TO_INT(iq_stPTM.i_iCurrentMon/(EXPT(2,i_iADCBits)-1)*67000);]]></ST>
+
+
+]]></ST>
       </Implementation>
     </Action>
     <Method Name="BackingPressureSetPoint" Id="{24462767-c0c7-4963-b34e-5cf4d25fc552}">
@@ -182,67 +196,12 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_PTM_Ebara_010M">
-      <LineId Id="3" Count="0" />
-      <LineId Id="136" Count="0" />
-      <LineId Id="4" Count="1" />
-      <LineId Id="141" Count="1" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="132" Count="0" />
-      <LineId Id="222" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="266" Count="1" />
-      <LineId Id="22" Count="10" />
-      <LineId Id="140" Count="0" />
-      <LineId Id="173" Count="0" />
-      <LineId Id="34" Count="2" />
-      <LineId Id="175" Count="1" />
-      <LineId Id="178" Count="0" />
-      <LineId Id="37" Count="3" />
-      <LineId Id="171" Count="0" />
-      <LineId Id="41" Count="1" />
-      <LineId Id="95" Count="0" />
-      <LineId Id="137" Count="0" />
-      <LineId Id="139" Count="0" />
-      <LineId Id="315" Count="0" />
-      <LineId Id="172" Count="0" />
-      <LineId Id="145" Count="3" />
-      <LineId Id="155" Count="0" />
-      <LineId Id="160" Count="0" />
-      <LineId Id="164" Count="0" />
-      <LineId Id="156" Count="1" />
-      <LineId Id="161" Count="1" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="144" Count="0" />
-      <LineId Id="99" Count="1" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="314" Count="0" />
-      <LineId Id="106" Count="0" />
+      <LineId Id="376" Count="82" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_010M.ACT_IO">
-      <LineId Id="4" Count="0" />
-      <LineId Id="3" Count="0" />
-      <LineId Id="6" Count="2" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="11" Count="6" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="54" Count="1" />
-      <LineId Id="21" Count="2" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="35" Count="7" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="56" Count="1" />
-      <LineId Id="50" Count="1" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="52" Count="1" />
+      <LineId Id="58" Count="35" />
+      <LineId Id="53" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_010M.BackingPressureSetPoint">
       <LineId Id="5" Count="0" />
