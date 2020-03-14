@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_EbaraEVA" Id="{fcf97f55-51a9-4ad7-88f0-a45e9e26409c}" SpecialFunc="None">
     <Declaration><![CDATA[(*This function block does basic controls for the Ebara EV-A  pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
-FUNCTION_BLOCK FB_EbaraEVA
+FUNCTION_BLOCK FB_EbaraEVA EXTENDS FB_Pump
 VAR_INPUT
 	i_xExtIlkOK	:	BOOL;
 END_VAR
@@ -14,7 +14,14 @@ VAR_OUTPUT
 	stPump	:	ST_EbaraEVA; //Ebara dry pump structure 
 END_VAR
 VAR
-	(*IO*)
+  // For logging
+  (*  fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
+    ePrevState : E_PumpState;
+    tErrorPresent : R_TRIG;
+    tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)	
+	tFault : F_TRIG;*)
+
+(*IO*)
 	q_xRunDo AT%Q* : BOOL; // Output signal
 	q_xRemote At%Q* :BOOL;// Remote/Local Control
 	q_xResetAlarm At%Q* :BOOL;// Remote/Local Control
@@ -30,13 +37,14 @@ stPump.xIlkOK := i_xExtIlkOK AND stPump.i_xAlarmOK ;
 
 IF stPump.xIlkOK THEN
 	stPump.q_xRunDO := stPump.pv_xRunSW;
-	ELSE
+ELSE
 		stPump.PV_xRunSW := FALSE;
-        stPump.q_xRunDO := FALSE;	
+        stPump.q_xRunDO := FALSE;
 END_IF
 
 (*State evaluation*)
 IF NOT(stPump.i_xAlarmOK ) THEN
+	 ePrevState := stpump.eState;
 	stpump.eState := pumpFAULT;
 ELSIF NOT stpump.q_xRunDo AND stPump.i_xAlarmOK THEN
 		stpump.eState := pumpSTOPPED;	
@@ -48,8 +56,12 @@ ELSE
 	stpump.eState := pumpFAULT;
 END_IF
 
+
 //Soft IO Mapping
-ACT_IO();]]></ST>
+ACT_IO();
+
+// Log States and triggers
+ACT_Logger();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{1807940c-3fbb-4008-9507-5845d2fff7d5}">
       <Implementation>
@@ -61,6 +73,43 @@ q_xRunDo:=stPump.q_xRunDo;
 q_xRemote:= stPump.q_xRemote;]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_Logger" Id="{64314086-c648-4cbf-8914-c1f81f7a5c99}">
+      <Implementation>
+        <ST><![CDATA[//STATE Logger  
+
+IF ePrevState <> stpump.eState THEN
+	  CASE stpump.eState OF
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+  		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpSTARTING:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Info);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := stpump.eState;  
+  END_IF
+  
+// ILK logger
+
+IF NOT i_xExtIlkOK AND stPump.q_xRunDO THEN
+ 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+// Log Action
+tAction(CLK:=  stPump.q_xRunDo);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+
+
+// Log FAULT
+tFault(CLK:= stPump.i_xAlarmOK);
+IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
+
+]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="FB_EbaraEVA">
       <LineId Id="9" Count="0" />
       <LineId Id="27" Count="0" />
@@ -70,7 +119,9 @@ q_xRemote:= stPump.q_xRemote;]]></ST>
       <LineId Id="29" Count="5" />
       <LineId Id="84" Count="0" />
       <LineId Id="83" Count="0" />
-      <LineId Id="85" Count="1" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="86" Count="0" />
       <LineId Id="94" Count="0" />
       <LineId Id="93" Count="0" />
       <LineId Id="96" Count="0" />
@@ -78,15 +129,41 @@ q_xRemote:= stPump.q_xRemote;]]></ST>
       <LineId Id="88" Count="2" />
       <LineId Id="92" Count="0" />
       <LineId Id="87" Count="0" />
+      <LineId Id="124" Count="0" />
       <LineId Id="62" Count="0" />
       <LineId Id="25" Count="0" />
       <LineId Id="36" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="140" Count="0" />
     </LineIds>
     <LineIds Name="FB_EbaraEVA.ACT_IO">
       <LineId Id="2" Count="0" />
       <LineId Id="6" Count="0" />
       <LineId Id="3" Count="2" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_EbaraEVA.ACT_Logger">
+      <LineId Id="1" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="27" Count="4" />
+      <LineId Id="33" Count="2" />
+      <LineId Id="47" Count="4" />
+      <LineId Id="22" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_Pfeiffer" Id="{f61aaad0-85b4-4244-b8a7-58d7d76a340e}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Pfeiffer Turbo pump connected to the TM700 and TC400 Controllers.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
-FUNCTION_BLOCK FB_PTM_Pfeiffer
+FUNCTION_BLOCK FB_PTM_Pfeiffer EXTENDS FB_Pump
 VAR_IN_OUT
 	
 END_VAR
@@ -63,7 +63,10 @@ END_IF
 
 
 (*Soft IO Mapping*)
-ACT_IO();]]></ST>
+ACT_IO();
+// Log States and triggers
+ACT_Logger();
+]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{6d730de1-568e-46c8-bd68-32cda7221400}">
       <Implementation>
@@ -109,6 +112,8 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="85" Count="0" />
       <LineId Id="84" Count="0" />
       <LineId Id="97" Count="0" />
+      <LineId Id="150" Count="1" />
+      <LineId Id="149" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Pfeiffer.ACT_IO">
       <LineId Id="8" Count="0" />

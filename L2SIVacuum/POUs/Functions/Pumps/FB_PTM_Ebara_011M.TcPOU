@@ -3,7 +3,7 @@
   <POU Name="FB_PTM_Ebara_011M" Id="{80002545-2d80-4798-8b5d-b360277946fd}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Ebara Turbo pump connected to the ETC011M Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
-FUNCTION_BLOCK FB_PTM_Ebara_011M
+FUNCTION_BLOCK FB_PTM_Ebara_011M EXTENDS FB_Pump
 VAR_IN_OUT
 END_VAR
 VAR_INPUT
@@ -74,6 +74,7 @@ IF iq_stPTM.i_xOverride THEN
 ELSIF iq_stPTM.i_xFault OR (iq_stPTM.q_RunDO AND NOT iq_stPTM.xExtRunOk) THEN
 	iq_stPTM.q_RunDO:=FALSE;
 	iq_stPTM.q_xProtection:=FALSE;
+	iq_stPTM.xRunSW:=FALSE;
 	//And one for when we need to start the pump normally. Only allows pump to be started if ILK ok.
 ELSIF iq_stPTM.xRunSW AND iq_stPTM.xExtRunOk THEN
 	iq_stPTM.q_RunDO:=TRUE;
@@ -116,6 +117,8 @@ END_IF
 
 (*soft IO mapping*)
 ACT_IO();
+// Log States and triggers
+ACT_Logger();
 ]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{3ede8d23-8566-4337-9266-6da353ee69b7}">
@@ -153,6 +156,43 @@ END_IF
 iq_stPTM.i_xFault := NOT iq_stPTM.i_xNCFault; //??]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_Logger" Id="{f7305e4c-a374-4ba3-b968-9b8625615ceb}">
+      <Implementation>
+        <ST><![CDATA[//STATE Logger  
+
+IF ePrevState <> iq_stPTM.eState THEN
+	  CASE iq_stPTM.eState OF
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+  		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpSTARTING:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Info);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stPTM.eState;  
+  END_IF
+  
+// ILK logger
+
+IF NOT i_xExtIlkOK AND iq_stPTM.q_RunDO THEN
+ 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+// Log Action
+tAction(CLK:=  iq_stPTM.q_RunDO);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+
+
+// Log FAULT
+tFault(CLK:= iq_stPTM.i_xNCFault);
+IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
+
+]]></ST>
+      </Implementation>
+    </Action>
     <Method Name="M_Run" Id="{c9c0a6c1-7b74-40d6-9159-49ad78962e29}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
@@ -175,7 +215,9 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="204" Count="0" />
       <LineId Id="22" Count="3" />
       <LineId Id="122" Count="3" />
-      <LineId Id="30" Count="6" />
+      <LineId Id="30" Count="4" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="35" Count="1" />
       <LineId Id="164" Count="0" />
       <LineId Id="38" Count="1" />
       <LineId Id="99" Count="4" />
@@ -187,6 +229,8 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="247" Count="0" />
       <LineId Id="50" Count="0" />
       <LineId Id="120" Count="1" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="299" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_011M.ACT_IO">
@@ -195,6 +239,28 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="12" Count="20" />
       <LineId Id="36" Count="1" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Ebara_011M.ACT_Logger">
+      <LineId Id="1" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="27" Count="4" />
+      <LineId Id="33" Count="2" />
+      <LineId Id="47" Count="4" />
+      <LineId Id="22" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_011M.M_Run">
       <LineId Id="10" Count="0" />

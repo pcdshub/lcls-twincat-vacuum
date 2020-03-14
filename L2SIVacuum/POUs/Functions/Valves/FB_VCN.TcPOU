@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VCN" Id="{b91718c1-ee94-477e-afdc-a1b96008e0fd}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function implements the Basic functions for the Pfeiffer EVR 116 needle valve*)
 FUNCTION_BLOCK FB_VCN
@@ -24,6 +24,10 @@ VAR CONSTANT
 END_VAR
 VAR
 	// Requested voltage
+	{attribute 'pytmc' := '
+	pv: POS_AO;
+	io: i ;
+	'}
 	rReqVoltage: REAL := 0;
 	//iResolution: INT :=16;
 	// 

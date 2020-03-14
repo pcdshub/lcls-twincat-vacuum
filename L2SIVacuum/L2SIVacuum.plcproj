@@ -197,6 +197,9 @@
     <Compile Include="POUs\Functions\Pumps\FB_PTM_TwisTorr.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\FB_Pump.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_ScrollPump.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -268,6 +271,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\functions\F_TurboGateValve_ILK.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\functions\F_TurboGateValve_ILK_1.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\functions\F_TurboGateValve_Protection_ILK.TcPOU">
