@@ -35,7 +35,7 @@ END_VAR
 IF PG.rVAC_SP = 0 THEN
 	PG.rVAC_SP := rVAC_SP;
 END_IF
-
+If (iTermBits=0) THEN iTermBits := 32767;END_IF
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
 IF rV >= 0.99 THEN

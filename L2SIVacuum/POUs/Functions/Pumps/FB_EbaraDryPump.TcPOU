@@ -114,7 +114,11 @@ stPump.i_xRemote:= i_xRemote;]]></ST>
     </Action>
     <Action Name="ACT_Logger" Id="{3a00bf60-1d67-4437-aa8f-3c002baf8068}">
       <Implementation>
-        <ST><![CDATA[//STATE Logger  
+        <ST><![CDATA[// ILK logger
+IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
+ 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+//STATE Logger  
 
 IF ePrevState <> stpump.eState THEN
 	  CASE stpump.eState OF
@@ -130,12 +134,6 @@ IF ePrevState <> stpump.eState THEN
 	  ePrevState := stpump.eState;  
   END_IF
   
-// ILK logger
-
-IF NOT i_xExtIlkOK AND stPump.q_xRunDO THEN
- 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
-END_IF
-
 
 // Log Action
 tAction(CLK:=  stPump.q_xRunDo);
@@ -171,6 +169,9 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_EbaraDryPump.ACT_Logger">
+      <LineId Id="52" Count="0" />
+      <LineId Id="54" Count="1" />
+      <LineId Id="53" Count="0" />
       <LineId Id="1" Count="0" />
       <LineId Id="21" Count="0" />
       <LineId Id="20" Count="0" />
@@ -185,9 +186,8 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
       <LineId Id="17" Count="0" />
       <LineId Id="5" Count="1" />
       <LineId Id="3" Count="0" />
-      <LineId Id="18" Count="1" />
-      <LineId Id="23" Count="1" />
-      <LineId Id="27" Count="4" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="30" Count="1" />
       <LineId Id="33" Count="2" />
       <LineId Id="47" Count="4" />
       <LineId Id="22" Count="0" />

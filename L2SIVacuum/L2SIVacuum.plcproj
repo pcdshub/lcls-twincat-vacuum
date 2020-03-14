@@ -215,6 +215,9 @@
     <Compile Include="POUs\Functions\Pumps\functions\F_TurboExtILKLogic_2.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\Interfaces\FB_TPIP_ADS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_Kashiyama_VRC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -222,6 +225,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_TurbVentvalve_NO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_Valve.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VCC.TcPOU">
@@ -314,6 +320,7 @@
     <Folder Include="POUs\Functions\Gauges" />
     <Folder Include="POUs\Functions\Gauges\Interfaces" />
     <Folder Include="POUs\Functions\Pumps\functions" />
+    <Folder Include="POUs\Functions\Pumps\Interfaces" />
     <Folder Include="POUs\Functions\Valves" />
     <Folder Include="POUs\Functions\Pumps" />
     <Folder Include="POUs\Functions\Valves\functions" />

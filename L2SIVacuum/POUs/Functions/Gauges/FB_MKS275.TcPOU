@@ -41,7 +41,7 @@ IF PG.rVAC_SP = 0 THEN
 END_IF
 
 (* Real-value calculation *)
-
+If (iTermBits=0) THEN iTermBits := 32767;END_IF
 V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;	
 
 Vlowest := MIN(V, Vlowest);

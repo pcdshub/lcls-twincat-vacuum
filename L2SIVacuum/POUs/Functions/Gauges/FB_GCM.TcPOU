@@ -11,7 +11,7 @@ VAR_IN_OUT
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := 'pv:'}
-	VG	:	ST_VG;
+	PG	:	ST_VG;
 END_VAR
 VAR_INPUT
 	i_rFULL_SCALE : REAL;
@@ -32,17 +32,17 @@ A. Wallace
 The full-scale pressure times the ratio of the meas.
 voltage to full-scale voltage (10V).
 The minimum pressure is always going to be 5e-4 * F.S.V.*)
-VG.rFULL_SCALE := i_rFULL_SCALE;
-rMinPressure := VG.rFULL_SCALE * 5E-4;
+PG.rFULL_SCALE := i_rFULL_SCALE;
+rMinPressure := PG.rFULL_SCALE * 5E-4;
 
+If (iTermBits=0) THEN iTermBits := 32767;END_IF
+rV :=MAX((10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits),0);
 
-rV :=MAX((10*INT_TO_REAL(VG.i_iPRESS_R)/iTermBits),0);
-
-VG.rPRESS := (VG.rFULL_SCALE/10)*rV;
-IF VG.rPRESS > (rMinPressure)THEN
-	VG.xPRESS_OK := TRUE;
+PG.rPRESS := (PG.rFULL_SCALE/10)*rV;
+IF PG.rPRESS > (rMinPressure)THEN
+	PG.xPRESS_OK := TRUE;
 ELSE
-	VG.xPRESS_OK := FALSE;
+	PG.xPRESS_OK := FALSE;
 END_IF
 
 (*IO soft linking*)
@@ -50,7 +50,7 @@ ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{c1214d74-d1dc-47d0-8d43-06819891a8d4}">
       <Implementation>
-        <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_SetBits" Id="{ef0f5032-cc49-4110-b8a4-5e654a7699b0}">

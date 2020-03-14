@@ -7,7 +7,7 @@ VAR_INPUT
 END_VAR
 VAR_OUTPUT
 		{attribute 'pytmc' := 'pv:'}
-		VG : ST_VG;
+		PG : ST_VG;
 END_VAR
 VAR
 	MinPressure: REAL := 7.5E-3; //Torr
@@ -25,32 +25,32 @@ END_VAR
 ACT_IO();
 
 (* Real-value calculation *)
-
- V := 10*INT_TO_REAL(VG.i_iPRESS_R)/iTermBits;
+If (iTermBits=0) THEN iTermBits := 32767;END_IF
+V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 	
 
 IF V < 0.4 THEN
 
-	VG.eState := GaugeDisconnected; //Most likely not connected
+	PG.eState := GaugeDisconnected; //Most likely not connected
 
 ELSIF V >= 0.4 AND V <= 1.0 THEN
-	VG.rPRESS := MinPressure;
-	VG.eState := ValidLo;
+	PG.rPRESS := MinPressure;
+	PG.eState := ValidLo;
 
 ELSIF V > 1 AND V <= 9.8 THEN
 
-	VG.rPRESS := LREAL_TO_REAL((V-1)*0.125*FullScale);
-	VG.eState := Valid;
+	PG.rPRESS := LREAL_TO_REAL((V-1)*0.125*FullScale);
+	PG.eState := Valid;
 
 ELSE
 	
-VG.eState := OoR; //Larger voltage, probably out of range?
+PG.eState := OoR; //Larger voltage, probably out of range?
 
 END_IF
 
 
 (* Pressure OK check *)
-VG.xPRESS_OK := (VG.rPRESS >= MinPressure);
+PG.xPRESS_OK := (PG.rPRESS >= MinPressure);
 
 (*Soft IO Mapping*)
 ACT_IO();
@@ -59,7 +59,7 @@ ACT_IO();
     </Implementation>
     <Action Name="ACT_IO" Id="{f7bdedec-d365-42ba-8021-29225073f9cd}">
       <Implementation>
-        <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_SetBits" Id="{945a4b7c-0383-4407-a003-10a045f5720a}">

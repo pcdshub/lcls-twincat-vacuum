@@ -23,8 +23,8 @@ END_VAR
 VAR
 	i_iADCBits : UINT := 15;
 	RTRIG_INLK: R_TRIG;
-	TOF_RESET: TOF :=(PT:=T#1S);
-	TOF_SetSpeed: TOF :=(PT:=T#1S);
+	TOF_RESET: TON :=(PT:=T#1S);
+	TOF_SetSpeed: TON :=(PT:=T#1S);
 	
 	(*IO*)
 	(*inputs*)
@@ -91,13 +91,13 @@ iq_stPTM.q_xStop := iq_stPTM.q_RunDO;
 
  (* to reset the Input speed OK bit *)
  TOF_SetSpeed (IN:= iq_stPTM.iq_xSpeedSet, Q => );
- IF NOT (TOF_SetSpeed.Q) THEN iq_stPTM.iq_xSpeedSet:= FALSE; 
+ IF  (TOF_SetSpeed.Q) THEN iq_stPTM.iq_xSpeedSet:= FALSE; 
  END_IF
  (* to reset the Reset Bit *)
  IF (iq_stPTM.xResetSW ) THEN  iq_stPTM.q_xReset := TRUE; 
  END_IF
  TOF_RESET (IN:= iq_stPTM.q_xReset, Q => );
- IF NOT (TOF_RESET.Q) THEN 
+ IF TOF_RESET.Q THEN 
 	iq_stPTM.q_xReset:= FALSE;
 	iq_stPTM.xResetSW := FALSE; 
  END_IF
@@ -116,14 +116,14 @@ iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressure
  (*Pump STATE*)
 IF iq_stPtm.i_xFault THEN 
 	iq_stPtm.eState := pumpFAULT;
+ELSIF iq_stPTM.i_xDecel AND NOT iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpSTOPPING;
 ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
 	iq_stPtm.eState := pumpSTOPPED;
 ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO AND iq_stPTM.i_xAccel THEN
 	iq_stPtm.eState := pumpSTARTING;
 ELSIF iq_stPtm.i_xAtSpd AND iq_stPtm.q_RunDO THEN
 	iq_stPtm.eState := pumpRUNNING;
-ELSIF iq_stPTM.i_xDecel AND NOT iq_stPtm.q_RunDO THEN
-	iq_stPtm.eState := pumpSTOPPING;
 ELSE 
 	iq_stPtm.eState := pumpFAULT;
 END_IF
@@ -176,7 +176,12 @@ END_IF*)
     </Action>
     <Action Name="ACT_Logger" Id="{f47b7190-33a4-4a1f-af51-7f9a030ae9f6}">
       <Implementation>
-        <ST><![CDATA[//STATE Logger  
+        <ST><![CDATA[// ILK logger
+//STATE Logger  
+IF NOT i_xExtIlkOK AND (ePrevState = pumpRUNNING OR ePrevState = pumpSTARTING) THEN
+ 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
 
 IF ePrevState <> iq_stPTM.eState THEN
 	  CASE iq_stPTM.eState OF
@@ -185,18 +190,15 @@ IF ePrevState <> iq_stPTM.eState THEN
   		pumpSTOPPED:
 			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
 		pumpSTARTING:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Info);
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
 		pumpRUNNING:
 			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
 	  END_CASE
 	  ePrevState := iq_stPTM.eState;  
   END_IF
   
-// ILK logger
 
-IF NOT i_xExtIlkOK AND iq_stPTM.q_RunDO THEN
- 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
-END_IF
+
 
 
 // Log Action
@@ -234,7 +236,10 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_PTM_Ebara_010M">
-      <LineId Id="376" Count="82" />
+      <LineId Id="376" Count="68" />
+      <LineId Id="504" Count="1" />
+      <LineId Id="445" Count="5" />
+      <LineId Id="453" Count="5" />
       <LineId Id="503" Count="0" />
       <LineId Id="2" Count="0" />
     </LineIds>
@@ -243,7 +248,10 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="53" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_010M.ACT_Logger">
+      <LineId Id="56" Count="0" />
       <LineId Id="1" Count="0" />
+      <LineId Id="53" Count="2" />
+      <LineId Id="52" Count="0" />
       <LineId Id="21" Count="0" />
       <LineId Id="20" Count="0" />
       <LineId Id="2" Count="0" />
@@ -258,8 +266,8 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="5" Count="1" />
       <LineId Id="3" Count="0" />
       <LineId Id="18" Count="1" />
-      <LineId Id="23" Count="1" />
-      <LineId Id="27" Count="4" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="29" Count="2" />
       <LineId Id="33" Count="2" />
       <LineId Id="47" Count="4" />
       <LineId Id="22" Count="0" />

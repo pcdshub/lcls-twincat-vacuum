@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_Valve" Id="{d216fd72-6969-4ab7-a5bc-556a1c976071}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Valve
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	// For logging
+    fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
+    ePrevState : E_ValvePositionState;
+    tErrorPresent : R_TRIG;
+    tAction : R_TRIG; // Primary action of this device (OPN_DO, etc.)
+    tOverrideActivated : R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Action Name="ACT_Logger" Id="{a287235d-78df-4063-a496-ba56a271188f}">
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_Valve">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Valve.ACT_Logger">
+      <LineId Id="22" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

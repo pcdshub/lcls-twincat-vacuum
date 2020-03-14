@@ -82,7 +82,7 @@ VAR
 	
 	
 	(* Timeouts*)
-	tTimeOutDuration: TIME:= T#5S;
+	tTimeOutDuration: TIME:= T#10S;
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
 	
@@ -326,14 +326,14 @@ xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS;
 ///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE;
-	iq_stValve.sErrorMessage := ': Close Timeout';
+	iq_stValve.sErrorMessage := ' Close Timeout';
 ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE; 
-	iq_stValve.sErrorMessage := ': Open Timeout';
+	iq_stValve.sErrorMessage := ' Open Timeout';
 END_IF
 IF (iq_stValve.eState=INVALID) THEN
 	iq_stValve.bErrorPresent := TRUE; 
-	iq_stValve.sErrorMessage := CONCAT(sPath,': Invalid Valve Position');
+	iq_stValve.sErrorMessage := CONCAT(sPath,' Invalid Valve Position');
 END_IF
 
 

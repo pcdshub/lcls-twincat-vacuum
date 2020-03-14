@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_ITR90" Id="{d1491968-690d-4aa1-ab30-fd64b81089f0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements the Oerlikon Leybold IONVAC Hot Cathode ITR 90*)
 FUNCTION_BLOCK FB_ITR90
@@ -69,7 +69,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+        <ST><![CDATA[If (iTermBits=0) THEN iTermBits := 32767;END_IF
+This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_ITR90">
@@ -85,6 +86,7 @@ END_VAR
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_ITR90.M_SetBits">
+      <LineId Id="10" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
