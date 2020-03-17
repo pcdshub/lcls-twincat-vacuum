@@ -7,7 +7,7 @@ FUNCTION_BLOCK FB_PTM_Ebara_011M EXTENDS FB_Pump
 VAR_IN_OUT
 END_VAR
 VAR_INPUT
-	i_rMaxBackingPressure : REAL := 0.01;
+	i_rMaxBackingPressure : REAL := 0.4;
 	i_iMinSpeedRPM : DINT := 100; //check pump manual for setting
 	i_iMaxSpeedRPM : DINT := 33600; // check pump manual for setting
 	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
@@ -73,7 +73,7 @@ IF iq_stPTM.i_xOverride THEN
 	//Handle faults - the way the Ebara cable is done, xFault is normally closed
 ELSIF iq_stPTM.i_xFault OR (iq_stPTM.q_RunDO AND NOT iq_stPTM.xExtRunOk) THEN
 	iq_stPTM.q_RunDO:=FALSE;
-	iq_stPTM.q_xProtection:=FALSE;
+	//iq_stPTM.q_xProtection:=FALSE;
 	iq_stPTM.xRunSW:=FALSE;
 	//And one for when we need to start the pump normally. Only allows pump to be started if ILK ok.
 ELSIF iq_stPTM.xRunSW AND iq_stPTM.xExtRunOk THEN
@@ -116,6 +116,10 @@ ELSIF iq_stPtm.i_xAtSpd AND iq_stPtm.q_RunDO THEN
 ELSE 
 	iq_stPtm.eState := pumpFAULT;
 END_IF
+
+(*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
+iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
+
 
 (*soft IO mapping*)
 ACT_IO();
@@ -196,6 +200,17 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
 ]]></ST>
       </Implementation>
     </Action>
+    <Method Name="BackingPressureSetPoint" Id="{6ea1b85b-ed19-4997-8749-4c558b12344a}">
+      <Declaration><![CDATA[METHOD PUBLIC BackingPressureSetPoint : REAL
+VAR_INPUT
+	i_SetPoint : REAL;
+	rMaxBackingPressure: REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[BackingPressureSetPoint := Min(i_SetPoint , rMaxBackingPressure);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Run" Id="{c9c0a6c1-7b74-40d6-9159-49ad78962e29}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
@@ -232,6 +247,9 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="302" Count="1" />
       <LineId Id="251" Count="7" />
       <LineId Id="247" Count="0" />
+      <LineId Id="304" Count="0" />
+      <LineId Id="306" Count="1" />
+      <LineId Id="305" Count="0" />
       <LineId Id="50" Count="0" />
       <LineId Id="120" Count="1" />
       <LineId Id="300" Count="0" />
@@ -248,6 +266,9 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
     <LineIds Name="FB_PTM_Ebara_011M.ACT_Logger">
       <LineId Id="52" Count="32" />
       <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Ebara_011M.BackingPressureSetPoint">
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_011M.M_Run">
       <LineId Id="10" Count="0" />

@@ -10,7 +10,7 @@ END_VAR
 VAR_INPUT
 	i_xExtILKOk : BOOL; // Turbo ILK bit , set to True if not used
 	//i_iRawSpeed: INT; //Should come from PLC Soft IO.
-	i_rMaxBackingPressure : REAL := 0.01;
+	i_rMaxBackingPressure : REAL := 0.4;
 	i_iMinSpeedRPM : DINT := 100; //check pump manual for setting
 	i_iMaxSpeedRPM : DINT := 33600; // check pump manual for setting
 END_VAR
@@ -53,7 +53,7 @@ Modified Nov 2018 by M. Ghaly
 *)
 (* The pump runs when the RunDO is set to true. The RunDO sets the outputs Start and Stop to true when it 
 is true, and false otherwise. Per the manual, when START bit is closed the pump will accelerate, and when the STOP
-bit is Opened, the pump will decelerate with with break and stop *)
+bit is Opened, the pump will decelerate with the brake and stop *)
 
 (* Simple protection reset *)
 iq_stPtm.xExtRunOk:= i_xExtILKOk AND NOT iq_stPTM.i_xFault;
@@ -181,6 +181,15 @@ END_IF*)
 IF NOT i_xExtIlkOK AND (ePrevState = pumpRUNNING OR ePrevState = pumpSTARTING) THEN
  		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
 END_IF
+// Log Action
+tAction(CLK:=  iq_stPTM.q_RunDO);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+
+
+// Log FAULT
+tFault(CLK:= iq_stPTM.i_xNCFault);
+IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
+
 
 
 IF ePrevState <> iq_stPTM.eState THEN
@@ -200,15 +209,6 @@ IF ePrevState <> iq_stPTM.eState THEN
 
 
 
-
-// Log Action
-tAction(CLK:=  iq_stPTM.q_RunDO);
-IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
-
-
-// Log FAULT
-tFault(CLK:= iq_stPTM.i_xNCFault);
-IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
 
 ]]></ST>
       </Implementation>
@@ -251,6 +251,7 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="56" Count="0" />
       <LineId Id="1" Count="0" />
       <LineId Id="53" Count="2" />
+      <LineId Id="57" Count="8" />
       <LineId Id="52" Count="0" />
       <LineId Id="21" Count="0" />
       <LineId Id="20" Count="0" />
@@ -267,9 +268,7 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="3" Count="0" />
       <LineId Id="18" Count="1" />
       <LineId Id="23" Count="0" />
-      <LineId Id="29" Count="2" />
-      <LineId Id="33" Count="2" />
-      <LineId Id="47" Count="4" />
+      <LineId Id="29" Count="1" />
       <LineId Id="22" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_010M.BackingPressureSetPoint">

@@ -49,13 +49,9 @@ VAR
     
     
     // For logging
-    fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
     Msg : FB_FormatString;
     fbJson : FB_JsonSaxWriter;
-    ePrevState : E_PumpState;
-    tErrorPresent : R_TRIG;
-    tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
-    tOverrideActivated : R_TRIG;
+   tOverrideActivated : R_TRIG;
 	
 END_VAR
 ]]></Declaration>

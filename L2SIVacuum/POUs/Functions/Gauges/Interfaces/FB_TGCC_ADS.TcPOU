@@ -28,7 +28,9 @@ END_VAR
 ftReset(CLK:= fb_Read_VG.bBusy OR xFirstPass);
 xFirstPass := false;
 (*calling ADS read function*)
-	
+
+//IG.xPRESS_OK := false;	
+
 fb_Read_VG(
 	bRead:=ftReset.Q , 
 	sNetId:= sNetId, 
@@ -52,10 +54,14 @@ fb_CheckWatchdog(
 	nLastCnt=> );
 bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
 
-]]></ST>
+IG.xPRESS_OK := fb_Read_VG.bError AND fb_CheckWatchdog.bWatchdog;]]></ST>
     </Implementation>
     <LineIds Name="FB_TGCC_ADS">
-      <LineId Id="3" Count="27" />
+      <LineId Id="3" Count="3" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="8" Count="22" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

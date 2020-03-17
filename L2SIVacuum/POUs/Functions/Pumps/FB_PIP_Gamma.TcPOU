@@ -118,7 +118,7 @@ IF ePrevState <> stPump.eState THEN
   		pumpSTOPPED:
 			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
 		pumpSTARTING:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Info);
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
 		pumpRUNNING:
 			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
 	  END_CASE

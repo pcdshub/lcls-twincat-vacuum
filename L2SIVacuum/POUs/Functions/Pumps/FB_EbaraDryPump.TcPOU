@@ -82,7 +82,7 @@ IF stPump.i_xAlarm THEN
 	stpump.eState := pumpFAULT;
 ELSIF NOT stpump.q_xMPStart AND stPump.i_xAlarm THEN
 		stpump.eState := pumpSTOPPED;	
-ELSIF NOT stpump.q_xMPStart AND NOT stPump.i_xMPStatus THEN
+ELSIF stpump.q_xMPStart AND NOT stPump.i_xMPStatus THEN
 		stpump.eState := pumpSTARTING;	
 ELSIF stPump.i_xMPStatus THEN
 		stpump.eState := pumpRUNNING;
@@ -127,7 +127,7 @@ IF ePrevState <> stpump.eState THEN
   		pumpSTOPPED:
 			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
 		pumpSTARTING:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Info);
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
 		pumpRUNNING:
 			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
 	  END_CASE

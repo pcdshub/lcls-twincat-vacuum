@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VRC_EBD" Id="{2d64f56d-4c72-4bd6-8f7c-38b44c217f1d}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is similar to the FB_VGC, except it has 2 outputs to actuate the Valve*)
 (* This Function Block Implements Basic Functionality for certain types of valves e.g Turbo Isolation valves, Apperture Valve *)
 (* Note Interlock Logic is External *)
-FUNCTION_BLOCK FB_VRC_EBD
+FUNCTION_BLOCK FB_VRC_EBD EXTENDS FB_Valve
 VAR_IN_OUT
 	
 END_VAR
@@ -19,10 +19,19 @@ VAR_OUTPUT
 	iq_stValve : ST_VRC;
 END_VAR
 VAR
-
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	sPath: STRING;
+	xFirstPass	:	BOOL;
+	fbFSInit		:	R_TRIG;
 	tonOvrd	:	TON;
 	tonDelOK : TON;
 	rtOK	:	R_TRIG;
+	tOvrd	:	TIME := T#10s;
+	(* Timeouts*)
+	tTimeOutDuration: TIME:= T#10S;
+	tOPNtimeout: TON;
+	tCLStimeout:TON;
 
 	(*IO*)
 	i_xOpnLS	AT%I*: BOOL;
@@ -32,8 +41,15 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
+(* On first PLC pass, put valve into vented state, which implies a closed valve *)
+fbFSInit( CLK := TRUE, Q => xFirstPass);
+IF xFirstPass THEN
+	iq_stValve.eVGC_State := Vented;
+	iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
 
-///Check valve postion
+
+///Check valve position
 IF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
 	iq_stValve.eState:=OPEN;
 ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
@@ -48,6 +64,11 @@ END_IF
 iq_stValve.xOPN_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
 	iq_stValve.pv_xOPN_SW := FALSE;
+	iq_stValve.eVGC_State := ERR_ExtFault;
+END_IF
+
+IF (iq_stValve.q_xOPN_DO) AND (iq_stValve.xOPN_OK) THEN
+	iq_stValve.eVGC_State := AtVacuum;
 END_IF
 
 (* Override logic *)
@@ -58,7 +79,12 @@ when the valve permission goes true for more than ten seconds consistently, remo
 
 tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=T#10S);
 rtOK(CLK:=tonDelOK.Q);
-IF rtOK.Q THEN iq_stValve.pv_xOvrdOpn :=FALSE; END_IF
+IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN 
+	iq_stValve.pv_xOvrdOpn :=FALSE; 
+	if (iq_stValve.eState=OPEN) AND (i_xOverrideMode) THEN iq_stValve.pv_xOPN_SW := TRUE; END_IF
+    //Log
+    fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
+END_IF
 
 //Override timer
 tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=T#10S);
@@ -66,8 +92,31 @@ tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=T#10S);
 (* Here's where the valve opens *)
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
+///Check valve moving postion timout
+IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
+	iq_stValve.bErrorPresent := TRUE;
+	iq_stValve.sErrorMessage := ' Close Timeout';
+ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
+	iq_stValve.bErrorPresent := TRUE; 
+	iq_stValve.sErrorMessage := ' Open Timeout';
+END_IF
+IF (iq_stValve.eState=INVALID) THEN
+	iq_stValve.bErrorPresent := TRUE; 
+	iq_stValve.sErrorMessage := CONCAT(sPath,' Invalid Valve Position');
+END_IF
+
+(*Timers*)
+tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
+tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
+
+
+
+
 (*Soft IO Mapping*)
-ACT_IO();]]></ST>
+ACT_IO();
+
+// Log States and triggers
+ACT_Logger();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{c0be74a4-7c48-4930-969d-53ad2264e18b}">
       <Implementation>
@@ -78,6 +127,47 @@ iq_stValve.xOverrideMode := i_xOverrideMode;
 (*outputs*)
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;
 q_xOPN_DO_2:= iq_stValve.q_xOPN_DO;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Logger" Id="{8fe18f23-27ed-473d-8d21-46b61e7d7cb0}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+
+IF NOT i_xExtILK_OK AND ePrevState = OPEN THEN
+ 		fbLogger(sMsg:='Lost external interlock while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+//STATE Logger  
+
+IF ePrevState <> iq_stValve.eState THEN
+	  CASE iq_stValve.eState OF
+		INVALID:
+			fbLogger(sMsg:='Valve invalid position.', eSevr:=TcEventSeverity.Critical);
+  		MOVING:
+			fbLogger(sMsg:='Valve moving', eSevr:=TcEventSeverity.Warning);
+		OPEN:
+			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+		CLOSED:
+			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stValve.eState;  
+  END_IF
+  
+
+
+// Log valve timeouts
+tErrorPresent(CLK:=iq_stValve.bErrorPresent);
+IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
+
+// Log valve open
+tAction(CLK:= iq_stValve.q_xOPN_DO);
+IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
+
+// Log override mode enabled
+tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
+IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
+]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_Set_OPN_SW" Id="{07186e50-891b-4770-9150-381f8e6a0477}">
@@ -92,13 +182,28 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VRC_EBD">
+      <LineId Id="154" Count="6" />
       <LineId Id="87" Count="0" />
       <LineId Id="3" Count="10" />
       <LineId Id="89" Count="1" />
-      <LineId Id="14" Count="18" />
-      <LineId Id="55" Count="1" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="163" Count="1" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="18" Count="8" />
+      <LineId Id="166" Count="4" />
+      <LineId Id="27" Count="5" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="125" Count="16" />
+      <LineId Id="123" Count="1" />
+      <LineId Id="56" Count="0" />
       <LineId Id="62" Count="0" />
       <LineId Id="2" Count="0" />
+      <LineId Id="120" Count="1" />
+      <LineId Id="119" Count="0" />
     </LineIds>
     <LineIds Name="FB_VRC_EBD.ACT_IO">
       <LineId Id="2" Count="2" />
@@ -106,6 +211,28 @@ END_VAR
       <LineId Id="5" Count="0" />
       <LineId Id="1" Count="0" />
       <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_EBD.ACT_Logger">
+      <LineId Id="66" Count="4" />
+      <LineId Id="64" Count="1" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="52" Count="10" />
+      <LineId Id="22" Count="0" />
     </LineIds>
     <LineIds Name="FB_VRC_EBD.M_Set_OPN_SW">
       <LineId Id="5" Count="0" />
