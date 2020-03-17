@@ -16,7 +16,7 @@
     <CombineIds>false</CombineIds>
     <Company>SLAC</Company>
     <Released>false</Released>
-    <Title>L2SI Vacuum Library</Title>
+    <Title>lcls-twincat-vacuum</Title>
     <ProjectVersion>0.0.0</ProjectVersion>
   </PropertyGroup>
   <ItemGroup>
