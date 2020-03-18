@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_TwisTorr" Id="{91de0c91-34da-4736-bacc-23eca1b0004f}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TwisTorr 304 FS with on board Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
-FUNCTION_BLOCK FB_PTM_TwisTorr
+FUNCTION_BLOCK FB_PTM_TwisTorr EXTENDS FB_Pump
 VAR_INPUT
 	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 	
@@ -50,7 +50,10 @@ ELSE
 END_IF
 
 (*I/O soft mapping*)
-ACT_IO();]]></ST>
+ACT_IO();
+// Log States and triggers
+ACT_Logger();
+]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{dc6a943d-ff3d-49ac-8d8c-5de521211d0a}">
       <Implementation>
@@ -61,6 +64,44 @@ iq_stPtm.i_xFault := i_xFault;
 
 (*Outputs*)
 q_RunDO := iq_stPtm.q_RunDO;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Logger" Id="{184e26d2-3bc9-4a1c-84bc-a7ea36dccc50}">
+      <Implementation>
+        <ST><![CDATA[//STATE Logger  
+IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
+ 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+IF ePrevState <> iq_stPTM.eState THEN
+	  CASE iq_stPTM.eState OF
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+  		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpSTARTING:
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stPTM.eState;  
+  END_IF
+  
+// ILK logger
+
+
+
+// Log Action
+tAction(CLK:=  iq_stPTM.q_RunDO);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+
+
+// Log FAULT
+tFault(CLK:= NOT iq_stPTM.i_xFault);
+IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
+
+]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_Run" Id="{8ab9be14-b507-4653-a3e8-b3b1fd16bb91}">
@@ -81,10 +122,16 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="51" Count="8" />
       <LineId Id="41" Count="1" />
       <LineId Id="9" Count="0" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="80" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_TwisTorr.ACT_IO">
       <LineId Id="2" Count="2" />
       <LineId Id="7" Count="3" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TwisTorr.ACT_Logger">
+      <LineId Id="150" Count="32" />
+      <LineId Id="22" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_TwisTorr.M_Run">
       <LineId Id="10" Count="0" />

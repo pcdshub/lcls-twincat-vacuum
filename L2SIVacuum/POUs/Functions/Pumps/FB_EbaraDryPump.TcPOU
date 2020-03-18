@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_EbaraDryPump" Id="{fa5a85fd-eab5-4a2b-a440-c1a901955592}" SpecialFunc="None">
     <Declaration><![CDATA[(*This function block does basic controls for the Ebara EV-S Dry pump. Starts booster pump when appropriate. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
-FUNCTION_BLOCK FB_EbaraDryPump
+FUNCTION_BLOCK FB_EbaraDryPump EXTENDS FB_Pump
 VAR_INPUT
 	i_stBPGauge	:	ST_VG; //booster pump interlock gauge
 	i_xVlvOpn	:	BOOL; //valve(s) to main system load are open
@@ -82,20 +82,26 @@ IF stPump.i_xAlarm THEN
 	stpump.eState := pumpFAULT;
 ELSIF NOT stpump.q_xMPStart AND stPump.i_xAlarm THEN
 		stpump.eState := pumpSTOPPED;	
-ELSIF NOT stpump.q_xMPStart AND NOT stPump.i_xMPStatus THEN
+ELSIF stpump.q_xMPStart AND NOT stPump.i_xMPStatus THEN
 		stpump.eState := pumpSTARTING;	
 ELSIF stPump.i_xMPStatus THEN
 		stpump.eState := pumpRUNNING;
 ELSE
 	stpump.eState := pumpFAULT;
 END_IF
-]]></ST>
+
+
+//Mapping
+ACT_IO();
+// Log States and triggers
+ACT_Logger();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{98533322-3808-41fc-88a0-2acd4df6d1ea}">
       <Implementation>
         <ST><![CDATA[(*Outputs*)
 q_xMPStart	:= stPump.q_xMPStart;
 q_xBPStart	:= stPump.q_xBPStart;
+stPump.q_xRunDo := stPump.q_xMPStart;
 (*Inputs*)
 stPump.i_xMPStatus:=	i_xMPStatus;
 stPump.i_xBPStatus:=	i_xBPStatus;
@@ -106,6 +112,41 @@ StPump.xErr := NOT(i_xAlarmOK);
 stPump.i_xRemote:= i_xRemote;]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_Logger" Id="{3a00bf60-1d67-4437-aa8f-3c002baf8068}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
+ 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+//STATE Logger  
+
+IF ePrevState <> stpump.eState THEN
+	  CASE stpump.eState OF
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+  		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpSTARTING:
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := stpump.eState;  
+  END_IF
+  
+
+// Log Action
+tAction(CLK:=  stPump.q_xRunDo);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+
+
+// Log FAULT
+tFault(CLK:= NOT stPump.i_xAlarm);
+IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
+
+]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="FB_EbaraDryPump">
       <LineId Id="3" Count="23" />
       <LineId Id="70" Count="0" />
@@ -113,14 +154,43 @@ stPump.i_xRemote:= i_xRemote;]]></ST>
       <LineId Id="2" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="103" Count="11" />
+      <LineId Id="144" Count="2" />
       <LineId Id="100" Count="0" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="147" Count="0" />
     </LineIds>
     <LineIds Name="FB_EbaraDryPump.ACT_IO">
-      <LineId Id="2" Count="6" />
+      <LineId Id="2" Count="2" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="3" />
       <LineId Id="10" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="11" Count="0" />
       <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_EbaraDryPump.ACT_Logger">
+      <LineId Id="52" Count="0" />
+      <LineId Id="54" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="33" Count="2" />
+      <LineId Id="47" Count="4" />
+      <LineId Id="22" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

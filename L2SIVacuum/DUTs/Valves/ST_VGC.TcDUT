@@ -95,8 +95,8 @@ STRUCT
 	field: PREC 2
 	field: EGU "TORR"
 	'}
-	rAT_VAC_SP	:	REAL := 0.01;	// Interlock setpoint for gauges on both sides of valve
-	rAT_VAC_SP_LAST	:	REAL :=0.01 ;	// Interlock setpoint for gauges on both sides of valve
+	rAT_VAC_SP	:	REAL := 0.000001;	// Interlock setpoint for gauges on both sides of valve
+	rAT_VAC_SP_LAST	:	REAL :=0.000001 ;	// Interlock setpoint for gauges on both sides of valve
 	{attribute 'pytmc' := '
     pv: AT_VAC_HYS;
 	io: o;
@@ -105,7 +105,7 @@ STRUCT
 	field: PREC 2
 	field: EGU "TORR"
     '}
-	rAT_VAC_HYS	:	REAL :=0.01;	// Hysteresis of the vacuum sp
+	rAT_VAC_HYS	:	REAL :=0.000001;	// Hysteresis of the vacuum sp
 	{attribute 'pytmc' := '
     pv: HYST_PERC ;
 	io: o;

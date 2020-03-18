@@ -16,7 +16,7 @@
     <CombineIds>false</CombineIds>
     <Company>SLAC</Company>
     <Released>false</Released>
-    <Title>L2SI Vacuum Library</Title>
+    <Title>lcls-twincat-vacuum</Title>
     <ProjectVersion>0.0.0</ProjectVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -197,6 +197,9 @@
     <Compile Include="POUs\Functions\Pumps\FB_PTM_TwisTorr.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\FB_Pump.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_ScrollPump.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -212,6 +215,9 @@
     <Compile Include="POUs\Functions\Pumps\functions\F_TurboExtILKLogic_2.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\Interfaces\FB_TPIP_ADS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_Kashiyama_VRC.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -219,6 +225,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_TurbVentvalve_NO.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_Valve.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VCC.TcPOU">
@@ -270,6 +279,9 @@
     <Compile Include="POUs\Functions\Valves\functions\F_TurboGateValve_ILK.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\functions\F_TurboGateValve_ILK_1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\functions\F_TurboGateValve_Protection_ILK.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -308,6 +320,7 @@
     <Folder Include="POUs\Functions\Gauges" />
     <Folder Include="POUs\Functions\Gauges\Interfaces" />
     <Folder Include="POUs\Functions\Pumps\functions" />
+    <Folder Include="POUs\Functions\Pumps\Interfaces" />
     <Folder Include="POUs\Functions\Valves" />
     <Folder Include="POUs\Functions\Pumps" />
     <Folder Include="POUs\Functions\Valves\functions" />

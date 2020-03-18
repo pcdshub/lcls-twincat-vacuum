@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VGC_AP" Id="{35834045-fb1e-4ba9-a4dc-abf7b4af153b}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves with Appertures*)
 (* This function block interlock is as follows:
@@ -85,6 +85,14 @@ VAR
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
 	
+	 // For logging
+    fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
+    ePrevState : E_VGC;
+    tErrorPresent : R_TRIG;
+    tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
+    tOverrideActivated : R_TRIG;
+	
+	
 	
 	(*IO*)
 	i_xOpnLS	AT%I*: BOOL;
@@ -130,7 +138,7 @@ IF xFirstPass THEN
 END_IF
 
 
-///Check valve postion
+///Check valve position
 IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
 	iq_stValve.eState:=INVALID;
 ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
@@ -183,48 +191,88 @@ END_IF
 ///////////////////////////////////////////////////
 CASE iq_stValve.eVGC_State OF
 	Vented: (* The Vented state is used during pump down *)
+        //Log new state
+        IF ePrevState <> iq_stValve.eVGC_State THEN
+            fbLogger(sMsg:='Vented', eSevr:=TcEventSeverity.Info);
+            ePrevState := iq_stValve.eVGC_State;
+		END_IF
+        
 		(* Assuming the pump down went well, we are now at vacuum on both sides,
 		so we move to the vacuum state, otherwise remain in the vented state *)
-		IF iq_stValve.xAT_VAC THEN
-		iq_stValve.eVGC_State := AtVacuum;
+		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND NOT (NOT (iq_stValve.xERR_SP)) and NOT (NOT (iq_stValve.xERR_ExtFault))THEN
+		    iq_stValve.eVGC_State := AtVacuum;
 		ELSE
-		iq_stValve.eVGC_State := Vented;
+		    iq_stValve.eVGC_State := Vented;
 		END_IF
 	
 	AtVacuum:
+        //Log new state
+        IF ePrevState <> iq_stValve.eVGC_State THEN
+            fbLogger(sMsg:='Vacuum setpoint satisfied', eSevr:=TcEventSeverity.Info);
+            ePrevState := iq_stValve.eVGC_State;
+		END_IF
+        
 		IF iq_stValve.xAT_VAC THEN
 		(* If both pressure setpoints are made,
 		then enable the differential pressure interlock, regardless of the valve state
 		assuming we're using some kind of ion gauge where a pressure setpoint cannot be higher than 1E-4 T *)
 		iq_stValve.eVGC_State := AtVacuum;
+				
 		ELSE
 		
 			(* If the valve is open (or in an unknown state) and either gauge is not at it's vacuum setpoint,
 			we have a loss of vacuum error *)
 			IF (iq_stValve.i_xOpnLS OR (NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.i_xClsLS)) THEN
-			iq_stValve.eVGC_State := ERR_LostVac;
+				iq_stValve.eVGC_State := ERR_LostVac;
+				iq_stValve.xERR_SP := TRUE; //TAW changed this to the ERR_SP bool because I think that's what it was intended to be?
 		
 			(* Alternatively, if the valve is already closed and we lose pressure on one side,
 			it was probably intentional venting, so we calmly move back to venting mode, and
 			disable the differential pressure interlock *) //?? 
 			ELSIF iq_stValve.i_xClsLS THEN
-			iq_stValve.eVGC_State := Vented;
+				iq_stValve.eVGC_State := Vented;
 			END_IF
 		
 		END_IF
-	
 	ERR_DiffPress:
-		iq_stValve.eVGC_State := Vented;
-		iq_stValve.xERR_DifPres := TRUE;
+        //Log new state
+        IF ePrevState <> iq_stValve.eVGC_State THEN
+            fbLogger(sMsg:='Potential accidental vent.', eSevr:=TcEventSeverity.Critical);
+            ePrevState := iq_stValve.eVGC_State;
+		END_IF
+        
+		IF NOT (iq_stValve.xERR_DifPres) THEN
+			iq_stValve.eVGC_State := Vented;
+		END_IF
+		
 	
 	ERR_LostVac:
-		iq_stValve.eVGC_State := Vented;
-		iq_stValve.xERR_SP := TRUE;
-	
+        //Log new state
+        IF ePrevState <> iq_stValve.eVGC_State THEN
+            fbLogger(sMsg:='Unexpected loss of vacuum while valve was open.', eSevr:=TcEventSeverity.Critical);
+            ePrevState := iq_stValve.eVGC_State;
+		END_IF
+		IF NOT (iq_stValve.xERR_SP) THEN
+			iq_stValve.eVGC_State := Vented;
+		END_IF
+		
+	ERR_ExtFault:
+        //Log new state
+        IF ePrevState <> iq_stValve.eVGC_State THEN
+            fbLogger(sMsg:='Lost external interlock while valve was open.', eSevr:=TcEventSeverity.Critical);
+            ePrevState := iq_stValve.eVGC_State;
+		END_IF
+		IF NOT (iq_stValve.xERR_ExtFault) AND (NOT i_xExt_OK) THEN
+			iq_stValve.eVGC_State := Vented;
+		END_IF
 	END_CASE
 
 
 
+IF (NOT i_xExt_OK) THEN
+	iq_stValve.eVGC_State := ERR_ExtFault;
+	iq_stValve.xERR_ExtFault := TRUE;
+END_IF
 
 // Interlock evaluation - with bypass for DP ILK bypass
 ///////////////////////////////////////////////
@@ -247,7 +295,10 @@ tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=tDelOK);
 rtOK(CLK:=tonDelOK.Q);
 IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN 
 	iq_stValve.pv_xOvrdOpn :=FALSE;
-	iq_stValve.pv_xOPN_SW := TRUE; //for seamless transition
+	if (iq_stValve.eState = OPEN) AND (i_xOverrideMode) THEN iq_stValve.pv_xOPN_SW := TRUE; END_IF  //for seamless transition
+	//Log
+    fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
+    
 END_IF
 
 //Override timer
@@ -255,13 +306,13 @@ tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
 (* If Epics Command to close the Valve, check if PMPS and EPS are ok, otherwise Keep command set to open valve *)
 IF NOT(iq_stValve.pv_xOPN_SW) AND ((NOT i_xPMPS_OK) OR (NOT i_xEPS_OK)) THEN
-	iq_stValve.pv_xOPN_SW := TRUE; // plc to only reset never to set this signal
+	//iq_stValve.pv_xOPN_SW := TRUE; // plc to only reset never to set this signal
 END_IF
 (* Reset the EPICS command to open the valve if the interlock is lost *) 
 (* based on EPS ok state, EPS overrides OPN_OK*)
 IF NOT iq_stValve.xOPN_OK THEN
 	IF i_xEPS_OK THEN iq_stValve.pv_xOPN_SW := FALSE; iq_stValve.sErrorMessage := 'ILK Active';
-	ELSE iq_stValve.pv_xOPN_SW := TRUE;		// plc to only reset never to set this signal
+	ELSE //iq_stValve.pv_xOPN_SW := TRUE;		// plc to only reset never to set this signal
 	END_IF
 END_IF
 
@@ -286,6 +337,19 @@ END_IF
 (*Timers*)
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
 tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
+
+
+// Log valve timeouts
+tErrorPresent(CLK:=iq_stValve.bErrorPresent);
+IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
+
+// Log valve open
+tAction(CLK:= iq_stValve.q_xOPN_DO);
+IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
+
+// Log override mode enabled
+tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
+IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 
 
 // Alarm reset
@@ -379,12 +443,21 @@ END_VAR
       <LineId Id="63" Count="0" />
       <LineId Id="241" Count="0" />
       <LineId Id="244" Count="0" />
-      <LineId Id="66" Count="64" />
+      <LineId Id="66" Count="18" />
+      <LineId Id="1124" Count="42" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="1167" Count="29" />
+      <LineId Id="123" Count="3" />
+      <LineId Id="1197" Count="3" />
+      <LineId Id="127" Count="3" />
       <LineId Id="285" Count="0" />
       <LineId Id="287" Count="1" />
       <LineId Id="286" Count="0" />
       <LineId Id="131" Count="4" />
-      <LineId Id="141" Count="14" />
+      <LineId Id="141" Count="10" />
+      <LineId Id="1202" Count="1" />
+      <LineId Id="1201" Count="0" />
+      <LineId Id="152" Count="3" />
       <LineId Id="408" Count="0" />
       <LineId Id="428" Count="0" />
       <LineId Id="416" Count="1" />
@@ -408,6 +481,7 @@ END_VAR
       <LineId Id="769" Count="1" />
       <LineId Id="849" Count="0" />
       <LineId Id="342" Count="3" />
+      <LineId Id="1204" Count="12" />
       <LineId Id="347" Count="3" />
       <LineId Id="487" Count="2" />
       <LineId Id="162" Count="0" />

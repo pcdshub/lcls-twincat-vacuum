@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
-  <POU Name="FB_TGCC_ADS" Id="{873a2ff9-f17a-4be7-ac16-f378eb2ba14b}" SpecialFunc="None">
+  <POU Name="FB_TPIP_ADS" Id="{704cb2e4-e360-4c37-a6d8-8285081db9a0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
 (* Not all the Variables in the original structure is required, just few signals *)
 (* The variable values are read via ADS using the symbol name*)
-FUNCTION_BLOCK FB_TGCC_ADS
+FUNCTION_BLOCK FB_TPIP_ADS
 VAR_INPUT
 	sNetId : String; //NetID of the Destination PLC controller
 	nPort : uint; // port number
-	sVarName : string;// the variable name of the declared gauge function block.
+	sVarName : string;// the variable name of the declared pip/pin function block.
 	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
 END_VAR
 VAR_OUTPUT
@@ -28,14 +28,12 @@ END_VAR
 ftReset(CLK:= fb_Read_VG.bBusy OR xFirstPass);
 xFirstPass := false;
 (*calling ADS read function*)
-
-//IG.xPRESS_OK := false;	
-
+	
 fb_Read_VG(
 	bRead:=ftReset.Q , 
 	sNetId:= sNetId, 
 	nPort:= nPort, 
-	sVarName:= CONCAT(sVarName,'.IG'), 
+	sVarName:= CONCAT(sVarName,'.q_IG'), 
 	nDestAddr:= ADR(IG), 
 	nLen:= SIZEOF(IG), 
 	tTimeout:= , 
@@ -54,14 +52,10 @@ fb_CheckWatchdog(
 	nLastCnt=> );
 bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
 
-IG.xPRESS_OK := NOT(fb_Read_VG.bError AND fb_CheckWatchdog.bWatchdog);]]></ST>
+IG.xPRESS_OK := NOT( fb_Read_VG.bError AND fb_CheckWatchdog.bWatchdog);]]></ST>
     </Implementation>
-    <LineIds Name="FB_TGCC_ADS">
-      <LineId Id="3" Count="3" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="8" Count="22" />
+    <LineIds Name="FB_TPIP_ADS">
+      <LineId Id="3" Count="27" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

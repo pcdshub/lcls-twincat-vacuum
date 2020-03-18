@@ -31,7 +31,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 
 (* Readbacks *)
     {attribute 'pytmc' := '
-	pv: ILK_STATUS;
+	pv: ILK_OK;
 	field: ZNAM ILK ACTIVE;
 	field: ONAM ILK OK;
 	io: i;

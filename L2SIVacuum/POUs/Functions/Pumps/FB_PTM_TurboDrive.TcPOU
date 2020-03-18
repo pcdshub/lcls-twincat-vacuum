@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_TurboDrive" Id="{dfc77842-243a-4cfe-b1b5-b7fe350ab6a4}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function block provides basic turbo control for Leybold Turbo Drive 300, Turbo Drive 400 *)
 (* TD20 Classic Via Remote X1 Connector 9-way PLC interface*)
-FUNCTION_BLOCK FB_PTM_TurboDrive
+FUNCTION_BLOCK FB_PTM_TurboDrive EXTENDS FB_Pump
 VAR_IN_OUT
 	
 END_VAR
@@ -61,7 +61,10 @@ END_IF;
 			
 
 (*I/O soft mapping*)
-ACT_IO();]]></ST>
+ACT_IO();
+// Log States and triggers
+ACT_Logger();
+]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{4cbb30e0-b539-45c8-81cf-4305f479bf38}">
       <Implementation>
@@ -101,6 +104,8 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="82" Count="0" />
       <LineId Id="79" Count="1" />
       <LineId Id="9" Count="0" />
+      <LineId Id="125" Count="1" />
+      <LineId Id="124" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_TurboDrive.ACT_IO">
       <LineId Id="2" Count="1" />

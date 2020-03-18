@@ -21,7 +21,7 @@ STRUCT
 	
 	// Outputs
 	{attribute 'pytmc' := '
-	pv: POS_AO;
+	pv: POS_AO_R;
 	io: i ;
 	'}
 	q_iRawPosition	:	INT; //Position control 

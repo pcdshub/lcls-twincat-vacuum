@@ -82,7 +82,7 @@ VAR
 	
 	
 	(* Timeouts*)
-	tTimeOutDuration: TIME:= T#5S;
+	tTimeOutDuration: TIME:= T#10S;
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
 	
@@ -138,7 +138,7 @@ IF xFirstPass THEN
 END_IF
 
 
-///Check valve postion
+///Check valve position
 IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
 	iq_stValve.eState:=INVALID;
 ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
@@ -295,8 +295,7 @@ tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=tDelOK);
 rtOK(CLK:=tonDelOK.Q);
 IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN 
 	iq_stValve.pv_xOvrdOpn :=FALSE;
-	iq_stValve.pv_xOPN_SW := TRUE; //for seamless transition
-    
+	if (iq_stValve.eState = OPEN) AND (i_xOverrideMode) THEN iq_stValve.pv_xOPN_SW := TRUE; END_IF //for seamless transition   
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
     
@@ -307,13 +306,13 @@ tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
 (* If Epics Command to close the Valve, check if PMPS and EPS are ok, otherwise Keep command set to open valve *)
 IF NOT(iq_stValve.pv_xOPN_SW) AND ((NOT i_xPMPS_OK) OR (NOT i_xEPS_OK)) THEN
-	iq_stValve.pv_xOPN_SW := TRUE; // plc to only reset never to set this signal
+	//iq_stValve.pv_xOPN_SW := TRUE; // plc to only reset never to set this signal
 END_IF
 (* Reset the EPICS command to open the valve if the interlock is lost *) 
 (* based on EPS ok state, EPS overrides OPN_OK*)
 IF NOT iq_stValve.xOPN_OK THEN
 	IF i_xEPS_OK THEN iq_stValve.pv_xOPN_SW := FALSE; iq_stValve.sErrorMessage := 'ILK Active';
-	ELSE iq_stValve.pv_xOPN_SW := TRUE;		// plc to only reset never to set this signal
+	ELSE //iq_stValve.pv_xOPN_SW := TRUE;		// plc to only reset never to set this signal
 	END_IF
 END_IF
 
@@ -326,14 +325,14 @@ xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS;
 ///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE;
-	iq_stValve.sErrorMessage := ': Close Timeout';
+	iq_stValve.sErrorMessage := ' Close Timeout';
 ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE; 
-	iq_stValve.sErrorMessage := ': Open Timeout';
+	iq_stValve.sErrorMessage := ' Open Timeout';
 END_IF
 IF (iq_stValve.eState=INVALID) THEN
 	iq_stValve.bErrorPresent := TRUE; 
-	iq_stValve.sErrorMessage := CONCAT(sPath,': Invalid Valve Position');
+	iq_stValve.sErrorMessage := CONCAT(sPath,' Invalid Valve Position');
 END_IF
 
 
@@ -422,7 +421,8 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VGC">
-      <LineId Id="3" Count="265" />
+      <LineId Id="3" Count="194" />
+      <LineId Id="199" Count="69" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC.ACT_IO">
