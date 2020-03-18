@@ -36,6 +36,13 @@ STRUCT
     '}
 	xHVEna_SW : BOOL; 
 	{attribute 'pytmc' := '
+    pv: Auto_On;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
+	io:i;
+    '}
+	xAutoOn : BOOL;
+	{attribute 'pytmc' := '
     pv: SP_HYS;
 	io: io;
 	field: HOPR 1000
