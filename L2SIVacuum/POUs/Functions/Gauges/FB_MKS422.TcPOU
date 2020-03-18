@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS422" Id="{2e4ef3e9-09c8-44c2-b5f5-464ffb8c18a0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 422 connected to a 937A/B *)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
@@ -113,7 +113,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[this^.IG.xHV_SW:= TRUE;]]></ST>
+        <ST><![CDATA[this^.IG.q_xHV_DIS:= FALSE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_HVE" Id="{96e3d628-6b52-491b-8d3c-14f027a8981f}">
@@ -127,63 +127,5 @@ END_VAR
 this^.IG.xHV_SW:= (enable);]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS422">
-      <LineId Id="3" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="4" Count="1" />
-      <LineId Id="264" Count="1" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="268" Count="0" />
-      <LineId Id="267" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="242" Count="1" />
-      <LineId Id="107" Count="0" />
-      <LineId Id="110" Count="0" />
-      <LineId Id="112" Count="7" />
-      <LineId Id="300" Count="0" />
-      <LineId Id="120" Count="1" />
-      <LineId Id="301" Count="0" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="9" Count="5" />
-      <LineId Id="204" Count="1" />
-      <LineId Id="208" Count="0" />
-      <LineId Id="330" Count="0" />
-      <LineId Id="210" Count="0" />
-      <LineId Id="212" Count="2" />
-      <LineId Id="211" Count="0" />
-      <LineId Id="261" Count="2" />
-      <LineId Id="331" Count="0" />
-      <LineId Id="260" Count="0" />
-      <LineId Id="206" Count="0" />
-      <LineId Id="258" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="248" Count="0" />
-      <LineId Id="122" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="42" Count="1" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="150" Count="0" />
-      <LineId Id="329" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="105" Count="0" />
-      <LineId Id="180" Count="1" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="272" Count="0" />
-      <LineId Id="271" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS422.IO">
-      <LineId Id="2" Count="1" />
-      <LineId Id="5" Count="1" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS422.M_AutoOn">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS422.M_HVE">
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

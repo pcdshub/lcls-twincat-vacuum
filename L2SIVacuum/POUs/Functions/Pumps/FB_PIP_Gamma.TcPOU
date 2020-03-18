@@ -20,7 +20,8 @@ VAR
  rPRESS : REAL;
  iOffset: INT:=11;
  rV : REAL;
- rHVEna_SP : REAL :=1E-3; // Default protection setpoint as per the gamma QPCe manual
+ timer:TON; 
+ rHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
  (* IO Controls *)
  q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when TRUE
  i_iPRESS  AT %I*: INT;  //
@@ -52,17 +53,17 @@ END_IF
 IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
 	stPump.q_xHVEna_DO := stPump.xHVEna_SW; 
 	stPump.xILKOk:= TRUE;
-ELSIF stPump.q_xHVEna_DO THEN 
-	IF i_stGauge.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN
+ELSIF stPump.q_xHVEna_DO AND timer.Q THEN 
+	IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
 		stPump.q_xHVEna_DO := FALSE;
-		 stPump.xHVEna_SW := FALSE;
-		 stPump.xILKOk := FALSE;
+		stPump.xHVEna_SW := FALSE;
+		stPump.xILKOk := FALSE;
 	ELSE
 		stPump.q_xHVEna_DO := stPump.xHVEna_SW; 
 	END_IF
 ELSE
 	stPump.q_xHVEna_DO  := FALSE;
-	 stPump.xHVEna_SW := FALSE;
+	stPump.xHVEna_SW := FALSE;
 	stPump.xILKOk := FALSE;
 END_IF
 
@@ -70,7 +71,7 @@ END_IF
 //stPump.q_xHVEna_DO := stPump.xHVEna_SW AND stPump.xHV_ExtIlk;
 //stPump.xHVEna_SW := stPump.q_xHVEna_DO;
 
-
+timer(IN:= NOT stPump.q_xHVEna_DO, PT:= T#1s);
 
 // Log pump turned off from loss of interlock
 tAction(CLK:= stPump.xILKOk);
@@ -171,6 +172,15 @@ stPump.i_xHV_DI:=	i_xSP_DI;
 q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_AutoOn" Id="{28cd0a93-5190-4d36-9dd8-bf794bc89b09}">
+      <Declaration><![CDATA[METHOD M_AutoOn : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.stPump.xHVEna_SW:= TRUE; // Pump is set to auto start when the pressure is low enough]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Run" Id="{55fab705-c400-4b7f-9779-42233f752de0}">
       <Declaration><![CDATA[
 METHOD PUBLIC M_Run : BOOL
@@ -183,70 +193,5 @@ END_VAR
 this^.stPump.xHVEna_SW := run;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PIP_Gamma">
-      <LineId Id="3" Count="8" />
-      <LineId Id="82" Count="1" />
-      <LineId Id="89" Count="6" />
-      <LineId Id="103" Count="0" />
-      <LineId Id="106" Count="2" />
-      <LineId Id="97" Count="3" />
-      <LineId Id="84" Count="1" />
-      <LineId Id="101" Count="1" />
-      <LineId Id="86" Count="2" />
-      <LineId Id="12" Count="3" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="62" Count="2" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="65" Count="1" />
-      <LineId Id="69" Count="1" />
-      <LineId Id="104" Count="1" />
-      <LineId Id="71" Count="1" />
-      <LineId Id="60" Count="1" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="20" Count="4" />
-      <LineId Id="144" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma.ACT_Logger">
-      <LineId Id="1" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="5" Count="1" />
-      <LineId Id="3" Count="0" />
-      <LineId Id="18" Count="1" />
-      <LineId Id="23" Count="1" />
-      <LineId Id="27" Count="4" />
-      <LineId Id="33" Count="2" />
-      <LineId Id="47" Count="4" />
-      <LineId Id="22" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma.ACT_SetGauge">
-      <LineId Id="2" Count="11" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma.IO">
-      <LineId Id="2" Count="4" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma.M_Run">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

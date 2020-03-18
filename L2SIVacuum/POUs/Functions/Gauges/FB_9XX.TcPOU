@@ -22,7 +22,7 @@ VAR
 	rMinPressure	:	REAL := 1E-5; //Torr
 	(*Default set point 50 mT*)
 	rVAC_SP: REAL := 5E-2;
-	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
 	(*IO*)
 	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
@@ -35,7 +35,8 @@ END_VAR
 IF PG.rVAC_SP = 0 THEN
 	PG.rVAC_SP := rVAC_SP;
 END_IF
-If (iTermBits=0) THEN iTermBits := 32767;END_IF
+// check no div by zero
+If (iTermBits=0) THEN iTermBits := 30518;END_IF
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
 IF rV >= 0.99 THEN
@@ -76,21 +77,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_9XX">
-      <LineId Id="3" Count="0" />
-      <LineId Id="43" Count="4" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="5" Count="20" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="75" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_9XX.ACT_IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_9XX.M_SetBits">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

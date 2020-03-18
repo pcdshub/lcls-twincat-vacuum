@@ -23,7 +23,7 @@ END_VAR
     <Implementation>
       <ST><![CDATA[(* Standard MKS 9XX series conversion *)
 (* works for 972 and 925 *)
-
+// no div by zero
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
@@ -54,20 +54,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_972">
-      <LineId Id="3" Count="1" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="5" Count="9" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="34" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_972.ACT_IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_972.M_SetBits">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
