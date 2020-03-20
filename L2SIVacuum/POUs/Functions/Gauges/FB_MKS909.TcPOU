@@ -114,15 +114,15 @@ IF ePrevState <> IG.eState THEN
 		ValidHi:
 		ValidLo:
 		Valid:
-			fbLogger(sMsg:='Gauge pressure is in valid state.', eSevr:=TcEventSeverity.Critical);
+			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
   		GaugeDisconnected:
 			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
 		PressInvalid:
-			fbLogger(sMsg:='Gauge pressure is invalid.', eSevr:=TcEventSeverity.Warning);
+			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
 		OoR:
-			fbLogger(sMsg:='Gauge pressure is out of range.', eSevr:=TcEventSeverity.Warning);
+			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
 		Starting:
-			fbLogger(sMsg:='Gauge is starting.', eSevr:=TcEventSeverity.Info);
+			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
 	  END_CASE
 	  ePrevState := IG.eState;  
   END_IF
