@@ -1,15 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
-  <POU Name="FB_Valve" Id="{d216fd72-6969-4ab7-a5bc-556a1c976071}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Valve
+  <POU Name="FB_Gauge" Id="{7a1f28cc-0783-4ebe-9457-6569085eece6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Gauge
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	// For logging
+	
+// For logging
     fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
-    ePrevState : E_ValvePositionState;
+    ePrevState : E_PressureState;
     tErrorPresent : R_TRIG;
     tAction : R_TRIG; // Primary action of this device (OPN_DO, etc.)
     tOverrideActivated : R_TRIG;
@@ -18,10 +19,5 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Action Name="ACT_Logger" Id="{a287235d-78df-4063-a496-ba56a271188f}">
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Action>
   </POU>
 </TcPlcObject>

@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_MKS909" Id="{e4d3e807-daeb-4a47-bccf-64bd129edfcd}" SpecialFunc="None">
+    <Declaration><![CDATA[(* Standard MKS 909 hot cathode *)
+(* works for 972 and 925 *)
+FUNCTION_BLOCK FB_MKS909 EXTENDS FB_Gauge
+VAR_INPUT
+	PG	: ST_VG;
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	IG	: ST_VG;
+END_VAR
+VAR_IN_OUT
+	
+END_VAR
+VAR
+	rV : REAL;
+	rMaxPressure	:	REAL := 5E-2; //Torr
+	rMinPressure	:	REAL := 1E-10; //Torr
+	timer:TON;
+	(*Default set point 50 mT*)
+	rVAC_SP: REAL := 9E-3; // as per manual
+	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
+	(*IO*)
+	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+	q_xHV_DIS AT %Q* : BOOL := True; // Active Low 
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Standard MKS 9XX series conversion *)
+(* works for 972 and 925 *)
+
+//Default setpoint 50 mT
+IF PG.rVAC_SP = 0 THEN
+	PG.rVAC_SP := rVAC_SP;
+END_IF
+// check no div by zero
+If (iTermBits=0) THEN iTermBits := 30518;END_IF
+rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
+
+(* Pressure OK check *)
+// Gauge state
+// Is the gauge plugged in, and within a reasonable range?
+IF  (rV >= 0.1 and rV <=8.7) THEN // as per manual
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
+	IG.eState := Valid;
+	IG.xPRESS_OK := TRUE; //Backwards compatibility
+ELSIF rV > 8.7 AND rV < 10 THEN
+	IG.rPRESS :=rMaxPressure;
+	IG.xPRESS_OK := FALSE;
+	IG.eState := Off;
+ELSE 
+	IG.xPRESS_OK := FALSE;
+	IG.eState := GaugeDisconnected;
+END_IF
+
+
+IF (PG.rPRESS <= IG.rPRO_SP)  AND (PG.xPRESS_OK) THEN
+		 PG.q_xHV_DIS := NOT IG.xHV_SW;
+		 IG.xILKOk := TRUE;
+	ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
+		IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+		IG.q_xHV_DIS := TRUE;
+		IG.xHV_SW := FALSE;
+		END_IF
+	ELSE 
+		IG.q_xHV_DIS := TRUE;
+		IG.xHV_SW := FALSE;
+		IG.xILKOk := FALSE;
+ 	END_IF
+ 
+
+timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
+
+(* Setpoint evaluation *)
+IG.xAT_VAC := IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP);
+
+(*Soft IO Mapping*)
+ACT_IO();
+
+(*Logger*)
+ACT_Logger();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{89c7028d-3190-45b7-aaec-73bdcb00e265}">
+      <Implementation>
+        <ST><![CDATA[(*soft link inputs*)
+IG.i_iPRESS_R:=	i_iPRESS_R; 
+
+(*soft link outputs*)
+q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Logger" Id="{c289ef5c-0d6d-44e6-b87e-b28bbd141dbf}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
+ 		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+// Log Action
+tAction(CLK:=  IG.q_xHV_DIS);
+IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+
+
+
+//STATE Logger  
+IF ePrevState <> IG.eState THEN
+	  CASE IG.eState OF
+		ValidHi:
+		ValidLo:
+		Valid:
+			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+  		GaugeDisconnected:
+			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+		PressInvalid:
+			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+		OoR:
+			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+		Starting:
+			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := IG.eState;  
+  END_IF
+  
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_AutoOn" Id="{6fde0073-91f6-4cb9-bbee-4ff5715804d3}">
+      <Declaration><![CDATA[METHOD M_AutoOn : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.IG.q_xHV_DIS:= FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetBits" Id="{a0b5c519-56d7-42f9-be00-fe9985112627}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
