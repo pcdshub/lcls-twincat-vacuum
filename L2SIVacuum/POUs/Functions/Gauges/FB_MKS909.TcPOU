@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_MKS909" Id="{e4d3e807-daeb-4a47-bccf-64bd129edfcd}" SpecialFunc="None">
     <Declaration><![CDATA[(* Standard MKS 909 hot cathode *)
 (* works for 972 and 925 *)
-FUNCTION_BLOCK FB_MKS909 EXTENDS FB_Gauge
+FUNCTION_BLOCK FB_MKS909 EXTENDS FB_GAUGE_BASE
 VAR_INPUT
 	PG	: ST_VG;
 END_VAR
@@ -83,7 +83,7 @@ IG.xAT_VAC := IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP);
 ACT_IO();
 
 (*Logger*)
-ACT_Logger();]]></ST>
+THIS^.ACT_Logger();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{89c7028d-3190-45b7-aaec-73bdcb00e265}">
       <Implementation>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_PTM_Pfeiffer" Id="{f61aaad0-85b4-4244-b8a7-58d7d76a340e}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Pfeiffer Turbo pump connected to the TM700 and TC400 Controllers.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
@@ -8,7 +8,7 @@ VAR_IN_OUT
 	
 END_VAR
 VAR_INPUT
-	i_xExtRunOk : BOOL; // Connect to external interlock logic, TRUE if not used.
+	i_xExtIlkOK : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -33,16 +33,18 @@ END_VAR
       <ST><![CDATA[(* Basic pump supervisory section *)
 
 q_xRemote := TRUE;
+(* Interlock Sum *)
+iq_stPtm.xExtRunOk:= i_xExtILKOk;
 IF iq_stPTM.xExtRunOk THEN
 	q_PumpingStation:= TRUE;
-	ELSE 
-		q_PumpingStation:= FALSE;
+ELSE 
+	q_PumpingStation:= FALSE;
 END_IF
 
-IF iq_stPTM.xExtRunOk AND NOT (iq_stPTM.i_xFault OR iq_stPTM.i_xTempFault) THEN
+IF iq_stPTM.xExtRunOk AND NOT iq_stPTM.i_xFault OR iq_stPTM.i_xTempFault THEN
 	iq_stPTM.q_RunDO:=iq_stPTM.xRunSW;
 ELSE
-	iq_stPTM.xRunSW:=0;
+	iq_stPTM.xRunSW:=FALSE;
 	iq_stPTM.q_RunDO:=FALSE;
 END_IF
 
@@ -50,7 +52,6 @@ END_IF
 (*Pump STATE*)
 IF iq_stPtm.i_xFault THEN 
 	iq_stPtm.eState := pumpFAULT;
-
 ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
 	iq_stPtm.eState := pumpSTOPPED;
 ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO THEN
@@ -83,6 +84,44 @@ iq_stPTM.i_xWarn:=  	i_xWarn ;
 	]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_Logger" Id="{2a4a55bb-5a82-4b5c-9d35-491701256bba}">
+      <Implementation>
+        <ST><![CDATA[//STATE Logger  
+IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
+ 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+IF ePrevState <> iq_stPTM.eState THEN
+	  CASE iq_stPTM.eState OF
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+  		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpSTARTING:
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stPTM.eState;  
+  END_IF
+  
+// ILK logger
+
+
+
+// Log Action
+tAction(CLK:=  iq_stPTM.q_RunDO);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+
+
+// Log FAULT
+tFault(CLK:= NOT iq_stPTM.i_xFault);
+IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
+
+]]></ST>
+      </Implementation>
+    </Action>
     <Method Name="M_Run" Id="{2c4aa976-1aba-482a-991c-f510aadc9928}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
@@ -94,40 +133,54 @@ END_VAR
 this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Pfeiffer">
-      <LineId Id="78" Count="0" />
-      <LineId Id="103" Count="0" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="98" Count="0" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="120" Count="1" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="79" Count="4" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="104" Count="2" />
-      <LineId Id="109" Count="10" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="107" Count="0" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="84" Count="0" />
-      <LineId Id="97" Count="0" />
-      <LineId Id="150" Count="1" />
-      <LineId Id="149" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.ACT_IO">
-      <LineId Id="8" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="12" Count="1" />
-      <LineId Id="3" Count="2" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.M_Run">
-      <LineId Id="10" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
+    <Method Name="M_Serial_IO" Id="{69cf9593-e155-45fc-9159-3adef61e53cd}">
+      <Declaration><![CDATA[METHOD PUBLIC M_Serial_IO : BOOL
+VAR_INPUT
+	st_Pfeiffer_CTRL: ST_PfeifferControl;
+	st_Pfeiffer_RBK: ST_PfeifferStatus;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(* This function block is used to map the IO points from the pfeiffer structures
+to the generic turbo structures *)
+
+(* Controls *) (* Controls is via DIO*)
+//st_Pfeiffer_CTRL.xPumpingStation_010 := iq_stPTM.q_RunDO;
+//st_Pfeiffer_CTRL.xMotorPump_023 := 1; //Setting always true because parameter 10 alone can enable/disable the pump
+//st_Pfeiffer_CTRL.uiPowerPct_708 := iq_stPTM.q_uiPowerPct;
+//st_Pfeiffer_CTRL.xErrorAck_009 := iq_stPTM.xResetSW;
+
+(* Readbacks *)
+iq_stPTM.i_xAccel := st_Pfeiffer_RBK.xPumpAccelerating_307;
+iq_stPTM.i_xAtSpd := st_Pfeiffer_RBK.xRotationSpeedAttn_306;
+iq_stPTM.i_diCurSpd := st_Pfeiffer_RBK.diActiveRotationSpeed_309;
+iq_stPTM.i_diPwr := st_Pfeiffer_RBK.diDrivePower_316;
+iq_stPTM.i_diElecTemp := st_Pfeiffer_RBK.diTempElec_326;
+iq_stPTM.i_diBtmTemp := st_Pfeiffer_RBK.diTempPmpBot_330;
+iq_stPTM.i_diBrngTemp := st_Pfeiffer_RBK.diTempBearng_342;
+iq_stPTM.i_diMtrTemp := st_Pfeiffer_RBK.diTempMotor_346;
+iq_stPTM.i_uiPowerPctRbk := st_Pfeiffer_RBK.uiPowerPct_708;
+
+iq_stPTM.xCommTimeout	:=	st_Pfeiffer_RBK.xTimeout;
+iq_stPTM.i_iErrorCode := st_Pfeiffer_RBK.iErrorCode_303;
+iq_stPTM.i_iWarningCode := st_Pfeiffer_RBK.iWarningCode_303;
+
+(* Check that error acknowledgment is processed *)
+IF st_Pfeiffer_RBK.xErrorAcknowledged THEN
+	st_Pfeiffer_RBK.xErrorAcknowledged := FALSE;
+	st_Pfeiffer_CTRL.xErrorAck_009 := FALSE;
+	iq_stPTM.xResetSW := FALSE;
+END_IF
+
+IF st_Pfeiffer_RBK.sErrorCode_303 = '' THEN
+	;
+ELSIF st_Pfeiffer_RBK.sErrorCode_303 <> '000000' THEN
+iq_stPTM.i_xFault := TRUE;
+ELSE
+iq_stPTM.i_xFault := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

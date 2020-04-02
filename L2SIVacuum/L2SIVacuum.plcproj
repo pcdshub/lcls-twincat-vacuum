@@ -50,13 +50,7 @@
     <Compile Include="DUTs\Pumps\ST_LeyboldPTM.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\Pumps\ST_PfeifferControl.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DUTs\Pumps\ST_PfeifferPTM.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\Pumps\ST_PfeifferStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Pumps\ST_PIP.TcDUT">
@@ -110,7 +104,7 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_Gauge.TcPOU">
+    <Compile Include="POUs\Functions\Gauges\FB_GaugeBase.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS909.TcPOU">
@@ -340,6 +334,10 @@
       <DefaultResolution>LCLS General, * (SLAC)</DefaultResolution>
       <Namespace>LCLS_General</Namespace>
     </PlaceholderReference>
+    <PlaceholderReference Include="LCLSVacuumSerialDriverLib">
+      <DefaultResolution>LCLSVacuumSerialDriverLib, * (SLAC)</DefaultResolution>
+      <Namespace>LCLSVacuumSerialDriverLib</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="PMPS">
       <DefaultResolution>PMPS, * (SLAC - LCLS)</DefaultResolution>
       <Namespace>PMPS</Namespace>
@@ -431,9 +429,6 @@
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc3_Module">
       <Resolution>Tc3_Module, * (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="TcUnit">
-      <Resolution>TcUnit, * (www.tcunit.org)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="UML State Chart Types">
       <Resolution>UML Statechart Types, * (3S - Smart Software Solutions GmbH)</Resolution>
