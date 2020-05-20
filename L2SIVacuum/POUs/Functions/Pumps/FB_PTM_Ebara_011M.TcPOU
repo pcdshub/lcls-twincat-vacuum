@@ -1,15 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_PTM_Ebara_011M" Id="{80002545-2d80-4798-8b5d-b360277946fd}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Ebara Turbo pump connected to the ETC011M Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
+{attribute 'no_check'}
 FUNCTION_BLOCK FB_PTM_Ebara_011M EXTENDS FB_Pump
 VAR_IN_OUT
 END_VAR
 VAR_INPUT
 	i_rMaxBackingPressure : REAL := 0.4;
-	i_iMinSpeedRPM : DINT := 100; //check pump manual for setting
-	i_iMaxSpeedRPM : DINT := 33600; // check pump manual for setting
+	i_iMinSpeed : DINT := 100; //check pump manual for setting
+	i_iMaxSpeed : DINT := 560; // check pump manual for setting
 	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
@@ -21,7 +22,7 @@ END_VAR
 VAR
 	TOF_SetSpeed: TON := (PT:=T#1S);
 	TOF_RESET: TON :=(PT:=T#1S);
-	i_iADCBits : UINT := 15;
+	i_iADCBits : UINT := 12;
 	(*IO*)
 	(*inputs*)
 	i_xDecel AT %I* : BOOL; //Link to brake input
@@ -145,8 +146,8 @@ ACT_Logger();
 	q_xProtection := iq_stPTM.q_xProtection;
 	q_xSetSpeed := iq_stPTM.iq_xSpeedSet;
 (*Validate Set Speed within range *) 
-IF iq_stPTM.q_iSpeedSet  >= i_iMinSpeedRPM AND iq_stPTM.q_iSpeedSet  <=i_iMaxSpeedRPM THEN 
-	q_iSpeedSet  := LIMIT(0, DINT_TO_INT((iq_stPTM.q_iSpeedSet - i_iMinSpeedRPM) / i_iMaxSpeedRPM *16383/5),16383); //Max output 5V
+IF iq_stPTM.q_iSpeedSet  >= i_iMinSpeed AND iq_stPTM.q_iSpeedSet  <=i_iMaxSpeed THEN 
+	q_iSpeedSet  := LIMIT(0, DINT_TO_INT((iq_stPTM.q_iSpeedSet - i_iMinSpeed) / i_iMaxSpeed *16383/5),16383); //Max output 5V
 	//:= DINT_TO_INT((iq_stPTM.q_iSpeedSet-100) / 33600 *32767/2); //Max 5V
 END_IF
 
@@ -222,57 +223,5 @@ END_VAR
 this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Ebara_011M">
-      <LineId Id="3" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="4" Count="10" />
-      <LineId Id="163" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="205" Count="1" />
-      <LineId Id="204" Count="0" />
-      <LineId Id="22" Count="3" />
-      <LineId Id="122" Count="3" />
-      <LineId Id="30" Count="4" />
-      <LineId Id="259" Count="0" />
-      <LineId Id="35" Count="1" />
-      <LineId Id="164" Count="0" />
-      <LineId Id="38" Count="1" />
-      <LineId Id="99" Count="4" />
-      <LineId Id="105" Count="1" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="107" Count="12" />
-      <LineId Id="246" Count="0" />
-      <LineId Id="248" Count="2" />
-      <LineId Id="302" Count="1" />
-      <LineId Id="251" Count="7" />
-      <LineId Id="247" Count="0" />
-      <LineId Id="304" Count="0" />
-      <LineId Id="306" Count="1" />
-      <LineId Id="305" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="120" Count="1" />
-      <LineId Id="300" Count="0" />
-      <LineId Id="299" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_011M.ACT_IO">
-      <LineId Id="2" Count="4" />
-      <LineId Id="8" Count="1" />
-      <LineId Id="12" Count="20" />
-      <LineId Id="36" Count="1" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_011M.ACT_Logger">
-      <LineId Id="52" Count="32" />
-      <LineId Id="22" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_011M.BackingPressureSetPoint">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_011M.M_Run">
-      <LineId Id="10" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

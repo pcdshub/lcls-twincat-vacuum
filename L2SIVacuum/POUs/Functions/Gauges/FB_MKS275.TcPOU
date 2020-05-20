@@ -4,6 +4,7 @@
     <Declaration><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
 (* For MKS 275 mini-convectron *)
+{attribute 'no_check'}
 FUNCTION_BLOCK FB_MKS275 EXTENDS FB_GaugeBase
 VAR_IN_OUT
 
@@ -91,12 +92,7 @@ IO();
     </Implementation>
     <Action Name="ACT_Logger" Id="{22ad07a8-3027-4a73-9587-1659b4a4301d}">
       <Implementation>
-        <ST><![CDATA[// ILK logger
-IF NOT PG.xILKOk AND NOT PG.q_xHV_DIS THEN
- 		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
-END_IF
-
-
+        <ST><![CDATA[
 //STATE Logger  
 IF ePrevState <> PG.eState THEN
 	  CASE PG.eState OF

@@ -7,6 +7,10 @@ FUNCTION_BLOCK FB_9XX EXTENDS FB_GaugeBAse
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	PG	: ST_VG;
 END_VAR
 VAR_IN_OUT
 END_VAR

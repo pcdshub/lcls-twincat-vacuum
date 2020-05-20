@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_PTM_Agilent" Id="{30958a8b-73eb-4ef7-96d3-72fcd80f684d}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TV Turbo pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -26,7 +26,7 @@ VAR
 	nR1Fault : INT;
 	tFaultWindowDuration : TIME := T#300S;
 	tR1FaultDuration : TIME := T#120S;
-	tTimeOutDuration: TIME:= T#120S;
+	tTimeOutDuration: TIME:= T#10M;
 	tFaultWindowElapsed: TON;
 	tR1Fault : TON;
 	tStartTimeOut : TON;
@@ -34,13 +34,15 @@ VAR
 	step : INT :=0;
 	nErrorCode: UINT :=0;
 	xBackingPressureOK: BOOL;
-	
+	iMaxSpeed : INT:=963;
 	
 	(*I/Os*)
-	i_xSTART 	AT%I*:	BOOL; // 'TcLinkTo' (EL1088) ^Input
-	i_xR1	AT%I*	:  BOOL;// 'TcLinkTo' (EL1088) ^Input
-	i_xR2	AT%I*	:  BOOL;// 'TcLinkTo' (EL1088) ^Input
-	i_xLSpd	AT%I*:  BOOL;// 'TcLinkTo' (EL1088) ^Input
+	i_xSTART 	AT%I*:	BOOL;
+	i_xR1	AT%I*	:  BOOL;
+	i_xR2	AT%I*	:  BOOL;
+	i_xLSpd	AT%I*:  BOOL;
+	i_iTempMon AT%I*: INT;
+	i_iPowerMon AT%I*: INT;
 	i_iCurrentMon AT%I*: INT;
 	i_iRawSpeed AT %I* : INT; // Link to Analog input
 	i_xFault AT%I*	:	BOOL;
@@ -53,6 +55,7 @@ VAR
     fbJson : FB_JsonSaxWriter;
    tOverrideActivated : R_TRIG;
 	
+	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -218,10 +221,10 @@ tStartTimeOut(IN := (step=20), PT:=tTimeOutDuration);
 tR1TimeOut(IN := (step=40), PT:=tTimeOutDuration);
 (* IO Mapping*)
 IO();
-// Log States and triggers
-ACT_Logger();
 (*Assign Error Message*)
 iq_stPtm.sError := ErrorMessage(nErrorCode, iq_stPtm.eState);
+// Log States and triggers
+ACT_Logger();
 (*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
 iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
 
@@ -260,7 +263,9 @@ END_VAR
 			ErrorMessage := CONCAT(sPath,': Pump Controller Fault');	
 	END_CASE
 	
-END_IF]]></ST>
+END_IF
+
+]]></ST>
       </Implementation>
     </Method>
     <Action Name="IO" Id="{91e0ad29-851c-46ff-a4b9-77352c8095fc}">
@@ -271,7 +276,14 @@ iq_stPtm.i_xR1:=	i_xR1;
 iq_stPtm.i_xR2:=	i_xR2;
 iq_stPtm.i_xLSpd:=	i_xLSpd;
 iq_stPtm.i_xFault:=	i_xFault;
-iq_stPtm.i_iCurrentMon := i_iCurrentMon;
+(* Real-value calculation *)
+If (iTermBits=0) THEN iTermBits := 32767;END_IF
+iq_stPtm.i_rCurrentMon := 10*INT_TO_REAL(i_iCurrentMon)/iTermBits; // 1v is equal to 1A  Manual page 73
+iq_stPtm.i_rTempMon := 10*INT_TO_REAL(i_iTempMon)/iTermBits; // 1v is equal to 1A  Manual page 73
+iq_stPtm.i_rPowerMon := 10*INT_TO_REAL(i_iPowerMon)/iTermBits; // 1v is equal to 1A  Manual page 73
+iq_stPtm.i_diCurSpd := 10*LREAL_TO_DINT(i_iRawSpeed/iTermBits); // 1v is equal to 1A  Manual page 73
+
+
 (*outputs*)
 q_RunDO := iq_stPtm.q_RunDO;
 q_xLSpd := iq_stPtm.q_xLSpd;
@@ -289,6 +301,26 @@ END_VAR
 this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_SetBits" Id="{a2f7f5fb-a670-4222-9341-81f8e7396faa}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetMaxSpeed" Id="{b01139cd-82e5-4729-bc78-ddb4924b1c2d}">
+      <Declaration><![CDATA[METHOD M_SetMaxSpeed : BOOL
+VAR_INPUT
+	iMaxSpeed: INT; //963Hz for 3.1,300HT and 1010Hz for 401 and 1350 for 81
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.iMaxSpeed := iMaxSpeed;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_TurboIsOn" Id="{fd80a5ac-8a80-41d5-8e07-a92996986023}">
       <Declaration><![CDATA[METHOD PUBLIC M_TurboIsOn : BOOL
 VAR_INPUT
@@ -298,30 +330,5 @@ END_VAR
         <ST><![CDATA[M_TurboIsOn := (This^.iq_stPtm.eState =  E_PumpState.pumpSTARTING ) OR (This^.iq_stPtm.eState =  E_PumpState.pumpRUNNING );]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Agilent">
-      <LineId Id="3" Count="161" />
-      <LineId Id="229" Count="0" />
-      <LineId Id="228" Count="0" />
-      <LineId Id="165" Count="4" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.BackingPressureSetPoint">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.ErrorMessage">
-      <LineId Id="3" Count="13" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.IO">
-      <LineId Id="2" Count="9" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.M_Run">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.M_TurboIsOn">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

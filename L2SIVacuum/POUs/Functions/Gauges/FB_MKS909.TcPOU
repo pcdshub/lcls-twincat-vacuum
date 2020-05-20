@@ -3,7 +3,7 @@
   <POU Name="FB_MKS909" Id="{e4d3e807-daeb-4a47-bccf-64bd129edfcd}" SpecialFunc="None">
     <Declaration><![CDATA[(* Standard MKS 909 hot cathode *)
 (* works for 972 and 925 *)
-FUNCTION_BLOCK FB_MKS909 EXTENDS FB_GAUGE_BASE
+FUNCTION_BLOCK FB_MKS909 EXTENDS FB_GaugeBase
 VAR_INPUT
 	PG	: ST_VG;
 END_VAR

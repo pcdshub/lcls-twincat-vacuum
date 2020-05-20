@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_PTM_Ebara_010M" Id="{db9fdbdf-85bb-4e58-96cc-808f2a65a0e5}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Ebara Turbo pump connected to the ETC010M Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
+ {attribute 'no_check'}
 FUNCTION_BLOCK FB_PTM_Ebara_010M EXTENDS FB_Pump
 VAR_IN_OUT
 	
@@ -11,8 +12,8 @@ VAR_INPUT
 	i_xExtILKOk : BOOL; // Turbo ILK bit , set to True if not used
 	//i_iRawSpeed: INT; //Should come from PLC Soft IO.
 	i_rMaxBackingPressure : REAL := 0.4;
-	i_iMinSpeedRPM : DINT := 100; //check pump manual for setting
-	i_iMaxSpeedRPM : DINT := 33600; // check pump manual for setting
+	i_iMinSpeed : DINT := 100; //Hz check pump manual for setting P43
+	i_iMaxSpeed : DINT := 560; //Hz check pump manual for setting P43
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -144,9 +145,9 @@ ACT_Logger();]]></ST>
 	iq_stPTM.i_xNCFault :=	i_xNCFault ;
 	iq_stPTM.i_xALARM:= NOT i_xNCFault;
 	iq_stPTM.i_xAtSpd := i_xAtSpd;
-	iq_stPTM.i_iTempMon := 100*LREAL_TO_INT(i_iTempMon/16383);// Manual page 28(DC 0 to 5V -> 0 to 100 DegC)
-	iq_stPTM.i_iCurrentMon := 10*LREAL_TO_INT(i_iCurrentMon/16383);// Manual page 28 (DC 0 to 5V -> 0 to 10 A)
-	iq_stPTM.i_diCurSpd := 100*LREAL_TO_DINT(i_iRawSpeed/16383);// Manual page 28 (DC 0 to 5V -> 0 to 100HZ)
+	iq_stPTM.i_rTempMon := (100*(INT_TO_REAL(i_iTempMon)/16383));// Manual page 28(DC 0 to 5V -> 0 to 100 DegC)
+	iq_stPTM.i_rCurrentMon := (10*(INT_TO_REAL(i_iCurrentMon)/16383));// Manual page 28 (DC 0 to 5V -> 0 to 10 A)
+	iq_stPTM.i_diCurSpd := 560*((i_iRawSpeed)/16383);// Manual page 28 (DC 0 to 5V -> 100 to 560Hz Rated Rotational Speed )
 (*outputs*)
 	q_xStart:= iq_stPTM.q_xStart;
 	q_xStop := iq_stPTM.q_xStop;
@@ -156,17 +157,10 @@ ACT_Logger();]]></ST>
 
 
 (*Validate Set Speed within range *) 
-IF iq_stPTM.q_iSpeedSet  >= i_iMinSpeedRPM AND iq_stPTM.q_iSpeedSet  <=i_iMaxSpeedRPM THEN 
-	q_iSpeedSet  := LIMIT(0, DINT_TO_INT((iq_stPTM.q_iSpeedSet - i_iMinSpeedRPM) / i_iMaxSpeedRPM *16383/5),16383); //Max 5V
+IF iq_stPTM.q_iSpeedSet  >= i_iMinSpeed AND iq_stPTM.q_iSpeedSet  <=i_iMaxSpeed THEN 
+	q_iSpeedSet  := LIMIT(0, DINT_TO_INT((iq_stPTM.q_iSpeedSet - i_iMinSpeed) / i_iMaxSpeed *16383/5),16383); //Max 5V
 END_IF
 
-(* Pump speed calculation *)
-(*IF i_iRawSpeed / (EXPT(2,i_iADCBits)-1) * 10 >= 0.2 THEN //Speed reading appears to zero at ~0.16V
-	iq_stPTM.i_diCurSpd := LREAL_TO_DINT(i_iRawSpeed/(EXPT(2,i_iADCBits)-1)*67000);
-//V (AI/(2^{# ADC bits} -1 ) * 10[ADC 10V scaling]) * (33600 [Max RPM] - 100) / 5
-ELSE
-	iq_stPTM.i_diCurSpd := 0;
-END_IF*)
 
 
 
@@ -176,22 +170,17 @@ END_IF*)
     </Action>
     <Action Name="ACT_Logger" Id="{f47b7190-33a4-4a1f-af51-7f9a030ae9f6}">
       <Implementation>
-        <ST><![CDATA[// ILK logger
-//STATE Logger  
+        <ST><![CDATA[
 IF NOT i_xExtIlkOK AND (ePrevState = pumpRUNNING OR ePrevState = pumpSTARTING) THEN
- 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+ 		fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical);  	
 END_IF
 // Log Action
 tAction(CLK:=  iq_stPTM.q_RunDO);
 IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
 
 
-// Log FAULT
-tFault(CLK:= iq_stPTM.i_xNCFault);
-IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
 
-
-
+//STATE Logger  
 IF ePrevState <> iq_stPTM.eState THEN
 	  CASE iq_stPTM.eState OF
 		pumpFAULT:
@@ -206,6 +195,10 @@ IF ePrevState <> iq_stPTM.eState THEN
 	  ePrevState := iq_stPTM.eState;  
   END_IF
   
+
+// Log FAULT
+tFault(CLK:= iq_stPTM.i_xNCFault);
+IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
 
 
 
@@ -235,48 +228,5 @@ END_VAR
 this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Ebara_010M">
-      <LineId Id="376" Count="68" />
-      <LineId Id="504" Count="1" />
-      <LineId Id="445" Count="5" />
-      <LineId Id="453" Count="5" />
-      <LineId Id="503" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_010M.ACT_IO">
-      <LineId Id="58" Count="35" />
-      <LineId Id="53" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_010M.ACT_Logger">
-      <LineId Id="56" Count="0" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="53" Count="2" />
-      <LineId Id="57" Count="8" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="5" Count="1" />
-      <LineId Id="3" Count="0" />
-      <LineId Id="18" Count="1" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="29" Count="1" />
-      <LineId Id="22" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_010M.BackingPressureSetPoint">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_010M.M_Run">
-      <LineId Id="10" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_972" Id="{02ad8586-ab8b-4c5e-9c1c-5db3b2c00a9f}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_972
+    <Declaration><![CDATA[{attribute 'no_check'}
+FUNCTION_BLOCK FB_972  EXTENDS FB_GaugeBase
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
