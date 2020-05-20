@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_MKS275" Id="{ffda77c7-a04b-4d4f-b9a5-3ec5d874c4e9}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
 (* For MKS 275 mini-convectron *)
-FUNCTION_BLOCK FB_MKS275
+{attribute 'no_check'}
+FUNCTION_BLOCK FB_MKS275 EXTENDS FB_GaugeBase
 VAR_IN_OUT
 
 END_VAR
@@ -82,10 +83,41 @@ PG.xPRESS_OK := (PG.rPRESS >= MinPressure);
 (* Setpoint evaluation *)
 PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS<=PG.rVAC_SP);
 
+(*Logger*)
+ACT_Logger();
+
 (*Soft IO Mapping *)
 IO();
 ]]></ST>
     </Implementation>
+    <Action Name="ACT_Logger" Id="{22ad07a8-3027-4a73-9587-1659b4a4301d}">
+      <Implementation>
+        <ST><![CDATA[
+//STATE Logger  
+IF ePrevState <> PG.eState THEN
+	  CASE PG.eState OF
+		ValidHi:
+			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+		ValidLo:
+			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+		Valid:
+			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+  		GaugeDisconnected:
+			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+		PressInvalid:
+			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+		OoR:
+			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+		Starting:
+			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := PG.eState;  
+  END_IF
+  
+
+]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="IO" Id="{fa1d0754-87c0-473a-9c19-51013692b513}">
       <Implementation>
         <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
@@ -101,27 +133,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS275">
-      <LineId Id="24" Count="15" />
-      <LineId Id="41" Count="3" />
-      <LineId Id="46" Count="3" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="52" Count="2" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="57" Count="2" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="62" Count="2" />
-      <LineId Id="66" Count="12" />
-      <LineId Id="95" Count="1" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="97" Count="0" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS275.IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS275.M_SetBits">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

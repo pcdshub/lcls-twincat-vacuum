@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="FB_GCC_Test" Id="{abe007c5-97e2-4f83-88a7-7230dad873a3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_GCC_Test EXTENDS TcUnit.FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	PG : ST_VG;
+	fb_MKS422: FB_MKS422;
+	//fb_MKS500: FB_MKS500;
+	i_iPRESS_R AT %Q* :INT;
+	cycle:INT :=0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[M_INIT();
+M_Interlock();
+M_CheckRange();
+//M_SelfProtection();
+cycle:=cycle+1;]]></ST>
+    </Implementation>
+    <Method Name="M_CheckRange" Id="{1ce3796c-9d57-423a-81de-918c6cc47319}">
+      <Declaration><![CDATA[METHOD M_CheckRange
+VAR
+	Expected:REAL;
+	Actual:REAL;
+	eStateExpected: E_PressureState;
+	eStateActual: E_PressureState;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('Check_Range');
+Case This^.cycle of
+	12:
+	This^.i_iPRESS_R :=  V_TO_INT(0.61);
+	This^.PG.rPRESS := 1E-4;
+	This^.PG.xPRESS_OK := True;
+	fb_MKS422.M_HVE(TRUE);
+	
+	15:
+	TEST('MKS422_Range_937B');
+	Expected :=1E-11 ;
+	eStateExpected := Valid;
+	Actual := This^.fb_MKS422.IG.rPRESS;
+	eStateActual := This^.fb_MKS422.IG.eState;
+	AssertTrue(This^.fb_MKS422.IG.xPRESS_OK, 'MKS422B xPRESS_OK is set to False');
+	AssertEquals(eStateExpected,eStateActual,'MKS422B eState Fail');
+	AssertEquals_REAL(Expected, Actual,1E-12, 'MKS422B rPress Fail');
+	TEST_FINISHED_NAMED('MKS422_Range_937B');
+	
+	16:
+	This^.i_iPRESS_R := V_TO_INT(2.4);
+	This^.fb_MKS422.b937A:=TRUE;
+	
+	20:
+	TEST('MKS422_Range_937A');
+	Expected :=1E-8 ;
+	Actual := This^.fb_MKS422.IG.rPRESS;
+	eStateExpected := Valid;
+	eStateActual := This^.fb_MKS422.IG.eState;
+	AssertTrue(This^.fb_MKS422.IG.xPRESS_OK, 'MKS422A xPRESS_OK is set to False');
+	AssertEquals(eStateExpected,eStateActual,'MKS422A eState Fail');
+	AssertEquals_REAL(Expected, Actual,1E-9, 'MKS422A rPress Fail');
+	TEST_FINISHED_NAMED('MKS422_Range_937A');
+
+	
+	21:
+	This^.i_iPRESS_R :=  V_TO_INT(0.1);  
+	
+	
+	24:
+	TEST('MKS422_Range_Off');
+	Expected :=0 ;
+	eStateExpected := GaugeDisconnected;
+	Actual := This^.fb_MKS422.IG.rPRESS;
+	eStateActual := This^.fb_MKS422.IG.eState;
+	AssertFalse(This^.fb_MKS422.IG.xPRESS_OK, 'MKS422A xPRESS_OK is set to True');
+	AssertEquals(eStateExpected,eStateActual,'MKS422A eState Fail');
+	AssertEquals_REAL(Expected, Actual,1, 'MKS422A rPress Fail');
+	TEST_FINISHED_NAMED('MKS422_Range_Off');
+
+	
+	25:
+	This^.i_iPRESS_R :=  V_TO_INT(10); 
+	
+	
+	29:
+	TEST('MKS422_Range_Invalid');
+	Expected :=0 ;
+	eStateExpected := PressInvalid;
+	Actual := This^.fb_MKS422.IG.rPRESS;
+	eStateActual := This^.fb_MKS422.IG.eState;
+	AssertFalse(This^.fb_MKS422.IG.xPRESS_OK, 'MKS422A xPRESS_OK is set to True');
+	AssertEquals(eStateExpected,eStateActual,'MKS422A eState Fail');
+	AssertEquals_REAL(Expected, Actual,1, 'MKS422A rPress Fail');
+	TEST_FINISHED_NAMED('MKS422_Range_Invalid');
+	TEST_FINISHED_NAMED('Check_Range');
+
+END_CASE
+
+This^.fb_MKS422(PG:=This^.PG, IG=>);
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_INIT" Id="{6a239255-8bd8-42eb-b1a0-2dca15c1db92}">
+      <Declaration><![CDATA[METHOD M_INIT
+VAR
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('MKS422_Startup');
+This^.PG.rPRESS := 1E-4;
+This^.PG.xPRESS_OK := TRUE;
+This^.fb_MKS422(PG:=This^.PG, IG=>);
+IF( cycle = 3) THEN
+	AssertFalse(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to True');
+	AssertTrue(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to False');
+	TEST_FINISHED_NAMED('MKS422_Startup');
+End_IF;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Interlock" Id="{376a3c27-9e60-4e4c-aaa9-e38bd67d3a7b}">
+      <Declaration><![CDATA[METHOD M_Interlock
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('MKS422_Interlock_Active');
+TEST('MKS422_Interlock_OK');
+TEST('MKS422_Interlock_Lost');
+
+Case cycle of
+	1:
+	This^.PG.rPRESS := 1E-1;
+	This^.PG.xPRESS_OK := TRUE;
+	fb_MKS422.M_HVE(TRUE);
+	
+	3:
+	AssertFalse(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to True');
+	AssertTrue(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to False');
+	TEST_FINISHED_NAMED('MKS422_Interlock_Active');
+	
+	4:
+	This^.PG.rPRESS := 1E-4;
+	This^.PG.xPRESS_OK := True;
+	fb_MKS422.M_HVE(TRUE);
+	
+	7:
+	AssertTrue(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to False');
+	AssertFalse(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to True');
+	TEST_FINISHED_NAMED('MKS422_Interlock_OK');
+
+	8:
+	This^.PG.rPRESS := 1E-1;
+	This^.PG.xPRESS_OK := False;
+	This^.fb_MKS422(PG:=This^.PG, IG=>);
+	
+	11:
+	AssertFalse(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to True');
+	AssertTrue(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to False');
+	TEST_FINISHED_NAMED('MKS422_Interlock_Lost');
+END_CASE
+
+This^.fb_MKS422(PG:=This^.PG, IG=>);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SelfProtection" Id="{ee508d43-9bf6-4fa4-a8d8-d9a6f8404bfe}">
+      <Declaration><![CDATA[METHOD M_SelfProtection
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Switching the Cold cathode backon
+TEST('MKS422_Interlock_OK_1');
+This^.PG.rPRESS := 1E-4;
+This^.PG.xPRESS_OK := True;
+fb_MKS422.M_HVE(TRUE);
+This^.fb_MKS422(PG:=This^.PG, IG=>);
+AssertTrue(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to False');
+AssertFalse(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to True');
+TEST_FINISHED_NAMED('MKS422_Interlock_OK_1');
+
+TEST('MKS422_Self_Protection');
+This^.PG.rPRESS := 1E-3;
+This^.PG.xPRESS_OK := TRUE;
+This^.fb_MKS422(PG:=This^.PG, IG=>);
+AssertFalse(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to True');
+AssertTrue(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to False');
+TEST_FINISHED_NAMED('MKS422_Self_Protection');
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

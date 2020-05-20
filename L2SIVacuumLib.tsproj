@@ -1,37 +1,45 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4022.27">
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.7">
 	<DataTypes>
 		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-000000000041}" TcBaseType="true" HideSubItems="true" CName="AmsNetId">AMSNETID</Name>
+			<BitSize>48</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>6</Elements>
+			</ArrayInfo>
+			<Format>
+				<Printf>%d.%d.%d.%d.%d.%d</Printf>
+				<Parameter>[0]</Parameter>
+				<Parameter>[1]</Parameter>
+				<Parameter>[2]</Parameter>
+				<Parameter>[3]</Parameter>
+				<Parameter>[4]</Parameter>
+				<Parameter>[5]</Parameter>
+			</Format>
+		</DataType>
+		<DataType>
 			<Name GUID="{F27C2E36-F71A-4739-B9BA-8A892874FECC}" PersistentType="true">VacEventClass</Name>
-			<DisplayName TxtId="">
-				<![CDATA[NewEventClass_DisplayText]]>
-			</DisplayName>
+			<DisplayName TxtId=""><![CDATA[NewEventClass_DisplayText]]></DisplayName>
 			<EventId>
 				<Name Id="1">Error</Name>
-				<DisplayName TxtId="">
-					<![CDATA[General Error: {0}]]>
-				</DisplayName>
+				<DisplayName TxtId=""><![CDATA[General Error: {0}]]></DisplayName>
 				<Severity>Warning</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="2">ErrorTO</Name>
-				<DisplayName TxtId="">
-					<![CDATA[Timeout Error: {0}]]>
-				</DisplayName>
+				<DisplayName TxtId=""><![CDATA[Timeout Error: {0}]]></DisplayName>
 				<Severity>Warning</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="3">Setpoint</Name>
-				<DisplayName TxtId="">
-					<![CDATA[Setpoint out of range: {0}]]>
-				</DisplayName>
+				<DisplayName TxtId=""><![CDATA[Setpoint out of range: {0}]]></DisplayName>
 				<Severity>Info</Severity>
 			</EventId>
 			<EventId>
 				<Name Id="4">Inlk_Active</Name>
-				<DisplayName TxtId="">
-					<![CDATA[Interlock Active: {0}]]>
-				</DisplayName>
+				<DisplayName TxtId=""><![CDATA[Interlock Active: {0}]]></DisplayName>
 				<Severity>Warning</Severity>
 			</EventId>
 			<Hides>
@@ -51,14 +59,252 @@
 			</SubItem>
 		</DataType>
 	</DataTypes>
-	<Project ProjectGUID="{607CA8E5-6515-4A1F-A434-6C029DB902EC}" Target64Bit="true" ShowHideConfigurations="#x106">
+	<Project ProjectGUID="{607CA8E5-6515-4A1F-A434-6C029DB902EC}" TargetNetId="172.21.148.60.1.1" ShowHideConfigurations="#x106">
+		<System>
+			<Settings MaxStackSize="512"/>
+			<Tasks>
+				<Task Id="3" Priority="16" CycleTime="100000" AmsPort="350" AdtTasks="true">
+					<Name>TestTask</Name>
+				</Task>
+			</Tasks>
+		</System>
 		<Plc>
 			<Project GUID="{19F43C40-AA59-45D4-A14D-CFB75472AEBC}" Name="L2SIVacuum" PrjFilePath="L2SIVacuum\L2SIVacuum.plcproj" TmcFilePath="L2SIVacuum\L2SIVacuum.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e">
 				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="L2SIVacuum\L2SIVacuum.tmc">
 					<Name>L2SIVacuum Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>LCLS_General.DefaultGlobals.stSys.I_EcatMaster1</Name>
+							<Comment><![CDATA[ AMS Net ID used for FB_EcatDiag, among others ]]></Comment>
+							<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
+						</Var>
+						<Var>
+							<Name>LCLSVacuumSerialDriverLib.lcls_twincat_vacuum.Global_Variables.g_stSystem.I_EcatMaster1</Name>
+							<Comment><![CDATA[ AMS Net ID used for FB_EcatDiag, among others ]]></Comment>
+							<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_VGC_Test.VGC.i_xOpnLS</Name>
+							<Comment><![CDATA[IO]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_VGC_Test.VGC.i_xClsLS</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_VRC_Test.VRC.i_xOpnLS</Name>
+							<Comment><![CDATA[IO]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_VRC_Test.VRC.i_xClsLS</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PIP_Test.fb_PIP_GAMMA.i_iPRESS</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PIP_Test.fb_PIP_GAMMA.i_xSP_DI</Name>
+							<Comment><![CDATA[ NO contact //function of relay set on the QPC to HV output state]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_TwisTorr.i_xAtSpd</Name>
+							<Comment><![CDATA[ Normaml operation when true]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_TwisTorr.i_xFault</Name>
+							<Comment><![CDATA[ Error // this open collector output signal is ON when a system fault condition is detected]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xDecel</Name>
+							<Comment><![CDATA[Link to brake input]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xAccel</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xRotate</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xNCFault</Name>
+							<Comment><![CDATA[ ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xAtSpd</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iRawSpeed</Name>
+							<Comment><![CDATA[ Link to Analog input]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iTempMon</Name>
+							<Comment><![CDATA[ Link to Analog input -- input Voltage according to the pump temprature 0->5V 0->100C]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iCurrentMon</Name>
+							<Comment><![CDATA[Link to Analog -- input Voltage to the output current of motor 0->5V 0->10A]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.q_iSpeedSet</Name>
+							<Comment><![CDATA[IO]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_GPI_Test.fb_MKS275.i_iPRESS_R</Name>
+							<Comment><![CDATA[ input Pressure // Link to analog Input]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_GPI_Test.fb_MKS317.i_iPRESS_R</Name>
+							<Comment><![CDATA[ input Pressure // Link to analog Input]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_GCC_Test.fb_MKS422.i_iPRESS_R</Name>
+							<Comment><![CDATA[ Controls and I/Os]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>Global_Variables.g_stSystem.I_EcatMaster1</Name>
+							<Comment><![CDATA[ AMS Net ID used for FB_EcatDiag, among others ]]></Comment>
+							<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>PRG_Test.fb_VGC_Test.VGC.q_xOPN_DO</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_VGC_Test.io_fbFFHWO.q_xFastFaultOut</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_VRC_Test.VRC.q_xOPN_DO</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PIP_Test.fb_PIP_GAMMA.q_xHVEna_DO</Name>
+							<Comment><![CDATA[ Enable High Voltage when TRUE]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_TwisTorr.q_RunDO</Name>
+							<Comment><![CDATA[ Start/Stop]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xStart</Name>
+							<Comment><![CDATA[ link to output]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xStop</Name>
+							<Comment><![CDATA[Link to output]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xReset</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xProtection</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xSetSpeed</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_iSpeedSet</Name>
+							<Comment><![CDATA[Link to analog Output]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.i_diCurSpd</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.i_iRawSpeed</Name>
+							<Comment><![CDATA[ Link to Analog input]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.i_iTempMon</Name>
+							<Comment><![CDATA[ Link to Analog input -- input Voltage according to the pump temprature 0->5V 0->100C]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_PTM_Test.i_iCurrentMon</Name>
+							<Comment><![CDATA[Link to Analog -- input Voltage to the output current of motor 0->5V 0->10A]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_GPI_Test.i_iPRESS_R</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_GCC_Test.fb_MKS422.q_xHV_DIS</Name>
+							<Comment><![CDATA[ Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_Test.fb_GCC_Test.i_iPRESS_R</Name>
+							<Comment><![CDATA[fb_MKS500: FB_MKS500;]]></Comment>
+							<Type>INT</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="8">
+						<Name>PlcTask Retains</Name>
+						<Var>
+							<Name>PMPS_GVL.SuccessfulPreemption</Name>
+							<Comment><![CDATA[ Any time BPTM applies a new BP request which is confirmed]]></Comment>
+							<Type>ULINT</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>PMPS_GVL.AccumulatedFF</Name>
+							<Comment><![CDATA[ Any time a FF occurs]]></Comment>
+							<Type>ULINT</Type>
+							<InOut>7</InOut>
+						</Var>
+					</Vars>
+					<TaskPouOids>
+						<TaskPouOid Prio="16" OTCID="#x08502001"/>
+					</TaskPouOids>
 				</Instance>
 			</Project>
 		</Plc>
+		<Io/>
 	</Project>
+	<Mappings>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500800205008}" Id="#x02030010"/>
+		<OwnerA Name="TIPC^L2SIVacuum^L2SIVacuum Instance">
+			<OwnerB Name="TIPC^L2SIVacuum^L2SIVacuum Instance">
+				<Link VarA="PlcTask Inputs^PRG_Test.fb_GPI_Test.fb_MKS275.i_iPRESS_R" VarB="PlcTask Outputs^PRG_Test.fb_GPI_Test.i_iPRESS_R"/>
+				<Link VarA="PlcTask Inputs^PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iCurrentMon" VarB="PlcTask Outputs^PRG_Test.fb_PTM_Test.i_iCurrentMon"/>
+				<Link VarA="PlcTask Inputs^PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iTempMon" VarB="PlcTask Outputs^PRG_Test.fb_PTM_Test.i_iTempMon"/>
+				<Link VarA="PlcTask Outputs^PRG_Test.fb_GCC_Test.i_iPRESS_R" VarB="PlcTask Inputs^PRG_Test.fb_GCC_Test.fb_MKS422.i_iPRESS_R"/>
+				<Link VarA="PlcTask Outputs^PRG_Test.fb_GPI_Test.i_iPRESS_R" VarB="PlcTask Inputs^PRG_Test.fb_GPI_Test.fb_MKS317.i_iPRESS_R"/>
+				<Link VarA="PlcTask Outputs^PRG_Test.fb_PTM_Test.i_diCurSpd" VarB="PlcTask Inputs^PRG_Test.fb_PTM_Test.q_iSpeedSet"/>
+				<Link VarA="PlcTask Outputs^PRG_Test.fb_PTM_Test.i_iRawSpeed" VarB="PlcTask Inputs^PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iRawSpeed"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
 </TcSmProject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_PIP_Gamma" Id="{c735b214-fb8d-491c-9d35-e2f8609cfbf0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the ION pump connected to a Gamma QPCe controller.
  Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
@@ -72,9 +72,6 @@ END_IF
 
 timer(IN:= NOT stPump.q_xHVEna_DO, PT:= T#1s);
 
-// Log pump turned off from loss of interlock
-//tAction(CLK:= stPump.xILKOk);
-//IF tAction.Q AND ((stPump.eState = pumpRUNNING) OR (stPump.eState = pumpSTARTING)) THEN fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); END_IF
 // TAW Experimental ion pump timeout
 tPumpStartTimeout(IN:=(NOT stPump.i_xHV_DI AND stPump.q_xHVEna_DO));
 tTimeOutAction(CLK:=tPumpStartTimeout.Q);
@@ -110,15 +107,31 @@ ACT_Logger();]]></ST>
     <Action Name="ACT_Logger" Id="{dd00b334-c786-42ee-ae98-6142e7f8ba70}">
       <Implementation>
         <ST><![CDATA[// ILK logger
-
-IF NOT stPump.xILKOk AND stPump.q_xHVEna_DO THEN
- 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+tAction(CLK:= );
+IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTARTING)) THEN 
+	fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); 
 END_IF
 
 
 // Log Action
 tAction(CLK:=  stPump.q_xHVEna_DO);
 IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+
+
+//STATE Logger  
+IF ePrevState <> stPump.eState THEN
+	  CASE stPump.eState OF
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+  		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpSTARTING:
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := stPump.eState;  
+  END_IF
 
 
 // Log FAULT

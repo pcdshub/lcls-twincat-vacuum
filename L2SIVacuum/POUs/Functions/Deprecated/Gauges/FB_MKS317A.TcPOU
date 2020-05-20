@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_MKS317A" Id="{5da6683a-653a-4dd9-bfe9-211b87873c21}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function is for the Pirani MKS 317 connected to a 937A/B *)
+    <Declaration><![CDATA[(*Deprecated*)
+(* This function is for the Pirani MKS 317 connected to a 937A*)
 (* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
 
-FUNCTION_BLOCK FB_MKS317A
+FUNCTION_BLOCK FB_MKS317A  Extends FB_GaugeBase
 VAR_IN_OUT
 	
 END_VAR
@@ -34,7 +35,7 @@ END_VAR
       <ST><![CDATA[(* 937B Logarithmic Output Conversion *)
 (* 5-20-2016, Alex Wallace and Scott Stubbs *)
 (* 09-28-2018, Margaret Ghaly *)
-(* This function will read the pressure from any gauge on a 937B. *)
+(* This function will read the pressure from any gauge on a 937A. *)
 
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;
 PG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV)/0.6)-12)); //manual page 61 937A
@@ -68,42 +69,44 @@ PG.xPRESS_OK := (rV <=rValidHiBoundary ) AND (rV>=rDisconnectedBoundary);
 (* Setpoint evaluation *)
 PG.xAT_VAC := (*(PG.eState =Valid)*) PG.xPRESS_OK AND PG.rPRESS <= PG.rVAC_SP;
 
-
+(*Logger*)
+ACT_Logger();
 (*soft io*)
 IO();
 ]]></ST>
     </Implementation>
+    <Action Name="ACT_Logger" Id="{7344e8d9-43b6-410c-a80c-1b1f154041bf}">
+      <Implementation>
+        <ST><![CDATA[
+//STATE Logger  
+IF ePrevState <> PG.eState THEN
+	  CASE PG.eState OF
+		ValidHi:
+			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+		ValidLo:
+			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+		Valid:
+			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+  		GaugeDisconnected:
+			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+		PressInvalid:
+			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+		OoR:
+			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+		Starting:
+			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := PG.eState;  
+  END_IF
+  
+
+]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="IO" Id="{193cb751-e264-4d99-903a-eefc06eb5f23}">
       <Implementation>
         <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_MKS317A">
-      <LineId Id="3" Count="0" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="4" Count="5" />
-      <LineId Id="106" Count="3" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="31" Count="4" />
-      <LineId Id="190" Count="0" />
-      <LineId Id="36" Count="3" />
-      <LineId Id="188" Count="0" />
-      <LineId Id="40" Count="1" />
-      <LineId Id="189" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="105" Count="0" />
-      <LineId Id="43" Count="2" />
-      <LineId Id="131" Count="1" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="133" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS317A.IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

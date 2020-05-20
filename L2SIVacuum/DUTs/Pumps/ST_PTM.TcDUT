@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <DUT Name="ST_PTM" Id="{4cff5a41-fc78-4938-9468-a980c788ccb5}">
     <Declaration><![CDATA[TYPE ST_PTM :
 STRUCT
@@ -50,6 +50,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	{attribute 'pytmc' := '
 	pv: SPEED;
 	io: i;
+	field: EGU "Hz"
 	'}
 	i_diCurSpd	:	DINT;
 	
@@ -111,8 +112,19 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	{attribute 'pytmc' := '
 	pv: CURR_MON;
 	io: i;
+	field: PREC 2
+	field: EGU "A";
 	'}
-	i_iCurrentMon : INT; // Voltage to the output current of motor 0->5V 0->10A
+	i_rCurrentMon : REAL;
+
+	{attribute 'pytmc' := '
+    pv: TEMP_MON
+	io: i
+	field: PREC 2
+	field: EGU "C"
+	'}
+	i_rTempMon	:	REAL; 
+
 
 
 END_STRUCT

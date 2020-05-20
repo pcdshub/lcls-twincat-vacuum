@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <DUT Name="ST_AgilentPTM" Id="{cabd0058-3dd4-4905-9b15-54411322c9ff}">
     <Declaration><![CDATA[TYPE ST_AgilentPTM EXTENDS ST_PTM :
 STRUCT
@@ -57,12 +57,7 @@ STRUCT
 	io: i;
 	'}
 	q_xSS   	:  BOOL; 
-	
-	
-	
-	
-	
-	
+		
 	(*pump Lock*)
 	{attribute 'pytmc' := '
     pv: FaultLock;
@@ -76,6 +71,13 @@ STRUCT
 	io: i;
 	'}
 	sError : STRING;
+	{attribute 'pytmc' := '
+	pv: Power_MON;
+	io: i;
+	field: PREC 2
+	field: EGU "W";
+	'}
+	i_rPowerMon : REAL;
 
 END_STRUCT
 END_TYPE

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_VGC_AP" Id="{35834045-fb1e-4ba9-a4dc-abf7b4af153b}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves with Appertures*)
 (* This function block interlock is as follows:
@@ -9,6 +9,7 @@ less than the maximum differential pressure.
 3. Once at-vac, the valve will close if the pressure on either side rises above the setpoint.*)
 (*This function block also implements PMPS and EPS interlocks, as well as Fast MPS trigger*)
 (* MPS is triggered differently than the VGC *)
+{attribute 'no_check'}
 FUNCTION_BLOCK FB_VGC_AP
 VAR_IN_OUT
 	
@@ -163,6 +164,7 @@ IF iq_stValve.rAT_VAC_SP <> 0 THEN
 	IF iq_stValve.rHYST_PERC <> (iq_stValve.rAT_VAC_HYS / iq_stValve.rAT_VAC_SP) THEN
 		iq_stValve.rHYST_PERC := LIMIT(0, (iq_stValve.rAT_VAC_HYS / iq_stValve.rAT_VAC_SP) ,1);
 	END_IF
+
 END_IF
 // Valve at vacuum check
 ///////////////////////////////////////////////////
@@ -420,102 +422,5 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VGC_AP">
-      <LineId Id="3" Count="21" />
-      <LineId Id="361" Count="0" />
-      <LineId Id="25" Count="2" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="621" Count="0" />
-      <LineId Id="620" Count="0" />
-      <LineId Id="327" Count="0" />
-      <LineId Id="329" Count="0" />
-      <LineId Id="362" Count="2" />
-      <LineId Id="325" Count="1" />
-      <LineId Id="36" Count="1" />
-      <LineId Id="199" Count="0" />
-      <LineId Id="198" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="696" Count="0" />
-      <LineId Id="40" Count="21" />
-      <LineId Id="248" Count="0" />
-      <LineId Id="246" Count="0" />
-      <LineId Id="249" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="241" Count="0" />
-      <LineId Id="244" Count="0" />
-      <LineId Id="66" Count="18" />
-      <LineId Id="1124" Count="42" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="1167" Count="29" />
-      <LineId Id="123" Count="3" />
-      <LineId Id="1197" Count="3" />
-      <LineId Id="127" Count="3" />
-      <LineId Id="285" Count="0" />
-      <LineId Id="287" Count="1" />
-      <LineId Id="286" Count="0" />
-      <LineId Id="131" Count="4" />
-      <LineId Id="141" Count="10" />
-      <LineId Id="1202" Count="1" />
-      <LineId Id="1201" Count="0" />
-      <LineId Id="152" Count="3" />
-      <LineId Id="408" Count="0" />
-      <LineId Id="428" Count="0" />
-      <LineId Id="416" Count="1" />
-      <LineId Id="424" Count="0" />
-      <LineId Id="433" Count="0" />
-      <LineId Id="425" Count="1" />
-      <LineId Id="430" Count="0" />
-      <LineId Id="432" Count="0" />
-      <LineId Id="427" Count="0" />
-      <LineId Id="423" Count="0" />
-      <LineId Id="156" Count="1" />
-      <LineId Id="429" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="556" Count="0" />
-      <LineId Id="406" Count="0" />
-      <LineId Id="335" Count="3" />
-      <LineId Id="846" Count="1" />
-      <LineId Id="340" Count="0" />
-      <LineId Id="848" Count="0" />
-      <LineId Id="341" Count="0" />
-      <LineId Id="769" Count="1" />
-      <LineId Id="849" Count="0" />
-      <LineId Id="342" Count="3" />
-      <LineId Id="1204" Count="12" />
-      <LineId Id="347" Count="3" />
-      <LineId Id="487" Count="2" />
-      <LineId Id="162" Count="0" />
-      <LineId Id="932" Count="0" />
-      <LineId Id="931" Count="0" />
-      <LineId Id="1024" Count="1" />
-      <LineId Id="934" Count="0" />
-      <LineId Id="852" Count="0" />
-      <LineId Id="163" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_AP.ACT_IO">
-      <LineId Id="2" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_AP.ACT_ResetAlarms">
-      <LineId Id="2" Count="1" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="6" Count="1" />
-    </LineIds>
-    <LineIds Name="FB_VGC_AP.M_IsClosed">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_AP.M_IsOpen">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_AP.M_Set_OPN_SW">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

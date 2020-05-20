@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_VGC" Id="{e37ddbb4-4f83-44d0-bab6-047e5a609a6c}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves*)
 (* This function block interlock is as follows:
@@ -8,6 +8,7 @@ less than the maximum differential pressure.
 2. This rule persists until the pressures on both sides are lower than the vacuum-setpoint.
 3. Once at-vac, the valve will close if the pressure on either side rises above the setpoint.*)
 (*This function block also implements PMPS and EPS interlocks, as well as Fast MPS trigger*)
+{attribute 'no_check'}
 FUNCTION_BLOCK FB_VGC
 VAR_IN_OUT
 	

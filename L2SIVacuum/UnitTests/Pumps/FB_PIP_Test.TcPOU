@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="FB_PIP_Test" Id="{42dd426b-50a4-45ca-8318-c8dc4e1a6ced}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PIP_Test EXTENDS TcUnit.FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	PG : ST_VG;
+	fb_PIP_GAMMA: FB_PIP_GAMMA;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[M_INIT();
+M_Interlock();
+M_AutoStart();
+]]></ST>
+    </Implementation>
+    <Method Name="M_AutoStart" Id="{0ca3d011-0de6-403f-8b45-be3c55d89c4f}">
+      <Declaration><![CDATA[METHOD M_AutoStart
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('PIP_Auto_Restart');
+This^.PG.rPRESS := 1E-6;
+This^.PG.xPRESS_OK := TRUE;
+This^.fb_PIP_GAMMA(i_stGauge:=PG, stPump=>, q_IG=>);
+AssertTrue(This^.fb_PIP_GAMMA.stPump.q_xHVEna_DO, 'PIP HVEna_DO set to false');
+TEST_FINISHED_NAMED('PIP_Auto_Restart');
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Check_State" Id="{21ab9721-0775-4531-aff3-4856a6f576b5}">
+      <Declaration><![CDATA[METHOD M_Check_State
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_INIT" Id="{a70ac589-207f-41cf-a1da-eba2bc83181d}">
+      <Declaration><![CDATA[METHOD M_INIT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('PIP_Startup');
+This^.PG.rPRESS := 1E-1;
+This^.PG.xPRESS_OK := TRUE;
+This^.fb_PIP_GAMMA(i_stGauge:=PG, stPump=>, q_IG=>);
+AssertFalse(This^.fb_PIP_GAMMA.stPump.xHVEna_SW, 'PIP xHVEna_SW set to True');
+AssertFalse(This^.fb_PIP_GAMMA.stPump.q_xHVEna_DO, 'PIP HVEna_DO set to True');
+TEST_FINISHED_NAMED('PIP_Startup');]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Interlock" Id="{9b091676-043a-4a29-9aa2-958fb5131e8c}">
+      <Declaration><![CDATA[METHOD M_Interlock
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('PIP_Interlock_Active');
+This^.PG.rPRESS := 1E-1;
+This^.PG.xPRESS_OK := True;
+This^.fb_PIP_GAMMA.M_Run(TRUE);
+This^.fb_PIP_GAMMA(i_stGauge:=PG, stPump=>, q_IG=>);
+AssertFalse(This^.fb_PIP_GAMMA.stPump.xHVEna_SW, 'PIP xHVEna_SW set to True');
+AssertFalse(This^.fb_PIP_GAMMA.stPump.q_xHVEna_DO, 'PIP HVEna_DO set to True');
+TEST_FINISHED_NAMED('PIP_Interlock_Active');
+
+TEST('PIP_Interlock_OK');
+This^.PG.rPRESS := 1E-9;
+This^.PG.xPRESS_OK := True;
+This^.fb_PIP_GAMMA.M_Run(TRUE);
+This^.fb_PIP_GAMMA(i_stGauge:=PG, stPump=>, q_IG=>);
+AssertTrue(This^.fb_PIP_GAMMA.stPump.xHVEna_SW, 'PIP xHVEna_SW set to False');
+AssertTrue(This^.fb_PIP_GAMMA.stPump.q_xHVEna_DO, 'PIP HVEna_DO set to False');
+TEST_FINISHED_NAMED('PIP_Interlock_OK');
+
+TEST('PIP_Interlock_Lost');
+This^.PG.rPRESS := 1E-9;
+This^.PG.xPRESS_OK := False;
+This^.fb_PIP_GAMMA(i_stGauge:=PG, stPump=>, q_IG=>);
+AssertFalse(This^.fb_PIP_GAMMA.stPump.xHVEna_SW, 'PIP xHVEna_SW set to True');
+AssertFalse(This^.fb_PIP_GAMMA.stPump.q_xHVEna_DO, 'PIP HVEna_DO set to True');
+TEST_FINISHED_NAMED('PIP_Interlock_Lost');
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <POU Name="FB_MKS500_EP" Id="{4da1e942-f359-4f6e-ab12-d5a0031e68e6}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EP boxes.
 A separate function block is necessary for the MKS500-to-EP box interface beacuse the EP
 boxes do not natively support the 5v IO signals on the MKS500 gauge.*)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
 (* 500 Logarithmic Output Conversion, factory default configuration *)
-FUNCTION_BLOCK FB_MKS500_EP
+FUNCTION_BLOCK FB_MKS500_EP EXTENDS FB_GaugeBase
 VAR_IN_OUT
 		
 END_VAR
@@ -48,7 +48,7 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
 (* Set Guage State based on the inputs HV ON and Discharge current*)
 IF rV >= 0.49 AND rV < 0.6  THEN
 	IG.eState := Starting;
-	IG.rPRESS := cDefaultPressure;
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 ELSIF rV < 0.4 THEN
 	IG.eState := Off;
 	IG.rPRESS := cDefaultPressure;
@@ -92,12 +92,51 @@ IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
 (* Setpoint evaluation *)
 IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid) ;
 
-
+ACT_Logger();
 (*Soft IO Linking*)
 // check ethercat Diagnostics
 IO();
 ]]></ST>
     </Implementation>
+    <Action Name="ACT_Logger" Id="{b6ae699a-8cbc-41c3-94fc-93d1d486cd97}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
+ 		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+// Log Action
+tAction(CLK:=  IG.q_xHV_DIS);
+IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+
+
+
+//STATE Logger  
+IF ePrevState <> IG.eState THEN
+	  CASE IG.eState OF
+		ValidHi:
+			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+		ValidLo:
+			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+		Valid:
+			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+  		GaugeDisconnected:
+			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+		PressInvalid:
+			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+		OoR:
+			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+		Starting:
+			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := IG.eState;  
+  END_IF
+  
+
+]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="IO" Id="{8ad71ac6-f961-40c8-a3be-ad3367f81f67}">
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
@@ -117,32 +156,5 @@ END_VAR
 this^.IG.xHV_SW:= NOT(enable);]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS500_EP">
-      <LineId Id="31" Count="0" />
-      <LineId Id="190" Count="1" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="32" Count="1" />
-      <LineId Id="36" Count="1" />
-      <LineId Id="275" Count="8" />
-      <LineId Id="51" Count="22" />
-      <LineId Id="319" Count="0" />
-      <LineId Id="74" Count="5" />
-      <LineId Id="81" Count="4" />
-      <LineId Id="107" Count="0" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="242" Count="0" />
-      <LineId Id="219" Count="1" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS500_EP.IO">
-      <LineId Id="6" Count="0" />
-      <LineId Id="4" Count="1" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS500_EP.M_HVE">
-      <LineId Id="7" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
