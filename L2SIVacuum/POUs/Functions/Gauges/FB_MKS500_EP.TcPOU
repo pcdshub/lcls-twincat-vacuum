@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
   <POU Name="FB_MKS500_EP" Id="{4da1e942-f359-4f6e-ab12-d5a0031e68e6}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EP boxes.
 A separate function block is necessary for the MKS500-to-EP box interface beacuse the EP
@@ -49,9 +49,6 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
 IF rV >= 0.49 AND rV < 0.6  THEN
 	IG.eState := Starting;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-ELSIF rV < 0.4 THEN
-	IG.eState := Off;
-	IG.rPRESS := cDefaultPressure;
 ELSE
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
@@ -123,7 +120,8 @@ this^.IG.xHV_SW:= NOT(enable);]]></ST>
       <LineId Id="117" Count="0" />
       <LineId Id="32" Count="1" />
       <LineId Id="36" Count="1" />
-      <LineId Id="275" Count="8" />
+      <LineId Id="275" Count="2" />
+      <LineId Id="281" Count="2" />
       <LineId Id="51" Count="22" />
       <LineId Id="319" Count="0" />
       <LineId Id="74" Count="5" />
