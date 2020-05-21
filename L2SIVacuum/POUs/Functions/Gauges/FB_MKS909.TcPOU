@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
   <POU Name="FB_MKS909" Id="{e4d3e807-daeb-4a47-bccf-64bd129edfcd}" SpecialFunc="None">
     <Declaration><![CDATA[(* Standard MKS 909 hot cathode *)
 (* works for 972 and 925 *)
@@ -150,5 +150,23 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_MKS909">
+      <LineId Id="3" Count="51" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS909.ACT_IO">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS909.ACT_Logger">
+      <LineId Id="2" Count="31" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS909.M_AutoOn">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS909.M_SetBits">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

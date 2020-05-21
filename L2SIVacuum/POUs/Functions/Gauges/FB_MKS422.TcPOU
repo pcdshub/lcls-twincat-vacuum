@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
   <POU Name="FB_MKS422" Id="{2e4ef3e9-09c8-44c2-b5f5-464ffb8c18a0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 422 connected to a 937A/B *)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
@@ -127,5 +127,20 @@ END_VAR
 this^.IG.xHV_SW:= (enable);]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_MKS422">
+      <LineId Id="3" Count="65" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.IO">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.M_AutoOn">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.M_HVE">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
