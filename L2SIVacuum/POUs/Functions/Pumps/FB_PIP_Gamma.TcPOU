@@ -149,8 +149,13 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); 
 (* use logarithmic Pressure calculation, Output= Normal and Offset = 0*)
 rV := 10*INT_TO_REAL(i_iPress)/32767;
 rPRESS := LREAL_TO_REAL(EXPT(10,(rV-iOffset))); (*offset = 11*)
+If stPump.q_xHVEna_DO THEN
 	q_IG.rPRESS := rPRESS;
 	stPump.rPRESS := rPRESS;
+ELSE
+	q_IG.rPRESS := 0;
+	stPump.rPRESS := 0;
+END_IF	
 IF (stPump.i_xHV_DI) AND (q_IG.rPRESS < q_IG.rVAC_SP) THEN //ADP// AND (q_IG.rPRESS<>0) AND stPump.q_xHVEna_DO) THEN 
 	q_IG.xPRESS_OK := TRUE;
 	ELSE
