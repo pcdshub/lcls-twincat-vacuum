@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
   <POU Name="FB_9XX" Id="{2b25be69-d890-49a3-9eed-41a1523a8d75}" SpecialFunc="None">
     <Declaration><![CDATA[(* Standard MKS 9XX series conversion *)
 (* works for 972 and 925 *)
@@ -77,5 +77,15 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_9XX">
+      <LineId Id="3" Count="31" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_9XX.ACT_IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_9XX.M_SetBits">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

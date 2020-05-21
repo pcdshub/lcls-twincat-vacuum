@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
   <POU Name="FB_972" Id="{02ad8586-ab8b-4c5e-9c1c-5db3b2c00a9f}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_972
 VAR_INPUT
@@ -54,5 +54,15 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_972">
+      <LineId Id="3" Count="15" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_972.ACT_IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_972.M_SetBits">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
