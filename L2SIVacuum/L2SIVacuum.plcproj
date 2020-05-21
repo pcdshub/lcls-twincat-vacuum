@@ -16,9 +16,9 @@
     <CombineIds>false</CombineIds>
     <Company>SLAC - LCLS</Company>
     <Released>false</Released>
-    <Title>lcls Vacuum lib</Title>
+    <Title>LCLS Vacuum</Title>
     <ProjectVersion>0.0.0</ProjectVersion>
-    <DefaultNamespace>SLAC - LCLS</DefaultNamespace>
+    <DefaultNamespace>LCLS_Vacuum</DefaultNamespace>
     <LibraryCategories>
       <LibraryCategory>
         <Id>{a5724f56-da3f-40b6-8a5e-63302d98c4cc}</Id>
@@ -113,6 +113,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Deprecated\Gauges\FB_MKS317A.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Valves\FB_VCC.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -245,10 +249,6 @@
     <Compile Include="POUs\Functions\Valves\FB_Valve.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\FB_VCC.TcPOU">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VFS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -328,18 +328,6 @@
     <Compile Include="POUs\Functions\Valves\Interfaces\ITF_Valve.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\ImplicitChecks\CheckDivDInt.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ImplicitChecks\CheckDivLInt.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ImplicitChecks\CheckDivLReal.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\ImplicitChecks\CheckDivReal.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="UnitTests\Functions\V_TO_INT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -376,7 +364,7 @@
     <Folder Include="GVLs" />
     <Folder Include="POUs\Functions\Deprecated" />
     <Folder Include="POUs\Functions\Deprecated\Gauges" />
-    <Folder Include="POUs\ImplicitChecks" />
+    <Folder Include="POUs\Functions\Deprecated\Valves" />
     <Folder Include="UnitTests" />
     <Folder Include="POUs\Functions" />
     <Folder Include="POUs\Functions\Gauges" />
@@ -456,9 +444,6 @@
     </PlaceholderResolution>
     <PlaceholderResolution Include="PMPS">
       <Resolution>PMPS, * (SLAC - LCLS)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="Standard">
-      <Resolution>Standard, * (System)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_DataExchange">
       <Resolution>Tc2_DataExchange, * (Beckhoff Automation GmbH)</Resolution>

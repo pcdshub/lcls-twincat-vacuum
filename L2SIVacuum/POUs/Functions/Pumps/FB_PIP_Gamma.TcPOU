@@ -112,12 +112,6 @@ IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTAR
 	fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); 
 END_IF
 
-
-// Log Action
-tAction(CLK:=  stPump.q_xHVEna_DO);
-IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
-
-
 //STATE Logger  
 IF ePrevState <> stPump.eState THEN
 	  CASE stPump.eState OF
@@ -129,33 +123,22 @@ IF ePrevState <> stPump.eState THEN
 			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
 		pumpRUNNING:
 			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+		pumpSTOPPING:
+			fbLogger(sMsg:='Pump stopping.', eSevr:=TcEventSeverity.Info);
 	  END_CASE
 	  ePrevState := stPump.eState;  
   END_IF
+
+  
+  // Log Action
+tAction(CLK:=  stPump.q_xHVEna_DO);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
 
 
 // Log FAULT
 tFault(CLK:=  NOT tPumpStartTimeout.Q);
 IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); END_IF
 
-
-
-//STATE Logger  
-
-IF ePrevState <> stPump.eState THEN
-	  CASE stPump.eState OF
-		pumpFAULT:
-			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
-  		pumpSTOPPED:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
-		pumpSTARTING:
-			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
-		pumpRUNNING:
-			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := stPump.eState;  
-  END_IF
-  
 ]]></ST>
       </Implementation>
     </Action>

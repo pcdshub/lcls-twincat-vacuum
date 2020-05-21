@@ -85,6 +85,7 @@ q_RunDO := iq_stPtm.q_RunDO;]]></ST>
     <Action Name="ACT_Logger" Id="{073bd2d6-ebd0-490d-9b1c-198b6a637e83}">
       <Implementation>
         <ST><![CDATA[//STATE Logger  
+// ILK logger
 IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
  		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
 END_IF
@@ -104,10 +105,6 @@ IF ePrevState <> iq_stPTM.eState THEN
 	  ePrevState := iq_stPTM.eState;  
   END_IF
   
-// ILK logger
-
-
-
 // Log Action
 tAction(CLK:=  iq_stPTM.q_RunDO);
 IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF

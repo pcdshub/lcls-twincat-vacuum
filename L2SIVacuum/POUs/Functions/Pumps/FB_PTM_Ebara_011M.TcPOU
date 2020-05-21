@@ -181,6 +181,8 @@ IF ePrevState <> iq_stPTM.eState THEN
 			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
 		pumpRUNNING:
 			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+		pumpSTOPPING:
+			fbLogger(sMsg:='Pump decelerating.', eSevr:=TcEventSeverity.Info);
 	  END_CASE
 	  ePrevState := iq_stPTM.eState;  
   END_IF

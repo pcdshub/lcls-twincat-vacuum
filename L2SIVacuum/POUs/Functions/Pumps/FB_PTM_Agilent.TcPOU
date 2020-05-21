@@ -32,7 +32,7 @@ VAR
 	tStartTimeOut : TON;
 	tR1TimeOut: TON;
 	step : INT :=0;
-	nErrorCode: UINT :=0;
+	nErrorCode: INT :=0;
 	xBackingPressureOK: BOOL;
 	iMaxSpeed : INT:=963;
 	
@@ -51,8 +51,8 @@ VAR
     
     
     // For logging
-    Msg : FB_FormatString;
-    fbJson : FB_JsonSaxWriter;
+  //  Msg : FB_FormatString;
+   // fbJson : FB_JsonSaxWriter;
    tOverrideActivated : R_TRIG;
 	
 	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
@@ -80,11 +80,6 @@ CASE (step) OF
 		iq_stPtm.eState := pumpSTOPPED;
 		step :=10;
         
-        //Log new state
-        IF ePrevState <> iq_stPtm.eState THEN
-            fbLogger(sMsg:='Pump stopped/ stopping.', eSevr:=TcEventSeverity.Verbose);
-            ePrevState := iq_stPtm.eState;
-		END_IF
 (*Idle State waiting to start*)	
 	10: // Idle State, waiting for the xRunSwitch
 		IF iq_stPtm.xExtRunOk  AND iq_stPTM.xRunSW THEN
@@ -104,11 +99,6 @@ CASE (step) OF
 		END_IF
 		// should check R1 ?? check Fault condition?
         
-        //Log new state
-        IF ePrevState <> iq_stPtm.eState THEN
-            fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Verbose);
-            ePrevState := iq_stPtm.eState;
-		END_IF
 		
 	40: // Pump is starting
 		iq_stPtm.eState := pumpSTARTING;
@@ -123,7 +113,7 @@ CASE (step) OF
 			step:= 90;
 			iq_stPtm.xPumpFaultLock := TRUE;
 			nErrorCode:= 930; // R1 Signal at Start time out.
-            fbLogger(sMsg:='Timeout: Pump could not achieve running speed.', eSevr:=TcEventSeverity.Warning);
+           // fbLogger(sMsg:='Timeout: Pump could not achieve running speed.', eSevr:=TcEventSeverity.Warning);
 		END_IF
 		
 	50: // Pump is Running (Normal Operation) ( R1 is True and STARTing is FALSE)
@@ -137,7 +127,7 @@ CASE (step) OF
         
         //Log new state
         IF ePrevState <> iq_stPtm.eState THEN
-            fbLogger(sMsg:='Pump at speed.', eSevr:=TcEventSeverity.Verbose);
+            //fbLogger(sMsg:='Pump at speed.', eSevr:=TcEventSeverity.Verbose);
             ePrevState := iq_stPtm.eState;
 		END_IF
 	
@@ -148,7 +138,7 @@ CASE (step) OF
 			tFaultWindowElapsed.IN := FALSE;
 			iq_stPtm.xPumpFaultLock := TRUE;
 			nErrorCode:= 920; // R1 Signal Lost multiple times.
-            fbLogger(sMsg:='Running signal Lost multiple times.', eSevr:=TcEventSeverity.Warning);
+            //fbLogger(sMsg:='Running signal Lost multiple times.', eSevr:=TcEventSeverity.Warning);
 		ELSIF tFaultWindowElapsed.Q  THEN
 			tFaultWindowElapsed.IN := FALSE;
 			nR1Fault := 0;
@@ -202,8 +192,8 @@ IF (NOT iq_stPtm.xRunSW) AND (NOT (step >= 90)) AND (NOT (step = 10)) THEN
 	step := 0;
 END_IF
 
-// Log faults
-tErrorPresent(CLK:=iq_stPtm.xPumpFaultLock);
+// Log faults Moved to ACT_Logger
+(*tErrorPresent(CLK:=iq_stPtm.xPumpFaultLock);
 IF tErrorPresent.Q THEN
     fbJson.StartObject();
     fbJson.AddKey('vacuum_typecode');
@@ -213,6 +203,7 @@ IF tErrorPresent.Q THEN
     fbLogger(sMsg:='Turbo control fault', eSevr:=TcEventSeverity.Warning);
     fbJson.ResetDocument();
 END_IF
+*)
 
 (* Timers *)
 tFaultWindowElapsed(PT:=tFaultWindowDuration);
@@ -230,6 +221,41 @@ iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressure
 
 ]]></ST>
     </Implementation>
+    <Action Name="ACT_Logger" Id="{ed7ad0a5-9a78-4047-aa81-61698840506a}">
+      <Implementation>
+        <ST><![CDATA[//STATE Logger  
+// ILK logger
+IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
+ 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+IF ePrevState <> iq_stPTM.eState THEN
+	  CASE iq_stPTM.eState OF
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+  		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpSTARTING:
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stPTM.eState;  
+  END_IF
+  
+// Log Action
+tAction(CLK:=  iq_stPTM.q_RunDO);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+
+
+// Log FAULT
+tFault(CLK:= iq_stPTM.i_xFault OR iq_stPtm.xPumpFaultLock);
+IF tFault.Q THEN fbLogger(sMsg:=iq_stPtm.sError, eSevr:=TcEventSeverity.Critical); END_IF
+
+]]></ST>
+      </Implementation>
+    </Action>
     <Method Name="BackingPressureSetPoint" Id="{21dc29bb-1bb2-48c6-a7d3-4f43435484d9}">
       <Declaration><![CDATA[METHOD BackingPressureSetPoint : REAL
 VAR_INPUT
@@ -252,15 +278,15 @@ END_VAR
         <ST><![CDATA[IF (eState = pumpFAULT ) THEN
 	CASE nErrorCode OF
 		950:
-			ErrorMessage := CONCAT(sPath,': Pump Starting Fault');
+			ErrorMessage := 'Pump Starting Fault';
 		930: 
-			ErrorMessage := CONCAT(sPath,': R1 Signal Timeout at Startup');
+			ErrorMessage := 'Pump could not achieve running speed';
 	
 		920:
-			ErrorMessage := CONCAT(sPath,': R1 signal lost multiple times');
+			ErrorMessage := 'Running at speed signal lost multiple times';
 
 		900:
-			ErrorMessage := CONCAT(sPath,': Pump Controller Fault');	
+			ErrorMessage := 'Pump Controller Fault';	
 	END_CASE
 	
 END_IF
