@@ -49,6 +49,9 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
 IF rV >= 0.49 AND rV < 0.6  THEN
 	IG.eState := Starting;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+ELSIF IG.q_xHV_DIS = FALSE THEN // change this condition to read the value if the Analog Slope is changed to report a non-overloaded NO HV status. 
+	IG.eState := Off;
+	IG.rPRESS := cDefaultPressure;
 ELSE
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
@@ -120,7 +123,9 @@ this^.IG.xHV_SW:= NOT(enable);]]></ST>
       <LineId Id="117" Count="0" />
       <LineId Id="32" Count="1" />
       <LineId Id="36" Count="1" />
-      <LineId Id="275" Count="2" />
+      <LineId Id="275" Count="1" />
+      <LineId Id="355" Count="2" />
+      <LineId Id="277" Count="0" />
       <LineId Id="281" Count="2" />
       <LineId Id="51" Count="22" />
       <LineId Id="319" Count="0" />
