@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VGC_EBD" Id="{103f9e7d-0b94-44cb-ad01-1b51d8921220}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function block is similar to the FB_VGC, except it has 2 outputs to actuate the Valve*)
+    <Declaration><![CDATA[(*Deprecated*)
+(* This function block is similar to the FB_VGC, except it has 2 outputs to actuate the Valve*)
 (* This function block implements basic functionality for Isolation Gate Valves*)
 (* This function block interlock is as follows:
 1. The valve can be opened when the difference between the pressures on both sides is
@@ -381,6 +382,10 @@ iq_stValve.xOverrideMode := i_xOverrideMode;
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;
 q_xOPN_DO_2:= iq_stValve.q_xOPN_DO;
 
+
+(*ILK Devices*)
+iq_stValve.sIlkUSDeviceName := This^.i_stUSG.sPath;
+iq_stValve.sIlkDSDeviceName := This^.i_stDSG.sPath;
 ]]></ST>
       </Implementation>
     </Action>
@@ -429,7 +434,7 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC_EBD.ACT_IO">
-      <LineId Id="2" Count="8" />
+      <LineId Id="2" Count="12" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC_EBD.ACT_ResetAlarms">

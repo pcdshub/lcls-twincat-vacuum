@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VGC_AP" Id="{35834045-fb1e-4ba9-a4dc-abf7b4af153b}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves with Appertures*)
+    <Declaration><![CDATA[(*Deprectated*)
+(* This function block implements basic functionality for Isolation Gate Valves with Appertures*)
 (* This function block interlock is as follows:
 1. The valve can be opened when the difference between the pressures on both sides is
 less than the maximum differential pressure.
@@ -327,14 +328,14 @@ xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=CLOSED);//iq_stValve.i
 ///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE;
-	iq_stValve.sErrorMessage := ': Close Timeout';
+	iq_stValve.sErrorMessage := 'Close Timeout';
 ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE; 
-	iq_stValve.sErrorMessage := ': Open Timeout';
+	iq_stValve.sErrorMessage := 'Open Timeout';
 END_IF
 IF (iq_stValve.eState=INVALID) THEN
 	iq_stValve.bErrorPresent := TRUE; 
-	iq_stValve.sErrorMessage := CONCAT(sPath,': Invalid Valve Position');
+	iq_stValve.sErrorMessage := CONCAT(sPath,'Invalid Valve Position');
 END_IF
 (*Timers*)
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );

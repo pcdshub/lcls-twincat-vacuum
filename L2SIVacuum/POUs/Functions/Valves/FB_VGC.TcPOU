@@ -37,6 +37,7 @@ VAR_INPUT
     pv: FF_Reset
 	'}
     i_xReset: BOOL;
+	i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -320,8 +321,15 @@ END_IF
 (* Here's where the valve opens *)
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
-(* When the valve  is open MPS is OK*)
-xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS; 
+(*MPS Fault setting*)
+If (i_xIsAperture ) THEN 
+	(* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
+	xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
+ELSE
+	(* When the valve  is open MPS is OK*)
+	xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS; 
+END_IF
+
 
 ///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
@@ -431,7 +439,13 @@ END_VAR
       <LineId Id="201" Count="0" />
       <LineId Id="369" Count="0" />
       <LineId Id="371" Count="0" />
-      <LineId Id="203" Count="64" />
+      <LineId Id="203" Count="16" />
+      <LineId Id="472" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="473" Count="1" />
+      <LineId Id="476" Count="3" />
+      <LineId Id="475" Count="0" />
+      <LineId Id="222" Count="45" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC.ACT_IO">

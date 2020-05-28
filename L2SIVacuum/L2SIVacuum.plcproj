@@ -134,6 +134,10 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Valves\FB_VGC_EBD.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_9XX.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -260,10 +264,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VGC_AP.TcPOU">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="POUs\Functions\Valves\FB_VGC_EBD.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
