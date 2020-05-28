@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="PRG_Test" Id="{3d3ce199-d6e8-49d3-9e69-49f0a2678e11}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_Test
 VAR
@@ -18,5 +18,9 @@ END_VAR
 TcUnit.RUN();
 ]]></ST>
     </Implementation>
+    <LineIds Name="PRG_Test">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

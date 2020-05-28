@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_TVGC_ADS" Id="{84085701-3a86-43d0-96fb-51ae4e0cc36d}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
 (* Not all the fields in the original structure is required, just few signals *)
@@ -7,7 +7,7 @@
 FUNCTION_BLOCK FB_TVGC_ADS
 VAR_INPUT
 	sNetId : String; //NetID of the Destination PLC controller
-	nPort : int; // port number
+	nPort : UINT; // port number
 	sVarName : string;// the variable name of the (device) declared function block.
 	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
 END_VAR

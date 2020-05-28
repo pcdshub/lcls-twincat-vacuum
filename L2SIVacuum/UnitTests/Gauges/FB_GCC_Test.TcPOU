@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_GCC_Test" Id="{abe007c5-97e2-4f83-88a7-7230dad873a3}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_GCC_Test EXTENDS TcUnit.FB_TestSuite
 VAR_INPUT
@@ -197,5 +197,25 @@ TEST_FINISHED_NAMED('MKS422_Self_Protection');
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_GCC_Test">
+      <LineId Id="3" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GCC_Test.M_CheckRange">
+      <LineId Id="3" Count="71" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GCC_Test.M_INIT">
+      <LineId Id="3" Count="7" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GCC_Test.M_Interlock">
+      <LineId Id="3" Count="35" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GCC_Test.M_SelfProtection">
+      <LineId Id="3" Count="19" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="F_TurboGateValve_ILK_1" Id="{4de2a450-fc41-4873-a7d2-9cd8db4a93ca}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function Block evaluates the ILK condition of the Turbo Gate valve *)
 (* The logic Protects the Turbo pump from inlet pressure above the SP*)
@@ -19,5 +19,9 @@ F_TurboGateValve_ILK_1 := (NOT (i_Turbo.eState = pumpSTOPPED) AND NOT (i_Turbo.e
 						AND (i_stISG.xPRESS_OK AND i_stISG.rPRESS < i_Turbo.rInletPressureSP);
 ]]></ST>
     </Implementation>
+    <LineIds Name="F_TurboGateValve_ILK_1">
+      <LineId Id="3" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

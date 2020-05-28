@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VRC_NO" Id="{5d1c15c7-6ca9-4210-b69b-eb5b4e8facc5}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is different from the regular VRC in that CLOSING must be permitted. *)
 FUNCTION_BLOCK FB_VRC_NO EXTENDS FB_Valve
@@ -175,5 +175,22 @@ END_VAR
         <ST><![CDATA[This^.pv_xCLS_SW := value;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VRC_NO">
+      <LineId Id="3" Count="77" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_NO.ACT_IO">
+      <LineId Id="2" Count="6" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_NO.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_NO.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_NO.M_Set_CLS_SW">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

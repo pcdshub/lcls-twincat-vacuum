@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_Agilent" Id="{30958a8b-73eb-4ef7-96d3-72fcd80f684d}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TV Turbo pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -307,7 +307,7 @@ If (iTermBits=0) THEN iTermBits := 32767;END_IF
 iq_stPtm.i_rCurrentMon := 10*INT_TO_REAL(i_iCurrentMon)/iTermBits; // 1v is equal to 1A  Manual page 73
 iq_stPtm.i_rTempMon := 10*INT_TO_REAL(i_iTempMon)/iTermBits; // 1v is equal to 1A  Manual page 73
 iq_stPtm.i_rPowerMon := 10*INT_TO_REAL(i_iPowerMon)/iTermBits; // 1v is equal to 1A  Manual page 73
-iq_stPtm.i_diCurSpd := 10*LREAL_TO_DINT(i_iRawSpeed/iTermBits); // 1v is equal to 1A  Manual page 73
+iq_stPtm.i_diCurSpd := 10*LREAL_TO_DINT(INT_TO_REAL(i_iRawSpeed)/iTermBits); // 1v is equal to 1A  Manual page 73
 
 
 (*outputs*)
@@ -356,5 +356,37 @@ END_VAR
         <ST><![CDATA[M_TurboIsOn := (This^.iq_stPtm.eState =  E_PumpState.pumpSTARTING ) OR (This^.iq_stPtm.eState =  E_PumpState.pumpRUNNING );]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_PTM_Agilent">
+      <LineId Id="3" Count="159" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.ACT_Logger">
+      <LineId Id="2" Count="29" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.BackingPressureSetPoint">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.ErrorMessage">
+      <LineId Id="3" Count="15" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.IO">
+      <LineId Id="2" Count="16" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_Run">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_SetBits">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_SetMaxSpeed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_TurboIsOn">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

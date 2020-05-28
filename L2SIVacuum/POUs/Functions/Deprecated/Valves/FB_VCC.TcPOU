@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VCC" Id="{5ba1a6cc-24ff-4014-aa5e-6a7b6226a38e}" SpecialFunc="None">
     <Declaration><![CDATA[(*Deprecated*)
 (* THE FB_VCC FUNCTION BLOCK IS DEPRECATED. USE FB_VVC INSTEAD. *)
@@ -93,5 +93,22 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VCC">
+      <LineId Id="3" Count="23" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.ACT_IO">
+      <LineId Id="2" Count="2" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.M_Set_OPN_SW">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

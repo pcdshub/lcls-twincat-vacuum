@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VGC" Id="{e37ddbb4-4f83-44d0-bab6-047e5a609a6c}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves*)
 (* This function block interlock is as follows:
@@ -299,9 +299,9 @@ IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN
 	if (iq_stValve.eState = OPEN) AND (i_xOverrideMode) THEN iq_stValve.pv_xOPN_SW := TRUE; END_IF //for seamless transition   
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
-    
 END_IF
-
+// Release the Force Open bit when the system override is false
+IF NOT (i_xOverrideMode) THEN  iq_stValve.pv_xOvrdOpn :=FALSE; END_IF
 //Override timer
 tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
@@ -326,14 +326,14 @@ xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS;
 ///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE;
-	iq_stValve.sErrorMessage := ' Close Timeout';
+	iq_stValve.sErrorMessage := 'Close Timeout';
 ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE; 
-	iq_stValve.sErrorMessage := ' Open Timeout';
+	iq_stValve.sErrorMessage := 'Open Timeout';
 END_IF
 IF (iq_stValve.eState=INVALID) THEN
 	iq_stValve.bErrorPresent := TRUE; 
-	iq_stValve.sErrorMessage := CONCAT(sPath,' Invalid Valve Position');
+	iq_stValve.sErrorMessage := CONCAT(sPath,'Invalid Valve Position');
 END_IF
 
 
@@ -378,6 +378,11 @@ iq_stValve.xEXT_OK := i_xEXT_OK;
 iq_stValve.xOverrideMode := i_xOverrideMode;
 (*outputs*)
 q_xOPN_DO:= iq_stValve.q_xOPN_DO;
+
+(*ILK Devices*)
+iq_stValve.sIlkUSDeviceName := This^.i_stUSG.sPath;
+iq_stValve.sIlkDSDeviceName := This^.i_stDSG.sPath;
+
 ]]></ST>
       </Implementation>
     </Action>
@@ -421,5 +426,34 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VGC">
+      <LineId Id="3" Count="196" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="371" Count="0" />
+      <LineId Id="203" Count="64" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC.ACT_IO">
+      <LineId Id="2" Count="6" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC.ACT_ResetAlarms">
+      <LineId Id="2" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC.M_Set_OPN_SW">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

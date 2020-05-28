@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS422" Id="{2e4ef3e9-09c8-44c2-b5f5-464ffb8c18a0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 422 connected to a 937A/B *)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
@@ -21,13 +21,14 @@ VAR
 	rV	:	REAL;
 	
 	timer:TON;
-	
 	(*IOs to be linked*)
 	/// Controls and I/Os
 	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
 	q_xHV_DIS AT %Q* : BOOL := True; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
-	
-	
+END_VAR
+VAR CONSTANT
+	MinPressure: REAL := 1E-10;
+	cDefaultPressure : REAL := 0;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -58,10 +59,10 @@ ELSIF rV > 9.6 AND rV<= 9.9 THEN
 	IG.eState := ValidHi; //HIGH
 ELSIF rV < 0.18 THEN // 
 	IG.eState := GaugeDisconnected; //not on
-	IG.rPRESS :=0;
+	IG.rPRESS :=cDefaultPressure;
 ELSE
 	IG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
-	IG.rPRESS :=0;
+	IG.rPRESS :=cDefaultPressure;
 END_IF
 
 
@@ -150,7 +151,9 @@ IF ePrevState <> IG.eState THEN
 IG.i_iPRESS_R:=	i_iPRESS_R; 
 
 (*soft link outputs*)
-q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
+q_xHV_DIS := IG.q_xHV_DIS;
+
+IG.sPath := sPath;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_AutoOn" Id="{06245f08-bb9d-49ef-bd4d-3fe48276b865}">
@@ -173,5 +176,26 @@ END_VAR
 this^.IG.xHV_SW:= (enable);]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_MKS422">
+      <LineId Id="3" Count="71" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.ACT_Logger">
+      <LineId Id="2" Count="33" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.IO">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.M_AutoOn">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.M_HVE">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

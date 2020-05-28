@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_TwisTorr" Id="{91de0c91-34da-4736-bacc-23eca1b0004f}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TwisTorr 304 FS with on board Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
@@ -112,5 +112,21 @@ END_VAR
 this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_PTM_TwisTorr">
+      <LineId Id="3" Count="29" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TwisTorr.ACT_IO">
+      <LineId Id="2" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TwisTorr.ACT_Logger">
+      <LineId Id="2" Count="29" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TwisTorr.M_Run">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

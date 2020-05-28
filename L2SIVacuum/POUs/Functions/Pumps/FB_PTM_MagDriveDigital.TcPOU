@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_MagDriveDigital" Id="{50197c8d-2497-4812-a680-acd70b819f81}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Leybold connected to the MagDriveDigital Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
@@ -139,5 +139,21 @@ END_VAR
 this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_PTM_MagDriveDigital">
+      <LineId Id="3" Count="39" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_MagDriveDigital.ACT_IO">
+      <LineId Id="2" Count="8" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_MagDriveDigital.ACT_Logger">
+      <LineId Id="2" Count="32" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_MagDriveDigital.M_Run">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

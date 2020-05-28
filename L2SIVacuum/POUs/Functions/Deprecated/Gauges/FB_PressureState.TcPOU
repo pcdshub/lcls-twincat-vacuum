@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PressureState" Id="{4670721e-b41f-4e8d-804c-723289c03b35}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_PressureState
+    <Declaration><![CDATA[(*Deprecated*)
+FUNCTION_BLOCK FB_PressureState
 VAR_INPUT
 	i_rV	:	REAL;
 	i_rVMin	:	REAL := 0.01; // Anything less than this voltage is considered disconnected

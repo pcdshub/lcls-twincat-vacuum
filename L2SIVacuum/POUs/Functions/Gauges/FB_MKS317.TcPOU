@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS317" Id="{8a56f7a2-f285-4648-be2d-40acd79b269f}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Pirani MKS 317 connected to a 937A/B *)
 (* This function block is used to provide protection and automatic turn on of ion gauges,
@@ -19,15 +19,18 @@ VAR_OUTPUT
 END_VAR
 VAR
 	rV	:	REAL;
+
+	(*IO*)
+	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR
+
+VAR CONSTANT
 	rMinPressure: REAL := 1E-4;
 	rDefaultVAC_SP: REAL :=5E-2; // Default 50 mT
 	rValidLoBoundary	:	REAL := 0.2;
 	rValidHiBoundary	:	REAL := 9.7; 
 	rDisconnectedBoundary	:	REAL := 0.17;
 	rNoSensorBoundary	:	REAL := 10;
-	
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -109,8 +112,23 @@ IF ePrevState <> PG.eState THEN
     </Action>
     <Action Name="IO" Id="{267ed2b0-2e00-403e-b259-b7dc82fa629f}">
       <Implementation>
-        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;
+
+PG.sPath := sPath;]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="FB_MKS317">
+      <LineId Id="3" Count="45" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS317.ACT_Logger">
+      <LineId Id="2" Count="22" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS317.IO">
+      <LineId Id="1" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

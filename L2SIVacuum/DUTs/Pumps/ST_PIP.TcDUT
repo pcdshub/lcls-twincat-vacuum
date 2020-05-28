@@ -27,6 +27,14 @@ STRUCT
 	'}
 	rHVEna_SP : REAL := 1.0E-4;	
 	
+	{attribute 'pytmc' := '
+    pv: ILK_DEVICE;
+	io: o;
+    '}
+	sIlkDeviceName: STRING;
+	//Required for other devices using this gauge as interlock
+	sPath: STRING;
+	
 (* EPICS Controls *)	
 	{attribute 'pytmc' := '
     pv: HV_SW;
@@ -42,6 +50,15 @@ STRUCT
 	io:i;
     '}
 	xAutoOn : BOOL;
+	
+	{attribute 'pytmc' := '
+    pv: FORCE_START;
+	io: io;
+	field: ZNAM FALSE;
+	field: ONAM FORCE START;
+    '}
+	pv_xOvrdStart	:	BOOL;
+	
 	{attribute 'pytmc' := '
     pv: SP_HYS;
 	io: io;
@@ -52,6 +69,18 @@ STRUCT
 	'}
 	/// Protection setpoint hysteresis 
 	rHYS_PR: REAL := 0.001; 
+	{attribute 'pytmc' := '
+    pv: AI_Offset;
+	io: i;
+    '}
+	iOffset: INT:=13;
+	{attribute 'pytmc' := '
+    pv: Inverted;
+	field: ZNAM NORMAL; 
+	field: ONAM INVERTED;
+	io: i;
+    '}
+	bOutputInverted : BOOL;
 (* IO Controls *)
 	{attribute 'pytmc' := '
     pv: HV_DO;

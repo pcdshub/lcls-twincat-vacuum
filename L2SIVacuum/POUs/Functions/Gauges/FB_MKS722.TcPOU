@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS722" Id="{367caa56-e444-4f21-b772-700d1462b7b8}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the MKS 722*)
 
@@ -61,5 +61,12 @@ ACT_IO();]]></ST>
         <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="FB_MKS722">
+      <LineId Id="3" Count="23" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS722.ACT_IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

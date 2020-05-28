@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VRC" Id="{2db6a988-e12f-4920-baa1-9b034d8c1cf9}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for certain types of valves e.g Turbo Isolation valves, Apperture Valve.
 This function block is interloked by an input (i_xExtILK_OK). This is so developers can interface with custom
@@ -95,14 +95,14 @@ when the valve permission goes true for more than ten seconds consistently, remo
 
 tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=T#10S);
 rtOK(CLK:=tonDelOK.Q);
-
 IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN 
 	iq_stValve.pv_xOvrdOpn :=FALSE; 
 	if (iq_stValve.eState=OPEN) AND (i_xOverrideMode) THEN iq_stValve.pv_xOPN_SW := TRUE; END_IF
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
-
+// Release the Force Open bit when the system override is false
+IF NOT(i_xOverrideMode) THEN  iq_stValve.pv_xOvrdOpn :=FALSE; END_IF
 //Override timer
 tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
@@ -215,5 +215,29 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VRC">
+      <LineId Id="3" Count="45" />
+      <LineId Id="50" Count="5" />
+      <LineId Id="135" Count="1" />
+      <LineId Id="57" Count="29" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.ACT_IO">
+      <LineId Id="2" Count="4" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.ACT_Logger">
+      <LineId Id="2" Count="35" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.M_Set_OPN_SW">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

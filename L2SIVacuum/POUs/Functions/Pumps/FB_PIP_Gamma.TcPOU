@@ -1,11 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PIP_Gamma" Id="{c735b214-fb8d-491c-9d35-e2f8609cfbf0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the ION pump connected to a Gamma QPCe controller.
  Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
 FUNCTION_BLOCK FB_PIP_Gamma Extends FB_Pump
 VAR_INPUT
-	i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock 
+	i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock
+    i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum interlock logic*) 
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -18,7 +19,7 @@ VAR_IN_OUT
 END_VAR
 VAR
  rPRESS : REAL;
- iOffset: INT:=11;
+ 
  rV : REAL;
  timer:TON; 
  rHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
@@ -34,6 +35,11 @@ tOverrideActivated : R_TRIG;
 tPumpStartTimeout : TON := (PT:=T#10s); // Timeout pump start if pressure < 1E-11 for more than 10s.
 MinPressure : REAL:= 1E-11; // Minimum readback pressure, pump must register pressure above this to be considered running
  
+//Overrides
+	tonOvrd	:	TON;
+	tonDelOK : TON;
+	rtOK	:	R_TRIG;
+	tOvrd	:	TIME := T#10s;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -60,6 +66,8 @@ ELSIF stPump.q_xHVEna_DO AND timer.Q THEN
 	ELSE
 		stPump.q_xHVEna_DO := stPump.xHVEna_SW; 
 	END_IF
+ELSIF (tonOvrd.Q AND i_xOverrideMode) THEN
+	stPump.q_xHVEna_DO := TRUE;
 ELSE
 	stPump.q_xHVEna_DO  := FALSE;
 	stPump.xHVEna_SW := FALSE;
@@ -104,6 +112,29 @@ IO();
 // Log States and triggers
 ACT_Logger();]]></ST>
     </Implementation>
+    <Action Name="ACT_IlkOverride" Id="{bcee683f-3211-4a69-9559-1cb72724e991}">
+      <Implementation>
+        <ST><![CDATA[(* Override logic *)
+(* Goal: give ability to override, but do so in a way that people won't forget it.
+Solution: Override only after ten seconds of override, protect against blips,
+when the Pump permission goes true for more than ten seconds consistently, remove override
+*)
+
+tonDelOK(IN:=stPump.xILKOk, PT:=T#10S);
+rtOK(CLK:=tonDelOK.Q);
+IF rtOK.Q AND stPump.pv_xOvrdStart THEN 
+	stPump.pv_xOvrdStart :=FALSE; 
+	if (stPump.eState = pumpRUNNING) AND (i_xOverrideMode) THEN stPump.xHVEna_SW:= TRUE; END_IF
+    //Log
+    fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
+END_IF
+// Release the Force Open bit when the system override is false
+IF NOT(i_xOverrideMode) THEN stPump.pv_xOvrdStart :=FALSE; END_IF
+//Override timer
+tonOvrd(IN:= stPump.pv_xOvrdStart, PT:=tOvrd);
+]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="ACT_Logger" Id="{dd00b334-c786-42ee-ae98-6142e7f8ba70}">
       <Implementation>
         <ST><![CDATA[// ILK logger
@@ -133,6 +164,9 @@ IF ePrevState <> stPump.eState THEN
   // Log Action
 tAction(CLK:=  stPump.q_xHVEna_DO);
 IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+// Log override mode enabled
+tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
+IF tOverrideActivated.Q THEN fbLogger(sMsg:='Pump override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 
 
 // Log FAULT
@@ -148,25 +182,33 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); 
 (* convert the analog input into readable pressure*)
 (* use logarithmic Pressure calculation, Output= Normal and Offset = 0*)
 rV := 10*INT_TO_REAL(i_iPress)/32767;
-rPRESS := LREAL_TO_REAL(EXPT(10,(rV-iOffset))); (*offset = 11*)
-If stPump.q_xHVEna_DO THEN
+//Manual Page 9
+
+if (stPump.bOutputInverted) THEN
+	rPRESS := LREAL_TO_REAL(EXPT(10,(rV-stPump.iOffset)*-1));
+ELSE 
+	rPRESS := LREAL_TO_REAL(EXPT(10,(rV-stPump.iOffset)));
+END_IF
+IF (stPump.q_xHVEna_DO) THEN
 	q_IG.rPRESS := rPRESS;
 	stPump.rPRESS := rPRESS;
-ELSE
-	q_IG.rPRESS := 0;
-	stPump.rPRESS := 0;
-END_IF	
+END_IF
+
+
 IF (stPump.i_xHV_DI) AND (q_IG.rPRESS < q_IG.rVAC_SP) THEN //ADP// AND (q_IG.rPRESS<>0) AND stPump.q_xHVEna_DO) THEN 
 	q_IG.xPRESS_OK := TRUE;
 	ELSE
 	q_IG.xPRESS_OK := FALSE;
 END_IF
+
+q_IG.sPath := This^.stPump.sPath;
+
 ]]></ST>
       </Implementation>
     </Action>
     <Action Name="IO" Id="{a9e5b5c0-3557-4ce9-a1b9-765648e955e7}">
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[stPump.sIlkDeviceName := This^.i_stGauge.sPath;
 (*inputs*)
 stPump.i_iPRESS:=	i_iPRESS;  
 stPump.i_xHV_DI:=	i_xSP_DI;
@@ -195,5 +237,40 @@ END_VAR
 this^.stPump.xHVEna_SW := run;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_PIP_Gamma">
+      <LineId Id="3" Count="23" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="27" Count="40" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.ACT_IlkOverride">
+      <LineId Id="2" Count="17" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.ACT_Logger">
+      <LineId Id="2" Count="26" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="29" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.ACT_SetGauge">
+      <LineId Id="2" Count="21" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.IO">
+      <LineId Id="2" Count="4" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.M_AutoOn">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma.M_Run">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

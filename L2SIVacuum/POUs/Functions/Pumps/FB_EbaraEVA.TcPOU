@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_EbaraEVA" Id="{fcf97f55-51a9-4ad7-88f0-a45e9e26409c}" SpecialFunc="None">
     <Declaration><![CDATA[(*This function block does basic controls for the Ebara EV-A  pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
@@ -107,5 +107,17 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
 ]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="FB_EbaraEVA">
+      <LineId Id="3" Count="30" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_EbaraEVA.ACT_IO">
+      <LineId Id="2" Count="4" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_EbaraEVA.ACT_Logger">
+      <LineId Id="2" Count="28" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

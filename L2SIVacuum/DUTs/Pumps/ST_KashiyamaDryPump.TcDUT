@@ -7,34 +7,46 @@ STRUCT
 (* Output *)	
 	//q_xRunDO 	:	BOOL; in Rough PUMP
 	{attribute 'pytmc' := '
-    pv: RESET_DO
+    pv: RESET_DO;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
 	'}
 	q_xResetDo	: 	BOOL;
 	{attribute 'pytmc' := '
-    pv: LSPD_DO
+    pv: LSPD_DO;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
 	'}
 	q_xLspdDo	: 	BOOL;
 	
 (* Input *)
 {attribute 'pytmc' := '
-    pv: REMOTE
+    pv: REMOTE;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
     '}
 	i_xLocal	:	BOOL;
 	{attribute 'pytmc' := '
-    pv: ALARM_OK
+    pv: ALARM_OK;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
     '}
 	i_xAlarmOK	:	BOOL;
 	{attribute 'pytmc' := '
-    pv: WARN_OK
+    pv: WARN_OK;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
     '}
 	i_xWarningOK	:	BOOL;
 	{attribute 'pytmc' := '
-    pv: RUN_DI
+    pv: RUN_DI;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
     '}
 	i_xIsRun		:	BOOL;
@@ -46,12 +58,16 @@ STRUCT
 (* EPICS *)
 	//xRunSW		:	BOOL; in Rough PUMP
 	{attribute 'pytmc' := '
-    pv: RESET_SW
+    pv: RESET_SW;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: io
 	'}
 	xResetSW	:	BOOL; //For resetting faults
 	{attribute 'pytmc' := '
-    pv: LSPD_SW
+    pv: LSPD_SW;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: io
 	'}
 	xLspdSW     :   BOOL;

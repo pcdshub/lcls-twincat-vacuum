@@ -31,6 +31,14 @@ STRUCT
 	xPRESS_OK: BOOL;
 	{attribute 'pytmc' := '
     pv: STATE;
+	field: ZRST PressInvalid;
+	field: ONST GaugeDisconnected;
+	field: TWST OoR;
+	field: THST Off;
+	field: FRST Starting;
+	field: FVST Valid;
+	field: SXST ValidHi;
+	field: SVST ValidLo;
 	io: i;
     '}
 	eState	:	E_PressureState;
@@ -121,7 +129,8 @@ STRUCT
 	io: i;
 	'}
 	xILKOk	:	BOOL; (* also a control *)
-	
+	//Required for other devices using this gauge as interlock
+	sPath: STRING;
 
 	/// Full scale pressure in Torr for baratron pressure conversion 
 	rFULL_SCALE: REAL := 1000;

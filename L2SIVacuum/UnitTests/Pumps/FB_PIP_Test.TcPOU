@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PIP_Test" Id="{42dd426b-50a4-45ca-8318-c8dc4e1a6ced}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_PIP_Test EXTENDS TcUnit.FB_TestSuite
 VAR_INPUT
@@ -92,5 +92,24 @@ TEST_FINISHED_NAMED('PIP_Interlock_Lost');
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_PIP_Test">
+      <LineId Id="3" Count="2" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Test.M_AutoStart">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Test.M_Check_State">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Test.M_INIT">
+      <LineId Id="3" Count="5" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Test.M_Interlock">
+      <LineId Id="3" Count="25" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

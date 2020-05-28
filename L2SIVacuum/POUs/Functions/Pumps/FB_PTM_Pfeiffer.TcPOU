@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_Pfeiffer" Id="{f61aaad0-85b4-4244-b8a7-58d7d76a340e}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Pfeiffer Turbo pump connected to the TM700 and TC400 Controllers.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
@@ -182,5 +182,25 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_PTM_Pfeiffer">
+      <LineId Id="3" Count="36" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Pfeiffer.ACT_IO">
+      <LineId Id="2" Count="9" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Pfeiffer.ACT_Logger">
+      <LineId Id="2" Count="32" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Pfeiffer.M_Run">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Pfeiffer.M_Serial_IO">
+      <LineId Id="3" Count="37" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

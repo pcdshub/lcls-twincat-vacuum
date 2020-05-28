@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VRC_Test" Id="{28f055fd-f5c0-4307-957c-f7993195c167}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VRC_Test EXTENDS TcUnit.FB_TestSuite
 VAR_INPUT
@@ -80,5 +80,20 @@ TEST_FINISHED_NAMED('VRC_Interlock_Lost');
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VRC_Test">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_Test.M_Check_State">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_Test.M_INIT">
+      <LineId Id="3" Count="9" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_Test.M_Interlock">
+      <LineId Id="3" Count="18" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

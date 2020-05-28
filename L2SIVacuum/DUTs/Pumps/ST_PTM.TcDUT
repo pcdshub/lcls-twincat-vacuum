@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_PTM" Id="{4cff5a41-fc78-4938-9468-a980c788ccb5}">
     <Declaration><![CDATA[TYPE ST_PTM :
 STRUCT
@@ -20,6 +20,8 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	xRunSW	:	BOOL;
 	{attribute 'pytmc' := '
 	pv: RST_SW;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: io;
 	'}
 	xResetSW	:	BOOL; //For resetting faults
@@ -39,11 +41,15 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	xExtRunOk	:	BOOL; (* also a control *)
 	{attribute 'pytmc' := '
     pv: ACCEL;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	i_xAccel	:	BOOL;
 	{attribute 'pytmc' := '
     pv: AT_SPD;
+	field: ZNAM FALSE; 
+	field: ONAM AT SPEED;
 	io: i;
 	'}
 	i_xAtSpd	:	BOOL;
@@ -58,16 +64,22 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 (* Alarm Outputs *)
 	{attribute 'pytmc' := '
     pv: FAULT;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	i_xFault		:	BOOL; (*FAULT*)
 	{attribute 'pytmc' := '
     pv: WARN;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	i_xWarn		:	BOOL; (* warning *)
 	{attribute 'pytmc' := '
     pv: ALARM;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	i_xALARM	:	BOOL; (* ALARM *)
@@ -118,10 +130,10 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	i_rCurrentMon : REAL;
 
 	{attribute 'pytmc' := '
-    pv: TEMP_MON
-	io: i
-	field: PREC 2
-	field: EGU "C"
+    pv: TEMP_MON;
+	io: i;
+	field: PREC 2;
+	field: EGU "C";
 	'}
 	i_rTempMon	:	REAL; 
 

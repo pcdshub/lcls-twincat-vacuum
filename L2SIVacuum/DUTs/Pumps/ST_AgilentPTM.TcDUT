@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_AgilentPTM" Id="{cabd0058-3dd4-4905-9b15-54411322c9ff}">
     <Declaration><![CDATA[TYPE ST_AgilentPTM EXTENDS ST_PTM :
 STRUCT
@@ -8,6 +8,8 @@ STRUCT
 	(* 24V in Ramp state; 0V for others *)
 	{attribute 'pytmc' := '
     pv: START;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
     i_xSTART :	BOOL; 
@@ -15,6 +17,8 @@ STRUCT
 	(* setpoint related to frequency *)
 	{attribute 'pytmc' := '
     pv: R1Status;
+	field: ZNAM FALSE; 
+	field: ONAM AT SPEED;
 	io: i;
 	'}
 	i_xR1	:  BOOL;
@@ -22,6 +26,8 @@ STRUCT
 	(* setpoint related to Power *)
 	{attribute 'pytmc' := '
     pv: R2Status;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	i_xR2	:  BOOL;
@@ -29,6 +35,8 @@ STRUCT
 	(* low speed mode *)
 	{attribute 'pytmc' := '
     pv: LSPD;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	i_xLSpd	:  BOOL;
@@ -47,6 +55,8 @@ STRUCT
 	(* Low speed control *)
 	{attribute 'pytmc' := '
     pv: LSPD_DO;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	q_xLSpd		:  BOOL; 
@@ -54,6 +64,8 @@ STRUCT
 	(*Soft start *)
 	{attribute 'pytmc' := '
     pv: XSS_DO;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	q_xSS   	:  BOOL; 
@@ -61,6 +73,8 @@ STRUCT
 	(*pump Lock*)
 	{attribute 'pytmc' := '
     pv: FaultLock;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	xPumpFaultLock : BOOL := FALSE;
@@ -68,6 +82,8 @@ STRUCT
 	// Error messages
 	{attribute 'pytmc' := '
     pv: ErrorMessage;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	sError : STRING;

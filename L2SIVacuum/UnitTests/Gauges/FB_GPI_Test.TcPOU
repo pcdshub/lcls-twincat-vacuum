@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_GPI_Test" Id="{22be8154-9d2d-4e8a-bd0c-5b5a056f6bed}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_GPI_Test EXTENDS TcUnit.FB_TestSuite
 VAR_INPUT
@@ -133,5 +133,17 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_GPI_Test">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GPI_Test.M_CheckRange">
+      <LineId Id="3" Count="68" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GPI_Test.M_INIT">
+      <LineId Id="3" Count="19" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

@@ -83,6 +83,9 @@
     <Compile Include="DUTs\Valves\E_VGC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Valves\ST_Valve.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Valves\ST_VVC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -116,7 +119,18 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Gauges\FB_MKS500_EP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Gauges\FB_PressureState.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="POUs\Functions\Deprecated\Valves\FB_VCC.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Valves\FB_VCC_NO.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -145,7 +159,7 @@
     <Compile Include="POUs\Functions\Gauges\FB_MKS392.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_MKS500_EP.TcPOU">
+    <Compile Include="POUs\Functions\Gauges\FB_MKS500.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS722.TcPOU">
@@ -162,18 +176,11 @@
     <Compile Include="POUs\Functions\Gauges\FB_MKS275.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_MKS500.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS_937B.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS422.TcPOU">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_PressureState.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -269,10 +276,6 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VVC.TcPOU">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="POUs\Functions\Valves\FB_VCC_NO.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -442,8 +445,14 @@
     <PlaceholderResolution Include="LCLS General">
       <Resolution>LCLS General, * (SLAC)</Resolution>
     </PlaceholderResolution>
+    <PlaceholderResolution Include="LCLSVacuumSerialDriverLib">
+      <Resolution>LCLSVacuumSerialDriverLib, * (SLAC)</Resolution>
+    </PlaceholderResolution>
     <PlaceholderResolution Include="PMPS">
-      <Resolution>PMPS, * (SLAC - LCLS)</Resolution>
+      <Resolution>PMPS, 0.2.0 (SLAC - LCLS)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="SysFile">
+      <Resolution>SysFile, * (System)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_DataExchange">
       <Resolution>Tc2_DataExchange, * (Beckhoff Automation GmbH)</Resolution>
@@ -451,14 +460,14 @@
     <PlaceholderResolution Include="Tc2_EtherCAT">
       <Resolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_Math">
-      <Resolution>Tc2_Math, * (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_MC2">
       <Resolution>Tc2_MC2, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_ModbusSrv">
       <Resolution>Tc2_ModbusSrv, * (Beckhoff Automation GmbH)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="Tc2_SerialCom">
+      <Resolution>Tc2_SerialCom, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_Standard">
       <Resolution>Tc2_Standard, * (Beckhoff Automation GmbH)</Resolution>
@@ -481,8 +490,8 @@
     <PlaceholderResolution Include="Tc3_Module">
       <Resolution>Tc3_Module, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
-    <PlaceholderResolution Include="UML State Chart Types">
-      <Resolution>UML Statechart Types, * (3S - Smart Software Solutions GmbH)</Resolution>
+    <PlaceholderResolution Include="TcUnit">
+      <Resolution>TcUnit, * (www.tcunit.org)</Resolution>
     </PlaceholderResolution>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS317A" Id="{5da6683a-653a-4dd9-bfe9-211b87873c21}" SpecialFunc="None">
     <Declaration><![CDATA[(*Deprecated*)
 (* This function is for the Pirani MKS 317 connected to a 937A*)
@@ -105,8 +105,20 @@ IF ePrevState <> PG.eState THEN
     </Action>
     <Action Name="IO" Id="{193cb751-e264-4d99-903a-eefc06eb5f23}">
       <Implementation>
-        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;
+PG.sPath := sPath;]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="FB_MKS317A">
+      <LineId Id="3" Count="40" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS317A.ACT_Logger">
+      <LineId Id="2" Count="22" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS317A.IO">
+      <LineId Id="1" Count="1" />
+    </LineIds>
   </POU>
 </TcPlcObject>

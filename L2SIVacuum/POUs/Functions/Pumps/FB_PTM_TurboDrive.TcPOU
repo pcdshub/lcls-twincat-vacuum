@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_PTM_TurboDrive" Id="{dfc77842-243a-4cfe-b1b5-b7fe350ab6a4}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function block provides basic turbo control for Leybold Turbo Drive 300, Turbo Drive 400 *)
 (* TD20 Classic Via Remote X1 Connector 9-way PLC interface*)
@@ -157,5 +157,25 @@ iq_stPTM.i_xWarn := i_st_TD20_RBK.wStatusWord.14; (* warning summary bit *)
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_PTM_TurboDrive">
+      <LineId Id="3" Count="36" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TurboDrive.ACT_IO">
+      <LineId Id="2" Count="7" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TurboDrive.ACT_Logger">
+      <LineId Id="2" Count="29" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TurboDrive.M_Run">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_TurboDrive.M_Serial_IO">
+      <LineId Id="3" Count="18" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

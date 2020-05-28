@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_LeyboldPTM" Id="{928359f7-41f5-4b97-ac89-aed21155294b}">
     <Declaration><![CDATA[TYPE ST_LeyboldPTM EXTENDS ST_PTM :
 STRUCT
@@ -12,11 +12,14 @@ More?
 //Readbacks
 	{attribute 'pytmc' := '
     pv: DECEL;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	i_xDecel	:	BOOL;
 	{attribute 'pytmc' := '
     pv: TEMP;
+	field: EGU "C";
 	io: i;
 	'}
 	i_diPumpTemp:	DINT;
@@ -28,6 +31,8 @@ More?
 	i_diElecTemp:	DINT;
 	{attribute 'pytmc' := '
     pv: OVR_TEMP;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 	i_xTempFault:	BOOL;
@@ -36,6 +41,8 @@ More?
 //Controls
 	{attribute 'pytmc' := '
     pv: REMOTE;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: io;
 	'}
 	q_xRemote : BOOL; (* Remote control enabled *)
