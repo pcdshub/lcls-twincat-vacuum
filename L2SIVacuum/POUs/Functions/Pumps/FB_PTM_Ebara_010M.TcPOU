@@ -58,7 +58,7 @@ bit is Opened, the pump will decelerate with the brake and stop *)
 
 (* Simple protection reset *)
 iq_stPtm.xExtRunOk:= i_xExtILKOk AND NOT iq_stPTM.i_xFault;
-iq_stPTM.q_xProtection:= iq_stPTM.xExtRunOk;
+iq_stPTM.q_xProtection:= TRUE;//iq_stPTM.xExtRunOk;
 (*soft IO mapping*)
 ACT_IO();
 

@@ -83,7 +83,7 @@
     <Compile Include="DUTs\Valves\E_VGC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\Valves\ST_Valve.TcDUT">
+    <Compile Include="DUTs\Valves\ST_ValveBase.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Valves\ST_VVC.TcDUT">

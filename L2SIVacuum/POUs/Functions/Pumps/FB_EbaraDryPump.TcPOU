@@ -57,13 +57,9 @@ sure the pump was exposed to the full system load before starting the booster.
 //Mapping
 ACT_IO();
 stPump.xExtIlk := NOT i_xExtIlkOK;
-// These are normally closed inputs
-stPump.xErr := NOT stPump.i_xAlarm;
-stPump.xWrn := NOT stPump.i_xWarning;
-
 
 //Interlock and error/warning
-stPump.xIlkOK :=  NOT stPump.xExtIlk AND NOT (stpump.xErr OR stpump.xWrn);
+stPump.xIlkOK :=  NOT stPump.xExtIlk AND NOT (stpump.xErr);// OR stpump.xWrn);
 
 //Start/ Stop the pump
 IF stpump.xIlkOK THEN
@@ -105,9 +101,9 @@ stPump.q_xRunDo := stPump.q_xMPStart;
 (*Inputs*)
 stPump.i_xMPStatus:=	i_xMPStatus;
 stPump.i_xBPStatus:=	i_xBPStatus;
-stPump.i_xWarning:= i_xWarning	;
-stPump.xWrn := i_xWarning;
-//stPump.i_xFault:= NOT(i_xAlarmOK);
+stPump.i_xWarning:= NOT i_xWarning;
+// These are normally closed inputs
+stPump.xWrn := NOT i_xWarning;
 stPump.i_xAlarm:=	NOT(i_xAlarmOK);
 StPump.xErr := NOT(i_xAlarmOK);
 stPump.i_xRemote:= i_xRemote;]]></ST>
@@ -151,7 +147,7 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
     <LineIds Name="FB_EbaraDryPump">
       <LineId Id="3" Count="23" />
       <LineId Id="70" Count="0" />
-      <LineId Id="27" Count="17" />
+      <LineId Id="31" Count="13" />
       <LineId Id="2" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="103" Count="11" />
@@ -164,8 +160,8 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
       <LineId Id="2" Count="2" />
       <LineId Id="12" Count="0" />
       <LineId Id="5" Count="3" />
+      <LineId Id="14" Count="0" />
       <LineId Id="10" Count="0" />
-      <LineId Id="13" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="11" Count="0" />
       <LineId Id="1" Count="0" />

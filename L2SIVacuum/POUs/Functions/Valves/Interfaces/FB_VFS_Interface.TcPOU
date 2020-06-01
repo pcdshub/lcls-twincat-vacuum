@@ -12,28 +12,47 @@ VAR_INPUT
     i_xFFReset: BOOL;
 END_VAR
 VAR_IN_OUT
-	io_fbFFHWO    :    FB_HardwareFFOutput;
+
 END_VAR
 VAR
-	// PMPS
-	fbFF    :    FB_FastFault :=(
-        i_DevName := 'VGC',
-        i_Desc := 'Fault occurs when fast sensor trips or the valve is not in open state',
-        i_TypeCode := 16#1010);
 
 	(*outputs*)
 	q_xPRESS_OK AT%Q*: BOOL;
 	{attribute 'pytmc' := '
+	pv: OPEN_SW; 
+	field: ZNAM FALSE; 
+	field: ONAM OPEN;
+	io: io ;
+	'}
+	i_xOPN_SW AT%Q*:BOOL;
+	{attribute 'pytmc' := '
 	pv: CLS_SW; 
+	field: ZNAM FALSE; 
+	field: ONAM CLOSE;
 	io: io ;
 	'}
 	q_xCLS_SW AT%Q*:BOOL; (*external open signal e.g epics*)
 	{attribute 'pytmc' := '
 	pv: FAULT_RESET; 
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: io ;
 	'}
 	q_xVAC_FAULT_Reset AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
-
+	{attribute 'pytmc' := '
+	pv: VFS_OVRD_ON ;
+	field: ZNAM Override OFF ;
+	field: ONAM Override ON;
+	io: io;
+	'}
+	i_xOverrideMode AT%Q*: BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+	{attribute 'pytmc' := '
+    pv: VFS_FORCE_OPN;
+	io: io;
+	field: ZNAM FALSE;
+	field: ONAM FORCE OPEN;
+    '}
+	i_xOverrideOpen AT%Q*: BOOL;
 	
 	(*inputs*)
 	{attribute 'pytmc' := '
@@ -44,21 +63,21 @@ VAR
 	'}
 	i_xTrigger AT %I* : BOOL;
 	{attribute 'pytmc' := '
-	pv: OPEN; 
+	pv: IS_OPEN; 
 	field: ZNAM NOT OPEN; 
 	field: ONAM OPEN;
 	io: io ;
 	'}
 	i_xVFS_Open AT %I* : BOOL;
 	{attribute 'pytmc' := '
-	pv: CLS; 
+	pv: IS_CLOSED; 
 	field: ZNAM NOT CLOSED; 
 	field: ONAM CLOSE;
 	io: io ;
 	'}
 	i_xVFS_Closed AT %I* : BOOL;
 	{attribute 'pytmc' := '
-	pv: FAULT_OK; 
+	pv: VAC_FAULT_OK; 
 	field: ZNAM FAULT ; 
 	field: ONAM FAULT OK;
 	io: io ;
@@ -76,16 +95,11 @@ END_VAR]]></Declaration>
       <ST><![CDATA[(*soft IO Mapping*)
 
 q_xPRESS_OK := IG.xPRESS_OK;
-
-(*FAST FAULT*)
-fbFF(i_xOK := i_xMPS_OK,
-    i_xReset := i_xFFReset,
-    io_fbFFHWO := io_fbFFHWO);]]></ST>
+]]></ST>
     </Implementation>
     <LineIds Name="FB_VFS_Interface">
       <LineId Id="68" Count="1" />
       <LineId Id="9" Count="0" />
-      <LineId Id="72" Count="3" />
       <LineId Id="71" Count="0" />
     </LineIds>
   </POU>

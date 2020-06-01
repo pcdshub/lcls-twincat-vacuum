@@ -58,7 +58,7 @@ Modified Nov 2018 by M. Ghaly
 
 (* Simple protection reset *)
 iq_stPtm.xExtRunOk:= i_xExtILKOk;
-iq_stPTM.q_xProtection := iq_stPTM.xExtRunOk;
+iq_stPTM.q_xProtection := TRUE;//iq_stPTM.xExtRunOk;
 
 (*soft IO mapping*)
 ACT_IO();

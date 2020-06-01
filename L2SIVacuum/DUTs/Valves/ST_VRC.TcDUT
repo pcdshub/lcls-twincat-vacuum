@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_VRC" Id="{ee6efa67-7be0-4e42-b045-50546d4578bb}">
-    <Declaration><![CDATA[TYPE ST_VRC EXTENDS ST_Valve:
+    <Declaration><![CDATA[TYPE ST_VRC EXTENDS ST_ValveBase:
 STRUCT
 (* Readbacks *)
 	//In case VRC is normally open

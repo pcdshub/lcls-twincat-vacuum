@@ -115,7 +115,7 @@ END_IF
 
 
 // Log Action
-tAction(CLK:=  IG.q_xHV_DIS);
+tAction(CLK:=  IG.xHV_SW);
 IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
 
 

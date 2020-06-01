@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
-  <DUT Name="ST_Valve" Id="{7bb16a25-da4b-490d-be73-850b3bc57053}">
-    <Declaration><![CDATA[TYPE ST_Valve :
+  <DUT Name="ST_ValveBase" Id="{7bb16a25-da4b-490d-be73-850b3bc57053}">
+    <Declaration><![CDATA[TYPE ST_ValveBase :
 STRUCT
 	(* EPICS Controls *)
 	{attribute 'pytmc' := '

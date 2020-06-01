@@ -125,13 +125,13 @@ IO();
     <Action Name="ACT_Logger" Id="{b6ae699a-8cbc-41c3-94fc-93d1d486cd97}">
       <Implementation>
         <ST><![CDATA[// ILK logger
-IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
+IF NOT IG.xILKOk AND IG.q_xHV_DIS THEN
  		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
 END_IF
 
 
 // Log Action
-tAction(CLK:=  IG.q_xHV_DIS);
+tAction(CLK:=   IG.xHV_SW);
 IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
 
 
