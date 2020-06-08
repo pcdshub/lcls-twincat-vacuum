@@ -80,8 +80,10 @@ ELSIF NOT stpump.q_xMPStart AND stPump.i_xAlarm THEN
 		stpump.eState := pumpSTOPPED;	
 ELSIF stpump.q_xMPStart AND NOT stPump.i_xMPStatus THEN
 		stpump.eState := pumpSTARTING;	
-ELSIF stPump.i_xMPStatus THEN
+ELSIF stPump.i_xMPStatus OR stPump.i_xBPStatus THEN
 		stpump.eState := pumpRUNNING;
+ELSIF NOT stPump.i_xMPStatus AND NOT stPump.i_xBPStatus THEN
+		stpump.eState := pumpSTOPPED;
 ELSE
 	stpump.eState := pumpFAULT;
 END_IF
@@ -150,7 +152,9 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
       <LineId Id="31" Count="13" />
       <LineId Id="2" Count="0" />
       <LineId Id="101" Count="0" />
-      <LineId Id="103" Count="11" />
+      <LineId Id="103" Count="8" />
+      <LineId Id="178" Count="1" />
+      <LineId Id="112" Count="2" />
       <LineId Id="144" Count="2" />
       <LineId Id="100" Count="0" />
       <LineId Id="148" Count="0" />

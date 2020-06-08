@@ -29,7 +29,7 @@ VAR
 	rtOK	:	R_TRIG;
 	tOvrd	:	TIME := T#10s;
 	(* Timeouts*)
-	tTimeOutDuration: TIME:= T#10S;
+	tTimeOutDuration: TIME:= T#30S;
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
 

@@ -83,7 +83,7 @@ VAR
 	
 	
 	(* Timeouts*)
-	tTimeOutDuration: TIME:= T#5S;
+	tTimeOutDuration: TIME:= T#30S;
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
 	

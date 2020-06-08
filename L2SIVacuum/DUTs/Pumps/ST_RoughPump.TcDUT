@@ -66,6 +66,7 @@ iErr	:	BOOL; //Error state/code
 	field: ONST STARTING;
 	field: TWST RUNNING;
 	field: THST FAULT;
+	field: FRST STOPPING;
 	io: i;
 	'}
 
