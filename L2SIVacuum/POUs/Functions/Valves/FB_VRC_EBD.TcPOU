@@ -62,6 +62,7 @@ END_IF
 
 (*evaluate Valve open external interlock*)
 iq_stValve.xOPN_OK := i_xExtILK_OK;
+iq_stValve.xEXT_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
 	iq_stValve.pv_xOPN_SW := FALSE;
 	iq_stValve.eVGC_State := ERR_ExtFault;
@@ -204,7 +205,9 @@ END_VAR
       <LineId Id="87" Count="0" />
       <LineId Id="3" Count="10" />
       <LineId Id="89" Count="1" />
-      <LineId Id="14" Count="2" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="15" Count="1" />
       <LineId Id="161" Count="0" />
       <LineId Id="17" Count="0" />
       <LineId Id="165" Count="0" />

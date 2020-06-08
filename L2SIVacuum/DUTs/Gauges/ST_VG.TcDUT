@@ -24,8 +24,8 @@ STRUCT
 	xAT_VAC: BOOL;
 	{attribute 'pytmc' := '
     pv: PRESS_OK;
-	field: ZNAM OFF; 
-	field: ONAM ON;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
     '}
 	xPRESS_OK: BOOL;

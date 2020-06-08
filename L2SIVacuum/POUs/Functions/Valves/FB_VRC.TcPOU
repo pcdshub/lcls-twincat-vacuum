@@ -11,12 +11,6 @@ VAR_IN_OUT
 	
 END_VAR
 VAR_INPUT
-	{attribute 'pytmc' := '
-	pv: EXT_ILK_OK ;
-	field: ZNAM NOT OK ;
-	field: ONAM OK ;
-	io: i ;
-	'}
 	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 END_VAR
@@ -77,6 +71,7 @@ END_IF
 
 (*evaluate Valve open external interlock*)
 iq_stValve.xOPN_OK := i_xExtILK_OK;
+iq_stValve.xEXT_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
 	iq_stValve.pv_xOPN_SW := FALSE;
 	iq_stValve.eVGC_State := ERR_ExtFault;
@@ -216,7 +211,9 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VRC">
-      <LineId Id="3" Count="45" />
+      <LineId Id="3" Count="27" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="31" Count="17" />
       <LineId Id="50" Count="5" />
       <LineId Id="135" Count="1" />
       <LineId Id="57" Count="29" />
