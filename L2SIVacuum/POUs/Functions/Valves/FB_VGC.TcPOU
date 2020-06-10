@@ -145,6 +145,8 @@ IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
 	iq_stValve.eState:=INVALID;
 ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=OPEN;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
+	iq_stValve.eState:=OPEN_F;
 ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=CLOSED;
 ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
@@ -435,7 +437,9 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VGC">
-      <LineId Id="3" Count="196" />
+      <LineId Id="3" Count="41" />
+      <LineId Id="580" Count="1" />
+      <LineId Id="45" Count="154" />
       <LineId Id="201" Count="0" />
       <LineId Id="369" Count="0" />
       <LineId Id="371" Count="0" />

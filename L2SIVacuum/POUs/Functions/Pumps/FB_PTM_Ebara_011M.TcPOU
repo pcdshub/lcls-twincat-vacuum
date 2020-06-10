@@ -8,7 +8,7 @@ FUNCTION_BLOCK FB_PTM_Ebara_011M EXTENDS FB_Pump
 VAR_IN_OUT
 END_VAR
 VAR_INPUT
-	i_rMaxBackingPressure : REAL := 0.4;
+	i_rMaxBackingPressure : REAL := 3;
 	i_iMinSpeed : DINT := 100; //check pump manual for setting
 	i_iMaxSpeed : DINT := 560; // check pump manual for setting
 	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.

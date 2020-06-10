@@ -11,7 +11,7 @@ END_VAR
 VAR_INPUT
 	i_xExtILKOk : BOOL; // Turbo ILK bit , set to True if not used
 	//i_iRawSpeed: INT; //Should come from PLC Soft IO.
-	i_rMaxBackingPressure : REAL := 0.4;
+	i_rMaxBackingPressure : REAL := 3;
 	i_iMinSpeed : DINT := 100; //Hz check pump manual for setting P43
 	i_iMaxSpeed : DINT := 560; //Hz check pump manual for setting P43
 END_VAR

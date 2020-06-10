@@ -56,6 +56,10 @@ VAR
 	
 	(*inputs*)
 	{attribute 'pytmc' := '
+    pv: 
+	'}
+	iq_stValve AT%I*: ST_VGC; (* All valve data and states will be in this struct*)
+	{attribute 'pytmc' := '
 	pv: TRIG; 
 	field: ZNAM TRIG_OFF; 
 	field: ONAM TRIG_ON;

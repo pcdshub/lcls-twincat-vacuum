@@ -82,6 +82,7 @@ STRUCT
 	field: ONST CLOSED ;
 	field: TWST MOVING ;
 	field: THST INVALID ;
+	field: FRST OPEN_F ;
 	io: i;
 	'}
 	eState	:	E_ValvePositionState := INVALID;
