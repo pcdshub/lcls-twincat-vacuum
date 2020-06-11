@@ -24,8 +24,8 @@ STRUCT
 	xAT_VAC: BOOL;
 	{attribute 'pytmc' := '
     pv: PRESS_OK;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
+	field: ZNAM OFF; 
+	field: ONAM ON;
 	io: i;
     '}
 	xPRESS_OK: BOOL;
@@ -129,6 +129,13 @@ STRUCT
 	io: i;
 	'}
 	xILKOk	:	BOOL; (* also a control *)
+	{attribute 'pytmc' := '
+    pv: LOGGER;
+	io: i;
+	field: ZNAM OFF ;
+	field: ONAM ON ;
+    '}
+	xLog : BOOL:=TRUE;
 	//Required for other devices using this gauge as interlock
 	sPath: STRING;
 

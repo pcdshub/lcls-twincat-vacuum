@@ -109,37 +109,39 @@ timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
     <Action Name="ACT_Logger" Id="{81455e48-69be-44cd-8f73-e6a424a8f2a9}">
       <Implementation>
         <ST><![CDATA[// ILK logger
-IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
- 		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+IF (IG.xLog) THEN
+	IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
+			fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+	END_IF
+	
+	
+	// Log Action
+	tAction(CLK:=  IG.xHV_SW);
+	IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+	
+	
+	
+	//STATE Logger  
+	IF ePrevState <> IG.eState THEN
+		  CASE IG.eState OF
+			ValidHi:
+				fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+			ValidLo:
+				fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+			Valid:
+				fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+			GaugeDisconnected:
+				fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+			PressInvalid:
+				fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+			OoR:
+				fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+			Starting:
+				fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+		  END_CASE
+		  ePrevState := IG.eState;  
+	  END_IF
 END_IF
-
-
-// Log Action
-tAction(CLK:=  IG.xHV_SW);
-IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
-
-
-
-//STATE Logger  
-IF ePrevState <> IG.eState THEN
-	  CASE IG.eState OF
-		ValidHi:
-			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
-		ValidLo:
-			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
-		Valid:
-			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-  		GaugeDisconnected:
-			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-		PressInvalid:
-			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-		OoR:
-			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-		Starting:
-			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := IG.eState;  
-  END_IF
   
 
 ]]></ST>
@@ -181,7 +183,11 @@ this^.IG.xHV_SW:= (enable);]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS422.ACT_Logger">
-      <LineId Id="2" Count="33" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="3" Count="30" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="34" Count="1" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS422.IO">

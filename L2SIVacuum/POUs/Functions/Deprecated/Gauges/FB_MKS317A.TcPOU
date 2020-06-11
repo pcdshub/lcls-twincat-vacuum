@@ -77,7 +77,7 @@ IO();
     </Implementation>
     <Action Name="ACT_Logger" Id="{7344e8d9-43b6-410c-a80c-1b1f154041bf}">
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[IF (PG.xLog) THEN
 //STATE Logger  
 IF ePrevState <> PG.eState THEN
 	  CASE PG.eState OF
@@ -98,6 +98,7 @@ IF ePrevState <> PG.eState THEN
 	  END_CASE
 	  ePrevState := PG.eState;  
   END_IF
+ END_IF
   
 
 ]]></ST>
@@ -114,7 +115,9 @@ PG.sPath := sPath;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS317A.ACT_Logger">
-      <LineId Id="2" Count="22" />
+      <LineId Id="2" Count="20" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="23" Count="1" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS317A.IO">

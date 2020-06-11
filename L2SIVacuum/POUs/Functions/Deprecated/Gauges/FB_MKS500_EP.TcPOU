@@ -108,7 +108,8 @@ IO();
     </Implementation>
     <Action Name="ACT_Logger" Id="{d4d9e5af-1970-44a2-9cdb-447bd65c853a}">
       <Implementation>
-        <ST><![CDATA[// ILK logger
+        <ST><![CDATA[IF (IG.xLog) THEN
+// ILK logger
 IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
  		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
 END_IF
@@ -140,7 +141,7 @@ IF ePrevState <> IG.eState THEN
 	  END_CASE
 	  ePrevState := IG.eState;  
   END_IF
-  
+END_IF
 
 ]]></ST>
       </Implementation>
@@ -171,7 +172,9 @@ this^.IG.xHV_SW:= NOT(enable);]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS500_EP.ACT_Logger">
-      <LineId Id="2" Count="33" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="3" Count="32" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS500_EP.IO">

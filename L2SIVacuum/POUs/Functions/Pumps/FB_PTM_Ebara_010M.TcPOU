@@ -147,7 +147,7 @@ ACT_Logger();]]></ST>
 	iq_stPTM.i_xAtSpd := i_xAtSpd;
 	iq_stPTM.i_rTempMon := (100*(INT_TO_REAL(i_iTempMon)/16383));// Manual page 28(DC 0 to 5V -> 0 to 100 DegC)
 	iq_stPTM.i_rCurrentMon := (10*(INT_TO_REAL(i_iCurrentMon)/16383));// Manual page 28 (DC 0 to 5V -> 0 to 10 A)
-	iq_stPTM.i_diCurSpd := 560*((i_iRawSpeed)/16383);// Manual page 28 (DC 0 to 5V -> 100 to 560Hz Rated Rotational Speed )
+	iq_stPTM.i_diCurSpd := LREAL_TO_DINT(560*LREAL_TO_DINT(i_iRawSpeed)/16383);//(560*(INT_TO_REAL(i_iRawSpeed)/16383));// Manual page 28 (DC 0 to 5V -> 100 to 560Hz Rated Rotational Speed )
 (*outputs*)
 	q_xStart:= iq_stPTM.q_xStart;
 	q_xStop := iq_stPTM.q_xStop;

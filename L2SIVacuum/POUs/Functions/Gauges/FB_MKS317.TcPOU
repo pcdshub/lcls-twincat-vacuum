@@ -86,26 +86,27 @@ IO();
       <Implementation>
         <ST><![CDATA[
 //STATE Logger  
-IF ePrevState <> PG.eState THEN
-	  CASE PG.eState OF
-		ValidHi:
-			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
-		ValidLo:
-			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
-		Valid:
-			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-  		GaugeDisconnected:
-			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-		PressInvalid:
-			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-		OoR:
-			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-		Starting:
-			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := PG.eState;  
-  END_IF
-  
+IF (PG.xLog) THEN
+	IF ePrevState <> PG.eState THEN
+		  CASE PG.eState OF
+			ValidHi:
+				fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+			ValidLo:
+				fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+			Valid:
+				fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+			GaugeDisconnected:
+				fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+			PressInvalid:
+				fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+			OoR:
+				fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+			Starting:
+				fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+		  END_CASE
+		  ePrevState := PG.eState;  
+	  END_IF
+ END_IF  
 
 ]]></ST>
       </Implementation>
@@ -122,7 +123,9 @@ PG.sPath := sPath;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS317.ACT_Logger">
-      <LineId Id="2" Count="22" />
+      <LineId Id="2" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="4" Count="20" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS317.IO">

@@ -136,8 +136,15 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	field: PREC 2;
 	field: EGU "C";
 	'}
-	i_rTempMon	:	REAL; 
-
+	i_rTempMon	:	REAL;
+ 
+	{attribute 'pytmc' := '
+    pv: LOGGER;
+	io: i;
+	field: ZNAM OFF ;
+	field: ONAM ON ;
+    '}
+	xLog : BOOL:=TRUE;
 
 
 END_STRUCT

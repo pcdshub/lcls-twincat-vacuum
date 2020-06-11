@@ -153,7 +153,8 @@ END_IF
 
 (* Pump speed calculation *)
 IF i_iRawSpeed / (EXPT(2,i_iADCBits)-1) * 10 >= 0.2 THEN //Speed reading appears zero at ~0.16V
-iq_stPTM.i_diCurSpd := LREAL_TO_DINT(i_iRawSpeed/(EXPT(2,i_iADCBits)-1)*67000);
+iq_stPTM.i_diCurSpd := LREAL_TO_DINT(560*LREAL_TO_DINT(i_iRawSpeed)/16383);
+//iq_stPTM.i_diCurSpd := LREAL_TO_DINT(i_iRawSpeed/(EXPT(2,i_iADCBits)-1)*67000);
 //V (AI/(2^{# ADC bits} -1 ) * 10[ADC 10V scaling]) * (33600 [Max RPM] - 100) / 5
 ELSE
 	iq_stPTM.i_diCurSpd := 0;
@@ -230,7 +231,9 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_011M.ACT_IO">
-      <LineId Id="2" Count="29" />
+      <LineId Id="2" Count="22" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="25" Count="6" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Ebara_011M.ACT_Logger">

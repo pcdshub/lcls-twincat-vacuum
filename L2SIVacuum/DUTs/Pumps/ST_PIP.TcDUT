@@ -122,7 +122,14 @@ STRUCT
 	'}
 
 	eState	:	E_PumpState;
-
+	
+	{attribute 'pytmc' := '
+    pv: LOGGER;
+	io: i;
+	field: ZNAM OFF ;
+	field: ONAM ON ;
+    '}
+	xLog : BOOL:=TRUE;
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>
