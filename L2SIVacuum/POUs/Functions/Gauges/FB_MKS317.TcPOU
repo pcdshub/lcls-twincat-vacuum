@@ -54,12 +54,12 @@ END_IF
 
 IF (rV <=9.7 ) AND (rV>=0.6) THEN
 	PG.eState := Valid; // normal
-ELSIF rV >= 0.18 AND rV <= 0.22 THEN
+ELSIF rV >= 0.16 AND rV <= 0.22 THEN
 	PG.eState := ValidLo; //LO
 	PG.rPRESS := rMinPressure;
 ELSIF rV > 9.7 AND rV<= 9.9 THEN
 	PG.eState := ValidHi; //HIGH
-ELSIF rV < 0.18 THEN
+ELSIF rV < 0.16 THEN
 	PG.eState := GaugeDisconnected; //not on
 	PG.rPRESS := -1;
 ELSE
