@@ -31,7 +31,7 @@ VAR CONSTANT
 	rValidBoundaryMin	:	REAL := 0.6;
 	rValidHiBoundary	:	REAL := 9.7;
 	rValidHiBoundaryMax	:	REAL := 9.9; 
-	rDisconnectedBoundary	:	REAL := 0.17;
+	rDisconnectedBoundary	:	REAL := 0.15;
 	rNoSensorBoundary	:	REAL := 10;
 END_VAR
 ]]></Declaration>
