@@ -15,7 +15,13 @@ STRUCT
 	'}
    	xILKOk : BOOL; 
 	
-	
+	{attribute 'pytmc' := '
+    pv: ERROR;
+	field: ZNAM FALSE ;
+	field: ONAM TRUE ;
+	io: i;
+	'}
+   	xError : BOOL; 
 	
 	{attribute 'pytmc' := '
 	pv: AT_VAC_SP;
