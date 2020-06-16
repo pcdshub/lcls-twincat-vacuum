@@ -50,6 +50,7 @@ STRUCT
 	io:i;
     '}
 	xAutoOn : BOOL;
+
 	
 	{attribute 'pytmc' := '
     pv: FORCE_START;
@@ -59,6 +60,7 @@ STRUCT
     '}
 	pv_xOvrdStart	:	BOOL;
 	
+
 	{attribute 'pytmc' := '
     pv: SP_HYS;
 	io: io;
