@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_MKS500_EP" Id="{b6e40b3e-284a-4805-984e-9e9c52ea2b8f}" SpecialFunc="None">
+    <Declaration><![CDATA[(*Deprecated*)
+(* This function is for the Cold Cathode MKS 500 connected to Beckhoff EP boxes.
+A separate function block is necessary for the MKS500-to-EP box interface beacuse the EP
+boxes do not natively support the 5v IO signals on the MKS500 gauge.*)
+(*This function provides ILK and Set Point Protection for the Cold Cathode*)
+(* 500 Logarithmic Output Conversion, factory default configuration *)
+FUNCTION_BLOCK FB_MKS500_EP EXTENDS FB_GaugeBase
+VAR_IN_OUT
+		
+END_VAR
+VAR_INPUT
+	
+	PG	:	ST_VG;
+END_VAR
+VAR_OUTPUT
+{attribute 'pytmc' := '
+    pv: 
+	'}
+	IG : ST_VG;
+END_VAR
+VAR
+	rV : REAL;
+	GaugeTurnOnTmr : TON;
+
+	(*IOs to be linked*)
+	/// Controls and I/Os
+	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
+	q_xHV_DIS AT %Q* : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EP2624) ^Output
+	//
+END_VAR
+
+VAR CONSTANT
+	// Ranges has to match the configurator software
+	pBase : REAL :=1.0E-10;//default curve base pressure is 1E-10. Confusing since can't actually read that low using analog out.
+	vBase : REAL := 1;
+	vDisconnected : REAL:= 0.5;
+	vSlope : REAL := 1.0; 
+	vGaugeOff: REAL := 9.8;
+	vNoDischarge: REAL := 9.3;
+	MinPressure: REAL := 1E-10;
+	cDefaultPressure : REAL := 0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 500 Logarithmic Output Conversion, factory default configuration *)
+
+rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
+
+(* Set Guage State based on the Analog voltage*)
+IF rV < vDisconnected THEN
+	IG.eState := GaugeDisconnected;
+	IG.rPRESS := cDefaultPressure;
+ELSIF rV >= vDisconnected AND rV < (vNoDischarge -0.3)  THEN
+	IG.eState := Valid;
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+ELSIF rV >= (vNoDischarge -0.3) AND rV <(vGaugeOff -0.3)   THEN
+	IG.eState := Starting;
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+ELSIF rV >= (vGaugeOff -0.3) THEN
+	IG.eState := Off;
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+ELSE
+	IG.eState := OoR;
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+END_IF
+
+
+(* Ion Gauge Protection Functions *)
+(* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
+(* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
+(* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+
+
+IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
+
+	IG.q_xHV_DIS := IG.xHV_SW;
+	IG.xILKOk := TRUE;
+ELSIF IG.q_xHV_DIS THEN
+	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+		IG.q_xHV_DIS := FALSE;
+		IG.xHV_SW := FALSE;
+	END_IF
+ELSE
+	IG.q_xHV_DIS := FALSE;
+	IG.xHV_SW := FALSE;
+	IG.xILKOk := FALSE;
+END_IF
+
+(* Pressure gauge OK checks *)
+
+GaugeTurnOnTmr(IN:=IG.q_xHV_DIS, PT:=T#10S, Q=>IG.xTurnOnTime);
+
+
+//Backwards compatibility
+IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
+
+(* Setpoint evaluation *)
+IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid) ;
+
+ACT_Logger();
+(*Soft IO Linking*)
+// check ethercat Diagnostics
+IO();
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_Logger" Id="{d4d9e5af-1970-44a2-9cdb-447bd65c853a}">
+      <Implementation>
+        <ST><![CDATA[IF (IG.xLog) THEN
+// ILK logger
+IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
+ 		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+// Log Action
+tAction(CLK:=  IG.q_xHV_DIS);
+IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+
+
+
+//STATE Logger  
+IF ePrevState <> IG.eState THEN
+	  CASE IG.eState OF
+		ValidHi:
+			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+		ValidLo:
+			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+		Valid:
+			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+  		GaugeDisconnected:
+			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+		PressInvalid:
+			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+		OoR:
+			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+		Starting:
+			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := IG.eState;  
+  END_IF
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="IO" Id="{0bf159f9-a7d2-430c-8956-9768de2be438}">
+      <Implementation>
+        <ST><![CDATA[(*soft link inputs*)
+IG.i_iPRESS_R:=	i_iPRESS_R; 
+(*soft link outputs*)
+q_xHV_DIS := IG.q_xHV_DIS;
+
+IG.sPath := sPath;]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_HVE" Id="{3b7edf43-649d-4d24-a7e7-a350c866a258}">
+      <Declaration><![CDATA[METHOD M_HVE : BOOL
+VAR_INPUT
+		enable:bool; // set to true to enable, false to disable;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.IG.xHV_SW:= NOT(enable);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_MKS500_EP">
+      <LineId Id="3" Count="58" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500_EP.ACT_Logger">
+      <LineId Id="2" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="3" Count="32" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500_EP.IO">
+      <LineId Id="2" Count="2" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS500_EP.M_HVE">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

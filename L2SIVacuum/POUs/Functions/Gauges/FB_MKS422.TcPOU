@@ -3,12 +3,13 @@
   <POU Name="FB_MKS422" Id="{2e4ef3e9-09c8-44c2-b5f5-464ffb8c18a0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 422 connected to a 937A/B *)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
-FUNCTION_BLOCK FB_MKS422
+FUNCTION_BLOCK FB_MKS422 EXTENDS FB_GaugeBase
 VAR_IN_OUT
 		
 END_VAR
 VAR_INPUT
 		PG	:	ST_VG; // Pirani Gauge Structure used to Interlock the Cold Cathode
+		b937A :BOOL:=FALSE; // True if this gauge is connected to MKS937A controller, False if connected to MKS937B controller
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -20,13 +21,14 @@ VAR
 	rV	:	REAL;
 	
 	timer:TON;
-	
 	(*IOs to be linked*)
 	/// Controls and I/Os
 	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
 	q_xHV_DIS AT %Q* : BOOL := True; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
-	
-	
+END_VAR
+VAR CONSTANT
+	MinPressure: REAL := 1E-10;
+	cDefaultPressure : REAL := 0;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -40,22 +42,27 @@ IO();
 
 (*Pressure readbacks*)
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
-IG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));
+if (b937A) THEN
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV)/0.6)-12)); //manual page 61 MKS937A
+	ELSE
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));	//manual page 73 MKS937B
+END_IF
+
 	
 
 (* Pressure gauge State checks *)
 IF (rV <=9.6 ) AND (rV>=0.6) THEN
 	IG.eState := Valid; // normal
-ELSIF rV >= 0.18 AND rV <= 0.22 THEN
+ELSIF rV >= 0.18 AND rV <= 0.22 THEN 
 	IG.eState := ValidLo; //LO
 ELSIF rV > 9.6 AND rV<= 9.9 THEN
 	IG.eState := ValidHi; //HIGH
-ELSIF rV < 0.18 THEN
+ELSIF rV < 0.18 THEN // 
 	IG.eState := GaugeDisconnected; //not on
-	IG.rPRESS :=0;
+	IG.rPRESS :=cDefaultPressure;
 ELSE
 	IG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
-	IG.rPRESS :=0;
+	IG.rPRESS :=cDefaultPressure;
 END_IF
 
 
@@ -89,7 +96,8 @@ IG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6);
 IG.xAT_VAC := IG.xPRESS_OK AND IG.rPRESS < IG.rVAC_SP;
 
 
-
+(*Logger*)
+ACT_Logger();
 (*Soft IO Linking*)
 // check ethercat Diagnostics
 IO();
@@ -98,13 +106,56 @@ timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
 
 ]]></ST>
     </Implementation>
+    <Action Name="ACT_Logger" Id="{81455e48-69be-44cd-8f73-e6a424a8f2a9}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+IF (IG.xLog) THEN
+	IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
+			fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+	END_IF
+	
+	
+	// Log Action
+	tAction(CLK:=  IG.xHV_SW);
+	IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+	
+	
+	
+	//STATE Logger  
+	IF ePrevState <> IG.eState THEN
+		  CASE IG.eState OF
+			ValidHi:
+				fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+			ValidLo:
+				fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+			Valid:
+				fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+			GaugeDisconnected:
+				fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+			PressInvalid:
+				fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+			OoR:
+				fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+			Starting:
+				fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+		  END_CASE
+		  ePrevState := IG.eState;  
+	  END_IF
+END_IF
+  
+
+]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="IO" Id="{745bf75f-6d68-4d34-a177-a78f14818649}">
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
 IG.i_iPRESS_R:=	i_iPRESS_R; 
 
 (*soft link outputs*)
-q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
+q_xHV_DIS := IG.q_xHV_DIS;
+
+IG.sPath := sPath;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_AutoOn" Id="{06245f08-bb9d-49ef-bd4d-3fe48276b865}">
@@ -127,5 +178,32 @@ END_VAR
 this^.IG.xHV_SW:= (enable);]]></ST>
       </Implementation>
     </Method>
+
+    <LineIds Name="FB_MKS422">
+      <LineId Id="3" Count="71" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.ACT_Logger">
+      <LineId Id="2" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="3" Count="30" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.IO">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.M_AutoOn">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS422.M_HVE">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+
   </POU>
 </TcPlcObject>

@@ -14,10 +14,22 @@
     <Implicit_Jitter_Distribution>{330d06c1-6163-43ce-9d48-1f8eea112233}</Implicit_Jitter_Distribution>
     <LibraryReferences>{2bc9c512-7c1a-483c-9892-8f50f3778fb4}</LibraryReferences>
     <CombineIds>false</CombineIds>
-    <Company>SLAC</Company>
+    <Company>SLAC - LCLS</Company>
     <Released>false</Released>
-    <Title>lcls-twincat-vacuum</Title>
+    <Title>LCLS Vacuum</Title>
     <ProjectVersion>0.0.0</ProjectVersion>
+    <DefaultNamespace>LCLS_Vacuum</DefaultNamespace>
+    <LibraryCategories>
+      <LibraryCategory>
+        <Id>{a5724f56-da3f-40b6-8a5e-63302d98c4cc}</Id>
+        <Version>0.0.0.0</Version>
+        <DefaultName>SLAC - LCLS</DefaultName>
+      </LibraryCategory>
+    </LibraryCategories>
+    <SelectedLibraryCategories>
+      <Id xmlns="">{a5724f56-da3f-40b6-8a5e-63302d98c4cc}</Id>
+    </SelectedLibraryCategories>
+    <Author>LCLS ECS-Platforms</Author>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\Gauges\E_PressureState.TcDUT">
@@ -50,13 +62,7 @@
     <Compile Include="DUTs\Pumps\ST_LeyboldPTM.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\Pumps\ST_PfeifferControl.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DUTs\Pumps\ST_PfeifferPTM.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="DUTs\Pumps\ST_PfeifferStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Pumps\ST_PIP.TcDUT">
@@ -75,6 +81,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Valves\E_VGC.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\ST_ValveBase.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Valves\ST_VVC.TcDUT">
@@ -100,8 +109,34 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\ADS\FB_ADS_WATCHDOG.TcPOU">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Gauges\FB_MKS317A.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Gauges\FB_MKS500_EP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Gauges\FB_PressureState.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Valves\FB_VCC.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Valves\FB_VCC_NO.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Deprecated\Valves\FB_VGC_EBD.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_9XX.TcPOU">
       <SubType>Code</SubType>
@@ -110,7 +145,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_Gauge.TcPOU">
+
+    <Compile Include="POUs\Functions\Gauges\FB_GaugeBase.TcPOU">
+
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS909.TcPOU">
@@ -125,14 +162,10 @@
     <Compile Include="POUs\Functions\Gauges\FB_ITR90.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_MKS317A.TcPOU">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS392.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_MKS500_EP.TcPOU">
+    <Compile Include="POUs\Functions\Gauges\FB_MKS500.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS722.TcPOU">
@@ -149,18 +182,11 @@
     <Compile Include="POUs\Functions\Gauges\FB_MKS275.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_MKS500.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS_937B.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS422.TcPOU">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="POUs\Functions\Gauges\FB_PressureState.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -236,10 +262,6 @@
     <Compile Include="POUs\Functions\Valves\FB_Valve.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\FB_VCC.TcPOU">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VFS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -247,19 +269,15 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\FB_VGC_EBD.TcPOU">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VRC_EBD.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\FB_VVC.TcPOU">
+    <Compile Include="POUs\Functions\Valves\FB_VRC_NO.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="POUs\Functions\Valves\FB_VCC_NO.TcPOU">
+    <Compile Include="POUs\Functions\Valves\FB_VVC.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -299,6 +317,10 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\functions\F_VRC_DIODE_ILK_OK.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\functions\F_VRC_DIODE_ILK.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -315,6 +337,33 @@
     <Compile Include="POUs\Functions\Valves\Interfaces\ITF_Valve.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UnitTests\Functions\V_TO_INT.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UnitTests\Gauges\FB_GCC_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UnitTests\Gauges\FB_GPI_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UnitTests\PRG_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UnitTests\Pumps\FB_PIP_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UnitTests\Pumps\FB_PTM_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UnitTests\Valves\FB_VGC_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UnitTests\Valves\FB_VRC_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Version\Global_Version.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
@@ -322,6 +371,10 @@
     <Folder Include="DUTs\Pumps" />
     <Folder Include="DUTs\Valves" />
     <Folder Include="GVLs" />
+    <Folder Include="POUs\Functions\Deprecated" />
+    <Folder Include="POUs\Functions\Deprecated\Gauges" />
+    <Folder Include="POUs\Functions\Deprecated\Valves" />
+    <Folder Include="UnitTests" />
     <Folder Include="POUs\Functions" />
     <Folder Include="POUs\Functions\Gauges" />
     <Folder Include="POUs\Functions\Gauges\Interfaces" />
@@ -332,6 +385,11 @@
     <Folder Include="POUs\Functions\Valves\functions" />
     <Folder Include="POUs\Functions\Valves\Interfaces" />
     <Folder Include="POUs\ADS" />
+    <Folder Include="UnitTests\Gauges" />
+    <Folder Include="UnitTests\Functions" />
+    <Folder Include="UnitTests\Pumps" />
+    <Folder Include="UnitTests\Valves" />
+    <Folder Include="Version" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
@@ -339,6 +397,10 @@
     <PlaceholderReference Include="LCLS General">
       <DefaultResolution>LCLS General, * (SLAC)</DefaultResolution>
       <Namespace>LCLS_General</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="LCLSVacuumSerialDriverLib">
+      <DefaultResolution>LCLSVacuumSerialDriverLib, * (SLAC)</DefaultResolution>
+      <Namespace>LCLSVacuumSerialDriverLib</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="PMPS">
       <DefaultResolution>PMPS, * (SLAC - LCLS)</DefaultResolution>
@@ -380,21 +442,23 @@
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
     </PlaceholderReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="L2SIVacuum.tmc">
-      <SubType>Content</SubType>
-    </None>
+    <PlaceholderReference Include="TcUnit">
+      <DefaultResolution>TcUnit, * (www.tcunit.org)</DefaultResolution>
+      <Namespace>TcUnit</Namespace>
+    </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
     <PlaceholderResolution Include="LCLS General">
       <Resolution>LCLS General, * (SLAC)</Resolution>
     </PlaceholderResolution>
-    <PlaceholderResolution Include="PMPS">
-      <Resolution>PMPS, * (SLAC - LCLS)</Resolution>
+    <PlaceholderResolution Include="LCLSVacuumSerialDriverLib">
+      <Resolution>LCLSVacuumSerialDriverLib, * (SLAC)</Resolution>
     </PlaceholderResolution>
-    <PlaceholderResolution Include="Standard">
-      <Resolution>Standard, * (System)</Resolution>
+    <PlaceholderResolution Include="PMPS">
+      <Resolution>PMPS, 0.2.0 (SLAC - LCLS)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="SysFile">
+      <Resolution>SysFile, * (System)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_DataExchange">
       <Resolution>Tc2_DataExchange, * (Beckhoff Automation GmbH)</Resolution>
@@ -402,14 +466,14 @@
     <PlaceholderResolution Include="Tc2_EtherCAT">
       <Resolution>Tc2_EtherCAT, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
-    <PlaceholderResolution Include="Tc2_Math">
-      <Resolution>Tc2_Math, * (Beckhoff Automation GmbH)</Resolution>
-    </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_MC2">
       <Resolution>Tc2_MC2, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_ModbusSrv">
       <Resolution>Tc2_ModbusSrv, * (Beckhoff Automation GmbH)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="Tc2_SerialCom">
+      <Resolution>Tc2_SerialCom, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_Standard">
       <Resolution>Tc2_Standard, * (Beckhoff Automation GmbH)</Resolution>
@@ -435,9 +499,11 @@
     <PlaceholderResolution Include="TcUnit">
       <Resolution>TcUnit, * (www.tcunit.org)</Resolution>
     </PlaceholderResolution>
-    <PlaceholderResolution Include="UML State Chart Types">
-      <Resolution>UML Statechart Types, * (3S - Smart Software Solutions GmbH)</Resolution>
-    </PlaceholderResolution>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="L2SIVacuum.tmc">
+      <SubType>Content</SubType>
+    </None>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>

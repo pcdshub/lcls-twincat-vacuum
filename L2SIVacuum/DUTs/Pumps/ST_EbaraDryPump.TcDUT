@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_EbaraDryPump" Id="{55a0bc2c-4199-48dd-89d3-0255c23678ea}">
     <Declaration><![CDATA[TYPE ST_EbaraDryPump EXTENDS ST_RoughPump :
 STRUCT
@@ -14,11 +14,15 @@ EV-S200
 //Controls
 {attribute 'pytmc' := '
     pv: MPStart;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
     '}
 q_xMPStart	:	BOOL; //Main Pump start
 {attribute 'pytmc' := '
     pv: BPStart;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
     '}
 q_xBPStart	:	BOOL; // Booster Pump start (this can be started by the pump automatically)
@@ -31,26 +35,36 @@ tonBP	:	TON := (PT:=T#5S); //Timer for pressure and valve stability
 //Readbacks
 {attribute 'pytmc' := '
     pv: MPStatus;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
     '}
 i_xMPStatus	:	BOOL; //MP status
 {attribute 'pytmc' := '
     pv: BPStatus;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
     '}
 i_xBPStatus	:	BOOL; //BP status
 {attribute 'pytmc' := '
     pv: WARN_DI;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
     '}
 i_xWarning	:	BOOL; //Warning status
 {attribute 'pytmc' := '
     pv: ALARM;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
     '}
 i_xAlarm	:	BOOL; //Alarm, maps to error
 {attribute 'pytmc' := '
     pv: REMOTE;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
     '}
 i_xRemote	:	BOOL; //Remote control status

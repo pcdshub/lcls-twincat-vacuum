@@ -24,7 +24,7 @@ VAR
 	
 	(*IO*)
 	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
-	i_xFault AT%I*: BOOL; // Error
+	i_xFault AT%I*: BOOL; // Error NC
     i_xAccel AT%I*: BOOL;
  	i_xDecel AT%I*: BOOL;
  	i_xWarn AT%I*: BOOL;
@@ -53,6 +53,22 @@ ELSE
 	iq_stPtm.q_RunDO:=FALSE;
 END_IF
 
+(*Pump STATE*)
+IF iq_stPtm.i_xFault THEN 
+	iq_stPtm.eState := pumpFAULT;
+ELSIF iq_stPTM.i_xDecel AND NOT iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpSTOPPING;
+ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
+	iq_stPtm.eState := pumpSTOPPED;
+ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO AND iq_stPTM.i_xAccel THEN
+	iq_stPtm.eState := pumpSTARTING;
+ELSIF iq_stPtm.i_xAtSpd AND iq_stPtm.q_RunDO THEN
+	iq_stPtm.eState := pumpRUNNING;
+ELSE 
+	iq_stPtm.eState := pumpFAULT;
+END_IF
+
+
 (*I/O soft mapping*)
 ACT_IO();
 // Log States and triggers
@@ -74,6 +90,44 @@ q_RunDO := iq_stPtm.q_RunDO;
 q_xRemote := iq_stPtm.q_xRemote; // remote out]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_Logger" Id="{9fc3f6eb-6b8f-4bd7-85d1-e8b023b1b9bf}">
+      <Implementation>
+        <ST><![CDATA[//STATE Logger  
+IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
+ 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+IF ePrevState <> iq_stPTM.eState THEN
+	  CASE iq_stPTM.eState OF
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+  		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpSTARTING:
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stPTM.eState;  
+  END_IF
+  
+// ILK logger
+
+
+
+// Log Action
+tAction(CLK:=  iq_stPTM.q_RunDO);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+
+
+// Log FAULT
+tFault(CLK:= NOT iq_stPTM.i_xFault);
+IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
+
+]]></ST>
+      </Implementation>
+    </Action>
     <Method Name="M_Run" Id="{4e6dd218-abd9-4d84-a501-462a869b0829}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
@@ -86,23 +140,20 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_PTM_MagDriveDigital">
-      <LineId Id="3" Count="6" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="10" Count="8" />
-      <LineId Id="40" Count="1" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="109" Count="1" />
-      <LineId Id="108" Count="0" />
+      <LineId Id="3" Count="39" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_MagDriveDigital.ACT_IO">
       <LineId Id="2" Count="8" />
       <LineId Id="1" Count="0" />
     </LineIds>
+    <LineIds Name="FB_PTM_MagDriveDigital.ACT_Logger">
+      <LineId Id="2" Count="32" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
     <LineIds Name="FB_PTM_MagDriveDigital.M_Run">
-      <LineId Id="10" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -69,6 +69,7 @@ q_RunDO := iq_stPtm.q_RunDO;]]></ST>
     <Action Name="ACT_Logger" Id="{184e26d2-3bc9-4a1c-84bc-a7ea36dccc50}">
       <Implementation>
         <ST><![CDATA[//STATE Logger  
+// ILK logger
 IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
  		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
 END_IF
@@ -88,10 +89,6 @@ IF ePrevState <> iq_stPTM.eState THEN
 	  ePrevState := iq_stPTM.eState;  
   END_IF
   
-// ILK logger
-
-
-
 // Log Action
 tAction(CLK:=  iq_stPTM.q_RunDO);
 IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
@@ -116,26 +113,20 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_PTM_TwisTorr">
-      <LineId Id="29" Count="11" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="47" Count="2" />
-      <LineId Id="51" Count="8" />
-      <LineId Id="41" Count="1" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="81" Count="1" />
-      <LineId Id="80" Count="0" />
+      <LineId Id="3" Count="29" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_TwisTorr.ACT_IO">
-      <LineId Id="2" Count="2" />
-      <LineId Id="7" Count="3" />
+      <LineId Id="2" Count="5" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_TwisTorr.ACT_Logger">
-      <LineId Id="150" Count="32" />
-      <LineId Id="22" Count="0" />
+      <LineId Id="2" Count="29" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_TwisTorr.M_Run">
-      <LineId Id="10" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

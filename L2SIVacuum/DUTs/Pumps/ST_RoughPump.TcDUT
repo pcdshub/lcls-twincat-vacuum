@@ -19,14 +19,16 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	'}
 pv_xRunSW	:	BOOL; //epics/ software control switch
 {attribute 'pytmc' := '
-    pv: RUN_DO
+    pv: RUN_DO;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
 	'}
 q_xRunDo 	:   BOOL; 
 
 //Status and Readback
 {attribute 'pytmc' := '
-    pv: ILK_OK
+    pv: ILK_OK;
 	field: ZNAM NOT OK ;
 	field: ONAM OK ;
 	io: i
@@ -34,18 +36,24 @@ q_xRunDo 	:   BOOL;
 xIlkOK	:	BOOL; //Interlock bit, true means OK to run
 xExtIlk	:	BOOL; //External interlock, this is where the logic goes
 {attribute 'pytmc' := '
-    pv: AT_SPD
+    pv: AT_SPD;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
 	'}
 xAtSpd	:	BOOL; //Pump at speed setpoint
 {attribute 'pytmc' := '
-    pv: WARN
+    pv: WARN;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
 	'}
 xWrn	:	BOOL; //Pump warning
 iWrn	:	BOOL; //Warning state/code
 {attribute 'pytmc' := '
-    pv: ERROR
+    pv: ERROR;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
 	'}
 xErr	:	BOOL; //Error summary
@@ -58,6 +66,7 @@ iErr	:	BOOL; //Error state/code
 	field: ONST STARTING;
 	field: TWST RUNNING;
 	field: THST FAULT;
+	field: FRST STOPPING;
 	io: i;
 	'}
 

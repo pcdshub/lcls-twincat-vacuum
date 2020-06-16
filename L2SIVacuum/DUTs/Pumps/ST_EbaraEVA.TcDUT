@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_EbaraEVA" Id="{825d9563-9766-45be-b4c4-16a1335c1e21}">
     <Declaration><![CDATA[TYPE ST_EbaraEVA EXTENDS ST_RoughPump:
 STRUCT
@@ -10,18 +10,24 @@ STRUCT
 	
 (* Input *)
 {attribute 'pytmc' := '
-    pv: REMOTE
-	io: io
+    pv: REMOTE;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
+	io: io;
     '}
 	q_xRemote	:	BOOL;
 	{attribute 'pytmc' := '
-    pv: ALARM_OK
+    pv: ALARM_OK;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
     '}
 	i_xAlarmOK	:	BOOL;
 	
 	{attribute 'pytmc' := '
-    pv: RUN_DI
+    pv: RUN_DI;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
     '}
 	i_xIsRun		:	BOOL;

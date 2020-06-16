@@ -29,7 +29,7 @@ VAR
 	rtOK	:	R_TRIG;
 	tOvrd	:	TIME := T#10s;
 	(* Timeouts*)
-	tTimeOutDuration: TIME:= T#10S;
+	tTimeOutDuration: TIME:= T#30S;
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
 
@@ -62,6 +62,7 @@ END_IF
 
 (*evaluate Valve open external interlock*)
 iq_stValve.xOPN_OK := i_xExtILK_OK;
+iq_stValve.xEXT_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
 	iq_stValve.pv_xOPN_SW := FALSE;
 	iq_stValve.eVGC_State := ERR_ExtFault;
@@ -170,6 +171,24 @@ IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSe
 ]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_IsClosed" Id="{4e438a9f-4342-41bd-a380-0da74e2a5082}">
+      <Declaration><![CDATA[METHOD PUBLIC M_IsClosed : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsOpen" Id="{eb6c64b2-d1bd-455c-8592-ebe86509e126}">
+      <Declaration><![CDATA[METHOD PUBLIC M_IsOpen : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Set_OPN_SW" Id="{07186e50-891b-4770-9150-381f8e6a0477}">
       <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
 METHOD PUBLIC M_Set_OPN_SW : BOOL
@@ -186,7 +205,9 @@ END_VAR
       <LineId Id="87" Count="0" />
       <LineId Id="3" Count="10" />
       <LineId Id="89" Count="1" />
-      <LineId Id="14" Count="2" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="15" Count="1" />
       <LineId Id="161" Count="0" />
       <LineId Id="17" Count="0" />
       <LineId Id="165" Count="0" />
@@ -233,6 +254,12 @@ END_VAR
       <LineId Id="29" Count="1" />
       <LineId Id="52" Count="10" />
       <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_EBD.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_EBD.M_IsOpen">
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VRC_EBD.M_Set_OPN_SW">
       <LineId Id="5" Count="0" />

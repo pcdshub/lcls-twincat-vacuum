@@ -2,8 +2,8 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_9XX" Id="{2b25be69-d890-49a3-9eed-41a1523a8d75}" SpecialFunc="None">
     <Declaration><![CDATA[(* Standard MKS 9XX series conversion *)
-(* works for 972 and 925 *)
-FUNCTION_BLOCK FB_9XX
+(* works for 925 *)
+FUNCTION_BLOCK FB_9XX EXTENDS FB_GaugeBAse
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -13,7 +13,6 @@ VAR_OUTPUT
 	PG	: ST_VG;
 END_VAR
 VAR_IN_OUT
-	
 END_VAR
 VAR
 	rV : REAL;
@@ -40,31 +39,65 @@ If (iTermBits=0) THEN iTermBits := 30518;END_IF
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
 IF rV >= 0.99 THEN
-	IF rV >= 0.99 AND rV < 1 THEN
+	IF rV >= 0.99 AND rV <= 1 THEN
 		PG.rPRESS := 1E-5;
 	ELSE
 		PG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-6));
 	END_IF
-	PG.xPRESS_OK := TRUE; //Backwards compatibility
+	PG.xPRESS_OK := TRUE;
+	PG.eState := Valid;
 ELSE
 	PG.xPRESS_OK := FALSE;
+	IF (rV = 0) THEN PG.eState := GaugeDisconnected;
+		ELSE  PG.eState := PressInvalid;
+	END_IF
 END_IF
-
-(* Pressure OK check *)
-fbGaugeState.i_rV := rV;
-fbGaugeState.i_MaxPressure := rMaxPressure;
-fbGaugeState.i_MinPressure := rMinPressure;
-fbGaugeState(iq_stVG:=PG);
 
 (* Setpoint evaluation *)
 PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS < PG.rVAC_SP);
 
+
+(*Logger*)
+ACT_Logger();
 (*Soft IO Mapping*)
 ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{fa0165d3-2f39-4dbf-b71c-224ecb928e0b}">
       <Implementation>
         <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Logger" Id="{8202116e-e944-4d2f-9609-fb14baf15925}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+IF NOT PG.xILKOk AND NOT PG.q_xHV_DIS THEN
+ 		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+//STATE Logger  
+IF ePrevState <> PG.eState THEN
+	  CASE PG.eState OF
+		ValidHi:
+			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+		ValidLo:
+			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+		Valid:
+			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+  		GaugeDisconnected:
+			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+		PressInvalid:
+			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+		OoR:
+			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+		Starting:
+			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := PG.eState;  
+  END_IF
+  
+
+]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_SetBits" Id="{c6390781-2f32-46e3-a37b-9fd31dd0725f}">
@@ -77,5 +110,21 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
+
+    <LineIds Name="FB_9XX">
+      <LineId Id="3" Count="32" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_9XX.ACT_IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_9XX.ACT_Logger">
+      <LineId Id="2" Count="27" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_9XX.M_SetBits">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+
   </POU>
 </TcPlcObject>

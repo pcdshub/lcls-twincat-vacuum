@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_ADS_WATCHDOG" Id="{fa67c1d7-9960-48b3-9228-718e772a08ad}" SpecialFunc="None">
     <Declaration><![CDATA[(*This function block is to be used whenever deivce data going to be read over ADS*)
-(*The remote plc has to instantiate this function block in order to write a watchdog cariable*)
-(*that the ADS read function expects*)
+(*The remote plc has to instantiate this function block in order to write a watchdog variable*)
+(*that the ADS read function expects to keep checking*)
 FUNCTION_BLOCK FB_ADS_WATCHDOG
 VAR_INPUT
 	sNetId : String; //NetID of the Destination PLC controller

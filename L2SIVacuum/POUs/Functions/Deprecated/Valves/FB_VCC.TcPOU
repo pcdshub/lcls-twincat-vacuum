@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_VCC" Id="{5ba1a6cc-24ff-4014-aa5e-6a7b6226a38e}" SpecialFunc="None">
+    <Declaration><![CDATA[(*Deprecated*)
+(* THE FB_VCC FUNCTION BLOCK IS DEPRECATED. USE FB_VVC INSTEAD. *)
+(* This Function Block Implements Basic Functionality for Vent Valves VVC *)
+(* Note Interlock Logic is External *)
+FUNCTION_BLOCK FB_VCC
+VAR_IN_OUT
+
+END_VAR
+VAR_INPUT
+	i_xExtILK_OK:BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
+	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only*)
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv:
+	'}
+	iq_stValve : ST_VVC;
+END_VAR
+VAR
+
+	tonOvrd	:	TON;
+	tonDelOK : TON;
+	rtOK	:	R_TRIG;
+
+	(*IO*)
+	q_xOPN_DO	AT%Q*: BOOL;
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+iq_stValve.xOPN_OK := i_xExtILK_OK;
+
+IF NOT iq_stValve.xOPN_OK THEN
+iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
+
+(* Override logic *)
+(* Goal: give ability to override, but do so in a way that people won't forget it.
+Solution: Override only after ten seconds of override, protect against blips,
+when the valve permission goes true for more than ten seconds consistently, remove override
+*)
+
+tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=T#10S);
+rtOK(CLK:=tonDelOK.Q);
+IF rtOK.Q THEN iq_stValve.xOvrdOpn :=FALSE; END_IF
+
+//Override timer
+tonOvrd(IN:=iq_stValve.xOvrdOpn, PT:=T#10S);
+
+(* Here's where the valve opens *)
+iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+
+(*IO Mapping*)
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{d165a6d3-343d-433e-9bfc-fed40a85fa97}">
+      <Implementation>
+        <ST><![CDATA[(*inputs*)
+iq_stValve.xOverrideMode := i_xOverrideMode;
+(*outputs*)
+q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_IsClosed" Id="{797d56d6-e736-4bd1-8e6d-f8a341c15bae}">
+      <Declaration><![CDATA[METHOD PUBLIC M_IsClosed : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsClosed := NOT This^.q_xOPN_DO;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsOpen" Id="{def52f34-99b7-48c7-9903-759cb85be175}">
+      <Declaration><![CDATA[METHOD PUBLIC M_IsOpen : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsOpen := This^.q_xOPN_DO;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Set_OPN_SW" Id="{7f5acd3f-8556-413a-b630-0f2034c75abd}">
+      <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+METHOD PUBLIC M_Set_OPN_SW : BOOL
+VAR_INPUT
+		value:BOOL;  //True to SET, False to RESET
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_VCC">
+      <LineId Id="3" Count="23" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.ACT_IO">
+      <LineId Id="2" Count="2" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCC.M_Set_OPN_SW">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

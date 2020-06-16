@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
   <DUT Name="ST_EbaraPTM" Id="{00dd7679-7d3a-464d-8613-c714e423a1cf}">
     <Declaration><![CDATA[TYPE ST_EbaraPTM EXTENDS ST_PTM :
 STRUCT
@@ -10,36 +10,49 @@ ETC series
 //Controls
 	{attribute 'pytmc' := '
     pv: START;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 q_xStart   : BOOL; //Outputs - FB decides if these are actually set
 	{attribute 'pytmc' := '
     pv: STOP;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 q_xStop    : BOOL;
 	{attribute 'pytmc' := '
     pv: RESET;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 q_xReset   : BOOL; // xReset is momentary reset switch - resets protection functions
 	{attribute 'pytmc' := '
     pv: PROT;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i;
 	'}
 q_xProtection : BOOL; //NC. If opened, pump will decelerate/not start
 	{attribute 'pytmc' := '
     pv: SETSPEED
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: io
 	'}
 iq_xSpeedSet    : BOOL; //Request to set speed
 	{attribute 'pytmc' := '
     pv: SPEED_REQ
 	io: io
+	field: EGU "Hz"
 	'}
-q_iSpeedSet   : DINT; //Requested speed (min. 100 RPM)
+q_iSpeedSet   : DINT; //Requested speed (min. 100Hz)
 	{attribute 'pytmc' := '
 	pv: OVRD_ON 
+	field: ZNAM OFF; 
+	field: ONAM ON;
 	io: io
 	'}
 i_xOverride   : BOOL; //Override mode - ignores interlocks
@@ -47,25 +60,27 @@ i_xOverride   : BOOL; //Override mode - ignores interlocks
 //Readbacks - also has Accel/At speed/Decel/Fault/Cur Speed (min 100RPM)
 	{attribute 'pytmc' := '
     pv: ROTATE_STATUS
+	field: ZNAM FALSE; 
+	field: ONAM ROTATING;
 	io: i
 	'}
 i_xRotate : BOOL; //If open, pump is rotating
 	{attribute 'pytmc' := '
     pv: DECEL
+	field: ZNAM FALSE; 
+	field: ONAM DECELERATING;
 	io: i
 	'}
 i_xDecel  : BOOL; //If closed, brake engaged (pump decelerating)
 	{attribute 'pytmc' := '
     pv: FAULT_OK
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
 	io: i
 	'}
 i_xNCFault  : BOOL; //Normally closed fault wiring. If false, there is a fault, or cable is unplugged.
 
-{attribute 'pytmc' := '
-    pv: TEMP_MON
-	io: i
-	'}
-i_iTempMon	:	INT; //Voltage according to the pump temprature 0->5V 0->100C
+
 
 END_STRUCT
 END_TYPE

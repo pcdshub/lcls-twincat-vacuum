@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="F_VALVE_REL_ILK" Id="{76a07f65-882b-4a00-83f1-0c1df4ed592a}" SpecialFunc="None">
     <Declaration><![CDATA[(* OK, this is going to be a general-use function that will return whether the ratio of the pressures given is less than x orders of magnitude.
 True iff 10^(-x) < a/b < 10^x.  Simple, right?  Just make sure it gets a positive order of magnitude and the pressures aren't 0. ~Scott *)   
-
+{attribute 'no_check'}
 FUNCTION F_VALVE_REL_ILK : BOOL
 VAR_INPUT
 	i_stUSG	:	ST_VG; // Upstream Gague
@@ -33,8 +33,7 @@ ELSE
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="F_VALVE_REL_ILK">
-      <LineId Id="25" Count="1" />
-      <LineId Id="3" Count="10" />
+      <LineId Id="3" Count="12" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

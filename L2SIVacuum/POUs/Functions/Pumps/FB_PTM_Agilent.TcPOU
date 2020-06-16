@@ -26,21 +26,23 @@ VAR
 	nR1Fault : INT;
 	tFaultWindowDuration : TIME := T#300S;
 	tR1FaultDuration : TIME := T#120S;
-	tTimeOutDuration: TIME:= T#120S;
+	tTimeOutDuration: TIME:= T#10M;
 	tFaultWindowElapsed: TON;
 	tR1Fault : TON;
 	tStartTimeOut : TON;
 	tR1TimeOut: TON;
 	step : INT :=0;
-	nErrorCode: UINT :=0;
+	nErrorCode: INT :=0;
 	xBackingPressureOK: BOOL;
-	
+	iMaxSpeed : INT:=963;
 	
 	(*I/Os*)
-	i_xSTART 	AT%I*:	BOOL; // 'TcLinkTo' (EL1088) ^Input
-	i_xR1	AT%I*	:  BOOL;// 'TcLinkTo' (EL1088) ^Input
-	i_xR2	AT%I*	:  BOOL;// 'TcLinkTo' (EL1088) ^Input
-	i_xLSpd	AT%I*:  BOOL;// 'TcLinkTo' (EL1088) ^Input
+	i_xSTART 	AT%I*:	BOOL;
+	i_xR1	AT%I*	:  BOOL;
+	i_xR2	AT%I*	:  BOOL;
+	i_xLSpd	AT%I*:  BOOL;
+	i_iTempMon AT%I*: INT;
+	i_iPowerMon AT%I*: INT;
 	i_iCurrentMon AT%I*: INT;
 	i_iRawSpeed AT %I* : INT; // Link to Analog input
 	i_xFault AT%I*	:	BOOL;
@@ -49,10 +51,11 @@ VAR
     
     
     // For logging
-    Msg : FB_FormatString;
-    fbJson : FB_JsonSaxWriter;
+  //  Msg : FB_FormatString;
+   // fbJson : FB_JsonSaxWriter;
    tOverrideActivated : R_TRIG;
 	
+	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -77,11 +80,6 @@ CASE (step) OF
 		iq_stPtm.eState := pumpSTOPPED;
 		step :=10;
         
-        //Log new state
-        IF ePrevState <> iq_stPtm.eState THEN
-            fbLogger(sMsg:='Pump stopped/ stopping.', eSevr:=TcEventSeverity.Verbose);
-            ePrevState := iq_stPtm.eState;
-		END_IF
 (*Idle State waiting to start*)	
 	10: // Idle State, waiting for the xRunSwitch
 		IF iq_stPtm.xExtRunOk  AND iq_stPTM.xRunSW THEN
@@ -101,11 +99,6 @@ CASE (step) OF
 		END_IF
 		// should check R1 ?? check Fault condition?
         
-        //Log new state
-        IF ePrevState <> iq_stPtm.eState THEN
-            fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Verbose);
-            ePrevState := iq_stPtm.eState;
-		END_IF
 		
 	40: // Pump is starting
 		iq_stPtm.eState := pumpSTARTING;
@@ -120,7 +113,7 @@ CASE (step) OF
 			step:= 90;
 			iq_stPtm.xPumpFaultLock := TRUE;
 			nErrorCode:= 930; // R1 Signal at Start time out.
-            fbLogger(sMsg:='Timeout: Pump could not achieve running speed.', eSevr:=TcEventSeverity.Warning);
+           // fbLogger(sMsg:='Timeout: Pump could not achieve running speed.', eSevr:=TcEventSeverity.Warning);
 		END_IF
 		
 	50: // Pump is Running (Normal Operation) ( R1 is True and STARTing is FALSE)
@@ -134,7 +127,7 @@ CASE (step) OF
         
         //Log new state
         IF ePrevState <> iq_stPtm.eState THEN
-            fbLogger(sMsg:='Pump at speed.', eSevr:=TcEventSeverity.Verbose);
+            //fbLogger(sMsg:='Pump at speed.', eSevr:=TcEventSeverity.Verbose);
             ePrevState := iq_stPtm.eState;
 		END_IF
 	
@@ -145,7 +138,7 @@ CASE (step) OF
 			tFaultWindowElapsed.IN := FALSE;
 			iq_stPtm.xPumpFaultLock := TRUE;
 			nErrorCode:= 920; // R1 Signal Lost multiple times.
-            fbLogger(sMsg:='Running signal Lost multiple times.', eSevr:=TcEventSeverity.Warning);
+            //fbLogger(sMsg:='Running signal Lost multiple times.', eSevr:=TcEventSeverity.Warning);
 		ELSIF tFaultWindowElapsed.Q  THEN
 			tFaultWindowElapsed.IN := FALSE;
 			nR1Fault := 0;
@@ -199,8 +192,8 @@ IF (NOT iq_stPtm.xRunSW) AND (NOT (step >= 90)) AND (NOT (step = 10)) THEN
 	step := 0;
 END_IF
 
-// Log faults
-tErrorPresent(CLK:=iq_stPtm.xPumpFaultLock);
+// Log faults Moved to ACT_Logger
+(*tErrorPresent(CLK:=iq_stPtm.xPumpFaultLock);
 IF tErrorPresent.Q THEN
     fbJson.StartObject();
     fbJson.AddKey('vacuum_typecode');
@@ -210,6 +203,7 @@ IF tErrorPresent.Q THEN
     fbLogger(sMsg:='Turbo control fault', eSevr:=TcEventSeverity.Warning);
     fbJson.ResetDocument();
 END_IF
+*)
 
 (* Timers *)
 tFaultWindowElapsed(PT:=tFaultWindowDuration);
@@ -218,15 +212,50 @@ tStartTimeOut(IN := (step=20), PT:=tTimeOutDuration);
 tR1TimeOut(IN := (step=40), PT:=tTimeOutDuration);
 (* IO Mapping*)
 IO();
-// Log States and triggers
-ACT_Logger();
 (*Assign Error Message*)
 iq_stPtm.sError := ErrorMessage(nErrorCode, iq_stPtm.eState);
+// Log States and triggers
+ACT_Logger();
 (*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
 iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
 
 ]]></ST>
     </Implementation>
+    <Action Name="ACT_Logger" Id="{ed7ad0a5-9a78-4047-aa81-61698840506a}">
+      <Implementation>
+        <ST><![CDATA[//STATE Logger  
+// ILK logger
+IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
+ 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+IF ePrevState <> iq_stPTM.eState THEN
+	  CASE iq_stPTM.eState OF
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+  		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpSTARTING:
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stPTM.eState;  
+  END_IF
+  
+// Log Action
+tAction(CLK:=  iq_stPTM.q_RunDO);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+
+
+// Log FAULT
+tFault(CLK:= iq_stPTM.i_xFault OR iq_stPtm.xPumpFaultLock);
+IF tFault.Q THEN fbLogger(sMsg:=iq_stPtm.sError, eSevr:=TcEventSeverity.Critical); END_IF
+
+]]></ST>
+      </Implementation>
+    </Action>
     <Method Name="BackingPressureSetPoint" Id="{21dc29bb-1bb2-48c6-a7d3-4f43435484d9}">
       <Declaration><![CDATA[METHOD BackingPressureSetPoint : REAL
 VAR_INPUT
@@ -249,18 +278,20 @@ END_VAR
         <ST><![CDATA[IF (eState = pumpFAULT ) THEN
 	CASE nErrorCode OF
 		950:
-			ErrorMessage := CONCAT(sPath,': Pump Starting Fault');
+			ErrorMessage := 'Pump Starting Fault';
 		930: 
-			ErrorMessage := CONCAT(sPath,': R1 Signal Timeout at Startup');
+			ErrorMessage := 'Pump could not achieve running speed';
 	
 		920:
-			ErrorMessage := CONCAT(sPath,': R1 signal lost multiple times');
+			ErrorMessage := 'Running at speed signal lost multiple times';
 
 		900:
-			ErrorMessage := CONCAT(sPath,': Pump Controller Fault');	
+			ErrorMessage := 'Pump Controller Fault';	
 	END_CASE
 	
-END_IF]]></ST>
+END_IF
+
+]]></ST>
       </Implementation>
     </Method>
     <Action Name="IO" Id="{91e0ad29-851c-46ff-a4b9-77352c8095fc}">
@@ -271,7 +302,14 @@ iq_stPtm.i_xR1:=	i_xR1;
 iq_stPtm.i_xR2:=	i_xR2;
 iq_stPtm.i_xLSpd:=	i_xLSpd;
 iq_stPtm.i_xFault:=	i_xFault;
-iq_stPtm.i_iCurrentMon := i_iCurrentMon;
+(* Real-value calculation *)
+If (iTermBits=0) THEN iTermBits := 32767;END_IF
+iq_stPtm.i_rCurrentMon := 10*INT_TO_REAL(i_iCurrentMon)/iTermBits; // 1v is equal to 1A  Manual page 73
+iq_stPtm.i_rTempMon := 10*INT_TO_REAL(i_iTempMon)/iTermBits; // 1v is equal to 1A  Manual page 73
+iq_stPtm.i_rPowerMon := 10*INT_TO_REAL(i_iPowerMon)/iTermBits; // 1v is equal to 1A  Manual page 73
+iq_stPtm.i_diCurSpd := 10*LREAL_TO_DINT(INT_TO_REAL(i_iRawSpeed)/iTermBits); // 1v is equal to 1A  Manual page 73
+
+
 (*outputs*)
 q_RunDO := iq_stPtm.q_RunDO;
 q_xLSpd := iq_stPtm.q_xLSpd;
@@ -289,6 +327,26 @@ END_VAR
 this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_SetBits" Id="{a2f7f5fb-a670-4222-9341-81f8e7396faa}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetMaxSpeed" Id="{b01139cd-82e5-4729-bc78-ddb4924b1c2d}">
+      <Declaration><![CDATA[METHOD M_SetMaxSpeed : BOOL
+VAR_INPUT
+	iMaxSpeed: INT; //963Hz for 3.1,300HT and 1010Hz for 401 and 1350 for 81
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.iMaxSpeed := iMaxSpeed;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_TurboIsOn" Id="{fd80a5ac-8a80-41d5-8e07-a92996986023}">
       <Declaration><![CDATA[METHOD PUBLIC M_TurboIsOn : BOOL
 VAR_INPUT
@@ -299,25 +357,32 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_PTM_Agilent">
-      <LineId Id="3" Count="161" />
-      <LineId Id="229" Count="0" />
-      <LineId Id="228" Count="0" />
-      <LineId Id="165" Count="4" />
+      <LineId Id="3" Count="159" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.ACT_Logger">
+      <LineId Id="2" Count="29" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Agilent.BackingPressureSetPoint">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Agilent.ErrorMessage">
-      <LineId Id="3" Count="13" />
+      <LineId Id="3" Count="15" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Agilent.IO">
-      <LineId Id="2" Count="9" />
+      <LineId Id="2" Count="16" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Agilent.M_Run">
       <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_SetBits">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_SetMaxSpeed">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Agilent.M_TurboIsOn">

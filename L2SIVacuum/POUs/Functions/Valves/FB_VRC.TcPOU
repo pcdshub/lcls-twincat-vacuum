@@ -5,17 +5,12 @@
 This function block is interloked by an input (i_xExtILK_OK). This is so developers can interface with custom
 interlocking logic outside this function block.*)
 (* Note Interlock Logic is External *)
+{attribute 'no_check'}
 FUNCTION_BLOCK FB_VRC EXTENDS FB_Valve
 VAR_IN_OUT
 	
 END_VAR
 VAR_INPUT
-	{attribute 'pytmc' := '
-	pv: EXT_ILK_OK ;
-	field: ZNAM NOT OK ;
-	field: ONAM OK ;
-	io: i ;
-	'}
 	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 END_VAR
@@ -36,7 +31,7 @@ VAR
 	rtOK	:	R_TRIG;
 	tOvrd	:	TIME := T#10s;
 	(* Timeouts*)
-	tTimeOutDuration: TIME:= T#10S;
+	tTimeOutDuration: TIME:= T#30S;
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
 	
@@ -54,6 +49,7 @@ fbFSInit( CLK := TRUE, Q => xFirstPass);
 IF xFirstPass THEN
 	iq_stValve.eVGC_State := Vented;
 	iq_stValve.pv_xOPN_SW := FALSE;
+	ePrevState := INVALID; 
 END_IF
 
 
@@ -64,6 +60,8 @@ IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
 	iq_stValve.eState:=INVALID;
 ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=OPEN;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
+	iq_stValve.eState:=OPEN_F;
 ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=CLOSED;
 ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
@@ -75,6 +73,7 @@ END_IF
 
 (*evaluate Valve open external interlock*)
 iq_stValve.xOPN_OK := i_xExtILK_OK;
+iq_stValve.xEXT_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
 	iq_stValve.pv_xOPN_SW := FALSE;
 	iq_stValve.eVGC_State := ERR_ExtFault;
@@ -99,7 +98,8 @@ IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
-
+// Release the Force Open bit when the system override is false
+IF NOT(i_xOverrideMode) THEN  iq_stValve.pv_xOvrdOpn :=FALSE; END_IF
 //Override timer
 tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
@@ -129,7 +129,8 @@ tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
 ACT_IO();
 
 // Log States and triggers
-ACT_Logger();]]></ST>
+ACT_Logger();
+]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{71e6a07b-f8a4-4ad9-819a-47adf702a688}">
       <Implementation>
@@ -182,6 +183,24 @@ IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSe
 ]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_IsClosed" Id="{196a70bb-373f-42e5-aeaa-84bd8a433acc}">
+      <Declaration><![CDATA[METHOD PUBLIC M_IsClosed : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsOpen" Id="{c98837b0-347d-4e29-a00c-0376b2ac9341}">
+      <Declaration><![CDATA[METHOD PUBLIC M_IsOpen : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Set_OPN_SW" Id="{87b0c242-3ded-4d47-af63-cf02c359390b}">
       <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
 METHOD PUBLIC M_Set_OPN_SW : BOOL
@@ -194,69 +213,32 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VRC">
-      <LineId Id="87" Count="0" />
-      <LineId Id="128" Count="0" />
-      <LineId Id="134" Count="0" />
-      <LineId Id="129" Count="3" />
-      <LineId Id="125" Count="2" />
-      <LineId Id="3" Count="0" />
-      <LineId Id="135" Count="10" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="146" Count="0" />
-      <LineId Id="89" Count="1" />
-      <LineId Id="14" Count="2" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="152" Count="1" />
-      <LineId Id="150" Count="1" />
-      <LineId Id="19" Count="7" />
-      <LineId Id="221" Count="0" />
-      <LineId Id="226" Count="1" />
-      <LineId Id="223" Count="1" />
-      <LineId Id="27" Count="5" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="196" Count="1" />
-      <LineId Id="200" Count="10" />
-      <LineId Id="198" Count="1" />
-      <LineId Id="216" Count="3" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="62" Count="0" />
+      <LineId Id="3" Count="16" />
+      <LineId Id="224" Count="1" />
+      <LineId Id="20" Count="10" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="31" Count="17" />
+      <LineId Id="50" Count="5" />
+      <LineId Id="135" Count="1" />
+      <LineId Id="57" Count="29" />
       <LineId Id="2" Count="0" />
-      <LineId Id="193" Count="1" />
-      <LineId Id="192" Count="0" />
     </LineIds>
     <LineIds Name="FB_VRC.ACT_IO">
-      <LineId Id="2" Count="2" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="5" Count="0" />
+      <LineId Id="2" Count="4" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_VRC.ACT_Logger">
-      <LineId Id="66" Count="4" />
-      <LineId Id="64" Count="1" />
+      <LineId Id="2" Count="35" />
       <LineId Id="1" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.M_IsClosed">
       <LineId Id="2" Count="0" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="5" Count="1" />
-      <LineId Id="3" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="29" Count="1" />
-      <LineId Id="52" Count="10" />
-      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC.M_IsOpen">
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VRC.M_Set_OPN_SW">
-      <LineId Id="5" Count="0" />
+      <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

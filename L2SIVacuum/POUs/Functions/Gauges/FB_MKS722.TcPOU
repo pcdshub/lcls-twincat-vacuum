@@ -58,20 +58,12 @@ ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{a9ca031f-8292-44da-bb18-9cf126ecf67e}">
       <Implementation>
-        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+        <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_MKS722">
-      <LineId Id="76" Count="0" />
-      <LineId Id="79" Count="1" />
-      <LineId Id="107" Count="0" />
-      <LineId Id="77" Count="1" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="36" Count="4" />
-      <LineId Id="30" Count="5" />
-      <LineId Id="41" Count="2" />
-      <LineId Id="47" Count="2" />
-      <LineId Id="9" Count="0" />
+      <LineId Id="3" Count="23" />
+      <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS722.ACT_IO">
       <LineId Id="1" Count="0" />
