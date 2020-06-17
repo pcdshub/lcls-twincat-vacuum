@@ -100,6 +100,18 @@ VAR
     tErrorPresent : R_TRIG;
     tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
     tOverrideActivated : R_TRIG;
+    
+    // Interlock Display
+    {attribute 'pytmc' := '
+        pv: Ilk_USG
+	    io: i
+    '}
+    sUSGPath : STRING;
+    {attribute 'pytmc' := '
+        pv: Ilk_DSG
+	    io: i
+    '}
+    sDSGPath : STRING;
 	
 END_VAR]]></Declaration>
     <Implementation>
@@ -137,6 +149,10 @@ ACT_IO();
 IF xFirstPass THEN
 	iq_stValve.eVGC_State := Vented;
 	iq_stValve.pv_xOPN_SW := FALSE;
+    
+    // Set strings for interlock display
+    sUSGPath := i_stUSG.sPath;
+    sDSGPath := i_stDSG.sPath;
 END_IF
 
 
@@ -436,42 +452,5 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VGC">
-      <LineId Id="3" Count="41" />
-      <LineId Id="580" Count="1" />
-      <LineId Id="45" Count="154" />
-      <LineId Id="201" Count="0" />
-      <LineId Id="369" Count="0" />
-      <LineId Id="371" Count="0" />
-      <LineId Id="203" Count="16" />
-      <LineId Id="472" Count="0" />
-      <LineId Id="220" Count="0" />
-      <LineId Id="473" Count="1" />
-      <LineId Id="476" Count="3" />
-      <LineId Id="475" Count="0" />
-      <LineId Id="222" Count="45" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.ACT_IO">
-      <LineId Id="2" Count="6" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="12" Count="1" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.ACT_ResetAlarms">
-      <LineId Id="2" Count="5" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.M_IsClosed">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.M_IsOpen">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.M_Set_OPN_SW">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
