@@ -83,7 +83,7 @@ timer(IN:= NOT stPump.q_xHVEna_DO, PT:= T#1s);
 // TAW Experimental ion pump timeout
 tPumpStartTimeout(IN:=(NOT stPump.i_xHV_DI AND stPump.q_xHVEna_DO));
 tTimeOutAction(CLK:=tPumpStartTimeout.Q);
-IF tTimeOutAction.Q THEN fbLogger(sMsg:='Pump time out.', eSevr:=TcEventSeverity.Critical); END_IF
+IF tTimeOutAction.Q THEN  fbLogger(sMsg:='Pump time out.', eSevr:=TcEventSeverity.Critical); END_IF
 
 
 
@@ -209,6 +209,8 @@ q_IG.sPath := This^.stPump.sPath;
     <Action Name="IO" Id="{a9e5b5c0-3557-4ce9-a1b9-765648e955e7}">
       <Implementation>
         <ST><![CDATA[stPump.sIlkDeviceName := This^.i_stGauge.sPath;
+stPump.xError := (stPump.eState = pumpFAULT);
+ 
 (*inputs*)
 stPump.i_iPRESS:=	i_iPRESS;  
 stPump.i_xHV_DI:=	i_xSP_DI;
@@ -263,7 +265,10 @@ this^.stPump.xHVEna_SW := run;]]></ST>
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PIP_Gamma.IO">
-      <LineId Id="2" Count="4" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="3" Count="3" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PIP_Gamma.M_AutoOn">
