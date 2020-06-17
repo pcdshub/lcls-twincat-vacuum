@@ -3,7 +3,9 @@
   <POU Name="FB_MKS909" Id="{e4d3e807-daeb-4a47-bccf-64bd129edfcd}" SpecialFunc="None">
     <Declaration><![CDATA[(* Standard MKS 909 hot cathode *)
 (* works for 972 and 925 *)
+
 FUNCTION_BLOCK FB_MKS909 EXTENDS FB_GaugeBase
+
 VAR_INPUT
 	PG	: ST_VG;
 END_VAR
@@ -83,7 +85,9 @@ IG.xAT_VAC := IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP);
 ACT_IO();
 
 (*Logger*)
+
 THIS^.ACT_Logger();]]></ST>
+
     </Implementation>
     <Action Name="ACT_IO" Id="{89c7028d-3190-45b7-aaec-73bdcb00e265}">
       <Implementation>
@@ -150,6 +154,7 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
+
     <LineIds Name="FB_MKS909">
       <LineId Id="3" Count="51" />
       <LineId Id="2" Count="0" />
@@ -168,5 +173,6 @@ END_VAR
     <LineIds Name="FB_MKS909.M_SetBits">
       <LineId Id="2" Count="0" />
     </LineIds>
+
   </POU>
 </TcPlcObject>

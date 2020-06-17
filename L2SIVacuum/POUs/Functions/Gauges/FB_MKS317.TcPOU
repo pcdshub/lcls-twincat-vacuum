@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
   <POU Name="FB_MKS317" Id="{8a56f7a2-f285-4648-be2d-40acd79b269f}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Pirani MKS 317 connected to a 937A/B *)
 (* This function block is used to provide protection and automatic turn on of ion gauges,
@@ -27,9 +27,11 @@ END_VAR
 VAR CONSTANT
 	rMinPressure: REAL := 1E-4;
 	rDefaultVAC_SP: REAL :=5E-2; // Default 50 mT
-	rValidLoBoundary	:	REAL := 0.2;
-	rValidHiBoundary	:	REAL := 9.7; 
-	rDisconnectedBoundary	:	REAL := 0.17;
+	rDisconnectedBoundary	:	REAL := 0.15;
+	rValidLoBoundary	:	REAL := 0.22;
+	rValidBoundaryMin	:	REAL := 0.6;
+	rValidHiBoundary	:	REAL := 9.7;
+	rValidHiBoundaryMax	:	REAL := 9.9; 
 	rNoSensorBoundary	:	REAL := 10;
 END_VAR
 ]]></Declaration>
@@ -52,14 +54,14 @@ IF PG.rVAC_SP = 0 THEN
 	PG.rVAC_SP := rDefaultVAC_SP;
 END_IF
 
-IF (rV <=9.7 ) AND (rV>=0.6) THEN
+IF (rV <=rValidHiBoundary ) AND (rV>=rValidBoundaryMin) THEN
 	PG.eState := Valid; // normal
-ELSIF rV >= 0.16 AND rV <= 0.22 THEN
+ELSIF rV >= rDisconnectedBoundary AND rV <= rValidLoBoundary THEN
 	PG.eState := ValidLo; //LO
 	PG.rPRESS := rMinPressure;
-ELSIF rV > 9.7 AND rV<= 9.9 THEN
+ELSIF rV > rValidHiBoundary AND rV<= rValidHiBoundaryMax THEN
 	PG.eState := ValidHi; //HIGH
-ELSIF rV < 0.16 THEN
+ELSIF rV < rDisconnectedBoundary THEN
 	PG.eState := GaugeDisconnected; //not on
 	PG.rPRESS := -1;
 ELSE
