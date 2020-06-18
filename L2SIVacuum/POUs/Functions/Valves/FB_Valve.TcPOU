@@ -23,13 +23,11 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Action>
-
     <LineIds Name="FB_Valve">
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_Valve.ACT_Logger">
       <LineId Id="1" Count="0" />
     </LineIds>
-
   </POU>
 </TcPlcObject>

@@ -57,7 +57,6 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-
     <LineIds Name="FB_972">
       <LineId Id="3" Count="17" />
       <LineId Id="2" Count="0" />
@@ -68,6 +67,5 @@ END_VAR
     <LineIds Name="FB_972.M_SetBits">
       <LineId Id="2" Count="0" />
     </LineIds>
-
   </POU>
 </TcPlcObject>
