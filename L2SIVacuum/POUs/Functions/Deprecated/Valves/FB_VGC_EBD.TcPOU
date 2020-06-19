@@ -365,6 +365,7 @@ ACT_IO();
 (*FAST FAULT*)
 fbFF(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
+	i_xAutoReset :=TRUE,
     io_fbFFHWO := io_fbFFHWO);
 
 
@@ -430,7 +431,9 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VGC_EBD">
-      <LineId Id="3" Count="265" />
+      <LineId Id="3" Count="261" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="265" Count="3" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC_EBD.ACT_IO">

@@ -57,7 +57,7 @@ VAR_IN_OUT
 END_VAR
 VAR
 	// PMPS
-	fbFF    :    FB_FastFault :=(
+	FFO    :    FB_FastFault :=(
         i_DevName := 'VGC',
         i_Desc := 'Fault occurs when the valve is not in open state',
         i_TypeCode := 16#1010);
@@ -371,8 +371,9 @@ ACT_ResetAlarms();
 ACT_IO();
 
 (*FAST FAULT*)
-fbFF(i_xOK := xMPS_OK,
+FFO(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
+	i_xAutoReset :=TRUE,
     io_fbFFHWO := io_fbFFHWO);
 
 
@@ -449,7 +450,9 @@ END_VAR
       <LineId Id="473" Count="1" />
       <LineId Id="476" Count="3" />
       <LineId Id="475" Count="0" />
-      <LineId Id="222" Count="45" />
+      <LineId Id="222" Count="41" />
+      <LineId Id="682" Count="0" />
+      <LineId Id="264" Count="3" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC.ACT_IO">
