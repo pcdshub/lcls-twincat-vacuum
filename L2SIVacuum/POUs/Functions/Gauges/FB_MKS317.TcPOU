@@ -27,7 +27,7 @@ END_VAR
 VAR CONSTANT
 	rMinPressure: REAL := 1E-4;
 	rDefaultVAC_SP: REAL :=5E-2; // Default 50 mT
-	rDisconnectedBoundary	:	REAL := 0.15;
+	rDisconnectedBoundary	:	REAL := 0.10;
 	rValidLoBoundary	:	REAL := 0.22;
 	rValidBoundaryMin	:	REAL := 0.6;
 	rValidHiBoundary	:	REAL := 9.7;
