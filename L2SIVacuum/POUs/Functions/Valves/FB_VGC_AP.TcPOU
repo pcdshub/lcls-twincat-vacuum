@@ -57,7 +57,7 @@ END_VAR
 VAR
 	// PMPS
 	fbFF    :    FB_FastFault :=(
-        i_DevName := 'VGC',
+        i_DevName := 'VGC Aptr',
         i_Desc := 'Fault occurs when the valve is not in open state',
         i_TypeCode := 16#1010);
 	//g_FastFaultOutput1	:	FB_HardwareFFOutput;	
@@ -204,7 +204,7 @@ CASE iq_stValve.eVGC_State OF
         
 		(* Assuming the pump down went well, we are now at vacuum on both sides,
 		so we move to the vacuum state, otherwise remain in the vented state *)
-		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND NOT (NOT (iq_stValve.xERR_SP)) and NOT (NOT (iq_stValve.xERR_ExtFault))THEN
+		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND  (NOT (iq_stValve.xERR_SP)) and  (NOT (iq_stValve.xERR_ExtFault))THEN
 		    iq_stValve.eVGC_State := AtVacuum;
 		ELSE
 		    iq_stValve.eVGC_State := Vented;
