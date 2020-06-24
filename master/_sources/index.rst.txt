@@ -1,0 +1,16 @@
+ Documentation
+--------------
+
+.. toctree::
+    :maxdepth: 3
+    :caption: Contents:
+
+    L2SIVacuumLib_index
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
