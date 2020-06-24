@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>L2SIVacuum Source Code &mdash; pcdshub/lcls-twincat-vacuum  documentation</title>
+  <title>DUTs &mdash; pcdshub/lcls-twincat-vacuum  documentation</title>
   
 
   
@@ -37,7 +37,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="L2SIVacuum EPICS" href="L2SIVacuumLib_L2SIVacuum_epics.html" /> 
+    <link rel="prev" title="Data Types" href="L2SIVacuumLib_L2SIVacuum_epics.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -82,118 +82,129 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">L2SIVacuumLib</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_pragmas.html">Pragmas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_nc.html">NC Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_boxes.html">Boxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_links.html">Links</a></li>
+</ul>
+<p class="caption"><span class="caption-text">L2SIVacuum</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="L2SIVacuumLib_index.html">L2SIVacuumLib.tsproj Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="L2SIVacuumLib_summary.html">Summary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html">L2SIVacuum</a></li>
-<li class="toctree-l2"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_epics.html">L2SIVacuum EPICS</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">L2SIVacuum Source Code</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#dut-e-pressurestate">DUT: E_PressureState</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-e-pumpstate">DUT: E_PumpState</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-e-valvepositionstate">DUT: E_ValvePositionState</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-e-vcn">DUT: E_VCN</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-e-vgc">DUT: E_VGC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-gauge-type">DUT: Gauge_Type</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-agilentptm">DUT: ST_AgilentPTM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-ebaradrypump">DUT: ST_EbaraDryPump</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-ebaraeva">DUT: ST_EbaraEVA</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-ebaraptm">DUT: ST_EbaraPTM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-kashiyamadrypump">DUT: ST_KashiyamaDryPump</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-leyboldptm">DUT: ST_LeyboldPTM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-pfeifferptm">DUT: ST_PfeifferPTM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-pip">DUT: ST_PIP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-ptm">DUT: ST_PTM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-roughpump">DUT: ST_RoughPump</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-valvebase">DUT: ST_ValveBase</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-vcc-no">DUT: ST_VCC_NO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-vcn">DUT: ST_VCN</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-vg">DUT: ST_VG</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-vgc">DUT: ST_VGC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-vrc">DUT: ST_VRC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#dut-st-vvc">DUT: ST_VVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gvl-constants">GVL: Constants</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gvl-global-variables">GVL: Global_Variables</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#gvl-global-version">GVL: Global_Version</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-roughpumpinlet-ilk">POU: F_RoughPumpInlet_ILK</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-turbo-vrc-ilk">POU: F_TURBO_VRC_ILK</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-turboextilk-no">POU: F_TurboExtILK_NO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-turboextilklogic">POU: F_TurboExtILKLogic</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-turboextilklogic-2">POU: F_TurboExtILKLogic_2</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-turbogatevalve-ilk">POU: F_TurboGateValve_ILK</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-turbogatevalve-ilk-1">POU: F_TurboGateValve_ILK_1</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-turbogatevalve-protection-ilk">POU: F_TurboGateValve_Protection_ILK</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-valve-rel-ilk">POU: F_VALVE_REL_ILK</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-vrc-diode-ilk">POU: F_VRC_DIODE_ILK</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-f-vrc-diode-ilk-ok">POU: F_VRC_DIODE_ILK_OK</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-972">POU: FB_972</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-9xx">POU: FB_9XX</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ads-watchdog">POU: FB_ADS_WATCHDOG</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-cmr362">POU: FB_CMR362</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ebaradrypump">POU: FB_EbaraDryPump</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ebaraeva">POU: FB_EbaraEVA</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-gauge-interface">POU: FB_Gauge_Interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-gaugebase">POU: FB_GaugeBase</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-gcc-test">POU: FB_GCC_Test</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-gcm">POU: FB_GCM</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-gpi-test">POU: FB_GPI_Test</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-itr90">POU: FB_ITR90</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-kashiyama-vrc">POU: FB_Kashiyama_VRC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-kashiyamapump">POU: FB_KashiyamaPump</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks248">POU: FB_MKS248</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks275">POU: FB_MKS275</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks317">POU: FB_MKS317</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks317a">POU: FB_MKS317A</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks392">POU: FB_MKS392</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks422">POU: FB_MKS422</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks500">POU: FB_MKS500</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks500-ep">POU: FB_MKS500_EP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks722">POU: FB_MKS722</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks909">POU: FB_MKS909</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks-937a">POU: FB_MKS_937A</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-mks-937b">POU: FB_MKS_937B</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-pip-gamma">POU: FB_PIP_Gamma</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-pip-test">POU: FB_PIP_Test</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-pressurestate">POU: FB_PressureState</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ptm-agilent">POU: FB_PTM_Agilent</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ptm-ebara-010m">POU: FB_PTM_Ebara_010M</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ptm-ebara-011m">POU: FB_PTM_Ebara_011M</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ptm-magdrivedigital">POU: FB_PTM_MagDriveDigital</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ptm-pfeiffer">POU: FB_PTM_Pfeiffer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ptm-test">POU: FB_PTM_Test</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ptm-turbodrive">POU: FB_PTM_TurboDrive</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-ptm-twistorr">POU: FB_PTM_TwisTorr</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-pump">POU: FB_Pump</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-scrollpump">POU: FB_ScrollPump</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-tgcc-ads">POU: FB_TGCC_ADS</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-tpip-ads">POU: FB_TPIP_ADS</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-turboextlogic">POU: FB_TurboExtLogic</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-turbventvalve-no">POU: FB_TurbVentvalve_NO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-tvgc-ads">POU: FB_TVGC_ADS</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-valve">POU: FB_Valve</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-valve-interface">POU: FB_Valve_Interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vcc">POU: FB_VCC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vcc-no">POU: FB_VCC_NO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vcn">POU: FB_VCN</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vfs">POU: FB_VFS</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vfs-interface">POU: FB_VFS_Interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vgc">POU: FB_VGC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vgc-ap">POU: FB_VGC_AP</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vgc-ebd">POU: FB_VGC_EBD</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vgc-test">POU: FB_VGC_Test</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vrc">POU: FB_VRC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vrc-ebd">POU: FB_VRC_EBD</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vrc-no">POU: FB_VRC_NO</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vrc-ok-cls">POU: FB_VRC_OK_CLS</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vrc-test">POU: FB_VRC_Test</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-fb-vvc">POU: FB_VVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-prg-test">POU: PRG_Test</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pou-v-to-int">POU: V_TO_INT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html">Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html#pragmas">Pragmas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html#symbols">Symbols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_epics.html">Data Types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_epics.html#database-records">Database Records</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DUTs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#e-pressurestate">E_PressureState</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#e-pumpstate">E_PumpState</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#e-valvepositionstate">E_ValvePositionState</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#e-vcn">E_VCN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#e-vgc">E_VGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gauge-type">Gauge_Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-agilentptm">ST_AgilentPTM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-ebaradrypump">ST_EbaraDryPump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-ebaraeva">ST_EbaraEVA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-ebaraptm">ST_EbaraPTM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-kashiyamadrypump">ST_KashiyamaDryPump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-leyboldptm">ST_LeyboldPTM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-pfeifferptm">ST_PfeifferPTM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-pip">ST_PIP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-ptm">ST_PTM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-roughpump">ST_RoughPump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-valvebase">ST_ValveBase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-vcc-no">ST_VCC_NO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-vcn">ST_VCN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-vg">ST_VG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-vgc">ST_VGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-vrc">ST_VRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-vvc">ST_VVC</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#gvls">GVLs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#constants">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#global-variables">Global_Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#global-version">Global_Version</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_index.html#pragma-summary">Pragma Summary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pous">POUs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#f-roughpumpinlet-ilk">F_RoughPumpInlet_ILK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-turbo-vrc-ilk">F_TURBO_VRC_ILK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-turboextilk-no">F_TurboExtILK_NO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-turboextilklogic">F_TurboExtILKLogic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-turboextilklogic-2">F_TurboExtILKLogic_2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-turbogatevalve-ilk">F_TurboGateValve_ILK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-turbogatevalve-ilk-1">F_TurboGateValve_ILK_1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-turbogatevalve-protection-ilk">F_TurboGateValve_Protection_ILK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-valve-rel-ilk">F_VALVE_REL_ILK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-vrc-diode-ilk">F_VRC_DIODE_ILK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-vrc-diode-ilk-ok">F_VRC_DIODE_ILK_OK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-972">FB_972</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-9xx">FB_9XX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ads-watchdog">FB_ADS_WATCHDOG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-cmr362">FB_CMR362</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ebaradrypump">FB_EbaraDryPump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ebaraeva">FB_EbaraEVA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-gauge-interface">FB_Gauge_Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-gaugebase">FB_GaugeBase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-gcc-test">FB_GCC_Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-gcm">FB_GCM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-gpi-test">FB_GPI_Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-itr90">FB_ITR90</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-kashiyama-vrc">FB_Kashiyama_VRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-kashiyamapump">FB_KashiyamaPump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks248">FB_MKS248</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks275">FB_MKS275</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks317">FB_MKS317</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks317a">FB_MKS317A</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks392">FB_MKS392</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks422">FB_MKS422</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks500">FB_MKS500</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks500-ep">FB_MKS500_EP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks722">FB_MKS722</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks909">FB_MKS909</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks-937a">FB_MKS_937A</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks-937b">FB_MKS_937B</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-pip-gamma">FB_PIP_Gamma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-pip-test">FB_PIP_Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-pressurestate">FB_PressureState</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ptm-agilent">FB_PTM_Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ptm-ebara-010m">FB_PTM_Ebara_010M</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ptm-ebara-011m">FB_PTM_Ebara_011M</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ptm-magdrivedigital">FB_PTM_MagDriveDigital</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ptm-pfeiffer">FB_PTM_Pfeiffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ptm-test">FB_PTM_Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ptm-turbodrive">FB_PTM_TurboDrive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ptm-twistorr">FB_PTM_TwisTorr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-pump">FB_Pump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-scrollpump">FB_ScrollPump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-tgcc-ads">FB_TGCC_ADS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-tpip-ads">FB_TPIP_ADS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-turboextlogic">FB_TurboExtLogic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-turbventvalve-no">FB_TurbVentvalve_NO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-tvgc-ads">FB_TVGC_ADS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-valve">FB_Valve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-valve-interface">FB_Valve_Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vcc">FB_VCC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vcc-no">FB_VCC_NO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vcn">FB_VCN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vfs">FB_VFS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vfs-interface">FB_VFS_Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vgc">FB_VGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vgc-ap">FB_VGC_AP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vgc-ebd">FB_VGC_EBD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vgc-test">FB_VGC_Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vrc">FB_VRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vrc-ebd">FB_VRC_EBD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vrc-no">FB_VRC_NO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vrc-ok-cls">FB_VRC_OK_CLS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vrc-test">FB_VRC_Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vvc">FB_VVC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prg-test">PRG_Test</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#v-to-int">V_TO_INT</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -240,9 +251,7 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="L2SIVacuumLib_index.html">L2SIVacuumLib.tsproj Documentation</a> &raquo;</li>
-        
-      <li>L2SIVacuum Source Code</li>
+      <li>DUTs</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -261,10 +270,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="l2sivacuum-source-code">
-<h1>L2SIVacuum Source Code<a class="headerlink" href="#l2sivacuum-source-code" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="dut-e-pressurestate">
-<h2>DUT: E_PressureState<a class="headerlink" href="#dut-e-pressurestate" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="duts">
+<h1>DUTs<a class="headerlink" href="#duts" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="e-pressurestate">
+<h2>E_PressureState<a class="headerlink" href="#e-pressurestate" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">E_PressureState</span> <span class="p">:</span>
 <span class="p">(</span>
     <span class="o">//</span> <span class="n">Invalid</span> <span class="n">states</span>
@@ -285,8 +294,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-e-pumpstate">
-<h2>DUT: E_PumpState<a class="headerlink" href="#dut-e-pumpstate" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="e-pumpstate">
+<h2>E_PumpState<a class="headerlink" href="#e-pumpstate" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">E_PumpState</span> <span class="p">:</span>
 <span class="p">(</span>
 <span class="n">pumpSTOPPED</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span>
@@ -299,8 +308,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-e-valvepositionstate">
-<h2>DUT: E_ValvePositionState<a class="headerlink" href="#dut-e-valvepositionstate" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="e-valvepositionstate">
+<h2>E_ValvePositionState<a class="headerlink" href="#e-valvepositionstate" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">E_ValvePositionState</span> <span class="p">:</span>
     <span class="p">(</span>
 <span class="n">OPEN</span>        <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span>
@@ -313,8 +322,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-e-vcn">
-<h2>DUT: E_VCN<a class="headerlink" href="#dut-e-vcn" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="e-vcn">
+<h2>E_VCN<a class="headerlink" href="#e-vcn" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">E_VCN</span> <span class="p">:</span>
     <span class="p">(</span>
 <span class="n">CloseValve</span>  <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span>
@@ -327,8 +336,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-e-vgc">
-<h2>DUT: E_VGC<a class="headerlink" href="#dut-e-vgc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="e-vgc">
+<h2>E_VGC<a class="headerlink" href="#e-vgc" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">E_VGC</span> <span class="p">:</span>
 <span class="p">(</span>
 
@@ -343,8 +352,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-gauge-type">
-<h2>DUT: Gauge_Type<a class="headerlink" href="#dut-gauge-type" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="gauge-type">
+<h2>Gauge_Type<a class="headerlink" href="#gauge-type" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">Gauge_Type</span><span class="p">:</span> <span class="p">(</span>
 <span class="n">PG722B</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">//</span><span class="n">Baraton</span> <span class="n">Gauge</span>
 <span class="n">IG903</span> <span class="o">:=</span> <span class="mi">1</span> <span class="p">,</span> <span class="o">//</span><span class="n">Cold</span> <span class="n">Cathode</span>
@@ -356,8 +365,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-agilentptm">
-<h2>DUT: ST_AgilentPTM<a class="headerlink" href="#dut-st-agilentptm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-agilentptm">
+<h2>ST_AgilentPTM<a class="headerlink" href="#st-agilentptm" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_AgilentPTM</span> <span class="n">EXTENDS</span> <span class="n">ST_PTM</span> <span class="p">:</span>
 <span class="n">STRUCT</span>
 
@@ -457,8 +466,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-ebaradrypump">
-<h2>DUT: ST_EbaraDryPump<a class="headerlink" href="#dut-st-ebaradrypump" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-ebaradrypump">
+<h2>ST_EbaraDryPump<a class="headerlink" href="#st-ebaradrypump" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_EbaraDryPump</span> <span class="n">EXTENDS</span> <span class="n">ST_RoughPump</span> <span class="p">:</span>
 <span class="n">STRUCT</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Extension</span> <span class="n">of</span> <span class="n">the</span> <span class="n">rough</span> <span class="n">pump</span> <span class="n">archetype</span> <span class="k">for</span> <span class="n">ebara</span>
@@ -533,8 +542,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-ebaraeva">
-<h2>DUT: ST_EbaraEVA<a class="headerlink" href="#dut-st-ebaraeva" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-ebaraeva">
+<h2>ST_EbaraEVA<a class="headerlink" href="#st-ebaraeva" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_EbaraEVA</span> <span class="n">EXTENDS</span> <span class="n">ST_RoughPump</span><span class="p">:</span>
 <span class="n">STRUCT</span>
 
@@ -573,8 +582,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-ebaraptm">
-<h2>DUT: ST_EbaraPTM<a class="headerlink" href="#dut-st-ebaraptm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-ebaraptm">
+<h2>ST_EbaraPTM<a class="headerlink" href="#st-ebaraptm" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_EbaraPTM</span> <span class="n">EXTENDS</span> <span class="n">ST_PTM</span> <span class="p">:</span>
 <span class="n">STRUCT</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Extension</span> <span class="n">of</span> <span class="n">the</span> <span class="n">PTM</span> <span class="n">archetype</span> <span class="k">for</span> <span class="n">Ebara</span> <span class="n">turbo</span> <span class="n">controllers</span>
@@ -661,8 +670,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-kashiyamadrypump">
-<h2>DUT: ST_KashiyamaDryPump<a class="headerlink" href="#dut-st-kashiyamadrypump" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-kashiyamadrypump">
+<h2>ST_KashiyamaDryPump<a class="headerlink" href="#st-kashiyamadrypump" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_KashiyamaDryPump</span> <span class="n">EXTENDS</span> <span class="n">ST_RoughPump</span><span class="p">:</span>
 <span class="n">STRUCT</span>
 
@@ -741,8 +750,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-leyboldptm">
-<h2>DUT: ST_LeyboldPTM<a class="headerlink" href="#dut-st-leyboldptm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-leyboldptm">
+<h2>ST_LeyboldPTM<a class="headerlink" href="#st-leyboldptm" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>TYPE ST_LeyboldPTM EXTENDS ST_PTM :
 STRUCT
 (* Extension of the PTM archetype for Oerlikon turbo controllers
@@ -793,8 +802,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-pfeifferptm">
-<h2>DUT: ST_PfeifferPTM<a class="headerlink" href="#dut-st-pfeifferptm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-pfeifferptm">
+<h2>ST_PfeifferPTM<a class="headerlink" href="#st-pfeifferptm" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>TYPE ST_PfeifferPTM EXTENDS ST_PTM :
 STRUCT
 (* Extension of the PTM archetype for Pfeiffer turbos
@@ -859,8 +868,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-pip">
-<h2>DUT: ST_PIP<a class="headerlink" href="#dut-st-pip" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-pip">
+<h2>ST_PIP<a class="headerlink" href="#st-pip" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_PIP</span> <span class="p">:</span>
 <span class="n">STRUCT</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Read</span> <span class="n">back</span> <span class="o">*</span><span class="p">)</span>
@@ -1003,8 +1012,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-ptm">
-<h2>DUT: ST_PTM<a class="headerlink" href="#dut-st-ptm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-ptm">
+<h2>ST_PTM<a class="headerlink" href="#st-ptm" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_PTM</span> <span class="p">:</span>
 <span class="n">STRUCT</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">General</span> <span class="n">PTM</span> <span class="n">Structure</span>
@@ -1156,8 +1165,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-roughpump">
-<h2>DUT: ST_RoughPump<a class="headerlink" href="#dut-st-roughpump" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-roughpump">
+<h2>ST_RoughPump<a class="headerlink" href="#st-roughpump" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_RoughPump</span> <span class="p">:</span>
 <span class="n">STRUCT</span>
 
@@ -1234,8 +1243,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-valvebase">
-<h2>DUT: ST_ValveBase<a class="headerlink" href="#dut-st-valvebase" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-valvebase">
+<h2>ST_ValveBase<a class="headerlink" href="#st-valvebase" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_ValveBase</span> <span class="p">:</span>
 <span class="n">STRUCT</span>
     <span class="p">(</span><span class="o">*</span> <span class="n">EPICS</span> <span class="n">Controls</span> <span class="o">*</span><span class="p">)</span>
@@ -1361,8 +1370,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-vcc-no">
-<h2>DUT: ST_VCC_NO<a class="headerlink" href="#dut-st-vcc-no" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-vcc-no">
+<h2>ST_VCC_NO<a class="headerlink" href="#st-vcc-no" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>TYPE ST_VCC_NO:
 STRUCT
 
@@ -1412,8 +1421,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-vcn">
-<h2>DUT: ST_VCN<a class="headerlink" href="#dut-st-vcn" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-vcn">
+<h2>ST_VCN<a class="headerlink" href="#st-vcn" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_VCN</span> <span class="p">:</span>
 <span class="n">STRUCT</span>
     <span class="p">(</span><span class="o">*</span> <span class="n">VCN</span> <span class="o">-</span> <span class="n">Valve</span> <span class="n">Controlled</span> <span class="n">Needle</span>
@@ -1472,8 +1481,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-vg">
-<h2>DUT: ST_VG<a class="headerlink" href="#dut-st-vg" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-vg">
+<h2>ST_VG<a class="headerlink" href="#st-vg" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_VG</span> <span class="p">:</span>
 <span class="n">STRUCT</span>
     <span class="o">///</span> <span class="n">A</span> <span class="n">general</span> <span class="n">gauge</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">make</span> <span class="n">the</span> <span class="n">rest</span> <span class="n">of</span> <span class="n">the</span> <span class="n">interlocking</span> <span class="n">simpler</span><span class="o">.</span> <span class="n">There</span> <span class="n">are</span> <span class="n">some</span> <span class="n">parameters</span> <span class="k">for</span> <span class="n">cold</span> <span class="n">cathodes</span> <span class="n">that</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">used</span> <span class="n">by</span> <span class="n">pirani</span><span class="o">.</span>
@@ -1620,8 +1629,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-vgc">
-<h2>DUT: ST_VGC<a class="headerlink" href="#dut-st-vgc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-vgc">
+<h2>ST_VGC<a class="headerlink" href="#st-vgc" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_VGC</span> <span class="n">EXTENDS</span> <span class="n">ST_ValveBase</span><span class="p">:</span>
 <span class="n">STRUCT</span>
 
@@ -1711,8 +1720,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-vrc">
-<h2>DUT: ST_VRC<a class="headerlink" href="#dut-st-vrc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-vrc">
+<h2>ST_VRC<a class="headerlink" href="#st-vrc" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_VRC</span> <span class="n">EXTENDS</span> <span class="n">ST_ValveBase</span><span class="p">:</span>
 <span class="n">STRUCT</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Readbacks</span> <span class="o">*</span><span class="p">)</span>
@@ -1728,8 +1737,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="dut-st-vvc">
-<h2>DUT: ST_VVC<a class="headerlink" href="#dut-st-vvc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="st-vvc">
+<h2>ST_VVC<a class="headerlink" href="#st-vvc" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_VVC</span> <span class="p">:</span>
 <span class="n">STRUCT</span>
 
@@ -1778,8 +1787,11 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="gvl-constants">
-<h2>GVL: Constants<a class="headerlink" href="#gvl-constants" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="gvls">
+<h1>GVLs<a class="headerlink" href="#gvls" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VAR_GLOBAL</span> <span class="n">CONSTANT</span>
     <span class="n">gc_iSizeOfGGOArray</span> <span class="p">:</span> <span class="n">INT</span> <span class="o">:=</span> <span class="mi">50</span><span class="p">;</span>
     <span class="n">gc_GaugeValidState</span> <span class="p">:</span>    <span class="n">INT</span> <span class="o">:=</span> <span class="mi">4</span><span class="p">;</span>
@@ -1787,8 +1799,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="gvl-global-variables">
-<h2>GVL: Global_Variables<a class="headerlink" href="#gvl-global-variables" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="global-variables">
+<h2>Global_Variables<a class="headerlink" href="#global-variables" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">VAR_GLOBAL</span>
     <span class="n">g_iSizeOfGGOArray</span> <span class="p">:</span> <span class="n">INT</span> <span class="o">:=</span> <span class="mi">50</span><span class="p">;</span>
 
@@ -1807,8 +1819,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="gvl-global-version">
-<h2>GVL: Global_Version<a class="headerlink" href="#gvl-global-version" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="global-version">
+<h2>Global_Version<a class="headerlink" href="#global-version" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;TcGenerated&#39;</span><span class="p">}</span>
 <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;no-analysis&#39;</span><span class="p">}</span>
 <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;linkalways&#39;</span><span class="p">}</span>
@@ -1820,8 +1832,11 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-roughpumpinlet-ilk">
-<h2>POU: F_RoughPumpInlet_ILK<a class="headerlink" href="#pou-f-roughpumpinlet-ilk" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="pous">
+<h1>POUs<a class="headerlink" href="#pous" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="f-roughpumpinlet-ilk">
+<h2>F_RoughPumpInlet_ILK<a class="headerlink" href="#f-roughpumpinlet-ilk" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span>
     <span class="n">Determine</span> <span class="n">whether</span> <span class="n">a</span> <span class="n">pump</span> <span class="n">attached</span> <span class="n">to</span> <span class="n">the</span> <span class="n">inlet</span> <span class="n">of</span> <span class="n">a</span> <span class="n">roughing</span> <span class="n">pump</span> <span class="ow">is</span> <span class="n">safe</span> <span class="n">to</span> <span class="nb">open</span><span class="o">.</span>
 
@@ -1840,8 +1855,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-turbo-vrc-ilk">
-<h2>POU: F_TURBO_VRC_ILK<a class="headerlink" href="#pou-f-turbo-vrc-ilk" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="f-turbo-vrc-ilk">
+<h2>F_TURBO_VRC_ILK<a class="headerlink" href="#f-turbo-vrc-ilk" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">Close</span> <span class="n">the</span> <span class="n">vic</span> <span class="k">if</span> <span class="n">the</span> <span class="n">roughing</span> <span class="n">pump</span> <span class="n">pirani</span> <span class="n">loses</span> <span class="n">its</span> <span class="n">at</span><span class="o">-</span><span class="n">vac</span> <span class="n">setpoint</span> <span class="k">while</span> <span class="n">the</span> <span class="n">turbo</span> <span class="ow">is</span> <span class="n">pumping</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION</span> <span class="n">F_TURBO_VRC_ILK</span> <span class="p">:</span> <span class="n">BOOL</span>
 <span class="n">VAR_INPUT</span>
@@ -1867,8 +1882,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-turboextilk-no">
-<h2>POU: F_TurboExtILK_NO<a class="headerlink" href="#pou-f-turboextilk-no" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="f-turboextilk-no">
+<h2>F_TurboExtILK_NO<a class="headerlink" href="#f-turboextilk-no" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">Block</span> <span class="n">interfaces</span> <span class="k">with</span> <span class="n">a</span> <span class="n">NO</span> <span class="n">turbo</span> <span class="n">valve</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Mainly</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">FEE</span> <span class="n">HXR</span> <span class="n">GATT</span><span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION</span> <span class="n">F_TurboExtILK_NO</span> <span class="p">:</span> <span class="n">BOOL</span>
@@ -1888,8 +1903,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-turboextilklogic">
-<h2>POU: F_TurboExtILKLogic<a class="headerlink" href="#pou-f-turboextilklogic" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="f-turboextilklogic">
+<h2>F_TurboExtILKLogic<a class="headerlink" href="#f-turboextilklogic" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">evaluates</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">ILK</span> <span class="n">logic</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">Turbo</span> <span class="n">shall</span> <span class="ow">not</span> <span class="n">Run</span> <span class="k">if</span> <span class="n">the</span> <span class="n">vent</span> <span class="n">valve</span> <span class="ow">is</span> <span class="nb">open</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">function</span> <span class="n">also</span> <span class="n">switches</span> <span class="n">off</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="k">if</span> <span class="n">the</span> <span class="n">Inlet</span> <span class="n">pressure</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">backing</span> <span class="n">Pressure</span><span class="o">*</span><span class="p">)</span>
@@ -1911,8 +1926,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-turboextilklogic-2">
-<h2>POU: F_TurboExtILKLogic_2<a class="headerlink" href="#pou-f-turboextilklogic-2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="f-turboextilklogic-2">
+<h2>F_TurboExtILKLogic_2<a class="headerlink" href="#f-turboextilklogic-2" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">evaluates</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">ILK</span> <span class="n">logic</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">function</span> <span class="n">switches</span> <span class="n">off</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="k">if</span> <span class="n">the</span> <span class="n">Inlet</span> <span class="n">pressure</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">backing</span> <span class="n">Pressure</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">are</span> <span class="n">higher</span> <span class="n">than</span> <span class="n">the</span> <span class="n">configured</span> <span class="nb">set</span> <span class="n">point</span><span class="o">*</span><span class="p">)</span>
@@ -1931,8 +1946,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-turbogatevalve-ilk">
-<h2>POU: F_TurboGateValve_ILK<a class="headerlink" href="#pou-f-turbogatevalve-ilk" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="f-turbogatevalve-ilk">
+<h2>F_TurboGateValve_ILK<a class="headerlink" href="#f-turbogatevalve-ilk" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">Block</span> <span class="n">evaluates</span> <span class="n">the</span> <span class="n">ILK</span> <span class="n">condition</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">Gate</span> <span class="n">valve</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">logic</span> <span class="n">Protects</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">pump</span> <span class="kn">from</span> <span class="nn">inlet</span> <span class="n">pressure</span> <span class="n">above</span> <span class="n">the</span> <span class="n">SP</span><span class="o">*</span><span class="p">)</span>
 
@@ -1952,8 +1967,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-turbogatevalve-ilk-1">
-<h2>POU: F_TurboGateValve_ILK_1<a class="headerlink" href="#pou-f-turbogatevalve-ilk-1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="f-turbogatevalve-ilk-1">
+<h2>F_TurboGateValve_ILK_1<a class="headerlink" href="#f-turbogatevalve-ilk-1" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">Block</span> <span class="n">evaluates</span> <span class="n">the</span> <span class="n">ILK</span> <span class="n">condition</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">Gate</span> <span class="n">valve</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">logic</span> <span class="n">Protects</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">pump</span> <span class="kn">from</span> <span class="nn">inlet</span> <span class="n">pressure</span> <span class="n">above</span> <span class="n">the</span> <span class="n">SP</span><span class="o">*</span><span class="p">)</span>
 
@@ -1973,8 +1988,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-turbogatevalve-protection-ilk">
-<h2>POU: F_TurboGateValve_Protection_ILK<a class="headerlink" href="#pou-f-turbogatevalve-protection-ilk" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="f-turbogatevalve-protection-ilk">
+<h2>F_TurboGateValve_Protection_ILK<a class="headerlink" href="#f-turbogatevalve-protection-ilk" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">Block</span> <span class="n">evaluates</span> <span class="n">the</span> <span class="n">ILK</span> <span class="n">condition</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">Gate</span> <span class="n">valve</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">logic</span> <span class="n">Protects</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">pump</span> <span class="kn">from</span> <span class="nn">inlet</span> <span class="n">pressure</span> <span class="n">above</span> <span class="n">the</span> <span class="n">SP</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">And</span> <span class="n">Protects</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">pump</span> <span class="kn">from</span> <span class="nn">backing</span> <span class="n">pressure</span> <span class="n">above</span> <span class="n">the</span> <span class="n">SP</span><span class="o">*</span><span class="p">)</span>
@@ -2000,8 +2015,8 @@ END_TYPE
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-valve-rel-ilk">
-<h2>POU: F_VALVE_REL_ILK<a class="headerlink" href="#pou-f-valve-rel-ilk" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="f-valve-rel-ilk">
+<h2>F_VALVE_REL_ILK<a class="headerlink" href="#f-valve-rel-ilk" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* OK, this is going to be a general-use function that will return whether the ratio of the pressures given is less than x orders of magnitude.
 True iff 10^(-x) &lt; a/b &lt; 10^x.  Simple, right?  Just make sure it gets a positive order of magnitude and the pressures aren&#39;t 0. ~Scott *)
 {attribute &#39;no_check&#39;}
@@ -2036,8 +2051,8 @@ END_FUNCTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-vrc-diode-ilk">
-<h2>POU: F_VRC_DIODE_ILK<a class="headerlink" href="#pou-f-vrc-diode-ilk" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="f-vrc-diode-ilk">
+<h2>F_VRC_DIODE_ILK<a class="headerlink" href="#f-vrc-diode-ilk" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">principle</span> <span class="ow">is</span> <span class="n">simple</span><span class="p">,</span> <span class="n">a</span> <span class="n">VRC</span> <span class="n">should</span> <span class="n">never</span> <span class="nb">open</span> <span class="n">when</span> <span class="n">B</span> <span class="n">side</span> <span class="n">pressure</span> <span class="ow">is</span> <span class="n">greater</span> <span class="n">than</span>
 <span class="n">the</span> <span class="n">A</span> <span class="n">side</span> <span class="n">pressure</span><span class="o">.</span> <span class="o">*</span><span class="p">)</span>
 
@@ -2076,8 +2091,8 @@ END_FUNCTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-f-vrc-diode-ilk-ok">
-<h2>POU: F_VRC_DIODE_ILK_OK<a class="headerlink" href="#pou-f-vrc-diode-ilk-ok" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="f-vrc-diode-ilk-ok">
+<h2>F_VRC_DIODE_ILK_OK<a class="headerlink" href="#f-vrc-diode-ilk-ok" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">The</span> <span class="n">function</span> <span class="n">returns</span> <span class="n">TRUE</span> <span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">ILK_OK</span> <span class="n">when</span> <span class="n">pressure</span> <span class="n">on</span> <span class="n">A</span> <span class="n">side</span> <span class="ow">is</span> <span class="n">greater</span> <span class="n">than</span> <span class="ow">or</span> <span class="n">equal</span> <span class="n">to</span> <span class="n">the</span> <span class="n">pressure</span> <span class="n">on</span> <span class="n">B</span> <span class="n">side</span><span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION</span> <span class="n">F_VRC_DIODE_ILK_OK</span> <span class="p">:</span> <span class="n">BOOL</span>
 <span class="n">VAR_INPUT</span>
@@ -2099,8 +2114,8 @@ END_FUNCTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-972">
-<h2>POU: FB_972<a class="headerlink" href="#pou-fb-972" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-972">
+<h2>FB_972<a class="headerlink" href="#fb-972" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;no_check&#39;</span><span class="p">}</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_972</span>  <span class="n">EXTENDS</span> <span class="n">FB_GaugeBase</span>
 <span class="n">VAR_INPUT</span>
@@ -2147,8 +2162,8 @@ END_FUNCTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-9xx">
-<h2>POU: FB_9XX<a class="headerlink" href="#pou-fb-9xx" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-9xx">
+<h2>FB_9XX<a class="headerlink" href="#fb-9xx" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">Standard</span> <span class="n">MKS</span> <span class="mi">9</span><span class="n">XX</span> <span class="n">series</span> <span class="n">conversion</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">works</span> <span class="k">for</span> <span class="mi">925</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_9XX</span> <span class="n">EXTENDS</span> <span class="n">FB_GaugeBAse</span>
@@ -2243,8 +2258,8 @@ END_FUNCTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ads-watchdog">
-<h2>POU: FB_ADS_WATCHDOG<a class="headerlink" href="#pou-fb-ads-watchdog" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ads-watchdog">
+<h2>FB_ADS_WATCHDOG<a class="headerlink" href="#fb-ads-watchdog" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="n">whenever</span> <span class="n">deivce</span> <span class="n">data</span> <span class="n">going</span> <span class="n">to</span> <span class="n">be</span> <span class="n">read</span> <span class="n">over</span> <span class="n">ADS</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span><span class="n">The</span> <span class="n">remote</span> <span class="n">plc</span> <span class="n">has</span> <span class="n">to</span> <span class="n">instantiate</span> <span class="n">this</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">order</span> <span class="n">to</span> <span class="n">write</span> <span class="n">a</span> <span class="n">watchdog</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span><span class="n">that</span> <span class="n">the</span> <span class="n">ADS</span> <span class="n">read</span> <span class="n">function</span> <span class="n">expects</span> <span class="n">to</span> <span class="n">keep</span> <span class="n">checking</span><span class="o">*</span><span class="p">)</span>
@@ -2289,8 +2304,8 @@ END_FUNCTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-cmr362">
-<h2>POU: FB_CMR362<a class="headerlink" href="#pou-fb-cmr362" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-cmr362">
+<h2>FB_CMR362<a class="headerlink" href="#fb-cmr362" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* For Pfeiffer CMR 362 *)
 FUNCTION_BLOCK FB_CMR362
 VAR_INPUT
@@ -2349,8 +2364,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ebaradrypump">
-<h2>POU: FB_EbaraDryPump<a class="headerlink" href="#pou-fb-ebaradrypump" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ebaradrypump">
+<h2>FB_EbaraDryPump<a class="headerlink" href="#fb-ebaradrypump" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(*This function block does basic controls for the Ebara EV-S Dry pump. Starts booster pump when appropriate. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
 FUNCTION_BLOCK FB_EbaraDryPump EXTENDS FB_Pump
@@ -2492,8 +2507,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ebaraeva">
-<h2>POU: FB_EbaraEVA<a class="headerlink" href="#pou-fb-ebaraeva" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ebaraeva">
+<h2>FB_EbaraEVA<a class="headerlink" href="#fb-ebaraeva" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Ebara</span> <span class="n">EV</span><span class="o">-</span><span class="n">A</span>  <span class="n">pump</span><span class="o">.</span> <span class="n">Turns</span> <span class="n">off</span> <span class="n">pump</span>
 <span class="ow">in</span> <span class="n">the</span> <span class="n">event</span> <span class="n">of</span> <span class="n">errors</span><span class="o">/</span> <span class="n">warnings</span><span class="o">.</span> <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_EbaraEVA</span> <span class="n">EXTENDS</span> <span class="n">FB_Pump</span>
@@ -2596,8 +2611,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-gauge-interface">
-<h2>POU: FB_Gauge_Interface<a class="headerlink" href="#pou-fb-gauge-interface" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-gauge-interface">
+<h2>FB_Gauge_Interface<a class="headerlink" href="#fb-gauge-interface" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Variables</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">They</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="n">the</span> <span class="n">custom</span> <span class="n">created</span> <span class="n">variables</span> <span class="n">on</span> <span class="n">the</span> <span class="n">EL6692</span><span class="o">/</span><span class="mi">5</span> <span class="n">primary</span> <span class="n">side</span><span class="o">*</span><span class="p">)</span>
@@ -2626,8 +2641,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-gaugebase">
-<h2>POU: FB_GaugeBase<a class="headerlink" href="#pou-fb-gaugebase" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-gaugebase">
+<h2>FB_GaugeBase<a class="headerlink" href="#fb-gaugebase" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_GaugeBase</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
@@ -2652,8 +2667,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-gcc-test">
-<h2>POU: FB_GCC_Test<a class="headerlink" href="#pou-fb-gcc-test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-gcc-test">
+<h2>FB_GCC_Test<a class="headerlink" href="#fb-gcc-test" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_GCC_Test</span> <span class="n">EXTENDS</span> <span class="n">TcUnit</span><span class="o">.</span><span class="n">FB_TestSuite</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
@@ -2676,8 +2691,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-gcm">
-<h2>POU: FB_GCM<a class="headerlink" href="#pou-fb-gcm" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-gcm">
+<h2>FB_GCM<a class="headerlink" href="#fb-gcm" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">For</span> <span class="n">Baratron</span> <span class="n">Pressure</span> <span class="n">Gauge</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span><span class="n">The</span> <span class="n">full</span><span class="o">-</span><span class="n">scale</span> <span class="n">pressure</span> <span class="n">times</span> <span class="n">the</span> <span class="n">ratio</span> <span class="n">of</span> <span class="n">the</span> <span class="n">meas</span><span class="o">.</span>
 <span class="n">voltage</span> <span class="n">to</span> <span class="n">full</span><span class="o">-</span><span class="n">scale</span> <span class="n">voltage</span> <span class="p">(</span><span class="mi">10</span><span class="n">V</span><span class="p">)</span><span class="o">.</span>
@@ -2730,8 +2745,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-gpi-test">
-<h2>POU: FB_GPI_Test<a class="headerlink" href="#pou-fb-gpi-test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-gpi-test">
+<h2>FB_GPI_Test<a class="headerlink" href="#fb-gpi-test" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_GPI_Test</span> <span class="n">EXTENDS</span> <span class="n">TcUnit</span><span class="o">.</span><span class="n">FB_TestSuite</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
@@ -2751,8 +2766,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-itr90">
-<h2>POU: FB_ITR90<a class="headerlink" href="#pou-fb-itr90" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-itr90">
+<h2>FB_ITR90<a class="headerlink" href="#fb-itr90" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">implements</span> <span class="n">the</span> <span class="n">Oerlikon</span> <span class="n">Leybold</span> <span class="n">IONVAC</span> <span class="n">Hot</span> <span class="n">Cathode</span> <span class="n">ITR</span> <span class="mi">90</span><span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_ITR90</span>
 <span class="n">VAR_INPUT</span>
@@ -2813,8 +2828,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-kashiyama-vrc">
-<h2>POU: FB_Kashiyama_VRC<a class="headerlink" href="#pou-fb-kashiyama-vrc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-kashiyama-vrc">
+<h2>FB_Kashiyama_VRC<a class="headerlink" href="#fb-kashiyama-vrc" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">Main</span> <span class="n">Kashiyama</span> <span class="n">gate</span> <span class="n">valve</span> <span class="n">permit</span> <span class="n">to</span> <span class="n">be</span> <span class="nb">open</span> <span class="n">when</span><span class="p">:</span>
             <span class="mf">1.</span> <span class="n">pump</span> <span class="ow">is</span> <span class="n">NORMAL</span> <span class="n">operating</span> <span class="n">status</span><span class="p">,</span> <span class="ow">and</span>
         <span class="mf">2.</span> <span class="n">chamber</span> <span class="n">pressure</span> <span class="ow">is</span> <span class="n">below</span> <span class="n">HighSP</span> <span class="ow">or</span> <span class="n">pump</span> <span class="ow">is</span> <span class="n">at</span> <span class="n">LowSpeed</span> <span class="n">state</span><span class="o">.</span>
@@ -2921,8 +2936,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-kashiyamapump">
-<h2>POU: FB_KashiyamaPump<a class="headerlink" href="#pou-fb-kashiyamapump" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-kashiyamapump">
+<h2>FB_KashiyamaPump<a class="headerlink" href="#fb-kashiyamapump" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="n">FOR</span> <span class="n">the</span> <span class="n">Kashiyama</span> <span class="n">pump</span><span class="o">.</span> <span class="n">Turns</span> <span class="n">off</span> <span class="n">pump</span>
 <span class="ow">in</span> <span class="n">the</span> <span class="n">event</span> <span class="n">of</span> <span class="n">errors</span><span class="o">/</span> <span class="n">warnings</span><span class="o">.</span> <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_KashiyamaPump</span>
@@ -3013,8 +3028,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks248">
-<h2>POU: FB_MKS248<a class="headerlink" href="#pou-fb-mks248" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks248">
+<h2>FB_MKS248<a class="headerlink" href="#fb-mks248" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">MKS248</span> <span class="n">valve</span> <span class="n">using</span> <span class="n">MKS1249</span> <span class="n">Drive</span> <span class="n">Module</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_MKS248</span>
 <span class="n">VAR_INPUT</span>
@@ -3072,8 +3087,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks275">
-<h2>POU: FB_MKS275<a class="headerlink" href="#pou-fb-mks275" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks275">
+<h2>FB_MKS275<a class="headerlink" href="#fb-mks275" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
 (* For MKS 275 mini-convectron *)
@@ -3195,8 +3210,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks317">
-<h2>POU: FB_MKS317<a class="headerlink" href="#pou-fb-mks317" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks317">
+<h2>FB_MKS317<a class="headerlink" href="#fb-mks317" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Pirani</span> <span class="n">MKS</span> <span class="mi">317</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">a</span> <span class="mi">937</span><span class="n">A</span><span class="o">/</span><span class="n">B</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">provide</span> <span class="n">protection</span> <span class="ow">and</span> <span class="n">automatic</span> <span class="n">turn</span> <span class="n">on</span> <span class="n">of</span> <span class="n">ion</span> <span class="n">gauges</span><span class="p">,</span>
  <span class="n">it</span> <span class="n">also</span> <span class="n">manages</span> <span class="n">the</span> <span class="n">turn</span> <span class="n">on</span> <span class="n">of</span> <span class="n">the</span> <span class="n">AT_VAC</span> <span class="n">boolean</span><span class="p">,</span> <span class="ow">and</span> <span class="n">checks</span> <span class="n">to</span> <span class="n">make</span> <span class="n">sure</span> <span class="n">the</span> <span class="n">pressure</span> <span class="ow">is</span> <span class="n">good</span> <span class="o">*</span><span class="p">)</span>
@@ -3310,8 +3325,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks317a">
-<h2>POU: FB_MKS317A<a class="headerlink" href="#pou-fb-mks317a" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks317a">
+<h2>FB_MKS317A<a class="headerlink" href="#fb-mks317a" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">Deprecated</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Pirani</span> <span class="n">MKS</span> <span class="mi">317</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">a</span> <span class="mi">937</span><span class="n">A</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">used</span> <span class="n">to</span> <span class="n">provide</span> <span class="n">protection</span> <span class="ow">and</span> <span class="n">automatic</span> <span class="n">turn</span> <span class="n">on</span> <span class="n">of</span> <span class="n">ion</span> <span class="n">gauges</span><span class="p">,</span>
@@ -3415,8 +3430,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks392">
-<h2>POU: FB_MKS392<a class="headerlink" href="#pou-fb-mks392" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks392">
+<h2>FB_MKS392<a class="headerlink" href="#fb-mks392" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">implements</span> <span class="n">the</span> <span class="n">MKS392</span> <span class="n">gauge</span><span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_MKS392</span>
 <span class="n">VAR_INPUT</span>
@@ -3470,8 +3485,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks422">
-<h2>POU: FB_MKS422<a class="headerlink" href="#pou-fb-mks422" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks422">
+<h2>FB_MKS422<a class="headerlink" href="#fb-mks422" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Cold</span> <span class="n">Cathode</span> <span class="n">MKS</span> <span class="mi">422</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">a</span> <span class="mi">937</span><span class="n">A</span><span class="o">/</span><span class="n">B</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span><span class="n">This</span> <span class="n">function</span> <span class="n">provides</span> <span class="n">ILK</span> <span class="ow">and</span> <span class="n">Set</span> <span class="n">Point</span> <span class="n">Protection</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Cold</span> <span class="n">Cathode</span><span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_MKS422</span> <span class="n">EXTENDS</span> <span class="n">FB_GaugeBase</span>
@@ -3622,8 +3637,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks500">
-<h2>POU: FB_MKS500<a class="headerlink" href="#pou-fb-mks500" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks500">
+<h2>FB_MKS500<a class="headerlink" href="#fb-mks500" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Cold</span> <span class="n">Cathode</span> <span class="n">MKS</span> <span class="mf">500.</span> <span class="n">If</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">Beckhoff</span> <span class="n">EP</span> <span class="n">boxes</span><span class="o">.</span>
 <span class="n">Set</span> <span class="n">the</span> <span class="n">EP</span> <span class="n">bit</span> <span class="n">to</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">necessary</span> <span class="k">for</span> <span class="n">the</span> <span class="n">MKS500</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">EP</span> <span class="n">box</span> <span class="n">interface</span> <span class="n">beacuse</span> <span class="n">the</span> <span class="n">EP</span>
 <span class="n">boxes</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">natively</span> <span class="n">support</span> <span class="n">the</span> <span class="mi">5</span><span class="n">v</span> <span class="n">IO</span> <span class="n">signals</span> <span class="n">on</span> <span class="n">the</span> <span class="n">MKS500</span> <span class="n">gauge</span><span class="o">.*</span><span class="p">)</span>
@@ -3794,8 +3809,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks500-ep">
-<h2>POU: FB_MKS500_EP<a class="headerlink" href="#pou-fb-mks500-ep" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks500-ep">
+<h2>FB_MKS500_EP<a class="headerlink" href="#fb-mks500-ep" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">Deprecated</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Cold</span> <span class="n">Cathode</span> <span class="n">MKS</span> <span class="mi">500</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">Beckhoff</span> <span class="n">EP</span> <span class="n">boxes</span><span class="o">.</span>
 <span class="n">A</span> <span class="n">separate</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">necessary</span> <span class="k">for</span> <span class="n">the</span> <span class="n">MKS500</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">EP</span> <span class="n">box</span> <span class="n">interface</span> <span class="n">beacuse</span> <span class="n">the</span> <span class="n">EP</span>
@@ -3946,8 +3961,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks722">
-<h2>POU: FB_MKS722<a class="headerlink" href="#pou-fb-mks722" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks722">
+<h2>FB_MKS722<a class="headerlink" href="#fb-mks722" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* This function is for the MKS 722*)
 
 FUNCTION_BLOCK FB_MKS722
@@ -4005,8 +4020,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks909">
-<h2>POU: FB_MKS909<a class="headerlink" href="#pou-fb-mks909" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks909">
+<h2>FB_MKS909<a class="headerlink" href="#fb-mks909" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* Standard MKS 909 hot cathode *)
 (* works for 972 and 925 *)
 
@@ -4135,8 +4150,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks-937a">
-<h2>POU: FB_MKS_937A<a class="headerlink" href="#pou-fb-mks-937a" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks-937a">
+<h2>FB_MKS_937A<a class="headerlink" href="#fb-mks-937a" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="mi">937</span><span class="n">A</span> <span class="n">Logarithmic</span> <span class="n">Output</span> <span class="n">Conversion</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="mi">7</span><span class="o">-</span><span class="mi">15</span><span class="o">-</span><span class="mi">2015</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">will</span> <span class="n">read</span> <span class="n">the</span> <span class="n">pressure</span> <span class="kn">from</span> <span class="nn">any</span> <span class="n">gauge</span> <span class="n">on</span> <span class="n">a</span> <span class="mi">937</span><span class="n">A</span><span class="o">.</span> <span class="o">*</span><span class="p">)</span>
@@ -4218,8 +4233,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-mks-937b">
-<h2>POU: FB_MKS_937B<a class="headerlink" href="#pou-fb-mks-937b" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-mks-937b">
+<h2>FB_MKS_937B<a class="headerlink" href="#fb-mks-937b" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* 937B Logarithmic Output Conversion *)
 (* 5-20-2016, Alex Wallace and Scott Stubbs *)
 (* This function will read the pressure from any gauge on a 937B. *)
@@ -4308,8 +4323,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-pip-gamma">
-<h2>POU: FB_PIP_Gamma<a class="headerlink" href="#pou-fb-pip-gamma" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-pip-gamma">
+<h2>FB_PIP_Gamma<a class="headerlink" href="#fb-pip-gamma" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="n">FOR</span> <span class="n">the</span> <span class="n">ION</span> <span class="n">pump</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">a</span> <span class="n">Gamma</span> <span class="n">QPCe</span> <span class="n">controller</span><span class="o">.</span>
  <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.</span> <span class="n">Enable</span> <span class="n">HV</span> <span class="n">only</span> <span class="n">when</span> <span class="n">interlock</span> <span class="n">gauge</span> <span class="n">press</span> <span class="ow">is</span> <span class="n">less</span> <span class="n">than</span> <span class="mf">1.0E-4</span> <span class="n">Torr</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PIP_Gamma</span> <span class="n">Extends</span> <span class="n">FB_Pump</span>
@@ -4516,8 +4531,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-pip-test">
-<h2>POU: FB_PIP_Test<a class="headerlink" href="#pou-fb-pip-test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-pip-test">
+<h2>FB_PIP_Test<a class="headerlink" href="#fb-pip-test" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PIP_Test</span> <span class="n">EXTENDS</span> <span class="n">TcUnit</span><span class="o">.</span><span class="n">FB_TestSuite</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
@@ -4535,8 +4550,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-pressurestate">
-<h2>POU: FB_PressureState<a class="headerlink" href="#pou-fb-pressurestate" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-pressurestate">
+<h2>FB_PressureState<a class="headerlink" href="#fb-pressurestate" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(*Deprecated*)
 FUNCTION_BLOCK FB_PressureState
 VAR_INPUT
@@ -4619,8 +4634,8 @@ END_FUNCTION_BLOCK
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ptm-agilent">
-<h2>POU: FB_PTM_Agilent<a class="headerlink" href="#pou-fb-ptm-agilent" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ptm-agilent">
+<h2>FB_PTM_Agilent<a class="headerlink" href="#fb-ptm-agilent" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* This function block does basic controls FOR the Agilent TV Turbo pump. Turns off pump
 in the event of errors/ warnings. Provides interlocking interface.*)
 FUNCTION_BLOCK FB_PTM_Agilent EXTENDS FB_Pump
@@ -4891,8 +4906,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ptm-ebara-010m">
-<h2>POU: FB_PTM_Ebara_010M<a class="headerlink" href="#pou-fb-ptm-ebara-010m" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ptm-ebara-010m">
+<h2>FB_PTM_Ebara_010M<a class="headerlink" href="#fb-ptm-ebara-010m" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="n">FOR</span> <span class="n">the</span> <span class="n">Ebara</span> <span class="n">Turbo</span> <span class="n">pump</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">the</span> <span class="n">ETC010M</span> <span class="n">Controller</span><span class="o">.</span>
  <span class="n">Turns</span> <span class="n">off</span> <span class="n">pump</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">event</span> <span class="n">of</span> <span class="n">errors</span><span class="o">/</span> <span class="n">warnings</span><span class="o">.</span> <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.*</span><span class="p">)</span>
  <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;no_check&#39;</span><span class="p">}</span>
@@ -5087,8 +5102,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ptm-ebara-011m">
-<h2>POU: FB_PTM_Ebara_011M<a class="headerlink" href="#pou-fb-ptm-ebara-011m" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ptm-ebara-011m">
+<h2>FB_PTM_Ebara_011M<a class="headerlink" href="#fb-ptm-ebara-011m" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* This function block does basic controls FOR the Ebara Turbo pump connected to the ETC011M Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
 {attribute &#39;no_check&#39;}
@@ -5288,8 +5303,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ptm-magdrivedigital">
-<h2>POU: FB_PTM_MagDriveDigital<a class="headerlink" href="#pou-fb-ptm-magdrivedigital" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ptm-magdrivedigital">
+<h2>FB_PTM_MagDriveDigital<a class="headerlink" href="#fb-ptm-magdrivedigital" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="n">FOR</span> <span class="n">the</span> <span class="n">Leybold</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">the</span> <span class="n">MagDriveDigital</span> <span class="n">Controller</span><span class="o">.</span>
  <span class="n">Turns</span> <span class="n">off</span> <span class="n">pump</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">event</span> <span class="n">of</span> <span class="n">errors</span><span class="o">/</span> <span class="n">warnings</span><span class="o">.</span> <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PTM_MagDriveDigital</span> <span class="n">EXTENDS</span> <span class="n">FB_Pump</span>
@@ -5411,8 +5426,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ptm-pfeiffer">
-<h2>POU: FB_PTM_Pfeiffer<a class="headerlink" href="#pou-fb-ptm-pfeiffer" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ptm-pfeiffer">
+<h2>FB_PTM_Pfeiffer<a class="headerlink" href="#fb-ptm-pfeiffer" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="n">FOR</span> <span class="n">the</span> <span class="n">Pfeiffer</span> <span class="n">Turbo</span> <span class="n">pump</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">the</span> <span class="n">TM700</span> <span class="ow">and</span> <span class="n">TC400</span> <span class="n">Controllers</span><span class="o">.</span>
  <span class="n">Turns</span> <span class="n">off</span> <span class="n">pump</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">event</span> <span class="n">of</span> <span class="n">errors</span><span class="o">/</span> <span class="n">warnings</span><span class="o">.</span> <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PTM_Pfeiffer</span> <span class="n">EXTENDS</span> <span class="n">FB_Pump</span>
@@ -5526,8 +5541,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ptm-test">
-<h2>POU: FB_PTM_Test<a class="headerlink" href="#pou-fb-ptm-test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ptm-test">
+<h2>FB_PTM_Test<a class="headerlink" href="#fb-ptm-test" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PTM_Test</span> <span class="n">EXTENDS</span> <span class="n">TcUnit</span><span class="o">.</span><span class="n">FB_TestSuite</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
@@ -5556,8 +5571,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ptm-turbodrive">
-<h2>POU: FB_PTM_TurboDrive<a class="headerlink" href="#pou-fb-ptm-turbodrive" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ptm-turbodrive">
+<h2>FB_PTM_TurboDrive<a class="headerlink" href="#fb-ptm-turbodrive" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">block</span> <span class="n">provides</span> <span class="n">basic</span> <span class="n">turbo</span> <span class="n">control</span> <span class="k">for</span> <span class="n">Leybold</span> <span class="n">Turbo</span> <span class="n">Drive</span> <span class="mi">300</span><span class="p">,</span> <span class="n">Turbo</span> <span class="n">Drive</span> <span class="mi">400</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">TD20</span> <span class="n">Classic</span> <span class="n">Via</span> <span class="n">Remote</span> <span class="n">X1</span> <span class="n">Connector</span> <span class="mi">9</span><span class="o">-</span><span class="n">way</span> <span class="n">PLC</span> <span class="n">interface</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">When</span> <span class="n">serial</span> <span class="n">interface</span> <span class="ow">is</span> <span class="n">implemented</span><span class="p">,</span> <span class="n">call</span> <span class="n">Method</span> <span class="n">M_Serial_IO</span> <span class="n">after</span> <span class="n">fb</span> <span class="n">instantiation</span><span class="p">,</span> <span class="ow">in</span> <span class="n">order</span> <span class="n">to</span> <span class="n">add</span> <span class="n">the</span> <span class="n">serial</span> <span class="n">status</span> <span class="o">*</span><span class="p">)</span>
@@ -5669,8 +5684,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-ptm-twistorr">
-<h2>POU: FB_PTM_TwisTorr<a class="headerlink" href="#pou-fb-ptm-twistorr" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-ptm-twistorr">
+<h2>FB_PTM_TwisTorr<a class="headerlink" href="#fb-ptm-twistorr" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="n">FOR</span> <span class="n">the</span> <span class="n">Agilent</span> <span class="n">TwisTorr</span> <span class="mi">304</span> <span class="n">FS</span> <span class="k">with</span> <span class="n">on</span> <span class="n">board</span> <span class="n">Controller</span><span class="o">.</span>
  <span class="n">Turns</span> <span class="n">off</span> <span class="n">pump</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">event</span> <span class="n">of</span> <span class="n">errors</span><span class="o">/</span> <span class="n">warnings</span><span class="o">.</span> <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PTM_TwisTorr</span> <span class="n">EXTENDS</span> <span class="n">FB_Pump</span>
@@ -5765,8 +5780,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-pump">
-<h2>POU: FB_Pump<a class="headerlink" href="#pou-fb-pump" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-pump">
+<h2>FB_Pump<a class="headerlink" href="#fb-pump" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_Pump</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
@@ -5790,8 +5805,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-scrollpump">
-<h2>POU: FB_ScrollPump<a class="headerlink" href="#pou-fb-scrollpump" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-scrollpump">
+<h2>FB_ScrollPump<a class="headerlink" href="#fb-scrollpump" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">block</span> <span class="n">provides</span> <span class="n">basic</span>  <span class="n">control</span> <span class="k">for</span> <span class="n">Scroll</span> <span class="n">Pumps</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Turn</span> <span class="n">on</span> <span class="n">scroll</span> <span class="n">pump</span> <span class="k">if</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">Vent</span> <span class="n">Valve</span> <span class="ow">is</span> <span class="n">closed</span><span class="o">.</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Cannot</span> <span class="n">turn</span> <span class="n">off</span> <span class="n">scroll</span> <span class="n">pump</span> <span class="k">if</span> <span class="n">turb</span> <span class="ow">is</span> <span class="n">running</span><span class="o">.</span> <span class="n">delay</span> <span class="n">scroll</span> <span class="n">off</span> <span class="mi">150</span><span class="n">s</span><span class="o">.*</span><span class="p">)</span>
@@ -5850,8 +5865,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-tgcc-ads">
-<h2>POU: FB_TGCC_ADS<a class="headerlink" href="#pou-fb-tgcc-ads" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-tgcc-ads">
+<h2>FB_TGCC_ADS<a class="headerlink" href="#fb-tgcc-ads" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Variables</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">variable</span> <span class="n">values</span> <span class="n">are</span> <span class="n">read</span> <span class="n">via</span> <span class="n">ADS</span> <span class="n">using</span> <span class="n">the</span> <span class="n">symbol</span> <span class="n">name</span><span class="o">*</span><span class="p">)</span>
@@ -5908,8 +5923,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-tpip-ads">
-<h2>POU: FB_TPIP_ADS<a class="headerlink" href="#pou-fb-tpip-ads" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-tpip-ads">
+<h2>FB_TPIP_ADS<a class="headerlink" href="#fb-tpip-ads" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Variables</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">variable</span> <span class="n">values</span> <span class="n">are</span> <span class="n">read</span> <span class="n">via</span> <span class="n">ADS</span> <span class="n">using</span> <span class="n">the</span> <span class="n">symbol</span> <span class="n">name</span><span class="o">*</span><span class="p">)</span>
@@ -5964,8 +5979,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-turboextlogic">
-<h2>POU: FB_TurboExtLogic<a class="headerlink" href="#pou-fb-turboextlogic" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-turboextlogic">
+<h2>FB_TurboExtLogic<a class="headerlink" href="#fb-turboextlogic" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">deprecated</span><span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TurboExtLogic</span>
 <span class="n">VAR_IN_OUT</span>
@@ -5987,8 +6002,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-turbventvalve-no">
-<h2>POU: FB_TurbVentvalve_NO<a class="headerlink" href="#pou-fb-turbventvalve-no" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-turbventvalve-no">
+<h2>FB_TurbVentvalve_NO<a class="headerlink" href="#fb-turbventvalve-no" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">impelemets</span> <span class="n">Interlock</span> <span class="k">for</span> <span class="n">Agilent</span> <span class="n">Turbo</span> <span class="n">Vent</span> <span class="n">Valve</span> <span class="n">Normally</span> <span class="n">Open</span><span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TurbVentvalve_NO</span>
 <span class="n">VAR_OUTPUT</span>
@@ -6019,8 +6034,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-tvgc-ads">
-<h2>POU: FB_TVGC_ADS<a class="headerlink" href="#pou-fb-tvgc-ads" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-tvgc-ads">
+<h2>FB_TVGC_ADS<a class="headerlink" href="#fb-tvgc-ads" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">fields</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span><span class="n">Use</span> <span class="k">with</span> <span class="n">FB_ADS_WATCHDOG</span> <span class="n">on</span> <span class="n">remotePLC</span><span class="o">*</span><span class="p">)</span>
@@ -6072,8 +6087,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-valve">
-<h2>POU: FB_Valve<a class="headerlink" href="#pou-fb-valve" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-valve">
+<h2>FB_Valve<a class="headerlink" href="#fb-valve" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_Valve</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
@@ -6096,8 +6111,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-valve-interface">
-<h2>POU: FB_Valve_Interface<a class="headerlink" href="#pou-fb-valve-interface" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-valve-interface">
+<h2>FB_Valve_Interface<a class="headerlink" href="#fb-valve-interface" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">fields</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">They</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="n">the</span> <span class="n">custom</span> <span class="n">created</span> <span class="n">variables</span> <span class="n">on</span> <span class="n">the</span> <span class="n">EL6692</span><span class="o">/</span><span class="mi">5</span> <span class="n">primary</span> <span class="n">side</span><span class="o">*</span><span class="p">)</span>
@@ -6125,8 +6140,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vcc">
-<h2>POU: FB_VCC<a class="headerlink" href="#pou-fb-vcc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vcc">
+<h2>FB_VCC<a class="headerlink" href="#fb-vcc" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">Deprecated</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">THE</span> <span class="n">FB_VCC</span> <span class="n">FUNCTION</span> <span class="n">BLOCK</span> <span class="n">IS</span> <span class="n">DEPRECATED</span><span class="o">.</span> <span class="n">USE</span> <span class="n">FB_VVC</span> <span class="n">INSTEAD</span><span class="o">.</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">Block</span> <span class="n">Implements</span> <span class="n">Basic</span> <span class="n">Functionality</span> <span class="k">for</span> <span class="n">Vent</span> <span class="n">Valves</span> <span class="n">VVC</span> <span class="o">*</span><span class="p">)</span>
@@ -6190,8 +6205,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vcc-no">
-<h2>POU: FB_VCC_NO<a class="headerlink" href="#pou-fb-vcc-no" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vcc-no">
+<h2>FB_VCC_NO<a class="headerlink" href="#fb-vcc-no" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">Deprecated</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">Block</span> <span class="n">Implements</span> <span class="n">Basic</span> <span class="n">Functionality</span> <span class="k">for</span> <span class="n">NO</span> <span class="n">Vent</span> <span class="n">Valves</span> <span class="n">VVC</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Note</span> <span class="n">Interlock</span> <span class="n">Logic</span> <span class="ow">is</span> <span class="n">External</span> <span class="o">*</span><span class="p">)</span>
@@ -6247,8 +6262,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vcn">
-<h2>POU: FB_VCN<a class="headerlink" href="#pou-fb-vcn" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vcn">
+<h2>FB_VCN<a class="headerlink" href="#fb-vcn" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">implements</span> <span class="n">the</span> <span class="n">Basic</span> <span class="n">functions</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Pfeiffer</span> <span class="n">EVR</span> <span class="mi">116</span> <span class="n">needle</span> <span class="n">valve</span><span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_VCN</span>
 <span class="n">VAR_INPUT</span>
@@ -6340,8 +6355,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vfs">
-<h2>POU: FB_VFS<a class="headerlink" href="#pou-fb-vfs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vfs">
+<h2>FB_VFS<a class="headerlink" href="#fb-vfs" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_VFS</span> <span class="n">EXTENDS</span> <span class="n">FB_Valve</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">implements</span> <span class="n">basic</span> <span class="n">functionality</span> <span class="k">for</span> <span class="n">Fast</span> <span class="n">Shutter</span><span class="o">/</span><span class="n">Valves</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Create</span> <span class="n">a</span> <span class="n">separate</span> <span class="n">virtual</span> <span class="n">PLC</span> <span class="k">for</span> <span class="n">the</span> <span class="n">fast</span> <span class="n">shutter</span> <span class="n">logic</span><span class="p">,</span> <span class="ow">and</span> <span class="n">tie</span><span class="o">/</span><span class="nb">map</span> <span class="n">this</span> <span class="n">task</span> <span class="n">to</span> <span class="n">the</span> <span class="n">FAST</span> <span class="n">I</span><span class="o">/</span><span class="n">O</span> <span class="n">portion</span> <span class="n">of</span> <span class="n">the</span> <span class="n">ethercat</span> <span class="n">bus</span><span class="p">,</span>
@@ -6620,8 +6635,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vfs-interface">
-<h2>POU: FB_VFS_Interface<a class="headerlink" href="#pou-fb-vfs-interface" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vfs-interface">
+<h2>FB_VFS_Interface<a class="headerlink" href="#fb-vfs-interface" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">Used</span> <span class="k">as</span> <span class="n">soft</span> <span class="n">IO</span> <span class="n">mapping</span> <span class="n">to</span> <span class="n">create</span> <span class="n">a</span> <span class="n">psuedo</span> <span class="n">valve</span> <span class="n">to</span> <span class="n">communicate</span> <span class="n">over</span> <span class="n">two</span> <span class="n">task</span> <span class="n">on</span> <span class="n">the</span> <span class="n">same</span> <span class="n">PLC</span><span class="o">.*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span><span class="k">for</span> <span class="n">FAST</span> <span class="n">shutter</span> <span class="n">control</span><span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_VFS_Interface</span>
@@ -6720,8 +6735,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vgc">
-<h2>POU: FB_VGC<a class="headerlink" href="#pou-fb-vgc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vgc">
+<h2>FB_VGC<a class="headerlink" href="#fb-vgc" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* This function block implements basic functionality for Isolation Gate Valves*)
 (* This function block interlock is as follows:
 1. The valve can be opened when the difference between the pressures on both sides is
@@ -7162,8 +7177,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vgc-ap">
-<h2>POU: FB_VGC_AP<a class="headerlink" href="#pou-fb-vgc-ap" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vgc-ap">
+<h2>FB_VGC_AP<a class="headerlink" href="#fb-vgc-ap" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(*Deprectated*)
 (* This function block implements basic functionality for Isolation Gate Valves with Appertures*)
 (* This function block interlock is as follows:
@@ -7554,8 +7569,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vgc-ebd">
-<h2>POU: FB_VGC_EBD<a class="headerlink" href="#pou-fb-vgc-ebd" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vgc-ebd">
+<h2>FB_VGC_EBD<a class="headerlink" href="#fb-vgc-ebd" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(*Deprecated*)
 (* This function block is similar to the FB_VGC, except it has 2 outputs to actuate the Valve*)
 (* This function block implements basic functionality for Isolation Gate Valves*)
@@ -7950,8 +7965,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vgc-test">
-<h2>POU: FB_VGC_Test<a class="headerlink" href="#pou-fb-vgc-test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vgc-test">
+<h2>FB_VGC_Test<a class="headerlink" href="#fb-vgc-test" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_VGC_Test</span> <span class="n">EXTENDS</span> <span class="n">TcUnit</span><span class="o">.</span><span class="n">FB_TestSuite</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
@@ -7972,8 +7987,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vrc">
-<h2>POU: FB_VRC<a class="headerlink" href="#pou-fb-vrc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vrc">
+<h2>FB_VRC<a class="headerlink" href="#fb-vrc" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">Block</span> <span class="n">Implements</span> <span class="n">Basic</span> <span class="n">Functionality</span> <span class="k">for</span> <span class="n">certain</span> <span class="n">types</span> <span class="n">of</span> <span class="n">valves</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span> <span class="n">Turbo</span> <span class="n">Isolation</span> <span class="n">valves</span><span class="p">,</span> <span class="n">Apperture</span> <span class="n">Valve</span><span class="o">.</span>
 <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">interloked</span> <span class="n">by</span> <span class="n">an</span> <span class="nb">input</span> <span class="p">(</span><span class="n">i_xExtILK_OK</span><span class="p">)</span><span class="o">.</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">so</span> <span class="n">developers</span> <span class="n">can</span> <span class="n">interface</span> <span class="k">with</span> <span class="n">custom</span>
 <span class="n">interlocking</span> <span class="n">logic</span> <span class="n">outside</span> <span class="n">this</span> <span class="n">function</span> <span class="n">block</span><span class="o">.*</span><span class="p">)</span>
@@ -8152,8 +8167,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vrc-ebd">
-<h2>POU: FB_VRC_EBD<a class="headerlink" href="#pou-fb-vrc-ebd" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vrc-ebd">
+<h2>FB_VRC_EBD<a class="headerlink" href="#fb-vrc-ebd" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">similar</span> <span class="n">to</span> <span class="n">the</span> <span class="n">FB_VGC</span><span class="p">,</span> <span class="k">except</span> <span class="n">it</span> <span class="n">has</span> <span class="mi">2</span> <span class="n">outputs</span> <span class="n">to</span> <span class="n">actuate</span> <span class="n">the</span> <span class="n">Valve</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">Block</span> <span class="n">Implements</span> <span class="n">Basic</span> <span class="n">Functionality</span> <span class="k">for</span> <span class="n">certain</span> <span class="n">types</span> <span class="n">of</span> <span class="n">valves</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span> <span class="n">Turbo</span> <span class="n">Isolation</span> <span class="n">valves</span><span class="p">,</span> <span class="n">Apperture</span> <span class="n">Valve</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Note</span> <span class="n">Interlock</span> <span class="n">Logic</span> <span class="ow">is</span> <span class="n">External</span> <span class="o">*</span><span class="p">)</span>
@@ -8321,8 +8336,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vrc-no">
-<h2>POU: FB_VRC_NO<a class="headerlink" href="#pou-fb-vrc-no" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vrc-no">
+<h2>FB_VRC_NO<a class="headerlink" href="#fb-vrc-no" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">different</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">regular</span> <span class="n">VRC</span> <span class="ow">in</span> <span class="n">that</span> <span class="n">CLOSING</span> <span class="n">must</span> <span class="n">be</span> <span class="n">permitted</span><span class="o">.</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_VRC_NO</span> <span class="n">EXTENDS</span> <span class="n">FB_Valve</span>
 <span class="n">VAR_IN_OUT</span>
@@ -8468,8 +8483,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vrc-ok-cls">
-<h2>POU: FB_VRC_OK_CLS<a class="headerlink" href="#pou-fb-vrc-ok-cls" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vrc-ok-cls">
+<h2>FB_VRC_OK_CLS<a class="headerlink" href="#fb-vrc-ok-cls" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">different</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">regular</span> <span class="n">VRC</span> <span class="ow">in</span> <span class="n">that</span> <span class="n">CLOSING</span> <span class="n">must</span> <span class="n">be</span> <span class="n">permitted</span><span class="o">.</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_VRC_OK_CLS</span>
 <span class="n">VAR_IN_OUT</span>
@@ -8513,8 +8528,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vrc-test">
-<h2>POU: FB_VRC_Test<a class="headerlink" href="#pou-fb-vrc-test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vrc-test">
+<h2>FB_VRC_Test<a class="headerlink" href="#fb-vrc-test" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_VRC_Test</span> <span class="n">EXTENDS</span> <span class="n">TcUnit</span><span class="o">.</span><span class="n">FB_TestSuite</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
@@ -8531,8 +8546,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-fb-vvc">
-<h2>POU: FB_VVC<a class="headerlink" href="#pou-fb-vvc" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="fb-vvc">
+<h2>FB_VVC<a class="headerlink" href="#fb-vvc" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">Block</span> <span class="n">Implements</span> <span class="n">Basic</span> <span class="n">Functionality</span> <span class="k">for</span> <span class="n">Vent</span> <span class="n">Valves</span> <span class="n">VVC</span><span class="o">.</span>
 
     <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">also</span> <span class="n">intended</span> <span class="k">for</span> <span class="n">the</span> <span class="n">general</span> <span class="n">use</span> <span class="n">case</span> <span class="n">of</span> <span class="n">solenoid</span> <span class="n">driven</span> <span class="p">(</span><span class="n">non</span><span class="o">-</span><span class="n">variable</span><span class="p">)</span> <span class="n">valves</span> <span class="n">that</span> <span class="n">lack</span> <span class="n">status</span> <span class="n">readbacks</span> <span class="ow">or</span> <span class="n">position</span> <span class="n">indicators</span><span class="o">.</span>
@@ -8600,8 +8615,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-prg-test">
-<h2>POU: PRG_Test<a class="headerlink" href="#pou-prg-test" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="prg-test">
+<h2>PRG_Test<a class="headerlink" href="#prg-test" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PROGRAM</span> <span class="n">PRG_Test</span>
 <span class="n">VAR</span>
     <span class="n">fb_VGC_Test</span><span class="p">:</span> <span class="n">FB_VGC_Test</span><span class="p">;</span>
@@ -8619,8 +8634,8 @@ END_ACTION
 </pre></div>
 </div>
 </div>
-<div class="section" id="pou-v-to-int">
-<h2>POU: V_TO_INT<a class="headerlink" href="#pou-v-to-int" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="v-to-int">
+<h2>V_TO_INT<a class="headerlink" href="#v-to-int" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;no_check&#39;</span><span class="p">}</span>
 <span class="n">FUNCTION</span> <span class="n">V_TO_INT</span> <span class="p">:</span> <span class="n">INT</span>
 <span class="n">VAR_INPUT</span>
@@ -8648,7 +8663,7 @@ END_ACTION
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="L2SIVacuumLib_L2SIVacuum_epics.html" class="btn btn-neutral float-left" title="L2SIVacuum EPICS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="L2SIVacuumLib_L2SIVacuum_epics.html" class="btn btn-neutral float-left" title="Data Types" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

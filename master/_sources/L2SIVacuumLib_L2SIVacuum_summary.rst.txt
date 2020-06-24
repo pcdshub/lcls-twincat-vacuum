@@ -1,9 +1,6 @@
 
-L2SIVacuum
-----------
-
 Settings
-^^^^^^^^
+--------
 
 .. list-table::
     :header-rows: 1
@@ -25,14 +22,14 @@ Settings
 .. _L2SIVacuum_pragmas:
 
 Pragmas
-^^^^^^^
+-------
 
 Total pragmas found: 249
 Total linter errors: 0
 
 
 Symbols
-^^^^^^^
+-------
 
 
 
@@ -44,8 +41,9 @@ Symbols
 
         .TCPADS_MAXUDP_BUFFSIZE, UDINT, 3368704 (32)
 
+
 Constants
-"""""""""
+^^^^^^^^^
 
 .. raw:: html
 
@@ -62,8 +60,8 @@ Constants
         Constants.bSimulationMode, BOOL, 86690656 (8)
         Constants.CompilerVersion, VERSION, 86690592 (64)
         Constants.CompilerVersionNumeric, DWORD, 86690752 (32)
-        Constants.gc_GaugeValidState, INT, 3369872 (16)
         Constants.gc_GaugeValidState, INT, 86687776 (16)
+        Constants.gc_GaugeValidState, INT, 3369872 (16)
         Constants.gc_iSizeOfGGOArray, INT, 3369856 (16)
         Constants.gc_iSizeOfGGOArray, INT, 86687760 (16)
         Constants.nPackMode, UINT, 86690688 (16)
@@ -74,9 +72,11 @@ Constants
 .. raw:: html
 
    </details>
+   <br />
+
 
 DefaultGlobals
-""""""""""""""
+^^^^^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -85,8 +85,9 @@ DefaultGlobals
         DefaultGlobals.fTimeStamp, LREAL, 3072128 (64)
         DefaultGlobals.stSys, LCLS_General.ST_System, 3072000 (88)
 
+
 GVL
-"""
+^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -94,8 +95,9 @@ GVL
 
         GVL.nLangId_OnlineMonitoring, DINT, 3369088 (32)
 
+
 GVL_INTERNAL
-""""""""""""
+^^^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -103,13 +105,9 @@ GVL_INTERNAL
 
         GVL_INTERNAL.UNINITIALIZED_CLASS_GUID, GUID, 3369440 (128)
 
+
 GVL_Logger
-""""""""""
-
-.. raw:: html
-
-   <details>
-       <summary>6 Symbols</summary>
+^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -122,17 +120,9 @@ GVL_Logger
         GVL_Logger.sPlcHostname, STRING(80), 3072376 (648)
         GVL_Logger.TCPADS_MAXUDP_BUFFSIZE, UDINT, 3073024 (32)
 
-.. raw:: html
-
-   </details>
 
 GVL_Param_TcUnit
-""""""""""""""""
-
-.. raw:: html
-
-   <details>
-       <summary>3 Symbols</summary>
+^^^^^^^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -142,12 +132,9 @@ GVL_Param_TcUnit
         GVL_Param_TcUnit.MaxNumberOfTestsForEachTestSuite, UINT, 3475104 (16)
         GVL_Param_TcUnit.MaxNumberOfTestSuites, UINT, 3466768 (16)
 
-.. raw:: html
-
-   </details>
 
 GVL_PfeifferParameters
-""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -155,13 +142,9 @@ GVL_PfeifferParameters
 
         GVL_PfeifferParameters.gcMaxPfeifferPumps, INT, 3367376 (16)
 
+
 GVL_TcUnit
-""""""""""
-
-.. raw:: html
-
-   <details>
-       <summary>8 Symbols</summary>
+^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -176,17 +159,9 @@ GVL_TcUnit
         GVL_TcUnit.TestSuiteAddresses, ARRAY[1..500] OF POINTER TO TcUnit.FB_TestSuite, 3478080 (32000)
         GVL_TcUnit.TestSuiteIsRegistered, BOOL, 3475904 (8)
 
-.. raw:: html
-
-   </details>
 
 Global_Constants
-""""""""""""""""
-
-.. raw:: html
-
-   <details>
-       <summary>4 Symbols</summary>
+^^^^^^^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -197,12 +172,9 @@ Global_Constants
         Global_Constants.EMPTY_SEVERITY, TcEventSeverity, 3365680 (16)
         Global_Constants.SUCCESS_EVENT, TcEventEntry, 3368896 (192)
 
-.. raw:: html
-
-   </details>
 
 Global_Variables
-""""""""""""""""
+^^^^^^^^^^^^^^^^
 
 .. raw:: html
 
@@ -313,8 +285,8 @@ Global_Variables
         Global_Variables.EMPTY_GUID_STRUCT, GUID, 3367392 (128)
         Global_Variables.EMPTY_ROUTE_ENTRY, Tc2_Utilities.ST_AmsRouteEntry, 3225280 (1184)
         Global_Variables.eWatchdogConfig, Tc2_System.E_WATCHDOG_TIME_CONFIG, 3161520 (16)
-        Global_Variables.fbGetCurTaskIdx, Tc2_System.GETCURTASKINDEX, 3370432 (256)
         Global_Variables.fbGetCurTaskIdx, Tc2_System.GETCURTASKINDEX, 86689984 (256)
+        Global_Variables.fbGetCurTaskIdx, Tc2_System.GETCURTASKINDEX, 3370432 (256)
         Global_Variables.FLOATREC_EXP_IS_INF, INT, 3226640 (16)
         Global_Variables.FLOATREC_EXP_IS_NAN, INT, 3226624 (16)
         Global_Variables.FLOATREC_MAX_DIGITS, INT, 3226656 (16)
@@ -343,12 +315,12 @@ Global_Variables
         Global_Variables.FORMAT_DECASC_CODES, ARRAY[0..9] OF BYTE, 3227584 (80)
         Global_Variables.FORMAT_HEXASC_CODES, ARRAY[0..1] OF BYTE, 3227328 (256)
         Global_Variables.FORMAT_MAX_ARGS, INT, 3226608 (16)
-        Global_Variables.g_DummyVG, LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG, 3370016 (416)
         Global_Variables.g_DummyVG, ST_VG, 86688928 (1056)
+        Global_Variables.g_DummyVG, LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG, 3370016 (416)
         Global_Variables.g_iSizeOfGGOArray, INT, 3369888 (16)
         Global_Variables.g_iSizeOfGGOArray, INT, 86687792 (16)
-        Global_Variables.g_stSystem, LCLS_General.ST_System, 3369904 (88)
         Global_Variables.g_stSystem, LCLS_General.ST_System, 86688832 (88)
+        Global_Variables.g_stSystem, LCLS_General.ST_System, 3369904 (88)
         Global_Variables.g_stSystem.I_EcatMaster1, AMSNETID, 86688872 (48)
         Global_Variables.GLOBAL_DCF77_PULSE_SPLIT, TIME, 3163264 (32)
         Global_Variables.GLOBAL_DCF77_SEQUENCE_CHECK, BOOL, 3163296 (8)
@@ -443,9 +415,11 @@ Global_Variables
 .. raw:: html
 
    </details>
+   <br />
+
 
 Global_Version
-""""""""""""""
+^^^^^^^^^^^^^^
 
 .. raw:: html
 
@@ -472,9 +446,11 @@ Global_Version
 .. raw:: html
 
    </details>
+   <br />
+
 
 LCLSVacuumSerialDriverLib
-"""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -482,8 +458,9 @@ LCLSVacuumSerialDriverLib
 
         LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.Global_Variables.g_stSystem.I_EcatMaster1, AMSNETID, 3369944 (48)
 
+
 LCLS_General
-""""""""""""
+^^^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -491,8 +468,9 @@ LCLS_General
 
         LCLS_General.DefaultGlobals.stSys.I_EcatMaster1, AMSNETID, 3072040 (48)
 
+
 PMPS_GVL
-""""""""
+^^^^^^^^
 
 .. raw:: html
 
@@ -526,9 +504,11 @@ PMPS_GVL
 .. raw:: html
 
    </details>
+   <br />
+
 
 PRG_Test
-""""""""
+^^^^^^^^
 
 .. raw:: html
 
@@ -588,9 +568,11 @@ PRG_Test
 .. raw:: html
 
    </details>
+   <br />
+
 
 ParameterList
-"""""""""""""
+^^^^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -598,8 +580,9 @@ ParameterList
 
         ParameterList.cSourceNameSize, UDINT (81..Tc2_Utilities.ParameterList.cMaxCharacters), 3369120 (32)
 
+
 TC_EVENTS
-"""""""""
+^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -607,8 +590,9 @@ TC_EVENTS
 
         TC_EVENTS.LCLSGeneralEventClass, ST_LCLSGeneralEventClass, 86741056 (960)
 
+
 TwinCAT_LicenseInfoVarList
-""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -616,13 +600,9 @@ TwinCAT_LicenseInfoVarList
 
         TwinCAT_LicenseInfoVarList._LicenseInfo, ARRAY[1..2] OF PlcLicenseInfo, 86690784 (2048)
 
+
 TwinCAT_SystemInfoVarList
-"""""""""""""""""""""""""
-
-.. raw:: html
-
-   <details>
-       <summary>5 Symbols</summary>
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
@@ -634,7 +614,4 @@ TwinCAT_SystemInfoVarList
         TwinCAT_SystemInfoVarList._TaskOid_PlcTask, OTCID, 86695936 (32)
         TwinCAT_SystemInfoVarList._TaskPouOid_PlcTask, OTCID, 86692832 (32)
 
-.. raw:: html
-
-   </details>
 
