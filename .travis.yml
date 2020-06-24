@@ -1,0 +1,28 @@
+language: python
+python: 3.7
+os: linux
+dist: xenial
+
+env:
+  global:
+    # Doctr deploy key for pcdshub/lcls-twincat-vacuum
+    - secure: "TX4xYusJ9Ri5BvfuHP8qII2W6LM9z+1qTios+pKRoZc/cNcj9sHZBoj05HfdskhmgrtsSM76pUevPgu4jkg4fTbt+GbIwR+5oxbaI+ZyBOdWcVzVp17sjnAAurIPDDWoPpMjh4HTAHpaHWVn4usTa8CZ658aX6eqpBRd8qZZBv2GgJFIRLq2Ip7zBZnMuT+G4ZHcUZIfYxIQ5OPV7idoxCF6nOla+WfuL8OZIh9W+K6lYNcu1Hejm8ij9TJfx/+BAUwopHUbm2t/vQf7Soi8LSM3omyf4NeC12VrnPhYh775OT++Na0cw0yzwXVb8pVak6RKQnlrYc6YpDMJkMPeDD3M3LkWni59KIPzT8mOBXzjz2UuOjzEHMbdiKYxN9rMG5UGnC6z5k3ohRCVu9Kbv5+6kMQq9VuJ1m7apIoCQQxtd0CyHt/YA0MrOIdxB5jC5BKO8U4fMkEoDQ8L1i7e6sYJKI8VSceFi5DSn5ToNiTtx01BMP9JzcxJNuBRciF8zNbbNOQbbORHdKLAJwvYFZAQ5pqM5s8Q03lUd7R7oT2qTaqUOH+mz2+VHP3/p9OnrdGPkxMsI8+d/F0/PdxNBNSG/QcazAdJ93/s1TAR/6Sinaex1qTcuOwVjLrZhJZmaXUEpRrUSDY9u9GT8wJFjHHuw3t9HeOMhULVmWkFs4E="
+    - TWINCAT_STYLE_EXCLUDE=
+
+stages:
+  - build
+  - test
+  - name: deploy
+    if: (branch = master OR tag IS present) AND type != pull_request
+
+import:
+  # Build stage
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/setup.yml
+  # Test stage
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/docs-build.yml
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/pragmalint.yml
+  # - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/pre-commit.yml
+  # - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/style.yml
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/summary.yml
+  # Deploy stage
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/doctr-upload.yml
