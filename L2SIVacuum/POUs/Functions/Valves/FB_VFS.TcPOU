@@ -53,7 +53,7 @@ VAR
 	CloseTimer: TON;
 	TimDur: TIME := T#20MS;
 	OpenTimer: TON;
-	OpenTimDur: TIME := T#10S;
+	OpenTimDur: TIME := T#2S;
 	
 	(* Timeouts*)
 	tTimeOutDuration: TIME:= T#0.5S;
@@ -105,9 +105,9 @@ IO();
 ///Check valve postion
 IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
 	iq_stValve.eState:=INVALID;
-ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
 	iq_stValve.eState:=OPEN;
-ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
 	iq_stValve.eState:=CLOSED;
 ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
 	iq_stValve.eState:=MOVING;
@@ -197,7 +197,7 @@ END_IF
 
 (*Timers*)
 CloseTimer ( IN:=xClose, PT:= TimDur, Q=>);
-OpenTimer ( IN:=xOpen, PT:= OpenTimDur, Q=>);
+OpenTimer ( IN:=i_xOpnLS, PT:= OpenTimDur, Q=>);
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
 tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
 

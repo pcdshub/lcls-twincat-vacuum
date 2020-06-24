@@ -44,7 +44,7 @@ fb_Read_VGC(
 (*Error*)
 fb_CheckWatchdog(
 	bEnable:= TRUE, 
-	tWatchdogTime:= T#100ms, 
+	tWatchdogTime:= T#900ms, 
 	nCnt:= iWatchdog , 
 	bWatchdog=> , 
 	nLastCnt=> );

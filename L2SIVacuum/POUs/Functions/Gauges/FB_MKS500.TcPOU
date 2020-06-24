@@ -44,24 +44,25 @@ VAR CONSTANT
 	vNoDischarge: REAL := 9.3;
 	MinPressure: REAL := 1E-10;
 	cDefaultPressure : REAL := 0;
+	rDeadband : REAL :=0.3;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* 500 Logarithmic Output Conversion, factory default configuration *)
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
-rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
+rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (* Set Guage State based on the Analog voltage*)
 IF rV < vDisconnected THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
-ELSIF rV >= vDisconnected AND rV < (vNoDischarge -0.3)  THEN
+ELSIF rV >= vDisconnected AND rV < (vNoDischarge -rDeadband)  THEN
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-ELSIF rV >= (vNoDischarge -0.3) AND rV <(vGaugeOff -0.3)   THEN
+ELSIF rV >= (vNoDischarge -rDeadband) AND rV <(vGaugeOff -rDeadband)   THEN
 	IG.eState := Starting;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-ELSIF rV >= (vGaugeOff -0.3) THEN
+ELSIF rV >= (vGaugeOff -rDeadband) THEN
 	IG.eState := Off;
 	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 	IG.rPRESS := cDefaultPressure;

@@ -24,7 +24,7 @@ VAR
 	field: ONAM OPEN;
 	io: io ;
 	'}
-	i_xOPN_SW AT%Q*:BOOL;
+	q_xOPN_SW AT%Q*:BOOL;
 	{attribute 'pytmc' := '
 	pv: CLS_SW; 
 	field: ZNAM FALSE; 
@@ -45,20 +45,16 @@ VAR
 	field: ONAM Override ON;
 	io: io;
 	'}
-	i_xOverrideMode AT%Q*: BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+	q_xOverrideMode AT%Q*: BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 	{attribute 'pytmc' := '
     pv: VFS_FORCE_OPN;
 	io: io;
 	field: ZNAM FALSE;
 	field: ONAM FORCE OPEN;
     '}
-	i_xOverrideOpen AT%Q*: BOOL;
+	q_xOverrideOpen AT%Q*: BOOL;
 	
 	(*inputs*)
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	iq_stValve AT%I*: ST_VGC; (* All valve data and states will be in this struct*)
 	{attribute 'pytmc' := '
 	pv: TRIG; 
 	field: ZNAM TRIG_OFF; 

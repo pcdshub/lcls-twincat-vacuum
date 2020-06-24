@@ -203,7 +203,7 @@ CASE iq_stValve.eVGC_State OF
         
 		(* Assuming the pump down went well, we are now at vacuum on both sides,
 		so we move to the vacuum state, otherwise remain in the vented state *)
-		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND NOT (NOT (iq_stValve.xERR_SP)) and NOT (NOT (iq_stValve.xERR_ExtFault))THEN
+		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND  (NOT (iq_stValve.xERR_SP)) and  (NOT (iq_stValve.xERR_ExtFault))THEN
 		    iq_stValve.eVGC_State := AtVacuum;
 		ELSE
 		    iq_stValve.eVGC_State := Vented;
@@ -323,7 +323,7 @@ END_IF
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (* When the valve  is open MPS is OK*)
-xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS; 
+xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS; 
 
 ///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
@@ -365,6 +365,7 @@ ACT_IO();
 (*FAST FAULT*)
 fbFF(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
+	i_xAutoReset :=TRUE,
     io_fbFFHWO := io_fbFFHWO);
 
 
@@ -430,7 +431,9 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VGC_EBD">
-      <LineId Id="3" Count="265" />
+      <LineId Id="3" Count="261" />
+      <LineId Id="369" Count="0" />
+      <LineId Id="265" Count="3" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC_EBD.ACT_IO">

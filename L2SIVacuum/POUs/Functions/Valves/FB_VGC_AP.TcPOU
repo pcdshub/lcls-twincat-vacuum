@@ -57,7 +57,7 @@ END_VAR
 VAR
 	// PMPS
 	fbFF    :    FB_FastFault :=(
-        i_DevName := 'VGC',
+        i_DevName := 'VGC Aptr',
         i_Desc := 'Fault occurs when the valve is not in open state',
         i_TypeCode := 16#1010);
 	//g_FastFaultOutput1	:	FB_HardwareFFOutput;	
@@ -204,7 +204,7 @@ CASE iq_stValve.eVGC_State OF
         
 		(* Assuming the pump down went well, we are now at vacuum on both sides,
 		so we move to the vacuum state, otherwise remain in the vented state *)
-		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND NOT (NOT (iq_stValve.xERR_SP)) and NOT (NOT (iq_stValve.xERR_ExtFault))THEN
+		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND  (NOT (iq_stValve.xERR_SP)) and  (NOT (iq_stValve.xERR_ExtFault))THEN
 		    iq_stValve.eVGC_State := AtVacuum;
 		ELSE
 		    iq_stValve.eVGC_State := Vented;
@@ -367,6 +367,7 @@ ACT_IO();
 (*FAST FAULT*)
 fbFF(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
+	i_xAutoReset :=TRUE,
     io_fbFFHWO := io_fbFFHWO);
 
 
@@ -428,7 +429,9 @@ END_VAR
     <LineIds Name="FB_VGC_AP">
       <LineId Id="3" Count="41" />
       <LineId Id="369" Count="1" />
-      <LineId Id="45" Count="223" />
+      <LineId Id="45" Count="219" />
+      <LineId Id="471" Count="0" />
+      <LineId Id="265" Count="3" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC_AP.ACT_IO">
