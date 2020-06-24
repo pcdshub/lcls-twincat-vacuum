@@ -17,12 +17,12 @@ stages:
 
 import:
   # Build stage
-  - travis/shared_configs/twincat/setup.yml
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/setup.yml
   # Test stage
-  - travis/shared_configs/twincat/docs-build.yml
-  - travis/shared_configs/twincat/pragmalint.yml
-  # - travis/shared_configs/twincat/pre-commit.yml
-  # - travis/shared_configs/twincat/style.yml
-  - travis/shared_configs/twincat/summary.yml
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/docs-build.yml
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/pragmalint.yml
+  # - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/pre-commit.yml
+  # - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/style.yml
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/summary.yml
   # Deploy stage
-  - travis/shared_configs/twincat/doctr-upload.yml
+  - pcdshub/pcds-ci-helpers:travis/shared_configs/twincat/doctr-upload.yml
