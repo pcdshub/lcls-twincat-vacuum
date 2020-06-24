@@ -18,7 +18,7 @@ Pragma Summary
     :header: PLC Name, Total Pragmas, Errors
     :align: center
 
-    :ref:`L2SIVacuum <L2SIVacuum_pragmas>`, 250, 0
+    :ref:`L2SIVacuum <L2SIVacuum_pragmas>`, 249, 0
 
 
 Indices and tables

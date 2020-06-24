@@ -2105,8 +2105,6 @@ POU: FB_ADS_WATCHDOG
     	nLastCnt=>  , 
     	bError=> bError, 
     	nErrorId=> );
-    	
-
 
     	
     (*Error*)
@@ -2944,17 +2942,19 @@ POU: FB_MKS275
     	PG : ST_VG;
     END_VAR
     VAR
-    	MinPressure: REAL := 1E-4;
     	V : REAL;
-    	Vlowest: REAL := 10;
     	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
-    	
-    	rValidLoBoundary	:	REAL := 0.375; // manual page 27
-    	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
-    	rDisconnectedBoundary	:	REAL := 0.3;
-    	
+    	Vlowest: REAL := 10;
     	(*IO*)
     	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    END_VAR
+
+    VAR CONSTANT
+    	MinPressure: REAL := 1E-4;
+    	rDeadband : REAL :=0.02;
+    	rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
+    	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
+    	rDisconnectedBoundary	:	REAL := 0.3;
     END_VAR
     (* This function block is used to provide protection and automatic turn on of ion gauges,
      it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
@@ -2971,7 +2971,7 @@ POU: FB_MKS275
 
     Vlowest := MIN(V, Vlowest);
 
-    IF V > rDisconnectedBoundary AND V < rValidLoBoundary THEN
+    IF V > rDisconnectedBoundary AND V < rValidLoBoundary +rDeadband  THEN
     	PG.rPRESS := MinPressure;
     	PG.eState := ValidLo;
 
@@ -3075,7 +3075,7 @@ POU: FB_MKS317
     VAR CONSTANT
     	rMinPressure: REAL := 1E-4;
     	rDefaultVAC_SP: REAL :=5E-2; // Default 50 mT
-    	rDisconnectedBoundary	:	REAL := 0.15;
+    	rDisconnectedBoundary	:	REAL := 0.10;
     	rValidLoBoundary	:	REAL := 0.22;
     	rValidBoundaryMin	:	REAL := 0.6;
     	rValidHiBoundary	:	REAL := 9.7;
@@ -3527,22 +3527,23 @@ POU: FB_MKS500
     	vNoDischarge: REAL := 9.3;
     	MinPressure: REAL := 1E-10;
     	cDefaultPressure : REAL := 0;
+    	rDeadband : REAL :=0.3;
     END_VAR
     (* 500 Logarithmic Output Conversion, factory default configuration *)
     If (iTermBits=0) THEN iTermBits := 32767;END_IF
-    rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
+    rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
     (* Set Guage State based on the Analog voltage*)
     IF rV < vDisconnected THEN
     	IG.eState := GaugeDisconnected;
     	IG.rPRESS := cDefaultPressure;
-    ELSIF rV >= vDisconnected AND rV < (vNoDischarge -0.3)  THEN
+    ELSIF rV >= vDisconnected AND rV < (vNoDischarge -rDeadband)  THEN
     	IG.eState := Valid;
     	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-    ELSIF rV >= (vNoDischarge -0.3) AND rV <(vGaugeOff -0.3)   THEN
+    ELSIF rV >= (vNoDischarge -rDeadband) AND rV <(vGaugeOff -rDeadband)   THEN
     	IG.eState := Starting;
     	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-    ELSIF rV >= (vGaugeOff -0.3) THEN
+    ELSIF rV >= (vGaugeOff -rDeadband) THEN
     	IG.eState := Off;
     	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
     	IG.rPRESS := cDefaultPressure;
@@ -5793,7 +5794,7 @@ POU: FB_TGCC_ADS
     (*Error*)
     fb_CheckWatchdog(
     	bEnable:= TRUE, 
-    	tWatchdogTime:= T#100ms, 
+    	tWatchdogTime:= T#900ms, 
     	nCnt:= iWatchdog , 
     	bWatchdog=> , 
     	nLastCnt=> );
@@ -5851,7 +5852,7 @@ POU: FB_TPIP_ADS
     (*Error*)
     fb_CheckWatchdog(
     	bEnable:= TRUE, 
-    	tWatchdogTime:= T#100ms, 
+    	tWatchdogTime:= T#900ms, 
     	nCnt:= iWatchdog , 
     	bWatchdog=> , 
     	nLastCnt=> );
@@ -5967,7 +5968,7 @@ POU: FB_TVGC_ADS
     (*Error*)
     fb_CheckWatchdog(
     	bEnable:= TRUE, 
-    	tWatchdogTime:= T#100ms, 
+    	tWatchdogTime:= T#900ms, 
     	nCnt:= iWatchdog , 
     	bWatchdog=> , 
     	nLastCnt=> );
@@ -6311,7 +6312,7 @@ POU: FB_VFS
     	CloseTimer: TON;
     	TimDur: TIME := T#20MS;
     	OpenTimer: TON;
-    	OpenTimDur: TIME := T#10S;
+    	OpenTimDur: TIME := T#2S;
     	
     	(* Timeouts*)
     	tTimeOutDuration: TIME:= T#0.5S;
@@ -6360,9 +6361,9 @@ POU: FB_VFS
     ///Check valve postion
     IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
     	iq_stValve.eState:=INVALID;
-    ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
+    ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
     	iq_stValve.eState:=OPEN;
-    ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
+    ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
     	iq_stValve.eState:=CLOSED;
     ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
     	iq_stValve.eState:=MOVING;
@@ -6452,7 +6453,7 @@ POU: FB_VFS
 
     (*Timers*)
     CloseTimer ( IN:=xClose, PT:= TimDur, Q=>);
-    OpenTimer ( IN:=xOpen, PT:= OpenTimDur, Q=>);
+    OpenTimer ( IN:=i_xOpnLS, PT:= OpenTimDur, Q=>);
     tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
     tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
 
@@ -6564,7 +6565,7 @@ POU: FB_VFS_Interface
     	field: ONAM OPEN;
     	io: io ;
     	'}
-    	i_xOPN_SW AT%Q*:BOOL;
+    	q_xOPN_SW AT%Q*:BOOL;
     	{attribute 'pytmc' := '
     	pv: CLS_SW; 
     	field: ZNAM FALSE; 
@@ -6585,20 +6586,16 @@ POU: FB_VFS_Interface
     	field: ONAM Override ON;
     	io: io;
     	'}
-    	i_xOverrideMode AT%Q*: BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+    	q_xOverrideMode AT%Q*: BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
     	{attribute 'pytmc' := '
         pv: VFS_FORCE_OPN;
     	io: io;
     	field: ZNAM FALSE;
     	field: ONAM FORCE OPEN;
         '}
-    	i_xOverrideOpen AT%Q*: BOOL;
+    	q_xOverrideOpen AT%Q*: BOOL;
     	
     	(*inputs*)
-    	{attribute 'pytmc' := '
-        pv: 
-    	'}
-    	iq_stValve AT%I*: ST_VGC; (* All valve data and states will be in this struct*)
     	{attribute 'pytmc' := '
     	pv: TRIG; 
     	field: ZNAM TRIG_OFF; 
@@ -6655,7 +6652,7 @@ POU: FB_VGC
     3. Once at-vac, the valve will close if the pressure on either side rises above the setpoint.*)
     (*This function block also implements PMPS and EPS interlocks, as well as Fast MPS trigger*)
     {attribute 'no_check'}
-    FUNCTION_BLOCK FB_VGC
+    FUNCTION_BLOCK FB_VGC Extends FB_Valve
     VAR_IN_OUT
     	
     END_VAR
@@ -6703,7 +6700,7 @@ POU: FB_VGC
     END_VAR
     VAR
     	// PMPS
-    	fbFF    :    FB_FastFault :=(
+    	FFO    :    FB_FastFault :=(
             i_DevName := 'VGC',
             i_Desc := 'Fault occurs when the valve is not in open state',
             i_TypeCode := 16#1010);
@@ -6741,11 +6738,8 @@ POU: FB_VGC
     	q_xOPN_DO	AT%Q*: BOOL;
         
         // For logging
-        fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
-        ePrevState : E_VGC;
-        tErrorPresent : R_TRIG;
-        tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
-        tOverrideActivated : R_TRIG;
+        eVGCPrevState : E_VGC;
+       
     	
     END_VAR
     (* Vacuum gate valve
@@ -6840,13 +6834,7 @@ POU: FB_VGC
     // Valve state
     ///////////////////////////////////////////////////
     CASE iq_stValve.eVGC_State OF
-    	Vented: (* The Vented state is used during pump down *)
-            //Log new state
-            IF ePrevState <> iq_stValve.eVGC_State THEN
-                fbLogger(sMsg:='Vented', eSevr:=TcEventSeverity.Info);
-                ePrevState := iq_stValve.eVGC_State;
-    		END_IF
-            
+    	Vented: (* The Vented state is used during pump down *)        
     		(* Assuming the pump down went well, we are now at vacuum on both sides,
     		so we move to the vacuum state, otherwise remain in the vented state *)
     		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
@@ -6856,12 +6844,6 @@ POU: FB_VGC
     		END_IF
     	
     	AtVacuum:
-            //Log new state
-            IF ePrevState <> iq_stValve.eVGC_State THEN
-                fbLogger(sMsg:='Vacuum setpoint satisfied', eSevr:=TcEventSeverity.Info);
-                ePrevState := iq_stValve.eVGC_State;
-    		END_IF
-            
     		IF iq_stValve.xAT_VAC THEN
     		(* If both pressure setpoints are made,
     		then enable the differential pressure interlock, regardless of the valve state
@@ -6885,40 +6867,36 @@ POU: FB_VGC
     		
     		END_IF
     	
-    	ERR_DiffPress:
-            //Log new state
-            IF ePrevState <> iq_stValve.eVGC_State THEN
-                fbLogger(sMsg:='Potential accidental vent.', eSevr:=TcEventSeverity.Critical);
-                ePrevState := iq_stValve.eVGC_State;
-    		END_IF
-            
+    	ERR_DiffPress:       
     		IF NOT (iq_stValve.xERR_DifPres) THEN
-    			iq_stValve.eVGC_State := Vented;
+    			IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
+    		    	iq_stValve.eVGC_State := AtVacuum;
+    			ELSE
+    		    	iq_stValve.eVGC_State := Vented;
+    			END_IF
     		END_IF
     		
     	
     	ERR_LostVac:
-            //Log new state
-            IF ePrevState <> iq_stValve.eVGC_State THEN
-                fbLogger(sMsg:='Unexpected loss of vacuum while valve was open.', eSevr:=TcEventSeverity.Critical);
-                ePrevState := iq_stValve.eVGC_State;
-    		END_IF
     		IF NOT (iq_stValve.xERR_SP) THEN
-    			iq_stValve.eVGC_State := Vented;
+    			IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
+    		    	iq_stValve.eVGC_State := AtVacuum;
+    			ELSE
+    		    	iq_stValve.eVGC_State := Vented;
+    			END_IF
     		END_IF
     		
     	ERR_ExtFault:
-            //Log new state
-            IF ePrevState <> iq_stValve.eVGC_State THEN
-                fbLogger(sMsg:='Lost external interlock while valve was open.', eSevr:=TcEventSeverity.Critical);
-                ePrevState := iq_stValve.eVGC_State;
-    		END_IF
     		IF NOT (iq_stValve.xERR_ExtFault) AND (NOT i_xExt_OK) THEN
-    			iq_stValve.eVGC_State := Vented;
+    			IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
+    		    	iq_stValve.eVGC_State := AtVacuum;
+    			ELSE
+    		    	iq_stValve.eVGC_State := Vented;
+    			END_IF
     		END_IF
     END_CASE
 
-    IF (NOT i_xExt_OK) THEN
+    IF (NOT i_xExt_OK) AND (iq_stValve.eState=OPEN)  THEN
     	iq_stValve.eVGC_State := ERR_ExtFault;
     	iq_stValve.xERR_ExtFault := TRUE;
     END_IF
@@ -6971,10 +6949,10 @@ POU: FB_VGC
     (*MPS Fault setting*)
     If (i_xIsAperture ) THEN 
     	(* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
-    	xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
+    	xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
     ELSE
     	(* When the valve  is open MPS is OK*)
-    	xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS; 
+    	xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS; 
     END_IF
 
 
@@ -7015,9 +6993,13 @@ POU: FB_VGC
     (*IO Mapping*)
     ACT_IO();
 
+    // Log States and triggers
+    ACT_Logger();
+
     (*FAST FAULT*)
-    fbFF(i_xOK := xMPS_OK,
+    FFO(i_xOK := xMPS_OK,
         i_xReset := i_xReset,
+    	i_xAutoReset :=TRUE,
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK
@@ -7033,6 +7015,62 @@ POU: FB_VGC
     (*ILK Devices*)
     iq_stValve.sIlkUSDeviceName := This^.i_stUSG.sPath;
     iq_stValve.sIlkDSDeviceName := This^.i_stDSG.sPath;
+    END_ACTION
+    ACTION ACT_Logger:
+    // ILK logger
+
+    (*IF NOT i_xExtILK_OK AND ePrevState = OPEN THEN
+     		fbLogger(sMsg:='Lost external interlock while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+    END_IF
+    *)
+
+    //Positiong STATE Logger  
+    IF ePrevState <> iq_stValve.eState THEN
+    	  CASE iq_stValve.eState OF
+    		INVALID:
+    			fbLogger(sMsg:='Valve invalid position.', eSevr:=TcEventSeverity.Critical);
+      		MOVING:
+    			fbLogger(sMsg:='Valve moving', eSevr:=TcEventSeverity.Warning);
+    		OPEN:
+    			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+    		OPEN_F:
+    			fbLogger(sMsg:='Valve Open without open do.', eSevr:=TcEventSeverity.Info);
+    		CLOSED:
+    			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+    	  END_CASE
+    	  ePrevState := iq_stValve.eState;  
+      END_IF
+     
+     //Pressure STATE Logger  
+    IF eVGCPrevState <> iq_stValve.eVGC_State THEN
+    	  CASE iq_stValve.eVGC_State OF
+    		Vented:
+    			 fbLogger(sMsg:='Vented', eSevr:=TcEventSeverity.Info);
+      		AtVacuum:
+    			 fbLogger(sMsg:='Vacuum setpoint satisfied', eSevr:=TcEventSeverity.Info);
+    		ERR_DiffPress:
+    			 fbLogger(sMsg:='Potential accidental vent.', eSevr:=TcEventSeverity.Critical);
+    		ERR_LostVac:
+    			fbLogger(sMsg:='Unexpected loss of vacuum while valve was open or moving.', eSevr:=TcEventSeverity.Critical);
+    		ERR_ExtFault:
+    			 fbLogger(sMsg:='Lost external interlock while valve was open.', eSevr:=TcEventSeverity.Critical);
+    	  END_CASE
+    	  eVGCPrevState := iq_stValve.eVGC_State;  
+      END_IF
+      
+
+
+    // Log valve timeouts
+    tErrorPresent(CLK:=iq_stValve.bErrorPresent);
+    IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
+
+    // Log valve open
+    tAction(CLK:= iq_stValve.q_xOPN_DO);
+    IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
+
+    // Log override mode enabled
+    tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
+    IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
     END_ACTION
     ACTION ACT_ResetAlarms:
     iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
@@ -7106,7 +7144,7 @@ POU: FB_VGC_AP
     VAR
     	// PMPS
     	fbFF    :    FB_FastFault :=(
-            i_DevName := 'VGC',
+            i_DevName := 'VGC Aptr',
             i_Desc := 'Fault occurs when the valve is not in open state',
             i_TypeCode := 16#1010);
     	//g_FastFaultOutput1	:	FB_HardwareFFOutput;	
@@ -7252,7 +7290,7 @@ POU: FB_VGC_AP
             
     		(* Assuming the pump down went well, we are now at vacuum on both sides,
     		so we move to the vacuum state, otherwise remain in the vented state *)
-    		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND NOT (NOT (iq_stValve.xERR_SP)) and NOT (NOT (iq_stValve.xERR_ExtFault))THEN
+    		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND  (NOT (iq_stValve.xERR_SP)) and  (NOT (iq_stValve.xERR_ExtFault))THEN
     		    iq_stValve.eVGC_State := AtVacuum;
     		ELSE
     		    iq_stValve.eVGC_State := Vented;
@@ -7415,6 +7453,7 @@ POU: FB_VGC_AP
     (*FAST FAULT*)
     fbFF(i_xOK := xMPS_OK,
         i_xReset := i_xReset,
+    	i_xAutoReset :=TRUE,
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK
@@ -7644,7 +7683,7 @@ POU: FB_VGC_EBD
             
     		(* Assuming the pump down went well, we are now at vacuum on both sides,
     		so we move to the vacuum state, otherwise remain in the vented state *)
-    		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND NOT (NOT (iq_stValve.xERR_SP)) and NOT (NOT (iq_stValve.xERR_ExtFault))THEN
+    		IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND  (NOT (iq_stValve.xERR_SP)) and  (NOT (iq_stValve.xERR_ExtFault))THEN
     		    iq_stValve.eVGC_State := AtVacuum;
     		ELSE
     		    iq_stValve.eVGC_State := Vented;
@@ -7764,7 +7803,7 @@ POU: FB_VGC_EBD
     iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
     (* When the valve  is open MPS is OK*)
-    xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS; 
+    xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS; 
 
     ///Check valve moving postion timout
     IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
@@ -7806,6 +7845,7 @@ POU: FB_VGC_EBD
     (*FAST FAULT*)
     fbFF(i_xOK := xMPS_OK,
         i_xReset := i_xReset,
+    	i_xAutoReset :=TRUE,
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK

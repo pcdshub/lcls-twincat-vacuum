@@ -2283,8 +2283,6 @@ END_FUNCTION
     <span class="n">nErrorId</span><span class="o">=&gt;</span> <span class="p">);</span>
 
 
-
-
 <span class="p">(</span><span class="o">*</span><span class="n">Error</span><span class="o">*</span><span class="p">)</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
@@ -3094,17 +3092,19 @@ VAR_OUTPUT
     PG : ST_VG;
 END_VAR
 VAR
-    MinPressure: REAL := 1E-4;
     V : REAL;
-    Vlowest: REAL := 10;
     iTermBits: UINT := 32767 ; // The terminal&#39;s maximum value in bits
-
-    rValidLoBoundary        :       REAL := 0.375; // manual page 27
-    rValidHiBoundary        :       REAL := 5.659;// 5.534; // manual page 27
-    rDisconnectedBoundary   :       REAL := 0.3;
-
+    Vlowest: REAL := 10;
     (*IO*)
     i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR
+
+VAR CONSTANT
+    MinPressure: REAL := 1E-4;
+    rDeadband : REAL :=0.02;
+    rValidLoBoundary        :       REAL := 0.375; //  0.375V as per manual page 27
+    rValidHiBoundary        :       REAL := 5.659;// 5.534; // manual page 27
+    rDisconnectedBoundary   :       REAL := 0.3;
 END_VAR
 (* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
@@ -3121,7 +3121,7 @@ V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
 Vlowest := MIN(V, Vlowest);
 
-IF V &gt; rDisconnectedBoundary AND V &lt; rValidLoBoundary THEN
+IF V &gt; rDisconnectedBoundary AND V &lt; rValidLoBoundary +rDeadband  THEN
     PG.rPRESS := MinPressure;
     PG.eState := ValidLo;
 
@@ -3223,7 +3223,7 @@ END_ACTION
 <span class="n">VAR</span> <span class="n">CONSTANT</span>
     <span class="n">rMinPressure</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E-4</span><span class="p">;</span>
     <span class="n">rDefaultVAC_SP</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span><span class="mf">5E-2</span><span class="p">;</span> <span class="o">//</span> <span class="n">Default</span> <span class="mi">50</span> <span class="n">mT</span>
-    <span class="n">rDisconnectedBoundary</span>   <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">0.15</span><span class="p">;</span>
+    <span class="n">rDisconnectedBoundary</span>   <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">0.10</span><span class="p">;</span>
     <span class="n">rValidLoBoundary</span>        <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">0.22</span><span class="p">;</span>
     <span class="n">rValidBoundaryMin</span>       <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">0.6</span><span class="p">;</span>
     <span class="n">rValidHiBoundary</span>        <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">9.7</span><span class="p">;</span>
@@ -3667,22 +3667,23 @@ END_ACTION
     <span class="n">vNoDischarge</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">9.3</span><span class="p">;</span>
     <span class="n">MinPressure</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E-10</span><span class="p">;</span>
     <span class="n">cDefaultPressure</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">rDeadband</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span><span class="mf">0.3</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 <span class="p">(</span><span class="o">*</span> <span class="mi">500</span> <span class="n">Logarithmic</span> <span class="n">Output</span> <span class="n">Conversion</span><span class="p">,</span> <span class="n">factory</span> <span class="n">default</span> <span class="n">configuration</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">If</span> <span class="p">(</span><span class="n">iTermBits</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">iTermBits</span> <span class="o">:=</span> <span class="mi">32767</span><span class="p">;</span><span class="n">END_IF</span>
-<span class="n">rV</span> <span class="o">:=</span> <span class="mi">10</span><span class="o">*</span><span class="n">INT_TO_REAL</span><span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">i_iPRESS_R</span><span class="p">)</span><span class="o">/</span><span class="mi">32767</span><span class="p">;</span>
+<span class="n">rV</span> <span class="o">:=</span> <span class="mi">10</span><span class="o">*</span><span class="n">INT_TO_REAL</span><span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">i_iPRESS_R</span><span class="p">)</span><span class="o">/</span><span class="n">iTermBits</span><span class="p">;</span>
 
 <span class="p">(</span><span class="o">*</span> <span class="n">Set</span> <span class="n">Guage</span> <span class="n">State</span> <span class="n">based</span> <span class="n">on</span> <span class="n">the</span> <span class="n">Analog</span> <span class="n">voltage</span><span class="o">*</span><span class="p">)</span>
 <span class="n">IF</span> <span class="n">rV</span> <span class="o">&lt;</span> <span class="n">vDisconnected</span> <span class="n">THEN</span>
     <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">GaugeDisconnected</span><span class="p">;</span>
     <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">cDefaultPressure</span><span class="p">;</span>
-<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="n">vDisconnected</span> <span class="n">AND</span> <span class="n">rV</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">vNoDischarge</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">)</span>  <span class="n">THEN</span>
+<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="n">vDisconnected</span> <span class="n">AND</span> <span class="n">rV</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">vNoDischarge</span> <span class="o">-</span><span class="n">rDeadband</span><span class="p">)</span>  <span class="n">THEN</span>
     <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">Valid</span><span class="p">;</span>
     <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,((</span><span class="n">rV</span><span class="o">-</span><span class="n">vBase</span><span class="p">)</span><span class="o">/</span><span class="n">vSlope</span><span class="o">+</span><span class="n">LOG</span><span class="p">(</span><span class="n">pBase</span><span class="p">))));</span>
-<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">vNoDischarge</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">)</span> <span class="n">AND</span> <span class="n">rV</span> <span class="o">&lt;</span><span class="p">(</span><span class="n">vGaugeOff</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">)</span>   <span class="n">THEN</span>
+<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">vNoDischarge</span> <span class="o">-</span><span class="n">rDeadband</span><span class="p">)</span> <span class="n">AND</span> <span class="n">rV</span> <span class="o">&lt;</span><span class="p">(</span><span class="n">vGaugeOff</span> <span class="o">-</span><span class="n">rDeadband</span><span class="p">)</span>   <span class="n">THEN</span>
     <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">Starting</span><span class="p">;</span>
     <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,((</span><span class="n">rV</span><span class="o">-</span><span class="n">vBase</span><span class="p">)</span><span class="o">/</span><span class="n">vSlope</span><span class="o">+</span><span class="n">LOG</span><span class="p">(</span><span class="n">pBase</span><span class="p">))));</span>
-<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">vGaugeOff</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">)</span> <span class="n">THEN</span>
+<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">vGaugeOff</span> <span class="o">-</span><span class="n">rDeadband</span><span class="p">)</span> <span class="n">THEN</span>
     <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">Off</span><span class="p">;</span>
     <span class="o">//</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,((</span><span class="n">rV</span><span class="o">-</span><span class="n">vBase</span><span class="p">)</span><span class="o">/</span><span class="n">vSlope</span><span class="o">+</span><span class="n">LOG</span><span class="p">(</span><span class="n">pBase</span><span class="p">))));</span>
     <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">cDefaultPressure</span><span class="p">;</span>
@@ -5895,7 +5896,7 @@ END_ACTION
 <span class="p">(</span><span class="o">*</span><span class="n">Error</span><span class="o">*</span><span class="p">)</span>
 <span class="n">fb_CheckWatchdog</span><span class="p">(</span>
     <span class="n">bEnable</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">,</span>
-    <span class="n">tWatchdogTime</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#100ms,</span>
+    <span class="n">tWatchdogTime</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#900ms,</span>
     <span class="n">nCnt</span><span class="o">:=</span> <span class="n">iWatchdog</span> <span class="p">,</span>
     <span class="n">bWatchdog</span><span class="o">=&gt;</span> <span class="p">,</span>
     <span class="n">nLastCnt</span><span class="o">=&gt;</span> <span class="p">);</span>
@@ -5951,7 +5952,7 @@ END_ACTION
 <span class="p">(</span><span class="o">*</span><span class="n">Error</span><span class="o">*</span><span class="p">)</span>
 <span class="n">fb_CheckWatchdog</span><span class="p">(</span>
     <span class="n">bEnable</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">,</span>
-    <span class="n">tWatchdogTime</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#100ms,</span>
+    <span class="n">tWatchdogTime</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#900ms,</span>
     <span class="n">nCnt</span><span class="o">:=</span> <span class="n">iWatchdog</span> <span class="p">,</span>
     <span class="n">bWatchdog</span><span class="o">=&gt;</span> <span class="p">,</span>
     <span class="n">nLastCnt</span><span class="o">=&gt;</span> <span class="p">);</span>
@@ -6061,7 +6062,7 @@ END_ACTION
 <span class="p">(</span><span class="o">*</span><span class="n">Error</span><span class="o">*</span><span class="p">)</span>
 <span class="n">fb_CheckWatchdog</span><span class="p">(</span>
     <span class="n">bEnable</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">,</span>
-    <span class="n">tWatchdogTime</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#100ms,</span>
+    <span class="n">tWatchdogTime</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#900ms,</span>
     <span class="n">nCnt</span><span class="o">:=</span> <span class="n">iWatchdog</span> <span class="p">,</span>
     <span class="n">bWatchdog</span><span class="o">=&gt;</span> <span class="p">,</span>
     <span class="n">nLastCnt</span><span class="o">=&gt;</span> <span class="p">);</span>
@@ -6393,7 +6394,7 @@ END_ACTION
     <span class="n">CloseTimer</span><span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
     <span class="n">TimDur</span><span class="p">:</span> <span class="n">TIME</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#20MS;</span>
     <span class="n">OpenTimer</span><span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
-    <span class="n">OpenTimDur</span><span class="p">:</span> <span class="n">TIME</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#10S;</span>
+    <span class="n">OpenTimDur</span><span class="p">:</span> <span class="n">TIME</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#2S;</span>
 
     <span class="p">(</span><span class="o">*</span> <span class="n">Timeouts</span><span class="o">*</span><span class="p">)</span>
     <span class="n">tTimeOutDuration</span><span class="p">:</span> <span class="n">TIME</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#0.5S;</span>
@@ -6442,9 +6443,9 @@ END_ACTION
 <span class="o">///</span><span class="n">Check</span> <span class="n">valve</span> <span class="n">postion</span>
 <span class="n">IF</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span>  <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">THEN</span>
     <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">:=</span><span class="n">INVALID</span><span class="p">;</span>
-<span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span> <span class="n">THEN</span>
+<span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">THEN</span>
     <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">:=</span><span class="n">OPEN</span><span class="p">;</span>
-<span class="n">ELSIF</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span> <span class="n">THEN</span>
+<span class="n">ELSIF</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">THEN</span>
     <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">:=</span><span class="n">CLOSED</span><span class="p">;</span>
 <span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">THEN</span>
     <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">:=</span><span class="n">MOVING</span><span class="p">;</span>
@@ -6534,7 +6535,7 @@ END_ACTION
 
 <span class="p">(</span><span class="o">*</span><span class="n">Timers</span><span class="o">*</span><span class="p">)</span>
 <span class="n">CloseTimer</span> <span class="p">(</span> <span class="n">IN</span><span class="o">:=</span><span class="n">xClose</span><span class="p">,</span> <span class="n">PT</span><span class="o">:=</span> <span class="n">TimDur</span><span class="p">,</span> <span class="n">Q</span><span class="o">=&gt;</span><span class="p">);</span>
-<span class="n">OpenTimer</span> <span class="p">(</span> <span class="n">IN</span><span class="o">:=</span><span class="n">xOpen</span><span class="p">,</span> <span class="n">PT</span><span class="o">:=</span> <span class="n">OpenTimDur</span><span class="p">,</span> <span class="n">Q</span><span class="o">=&gt;</span><span class="p">);</span>
+<span class="n">OpenTimer</span> <span class="p">(</span> <span class="n">IN</span><span class="o">:=</span><span class="n">i_xOpnLS</span><span class="p">,</span> <span class="n">PT</span><span class="o">:=</span> <span class="n">OpenTimDur</span><span class="p">,</span> <span class="n">Q</span><span class="o">=&gt;</span><span class="p">);</span>
 <span class="n">tOPNtimeout</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tTimeOutDuration</span> <span class="p">);</span>
 <span class="n">tCLStimeout</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tTimeOutDuration</span><span class="p">);</span>
 
@@ -6644,7 +6645,7 @@ END_ACTION
     <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">OPEN</span><span class="p">;</span>
     <span class="n">io</span><span class="p">:</span> <span class="n">io</span> <span class="p">;</span>
     <span class="s1">&#39;}</span>
-    <span class="n">i_xOPN_SW</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span><span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">q_xOPN_SW</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span><span class="n">BOOL</span><span class="p">;</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">CLS_SW</span><span class="p">;</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">FALSE</span><span class="p">;</span>
@@ -6665,20 +6666,16 @@ END_ACTION
     <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">Override</span> <span class="n">ON</span><span class="p">;</span>
     <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
     <span class="s1">&#39;}</span>
-    <span class="n">i_xOverrideMode</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">To</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="k">global</span> <span class="n">override</span> <span class="n">bit</span><span class="o">.</span> <span class="n">This</span> <span class="n">Overrides</span> <span class="n">Vacuum</span> <span class="n">logic</span> <span class="n">only</span><span class="p">,</span> <span class="n">EPS</span><span class="p">,</span> <span class="n">MPS</span> <span class="ow">and</span> <span class="n">PMPS</span> <span class="n">are</span> <span class="n">still</span> <span class="n">enforces</span><span class="o">*</span><span class="p">)</span>
+    <span class="n">q_xOverrideMode</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">To</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="k">global</span> <span class="n">override</span> <span class="n">bit</span><span class="o">.</span> <span class="n">This</span> <span class="n">Overrides</span> <span class="n">Vacuum</span> <span class="n">logic</span> <span class="n">only</span><span class="p">,</span> <span class="n">EPS</span><span class="p">,</span> <span class="n">MPS</span> <span class="ow">and</span> <span class="n">PMPS</span> <span class="n">are</span> <span class="n">still</span> <span class="n">enforces</span><span class="o">*</span><span class="p">)</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">VFS_FORCE_OPN</span><span class="p">;</span>
     <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">FALSE</span><span class="p">;</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">FORCE</span> <span class="n">OPEN</span><span class="p">;</span>
     <span class="s1">&#39;}</span>
-    <span class="n">i_xOverrideOpen</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">q_xOverrideOpen</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
 
     <span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="o">*</span><span class="p">)</span>
-    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-    <span class="n">pv</span><span class="p">:</span>
-    <span class="s1">&#39;}</span>
-    <span class="n">iq_stValve</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">ST_VGC</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span> <span class="n">All</span> <span class="n">valve</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">states</span> <span class="n">will</span> <span class="n">be</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">struct</span><span class="o">*</span><span class="p">)</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">TRIG</span><span class="p">;</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">TRIG_OFF</span><span class="p">;</span>
@@ -6733,7 +6730,7 @@ less than the maximum differential pressure.
 3. Once at-vac, the valve will close if the pressure on either side rises above the setpoint.*)
 (*This function block also implements PMPS and EPS interlocks, as well as Fast MPS trigger*)
 {attribute &#39;no_check&#39;}
-FUNCTION_BLOCK FB_VGC
+FUNCTION_BLOCK FB_VGC Extends FB_Valve
 VAR_IN_OUT
 
 END_VAR
@@ -6781,7 +6778,7 @@ VAR_IN_OUT
 END_VAR
 VAR
     // PMPS
-    fbFF    :    FB_FastFault :=(
+    FFO    :    FB_FastFault :=(
         i_DevName := &#39;VGC&#39;,
         i_Desc := &#39;Fault occurs when the valve is not in open state&#39;,
         i_TypeCode := 16#1010);
@@ -6819,11 +6816,8 @@ VAR
     q_xOPN_DO       AT%Q*: BOOL;
 
     // For logging
-    fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
-    ePrevState : E_VGC;
-    tErrorPresent : R_TRIG;
-    tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
-    tOverrideActivated : R_TRIG;
+    eVGCPrevState : E_VGC;
+
 
 END_VAR
 (* Vacuum gate valve
@@ -6919,12 +6913,6 @@ END_IF
 ///////////////////////////////////////////////////
 CASE iq_stValve.eVGC_State OF
     Vented: (* The Vented state is used during pump down *)
-        //Log new state
-        IF ePrevState &lt;&gt; iq_stValve.eVGC_State THEN
-            fbLogger(sMsg:=&#39;Vented&#39;, eSevr:=TcEventSeverity.Info);
-            ePrevState := iq_stValve.eVGC_State;
-            END_IF
-
             (* Assuming the pump down went well, we are now at vacuum on both sides,
             so we move to the vacuum state, otherwise remain in the vented state *)
             IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
@@ -6934,12 +6922,6 @@ CASE iq_stValve.eVGC_State OF
             END_IF
 
     AtVacuum:
-        //Log new state
-        IF ePrevState &lt;&gt; iq_stValve.eVGC_State THEN
-            fbLogger(sMsg:=&#39;Vacuum setpoint satisfied&#39;, eSevr:=TcEventSeverity.Info);
-            ePrevState := iq_stValve.eVGC_State;
-            END_IF
-
             IF iq_stValve.xAT_VAC THEN
             (* If both pressure setpoints are made,
             then enable the differential pressure interlock, regardless of the valve state
@@ -6964,39 +6946,35 @@ CASE iq_stValve.eVGC_State OF
             END_IF
 
     ERR_DiffPress:
-        //Log new state
-        IF ePrevState &lt;&gt; iq_stValve.eVGC_State THEN
-            fbLogger(sMsg:=&#39;Potential accidental vent.&#39;, eSevr:=TcEventSeverity.Critical);
-            ePrevState := iq_stValve.eVGC_State;
-            END_IF
-
             IF NOT (iq_stValve.xERR_DifPres) THEN
+                    IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
+                    iq_stValve.eVGC_State := AtVacuum;
+                    ELSE
                     iq_stValve.eVGC_State := Vented;
+                    END_IF
             END_IF
 
 
     ERR_LostVac:
-        //Log new state
-        IF ePrevState &lt;&gt; iq_stValve.eVGC_State THEN
-            fbLogger(sMsg:=&#39;Unexpected loss of vacuum while valve was open.&#39;, eSevr:=TcEventSeverity.Critical);
-            ePrevState := iq_stValve.eVGC_State;
-            END_IF
             IF NOT (iq_stValve.xERR_SP) THEN
+                    IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
+                    iq_stValve.eVGC_State := AtVacuum;
+                    ELSE
                     iq_stValve.eVGC_State := Vented;
+                    END_IF
             END_IF
 
     ERR_ExtFault:
-        //Log new state
-        IF ePrevState &lt;&gt; iq_stValve.eVGC_State THEN
-            fbLogger(sMsg:=&#39;Lost external interlock while valve was open.&#39;, eSevr:=TcEventSeverity.Critical);
-            ePrevState := iq_stValve.eVGC_State;
-            END_IF
             IF NOT (iq_stValve.xERR_ExtFault) AND (NOT i_xExt_OK) THEN
+                    IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
+                    iq_stValve.eVGC_State := AtVacuum;
+                    ELSE
                     iq_stValve.eVGC_State := Vented;
+                    END_IF
             END_IF
 END_CASE
 
-IF (NOT i_xExt_OK) THEN
+IF (NOT i_xExt_OK) AND (iq_stValve.eState=OPEN)  THEN
     iq_stValve.eVGC_State := ERR_ExtFault;
     iq_stValve.xERR_ExtFault := TRUE;
 END_IF
@@ -7049,10 +7027,10 @@ iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOv
 (*MPS Fault setting*)
 If (i_xIsAperture ) THEN
     (* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
-    xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
+    xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
 ELSE
     (* When the valve  is open MPS is OK*)
-    xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS;
+    xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS;
 END_IF
 
 
@@ -7093,9 +7071,13 @@ ACT_ResetAlarms();
 (*IO Mapping*)
 ACT_IO();
 
+// Log States and triggers
+ACT_Logger();
+
 (*FAST FAULT*)
-fbFF(i_xOK := xMPS_OK,
+FFO(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
+    i_xAutoReset :=TRUE,
     io_fbFFHWO := io_fbFFHWO);
 
 END_FUNCTION_BLOCK
@@ -7111,6 +7093,62 @@ q_xOPN_DO:= iq_stValve.q_xOPN_DO;
 (*ILK Devices*)
 iq_stValve.sIlkUSDeviceName := This^.i_stUSG.sPath;
 iq_stValve.sIlkDSDeviceName := This^.i_stDSG.sPath;
+END_ACTION
+ACTION ACT_Logger:
+// ILK logger
+
+(*IF NOT i_xExtILK_OK AND ePrevState = OPEN THEN
+            fbLogger(sMsg:=&#39;Lost external interlock while valve was open.&#39;, eSevr:=TcEventSeverity.Critical);
+END_IF
+*)
+
+//Positiong STATE Logger
+IF ePrevState &lt;&gt; iq_stValve.eState THEN
+      CASE iq_stValve.eState OF
+            INVALID:
+                    fbLogger(sMsg:=&#39;Valve invalid position.&#39;, eSevr:=TcEventSeverity.Critical);
+            MOVING:
+                    fbLogger(sMsg:=&#39;Valve moving&#39;, eSevr:=TcEventSeverity.Warning);
+            OPEN:
+                    fbLogger(sMsg:=&#39;Valve Open.&#39;, eSevr:=TcEventSeverity.Info);
+            OPEN_F:
+                    fbLogger(sMsg:=&#39;Valve Open without open do.&#39;, eSevr:=TcEventSeverity.Info);
+            CLOSED:
+                    fbLogger(sMsg:=&#39;Valve closed.&#39;, eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := iq_stValve.eState;
+  END_IF
+
+ //Pressure STATE Logger
+IF eVGCPrevState &lt;&gt; iq_stValve.eVGC_State THEN
+      CASE iq_stValve.eVGC_State OF
+            Vented:
+                     fbLogger(sMsg:=&#39;Vented&#39;, eSevr:=TcEventSeverity.Info);
+            AtVacuum:
+                     fbLogger(sMsg:=&#39;Vacuum setpoint satisfied&#39;, eSevr:=TcEventSeverity.Info);
+            ERR_DiffPress:
+                     fbLogger(sMsg:=&#39;Potential accidental vent.&#39;, eSevr:=TcEventSeverity.Critical);
+            ERR_LostVac:
+                    fbLogger(sMsg:=&#39;Unexpected loss of vacuum while valve was open or moving.&#39;, eSevr:=TcEventSeverity.Critical);
+            ERR_ExtFault:
+                     fbLogger(sMsg:=&#39;Lost external interlock while valve was open.&#39;, eSevr:=TcEventSeverity.Critical);
+      END_CASE
+      eVGCPrevState := iq_stValve.eVGC_State;
+  END_IF
+
+
+
+// Log valve timeouts
+tErrorPresent(CLK:=iq_stValve.bErrorPresent);
+IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
+
+// Log valve open
+tAction(CLK:= iq_stValve.q_xOPN_DO);
+IF tAction.Q THEN fbLogger(sMsg:=&#39;Valve commanded open&#39;, eSevr:=TcEventSeverity.Info); END_IF
+
+// Log override mode enabled
+tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
+IF tOverrideActivated.Q THEN fbLogger(sMsg:=&#39;Valve override mode activated&#39;, eSevr:=TcEventSeverity.Warning); END_IF
 END_ACTION
 ACTION ACT_ResetAlarms:
 iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
@@ -7182,7 +7220,7 @@ END_VAR
 VAR
     // PMPS
     fbFF    :    FB_FastFault :=(
-        i_DevName := &#39;VGC&#39;,
+        i_DevName := &#39;VGC Aptr&#39;,
         i_Desc := &#39;Fault occurs when the valve is not in open state&#39;,
         i_TypeCode := 16#1010);
     //g_FastFaultOutput1    :       FB_HardwareFFOutput;
@@ -7328,7 +7366,7 @@ CASE iq_stValve.eVGC_State OF
 
             (* Assuming the pump down went well, we are now at vacuum on both sides,
             so we move to the vacuum state, otherwise remain in the vented state *)
-            IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND NOT (NOT (iq_stValve.xERR_SP)) and NOT (NOT (iq_stValve.xERR_ExtFault))THEN
+            IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND  (NOT (iq_stValve.xERR_SP)) and  (NOT (iq_stValve.xERR_ExtFault))THEN
                 iq_stValve.eVGC_State := AtVacuum;
             ELSE
                 iq_stValve.eVGC_State := Vented;
@@ -7491,6 +7529,7 @@ ACT_IO();
 (*FAST FAULT*)
 fbFF(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
+    i_xAutoReset :=TRUE,
     io_fbFFHWO := io_fbFFHWO);
 
 END_FUNCTION_BLOCK
@@ -7718,7 +7757,7 @@ CASE iq_stValve.eVGC_State OF
 
             (* Assuming the pump down went well, we are now at vacuum on both sides,
             so we move to the vacuum state, otherwise remain in the vented state *)
-            IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND NOT (NOT (iq_stValve.xERR_SP)) and NOT (NOT (iq_stValve.xERR_ExtFault))THEN
+            IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND  (NOT (iq_stValve.xERR_SP)) and  (NOT (iq_stValve.xERR_ExtFault))THEN
                 iq_stValve.eVGC_State := AtVacuum;
             ELSE
                 iq_stValve.eVGC_State := Vented;
@@ -7838,7 +7877,7 @@ END_IF
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (* When the valve  is open MPS is OK*)
-xMPS_OK := (iq_stValve.eState=OPEN);//iq_stValve.i_xOpnLS;
+xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS;
 
 ///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN
@@ -7880,6 +7919,7 @@ ACT_IO();
 (*FAST FAULT*)
 fbFF(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
+    i_xAutoReset :=TRUE,
     io_fbFFHWO := io_fbFFHWO);
 
 END_FUNCTION_BLOCK
