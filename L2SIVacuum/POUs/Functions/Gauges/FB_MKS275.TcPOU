@@ -19,17 +19,19 @@ VAR_OUTPUT
 	PG : ST_VG;
 END_VAR
 VAR
-	MinPressure: REAL := 1E-4;
 	V : REAL;
-	Vlowest: REAL := 10;
 	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
-	
-	rValidLoBoundary	:	REAL := 0.375; // manual page 27
-	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
-	rDisconnectedBoundary	:	REAL := 0.3;
-	
+	Vlowest: REAL := 10;
 	(*IO*)
 	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR
+
+VAR CONSTANT
+	MinPressure: REAL := 1E-4;
+	rDeadband : REAL :=0.02;
+	rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
+	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
+	rDisconnectedBoundary	:	REAL := 0.3;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
@@ -47,7 +49,7 @@ V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
 Vlowest := MIN(V, Vlowest);
 
-IF V > rDisconnectedBoundary AND V < rValidLoBoundary THEN
+IF V > rDisconnectedBoundary AND V < rValidLoBoundary +rDeadband  THEN
 	PG.rPRESS := MinPressure;
 	PG.eState := ValidLo;
 
