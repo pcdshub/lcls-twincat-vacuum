@@ -15,7 +15,11 @@ VAR_IN_OUT
 
 END_VAR
 VAR
-
+	{attribute 'pytmc' := '
+    pv: GFS;
+	io: i;
+    '}	
+	sGFS: String;
 	(*outputs*)
 	q_xPRESS_OK AT%Q*: BOOL;
 	{attribute 'pytmc' := '
@@ -59,35 +63,35 @@ VAR
 	pv: TRIG; 
 	field: ZNAM TRIG_OFF; 
 	field: ONAM TRIG_ON;
-	io: io ;
+	io: i ;
 	'}
 	i_xTrigger AT %I* : BOOL;
 	{attribute 'pytmc' := '
 	pv: IS_OPEN; 
 	field: ZNAM NOT OPEN; 
 	field: ONAM OPEN;
-	io: io ;
+	io: i ;
 	'}
 	i_xVFS_Open AT %I* : BOOL;
 	{attribute 'pytmc' := '
 	pv: IS_CLOSED; 
 	field: ZNAM NOT CLOSED; 
 	field: ONAM CLOSE;
-	io: io ;
+	io: i ;
 	'}
 	i_xVFS_Closed AT %I* : BOOL;
 	{attribute 'pytmc' := '
 	pv: VAC_FAULT_OK; 
 	field: ZNAM FAULT ; 
 	field: ONAM FAULT OK;
-	io: io ;
+	io: i ;
 	'}
 	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 	{attribute 'pytmc' := '
 	pv: FFO_OK; 
 	field: ZNAM FAULT ; 
 	field: ONAM FAULT OK;
-	io: io ;
+	io: i ;
 	'}
 	i_xMPS_OK AT%I*: BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
 END_VAR]]></Declaration>
@@ -95,11 +99,13 @@ END_VAR]]></Declaration>
       <ST><![CDATA[(*soft IO Mapping*)
 
 q_xPRESS_OK := IG.xPRESS_OK;
+sGFS := IG.sPath;
 ]]></ST>
     </Implementation>
     <LineIds Name="FB_VFS_Interface">
       <LineId Id="68" Count="1" />
       <LineId Id="9" Count="0" />
+      <LineId Id="163" Count="0" />
       <LineId Id="71" Count="0" />
     </LineIds>
   </POU>

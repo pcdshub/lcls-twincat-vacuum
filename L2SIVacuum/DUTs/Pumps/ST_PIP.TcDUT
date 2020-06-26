@@ -30,6 +30,7 @@ STRUCT
 	field: LOPR 0
 	field: PREC 2
 	field: EGU "TORR"
+	autosave_pass1: VAL DESC
 	'}
 	rHVEna_SP : REAL := 1.0E-4;	
 	
@@ -74,6 +75,7 @@ STRUCT
 	field: LOPR 0
 	field: PREC 2
 	field: EGU "TORR"
+	autosave_pass1: VAL DESC
 	'}
 	/// Protection setpoint hysteresis 
 	rHYS_PR: REAL := 0.001; 
