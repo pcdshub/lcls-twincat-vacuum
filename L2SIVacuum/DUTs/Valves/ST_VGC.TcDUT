@@ -22,6 +22,7 @@ STRUCT
 	field: LOPR 0
 	field: PREC 2
 	field: EGU "TORR"
+	autosave_pass1: VAL DESC
 	'}
 	rAT_VAC_SP	:	REAL := 0.000001;	// Interlock setpoint for gauges on both sides of valve
 	rAT_VAC_SP_LAST	:	REAL :=0.000001 ;	// Interlock setpoint for gauges on both sides of valve
@@ -32,11 +33,13 @@ STRUCT
 	field: LOPR 0
 	field: PREC 2
 	field: EGU "TORR"
+	autosave_pass1: VAL DESC
     '}
 	rAT_VAC_HYS	:	REAL :=0.000001;	// Hysteresis of the vacuum sp
 	{attribute 'pytmc' := '
     pv: HYST_PERC ;
 	io: o;
+	autosave_pass1: VAL DESC
     '}
 	rHYST_PERC	:	REAL := 0.80;	// Hysteresis percentage
 
@@ -54,21 +57,21 @@ STRUCT
     pv: ERR_DifPres;
 	field: ZNAM NO ERROR ;
 	field: ONAM Diffrential error present ;
-	io: o;
+	io: i;
     '}
 	xERR_DifPres		: 	BOOL;
 	{attribute 'pytmc' := '
     pv: ERR_SP;
 	field: ZNAM NO ERROR ;
 	field: ONAM Setpoint error present ;
-	io: o;
+	io: i;
     '}
 	xERR_SP			: 	BOOL;
 	{attribute 'pytmc' := '
     pv: ERR_Ext;
 	field: ZNAM NO ERROR ;
 	field: ONAM External error present ;
-	io: o;
+	io: i;
     '}
 	xERR_ExtFault		: 	BOOL;
 	xAlmSum			: 	BOOL;
@@ -76,12 +79,12 @@ STRUCT
 (*ILK Devices*)
 {attribute 'pytmc' := '
     pv: ILK_DEVICE_US;
-	io: o;
+	io: i;
     '}
 	sIlkUSDeviceName: STRING;
 	{attribute 'pytmc' := '
     pv: ILK_DEVICE_DS;
-	io: o;
+	io: i;
     '}
 	sIlkDSDeviceName: STRING;
 

@@ -98,6 +98,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	field: LOPR 0
 	field: PREC 2
 	field: EGU "TORR"
+	autosave_pass1: VAL DESC
 	'}
 	rBackingPressureSP : REAL := 0.01;
 	{attribute 'pytmc' := '
@@ -107,6 +108,7 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 	field: LOPR 0
 	field: PREC 2
 	field: EGU "TORR"
+	autosave_pass1: VAL DESC
 	'}
 	rInletPressureSP : REAL := 0.02; //20mTorr
 (*State*)	

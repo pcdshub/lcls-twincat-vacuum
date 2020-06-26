@@ -100,6 +100,7 @@ STRUCT
 	field: LOPR 0
 	field: PREC 2
 	field: EGU "TORR"
+	autosave_pass1: VAL DESC
     '}
 	rVAC_SP: REAL := 0.001; /// At vacuum setpoint for all gauges
 	/// Protection setpoint for ion gauges at which the gauge turns off, not used for pirani 
@@ -110,6 +111,7 @@ STRUCT
 	field: LOPR 0
 	field: PREC 2
 	field: EGU "TORR"
+	autosave_pass1: VAL DESC
     '}
 	rPRO_SP: REAL := 0.001;
 	{attribute 'pytmc' := '
@@ -119,6 +121,7 @@ STRUCT
 	field: LOPR 0
 	field: PREC 2
 	field: EGU "TORR"
+	autosave_pass1: VAL DESC
 	'}
 	/// Protection setpoint hysteresis 
 	rHYS_PR: REAL := 0.001; 
