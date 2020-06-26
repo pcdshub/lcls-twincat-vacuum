@@ -660,6 +660,7 @@ ST_PIP
     	field: LOPR 0
     	field: PREC 2
     	field: EGU "TORR"
+    	autosave_pass1: VAL DESC
     	'}
     	rHVEna_SP : REAL := 1.0E-4;	
     	
@@ -704,6 +705,7 @@ ST_PIP
     	field: LOPR 0
     	field: PREC 2
     	field: EGU "TORR"
+    	autosave_pass1: VAL DESC
     	'}
     	/// Protection setpoint hysteresis 
     	rHYS_PR: REAL := 0.001; 
@@ -874,6 +876,7 @@ ST_PTM
     	field: LOPR 0
     	field: PREC 2
     	field: EGU "TORR"
+    	autosave_pass1: VAL DESC
     	'}
     	rBackingPressureSP : REAL := 0.01;
     	{attribute 'pytmc' := '
@@ -883,6 +886,7 @@ ST_PTM
     	field: LOPR 0
     	field: PREC 2
     	field: EGU "TORR"
+    	autosave_pass1: VAL DESC
     	'}
     	rInletPressureSP : REAL := 0.02; //20mTorr
     (*State*)	
@@ -1355,6 +1359,7 @@ ST_VG
     	field: LOPR 0
     	field: PREC 2
     	field: EGU "TORR"
+    	autosave_pass1: VAL DESC
         '}
     	rVAC_SP: REAL := 0.001; /// At vacuum setpoint for all gauges
     	/// Protection setpoint for ion gauges at which the gauge turns off, not used for pirani 
@@ -1365,6 +1370,7 @@ ST_VG
     	field: LOPR 0
     	field: PREC 2
     	field: EGU "TORR"
+    	autosave_pass1: VAL DESC
         '}
     	rPRO_SP: REAL := 0.001;
     	{attribute 'pytmc' := '
@@ -1374,6 +1380,7 @@ ST_VG
     	field: LOPR 0
     	field: PREC 2
     	field: EGU "TORR"
+    	autosave_pass1: VAL DESC
     	'}
     	/// Protection setpoint hysteresis 
     	rHYS_PR: REAL := 0.001; 
@@ -1427,6 +1434,7 @@ ST_VGC
     	field: LOPR 0
     	field: PREC 2
     	field: EGU "TORR"
+    	autosave_pass1: VAL DESC
     	'}
     	rAT_VAC_SP	:	REAL := 0.000001;	// Interlock setpoint for gauges on both sides of valve
     	rAT_VAC_SP_LAST	:	REAL :=0.000001 ;	// Interlock setpoint for gauges on both sides of valve
@@ -1437,11 +1445,13 @@ ST_VGC
     	field: LOPR 0
     	field: PREC 2
     	field: EGU "TORR"
+    	autosave_pass1: VAL DESC
         '}
     	rAT_VAC_HYS	:	REAL :=0.000001;	// Hysteresis of the vacuum sp
     	{attribute 'pytmc' := '
         pv: HYST_PERC ;
     	io: o;
+    	autosave_pass1: VAL DESC
         '}
     	rHYST_PERC	:	REAL := 0.80;	// Hysteresis percentage
 
@@ -1459,21 +1469,21 @@ ST_VGC
         pv: ERR_DifPres;
     	field: ZNAM NO ERROR ;
     	field: ONAM Diffrential error present ;
-    	io: o;
+    	io: i;
         '}
     	xERR_DifPres		: 	BOOL;
     	{attribute 'pytmc' := '
         pv: ERR_SP;
     	field: ZNAM NO ERROR ;
     	field: ONAM Setpoint error present ;
-    	io: o;
+    	io: i;
         '}
     	xERR_SP			: 	BOOL;
     	{attribute 'pytmc' := '
         pv: ERR_Ext;
     	field: ZNAM NO ERROR ;
     	field: ONAM External error present ;
-    	io: o;
+    	io: i;
         '}
     	xERR_ExtFault		: 	BOOL;
     	xAlmSum			: 	BOOL;
@@ -1481,12 +1491,12 @@ ST_VGC
     (*ILK Devices*)
     {attribute 'pytmc' := '
         pv: ILK_DEVICE_US;
-    	io: o;
+    	io: i;
         '}
     	sIlkUSDeviceName: STRING;
     	{attribute 'pytmc' := '
         pv: ILK_DEVICE_DS;
-    	io: o;
+    	io: i;
         '}
     	sIlkDSDeviceName: STRING;
 
@@ -6562,7 +6572,11 @@ FB_VFS_Interface
 
     END_VAR
     VAR
-
+    	{attribute 'pytmc' := '
+        pv: GFS;
+    	io: i;
+        '}	
+    	sGFS: String;
     	(*outputs*)
     	q_xPRESS_OK AT%Q*: BOOL;
     	{attribute 'pytmc' := '
@@ -6606,41 +6620,42 @@ FB_VFS_Interface
     	pv: TRIG; 
     	field: ZNAM TRIG_OFF; 
     	field: ONAM TRIG_ON;
-    	io: io ;
+    	io: i ;
     	'}
     	i_xTrigger AT %I* : BOOL;
     	{attribute 'pytmc' := '
     	pv: IS_OPEN; 
     	field: ZNAM NOT OPEN; 
     	field: ONAM OPEN;
-    	io: io ;
+    	io: i ;
     	'}
     	i_xVFS_Open AT %I* : BOOL;
     	{attribute 'pytmc' := '
     	pv: IS_CLOSED; 
     	field: ZNAM NOT CLOSED; 
     	field: ONAM CLOSE;
-    	io: io ;
+    	io: i ;
     	'}
     	i_xVFS_Closed AT %I* : BOOL;
     	{attribute 'pytmc' := '
     	pv: VAC_FAULT_OK; 
     	field: ZNAM FAULT ; 
     	field: ONAM FAULT OK;
-    	io: io ;
+    	io: i ;
     	'}
     	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
     	{attribute 'pytmc' := '
     	pv: FFO_OK; 
     	field: ZNAM FAULT ; 
     	field: ONAM FAULT OK;
-    	io: io ;
+    	io: i ;
     	'}
     	i_xMPS_OK AT%I*: BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
     END_VAR
     (*soft IO Mapping*)
 
     q_xPRESS_OK := IG.xPRESS_OK;
+    sGFS := IG.sPath;
 
     END_FUNCTION_BLOCK
 

@@ -104,7 +104,8 @@ FB_MKS275
     * - $(PREFIX):PRO_SP
       - ao
       - $(SYMBOL).PG.rPRO_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -114,7 +115,8 @@ FB_MKS275
     * - $(PREFIX):PRO_SP_RBV
       - ai
       - $(SYMBOL).PG.rPRO_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -124,7 +126,8 @@ FB_MKS275
     * - $(PREFIX):SP_HYS
       - ao
       - $(SYMBOL).PG.rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -134,7 +137,8 @@ FB_MKS275
     * - $(PREFIX):SP_HYS_RBV
       - ai
       - $(SYMBOL).PG.rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -158,7 +162,8 @@ FB_MKS275
     * - $(PREFIX):VAC_SP
       - ao
       - $(SYMBOL).PG.rVAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -168,7 +173,8 @@ FB_MKS275
     * - $(PREFIX):VAC_SP_RBV
       - ai
       - $(SYMBOL).PG.rVAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -276,7 +282,8 @@ FB_MKS317
     * - $(PREFIX):PRO_SP
       - ao
       - $(SYMBOL).PG.rPRO_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -286,7 +293,8 @@ FB_MKS317
     * - $(PREFIX):PRO_SP_RBV
       - ai
       - $(SYMBOL).PG.rPRO_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -296,7 +304,8 @@ FB_MKS317
     * - $(PREFIX):SP_HYS
       - ao
       - $(SYMBOL).PG.rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -306,7 +315,8 @@ FB_MKS317
     * - $(PREFIX):SP_HYS_RBV
       - ai
       - $(SYMBOL).PG.rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -330,7 +340,8 @@ FB_MKS317
     * - $(PREFIX):VAC_SP
       - ao
       - $(SYMBOL).PG.rVAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -340,7 +351,8 @@ FB_MKS317
     * - $(PREFIX):VAC_SP_RBV
       - ai
       - $(SYMBOL).PG.rVAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -448,7 +460,8 @@ FB_MKS422
     * - $(PREFIX):PRO_SP
       - ao
       - $(SYMBOL).IG.rPRO_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -458,7 +471,8 @@ FB_MKS422
     * - $(PREFIX):PRO_SP_RBV
       - ai
       - $(SYMBOL).IG.rPRO_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -468,7 +482,8 @@ FB_MKS422
     * - $(PREFIX):SP_HYS
       - ao
       - $(SYMBOL).IG.rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -478,7 +493,8 @@ FB_MKS422
     * - $(PREFIX):SP_HYS_RBV
       - ai
       - $(SYMBOL).IG.rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -502,7 +518,8 @@ FB_MKS422
     * - $(PREFIX):VAC_SP
       - ao
       - $(SYMBOL).IG.rVAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -512,7 +529,8 @@ FB_MKS422
     * - $(PREFIX):VAC_SP_RBV
       - ai
       - $(SYMBOL).IG.rVAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -540,7 +558,8 @@ FB_PIP_Gamma
     * - $(PREFIX):AT_VAC_SP
       - ao
       - $(SYMBOL).stPump.rHVEna_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -550,7 +569,8 @@ FB_PIP_Gamma
     * - $(PREFIX):AT_VAC_SP_RBV
       - ai
       - $(SYMBOL).stPump.rHVEna_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -676,7 +696,8 @@ FB_PIP_Gamma
     * - $(PREFIX):SP_HYS
       - ao
       - $(SYMBOL).stPump.rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -686,7 +707,8 @@ FB_PIP_Gamma
     * - $(PREFIX):SP_HYS_RBV
       - ai
       - $(SYMBOL).stPump.rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -743,7 +765,8 @@ FB_PTM_Ebara_010M
     * - $(PREFIX):BP_SP
       - ao
       - $(SYMBOL).iq_stPTM.rBackingPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -753,7 +776,8 @@ FB_PTM_Ebara_010M
     * - $(PREFIX):BP_SP_RBV
       - ai
       - $(SYMBOL).iq_stPTM.rBackingPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -803,7 +827,8 @@ FB_PTM_Ebara_010M
     * - $(PREFIX):IP_SP
       - ao
       - $(SYMBOL).iq_stPTM.rInletPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -813,7 +838,8 @@ FB_PTM_Ebara_010M
     * - $(PREFIX):IP_SP_RBV
       - ai
       - $(SYMBOL).iq_stPTM.rInletPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1025,7 +1051,8 @@ FB_PTM_TwisTorr
     * - $(PREFIX):BP_SP
       - ao
       - $(SYMBOL).iq_stPtm.rBackingPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1035,7 +1062,8 @@ FB_PTM_TwisTorr
     * - $(PREFIX):BP_SP_RBV
       - ai
       - $(SYMBOL).iq_stPtm.rBackingPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1069,7 +1097,8 @@ FB_PTM_TwisTorr
     * - $(PREFIX):IP_SP
       - ao
       - $(SYMBOL).iq_stPtm.rInletPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1079,7 +1108,8 @@ FB_PTM_TwisTorr
     * - $(PREFIX):IP_SP_RBV
       - ai
       - $(SYMBOL).iq_stPtm.rInletPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1193,7 +1223,8 @@ FB_VGC
     * - $(PREFIX):AT_VAC_HYS
       - ao
       - $(SYMBOL).iq_stValve.rAT_VAC_HYS
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1203,7 +1234,8 @@ FB_VGC
     * - $(PREFIX):AT_VAC_HYS_RBV
       - ai
       - $(SYMBOL).iq_stValve.rAT_VAC_HYS
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1221,7 +1253,8 @@ FB_VGC
     * - $(PREFIX):AT_VAC_SP
       - ao
       - $(SYMBOL).iq_stValve.rAT_VAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1231,7 +1264,8 @@ FB_VGC
     * - $(PREFIX):AT_VAC_SP_RBV
       - ai
       - $(SYMBOL).iq_stValve.rAT_VAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1278,28 +1312,12 @@ FB_VGC
       - | io: output
 
 
-    * - $(PREFIX):ERR_DifPres
-      - bo
-      - $(SYMBOL).iq_stValve.xERR_DifPres
-      - | field: ONAM Diffrential error present
-        | field: ZNAM NO ERROR
-        | io: output
-
-
     * - $(PREFIX):ERR_DifPres_RBV
       - bi
       - $(SYMBOL).iq_stValve.xERR_DifPres
       - | field: ONAM Diffrential error present
         | field: ZNAM NO ERROR
-        | io: output
-
-
-    * - $(PREFIX):ERR_Ext
-      - bo
-      - $(SYMBOL).iq_stValve.xERR_ExtFault
-      - | field: ONAM External error present
-        | field: ZNAM NO ERROR
-        | io: output
+        | io: input
 
 
     * - $(PREFIX):ERR_Ext_RBV
@@ -1307,15 +1325,7 @@ FB_VGC
       - $(SYMBOL).iq_stValve.xERR_ExtFault
       - | field: ONAM External error present
         | field: ZNAM NO ERROR
-        | io: output
-
-
-    * - $(PREFIX):ERR_SP
-      - bo
-      - $(SYMBOL).iq_stValve.xERR_SP
-      - | field: ONAM Setpoint error present
-        | field: ZNAM NO ERROR
-        | io: output
+        | io: input
 
 
     * - $(PREFIX):ERR_SP_RBV
@@ -1323,7 +1333,7 @@ FB_VGC
       - $(SYMBOL).iq_stValve.xERR_SP
       - | field: ONAM Setpoint error present
         | field: ZNAM NO ERROR
-        | io: output
+        | io: input
 
 
     * - $(PREFIX):ErrMsg
@@ -1393,37 +1403,27 @@ FB_VGC
     * - $(PREFIX):HYST_PERC
       - ao
       - $(SYMBOL).iq_stValve.rHYST_PERC
-      - | io: output
+      - | autosave_pass1: VAL DESC
+        | io: output
 
 
     * - $(PREFIX):HYST_PERC_RBV
       - ai
       - $(SYMBOL).iq_stValve.rHYST_PERC
-      - | io: output
-
-
-    * - $(PREFIX):ILK_DEVICE_DS
-      - waveform
-      - $(SYMBOL).iq_stValve.sIlkDSDeviceName
-      - | io: output
+      - | autosave_pass1: VAL DESC
+        | io: output
 
 
     * - $(PREFIX):ILK_DEVICE_DS_RBV
       - waveform
       - $(SYMBOL).iq_stValve.sIlkDSDeviceName
-      - | io: output
-
-
-    * - $(PREFIX):ILK_DEVICE_US
-      - waveform
-      - $(SYMBOL).iq_stValve.sIlkUSDeviceName
-      - | io: output
+      - | io: input
 
 
     * - $(PREFIX):ILK_DEVICE_US_RBV
       - waveform
       - $(SYMBOL).iq_stValve.sIlkUSDeviceName
-      - | io: output
+      - | io: input
 
 
     * - $(PREFIX):LOGGER_RBV
@@ -1846,6 +1846,12 @@ LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
         | field: LOPR 0
         | field: PREC 2
         | io: output
+
+
+    * - $(PREFIX):STATE_RBV
+      - mbbi
+      - $(SYMBOL).eState
+      - | io: input
 
 
     * - $(PREFIX):VAC_SP
@@ -21713,7 +21719,8 @@ ST_EbaraPTM
     * - $(PREFIX):BP_SP
       - ao
       - $(SYMBOL).rBackingPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -21723,7 +21730,8 @@ ST_EbaraPTM
     * - $(PREFIX):BP_SP_RBV
       - ai
       - $(SYMBOL).rBackingPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -21773,7 +21781,8 @@ ST_EbaraPTM
     * - $(PREFIX):IP_SP
       - ao
       - $(SYMBOL).rInletPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -21783,7 +21792,8 @@ ST_EbaraPTM
     * - $(PREFIX):IP_SP_RBV
       - ai
       - $(SYMBOL).rInletPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -21977,7 +21987,8 @@ ST_PIP
     * - $(PREFIX):AT_VAC_SP
       - ao
       - $(SYMBOL).rHVEna_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -21987,7 +21998,8 @@ ST_PIP
     * - $(PREFIX):AT_VAC_SP_RBV
       - ai
       - $(SYMBOL).rHVEna_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22113,7 +22125,8 @@ ST_PIP
     * - $(PREFIX):SP_HYS
       - ao
       - $(SYMBOL).rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22123,7 +22136,8 @@ ST_PIP
     * - $(PREFIX):SP_HYS_RBV
       - ai
       - $(SYMBOL).rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22180,7 +22194,8 @@ ST_PTM
     * - $(PREFIX):BP_SP
       - ao
       - $(SYMBOL).rBackingPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22190,7 +22205,8 @@ ST_PTM
     * - $(PREFIX):BP_SP_RBV
       - ai
       - $(SYMBOL).rBackingPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22224,7 +22240,8 @@ ST_PTM
     * - $(PREFIX):IP_SP
       - ao
       - $(SYMBOL).rInletPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22234,7 +22251,8 @@ ST_PTM
     * - $(PREFIX):IP_SP_RBV
       - ai
       - $(SYMBOL).rInletPressureSP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22593,7 +22611,8 @@ ST_VG
     * - $(PREFIX):PRO_SP
       - ao
       - $(SYMBOL).rPRO_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22603,7 +22622,8 @@ ST_VG
     * - $(PREFIX):PRO_SP_RBV
       - ai
       - $(SYMBOL).rPRO_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22613,7 +22633,8 @@ ST_VG
     * - $(PREFIX):SP_HYS
       - ao
       - $(SYMBOL).rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22623,7 +22644,8 @@ ST_VG
     * - $(PREFIX):SP_HYS_RBV
       - ai
       - $(SYMBOL).rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22647,7 +22669,8 @@ ST_VG
     * - $(PREFIX):VAC_SP
       - ao
       - $(SYMBOL).rVAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22657,7 +22680,8 @@ ST_VG
     * - $(PREFIX):VAC_SP_RBV
       - ai
       - $(SYMBOL).rVAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22691,7 +22715,8 @@ ST_VGC
     * - $(PREFIX):AT_VAC_HYS
       - ao
       - $(SYMBOL).rAT_VAC_HYS
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22701,7 +22726,8 @@ ST_VGC
     * - $(PREFIX):AT_VAC_HYS_RBV
       - ai
       - $(SYMBOL).rAT_VAC_HYS
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22719,7 +22745,8 @@ ST_VGC
     * - $(PREFIX):AT_VAC_SP
       - ao
       - $(SYMBOL).rAT_VAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22729,7 +22756,8 @@ ST_VGC
     * - $(PREFIX):AT_VAC_SP_RBV
       - ai
       - $(SYMBOL).rAT_VAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -22752,28 +22780,12 @@ ST_VGC
         | io: input
 
 
-    * - $(PREFIX):ERR_DifPres
-      - bo
-      - $(SYMBOL).xERR_DifPres
-      - | field: ONAM Diffrential error present
-        | field: ZNAM NO ERROR
-        | io: output
-
-
     * - $(PREFIX):ERR_DifPres_RBV
       - bi
       - $(SYMBOL).xERR_DifPres
       - | field: ONAM Diffrential error present
         | field: ZNAM NO ERROR
-        | io: output
-
-
-    * - $(PREFIX):ERR_Ext
-      - bo
-      - $(SYMBOL).xERR_ExtFault
-      - | field: ONAM External error present
-        | field: ZNAM NO ERROR
-        | io: output
+        | io: input
 
 
     * - $(PREFIX):ERR_Ext_RBV
@@ -22781,15 +22793,7 @@ ST_VGC
       - $(SYMBOL).xERR_ExtFault
       - | field: ONAM External error present
         | field: ZNAM NO ERROR
-        | io: output
-
-
-    * - $(PREFIX):ERR_SP
-      - bo
-      - $(SYMBOL).xERR_SP
-      - | field: ONAM Setpoint error present
-        | field: ZNAM NO ERROR
-        | io: output
+        | io: input
 
 
     * - $(PREFIX):ERR_SP_RBV
@@ -22797,7 +22801,7 @@ ST_VGC
       - $(SYMBOL).xERR_SP
       - | field: ONAM Setpoint error present
         | field: ZNAM NO ERROR
-        | io: output
+        | io: input
 
 
     * - $(PREFIX):ErrMsg
@@ -22855,37 +22859,27 @@ ST_VGC
     * - $(PREFIX):HYST_PERC
       - ao
       - $(SYMBOL).rHYST_PERC
-      - | io: output
+      - | autosave_pass1: VAL DESC
+        | io: output
 
 
     * - $(PREFIX):HYST_PERC_RBV
       - ai
       - $(SYMBOL).rHYST_PERC
-      - | io: output
-
-
-    * - $(PREFIX):ILK_DEVICE_DS
-      - waveform
-      - $(SYMBOL).sIlkDSDeviceName
-      - | io: output
+      - | autosave_pass1: VAL DESC
+        | io: output
 
 
     * - $(PREFIX):ILK_DEVICE_DS_RBV
       - waveform
       - $(SYMBOL).sIlkDSDeviceName
-      - | io: output
-
-
-    * - $(PREFIX):ILK_DEVICE_US
-      - waveform
-      - $(SYMBOL).sIlkUSDeviceName
-      - | io: output
+      - | io: input
 
 
     * - $(PREFIX):ILK_DEVICE_US_RBV
       - waveform
       - $(SYMBOL).sIlkUSDeviceName
-      - | io: output
+      - | io: input
 
 
     * - $(PREFIX):LOGGER_RBV
