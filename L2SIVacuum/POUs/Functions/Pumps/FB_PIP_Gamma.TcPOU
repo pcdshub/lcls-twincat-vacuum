@@ -55,8 +55,8 @@ END_IF
 
 (* Enable HV *)
 IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
-	if (stPump.xAutoOn) THEN  stPump.q_xHVEna_DO := TRUE;
-	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW;  END_IF
+	IF (stPump.xAutoOn) AND NOT (stPump.q_xHVEna_DO) THEN  stPump.q_xHVEna_DO := TRUE;
+	ELSIF NOT (stPump.q_xHVEna_DO) THEN stPump.q_xHVEna_DO := stPump.xHVEna_SW;  END_IF
 	stPump.xILKOk:= TRUE;
 ELSIF stPump.q_xHVEna_DO AND timer.Q THEN 
 	IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
@@ -128,7 +128,7 @@ IF rtOK.Q AND stPump.pv_xOvrdStart THEN
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
-// Release the Force Open bit when the system override is false
+// Release the Force DO bit when the system override is false
 IF NOT(i_xOverrideMode) THEN stPump.pv_xOvrdStart :=FALSE; END_IF
 //Override timer
 tonOvrd(IN:= stPump.pv_xOvrdStart, PT:=tOvrd);
