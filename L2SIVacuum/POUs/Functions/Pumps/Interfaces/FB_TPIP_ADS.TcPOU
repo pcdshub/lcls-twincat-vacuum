@@ -52,11 +52,16 @@ fb_CheckWatchdog(
 	nLastCnt=> );
 bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
 
-IG.xPRESS_OK := NOT( fb_Read_VG.bError AND fb_CheckWatchdog.bWatchdog);]]></ST>
+IF (fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog) THEN
+IG.xPRESS_OK := FALSE;
+END_IF;]]></ST>
     </Implementation>
     <LineIds Name="FB_TPIP_ADS">
-      <LineId Id="3" Count="27" />
+      <LineId Id="3" Count="26" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="30" Count="0" />
       <LineId Id="2" Count="0" />
+      <LineId Id="53" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
