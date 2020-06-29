@@ -49,13 +49,17 @@ V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
 Vlowest := MIN(V, Vlowest);
 
-IF V > rDisconnectedBoundary AND V < rValidLoBoundary +rDeadband  THEN
+IF V > rDisconnectedBoundary AND V < rValidLoBoundary  THEN
 	PG.rPRESS := MinPressure;
 	PG.eState := ValidLo;
-
+	
+ELSIF V >= rValidLoBoundary AND V < rValidLoBoundary +rDeadband  THEN
+	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+	PG.eState := ValidLo;
+	
 ELSIF V >= rValidLoBoundary AND V < 2.842 THEN
 	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
-	PG.eState := Valid;
+	PG.eState := ValidLo;
 
 ELSIF V >= 2.842 AND V < 4.945 THEN
 	PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
@@ -63,7 +67,7 @@ ELSIF V >= 2.842 AND V < 4.945 THEN
 
 ELSIF V >= 4.945 AND V < rValidHiBoundary THEN
 	PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
-	PG.eState := Valid;
+	PG.eState := ValidHi;
 
 ELSIF V <= rDisconnectedBoundary THEN
 	PG.eState := GaugeDisconnected; //Most likely not connected
@@ -139,7 +143,11 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_MKS275">
-      <LineId Id="3" Count="55" />
+      <LineId Id="3" Count="17" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="94" Count="2" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="22" Count="36" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_MKS275.ACT_Logger">
