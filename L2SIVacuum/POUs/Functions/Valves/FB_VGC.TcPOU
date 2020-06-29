@@ -307,10 +307,10 @@ iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOv
 (*MPS Fault setting*)
 If (i_xIsAperture ) THEN 
 	(* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
-	xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
+	xMPS_OK := i_xOpnLS OR i_xClsLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
 ELSE
 	(* When the valve  is open MPS is OK*)
-	xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS; 
+	xMPS_OK := i_xOpnLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS; 
 END_IF
 
 
