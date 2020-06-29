@@ -54,7 +54,9 @@ fb_CheckWatchdog(
 	nLastCnt=> );
 bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
 
-IG.xPRESS_OK := NOT(fb_Read_VG.bError AND fb_CheckWatchdog.bWatchdog);]]></ST>
+IF (fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog) THEN
+IG.xPRESS_OK := FALSE;
+END_IF;]]></ST>
     </Implementation>
     <LineIds Name="FB_TGCC_ADS">
       <LineId Id="3" Count="3" />
@@ -62,6 +64,7 @@ IG.xPRESS_OK := NOT(fb_Read_VG.bError AND fb_CheckWatchdog.bWatchdog);]]></ST>
       <LineId Id="7" Count="0" />
       <LineId Id="52" Count="0" />
       <LineId Id="8" Count="22" />
+      <LineId Id="75" Count="1" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
