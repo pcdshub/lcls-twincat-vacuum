@@ -3,82 +3,32 @@
   <POU Name="FB_VFS_Interface" Id="{57bc9317-df03-4829-82d4-3e35e70264fe}" SpecialFunc="None">
     <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo valve to communicate over two task on the same PLC.*) 
 (*for FAST shutter control*)
-FUNCTION_BLOCK FB_VFS_Interface
+FUNCTION_BLOCK FB_VFS_Interface EXTENDS FB_Valve
 VAR_INPUT
-	IG : ST_VG; // The Cold Cathode Data Structure
+	IG : ST_VG; // The MKS422 Cold Cathode Data Structure
 	{attribute 'pytmc' := '
     pv: FF_Reset
 	'}
     i_xFFReset: BOOL;
 END_VAR
-VAR_IN_OUT
-
-END_VAR
 VAR
 	{attribute 'pytmc' := '
-    pv: GFS;
-	io: i;
-    '}	
-	sGFS: String;
+    pv: ;
+    '}
+	iq_stValve : ST_VFS; (* All valve data and states will be in this struct*)
+	tonOvrd	:	TON;
+	tOvrd	:	TIME := T#10s;
 	(*outputs*)
 	q_xPRESS_OK AT%Q*: BOOL;
-	{attribute 'pytmc' := '
-	pv: OPEN_SW; 
-	field: ZNAM FALSE; 
-	field: ONAM OPEN;
-	io: io ;
-	'}
 	q_xOPN_SW AT%Q*:BOOL;
-	{attribute 'pytmc' := '
-	pv: CLS_SW; 
-	field: ZNAM FALSE; 
-	field: ONAM CLOSE;
-	io: io ;
-	'}
 	q_xCLS_SW AT%Q*:BOOL; (*external open signal e.g epics*)
-	{attribute 'pytmc' := '
-	pv: FAULT_RESET; 
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: io ;
-	'}
 	q_xVAC_FAULT_Reset AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
-	{attribute 'pytmc' := '
-	pv: VFS_OVRD_ON ;
-	field: ZNAM Override OFF ;
-	field: ONAM Override ON;
-	io: io;
-	'}
 	q_xOverrideMode AT%Q*: BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
-	{attribute 'pytmc' := '
-    pv: VFS_FORCE_OPN;
-	io: io;
-	field: ZNAM FALSE;
-	field: ONAM FORCE OPEN;
-    '}
 	q_xOverrideOpen AT%Q*: BOOL;
 	
 	(*inputs*)
-	{attribute 'pytmc' := '
-	pv: TRIG; 
-	field: ZNAM TRIG_OFF; 
-	field: ONAM TRIG_ON;
-	io: i ;
-	'}
 	i_xTrigger AT %I* : BOOL;
-	{attribute 'pytmc' := '
-	pv: IS_OPEN; 
-	field: ZNAM NOT OPEN; 
-	field: ONAM OPEN;
-	io: i ;
-	'}
 	i_xVFS_Open AT %I* : BOOL;
-	{attribute 'pytmc' := '
-	pv: IS_CLOSED; 
-	field: ZNAM NOT CLOSED; 
-	field: ONAM CLOSE;
-	io: i ;
-	'}
 	i_xVFS_Closed AT %I* : BOOL;
 	{attribute 'pytmc' := '
 	pv: VAC_FAULT_OK; 
@@ -88,25 +38,125 @@ VAR
 	'}
 	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 	{attribute 'pytmc' := '
-	pv: FFO_OK; 
-	field: ZNAM FAULT ; 
-	field: ONAM FAULT OK;
+    pv: MPS_FAULT_OK
+	field: ZNAM MPS FAULT ;
+	field: ONAM MPS OK ;
 	io: i ;
 	'}
 	i_xMPS_OK AT%I*: BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
+	i_eVFS_State AT%I*: E_VFS; (*Interface*)
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*soft IO Mapping*)
 
 q_xPRESS_OK := IG.xPRESS_OK;
-sGFS := IG.sPath;
-]]></ST>
+
+
+(* Soft IO Mapping*)
+IO();
+///Check valve postion
+IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
+	iq_stValve.eState:=INVALID;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=OPEN;
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=CLOSED;
+ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=MOVING;
+ELSE
+	iq_stValve.eState:=INVALID;
+END_IF
+//Override timer
+tonOvrd(IN:=q_xOverrideOpen, PT:=tOvrd);
+(* Soft IO Mapping*)
+IO();
+(*Logger*)
+ACT_Logger();]]></ST>
     </Implementation>
+    <Action Name="ACT_Logger" Id="{1bb1f80f-bfee-4970-bc9f-116f1f77d8f0}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+
+IF i_xTrigger AND ePrevState = OPEN THEN
+ 		fbLogger(sMsg:='Fast valve triggered to close', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+//STATE Logger  
+
+IF ePrevState <> iq_stValve.eState THEN
+	  CASE iq_stValve.eState OF
+		INVALID:
+			fbLogger(sMsg:='Valve invalid position.', eSevr:=TcEventSeverity.Critical);
+  		MOVING:
+			fbLogger(sMsg:='Valve moving', eSevr:=TcEventSeverity.Warning);
+		OPEN:
+			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+		CLOSED:
+			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stValve.eState;  
+  END_IF
+  
+
+
+// Log valve timeouts
+tErrorPresent(CLK:=iq_stValve.bErrorPresent);
+IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
+
+// Log valve open
+tAction(CLK:= iq_stValve.q_xOPN_DO);
+IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
+
+// Log override mode enabled
+tOverrideActivated(CLK:= (tonOvrd.Q AND q_xOverrideMode));
+IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="IO" Id="{312ade16-8536-4df0-9a4e-8f0b63330a33}">
+      <Implementation>
+        <ST><![CDATA[(*inputs*)
+iq_stValve.i_xTrigger := i_xTrigger;
+iq_stValve.i_xOpnLS := 	i_xVFS_Open;
+iq_stValve.i_xClsLS:=	i_xVFS_Closed;
+iq_stValve.eVFS_State := i_eVFS_State;
+(*output*)
+q_xOPN_SW := iq_stValve.pv_xOPN_SW;
+q_xCLS_SW:= iq_stValve.xCLS_SW;
+q_xVAC_FAULT_Reset :=  iq_stValve.pv_xAlmRst;
+q_xOverrideMode :=iq_stValve.xOverrideMode;
+q_xOverrideOpen := iq_stValve.pv_xOvrdOpn ;
+
+
+iq_stValve.sGFS := IG.sPath;]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="FB_VFS_Interface">
       <LineId Id="68" Count="1" />
       <LineId Id="9" Count="0" />
       <LineId Id="163" Count="0" />
+      <LineId Id="257" Count="14" />
+      <LineId Id="296" Count="0" />
+      <LineId Id="289" Count="0" />
+      <LineId Id="291" Count="0" />
       <LineId Id="71" Count="0" />
+      <LineId Id="294" Count="0" />
+      <LineId Id="293" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VFS_Interface.ACT_Logger">
+      <LineId Id="2" Count="35" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VFS_Interface.IO">
+      <LineId Id="2" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="3" Count="1" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="25" Count="2" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="13" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

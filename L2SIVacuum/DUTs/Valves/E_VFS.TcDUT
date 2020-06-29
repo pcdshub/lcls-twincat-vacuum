@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_VFS" Id="{4b210349-830f-473c-9f5a-85821adbefb7}">
+    <Declaration><![CDATA[TYPE E_VFS :
+(
+
+	At_Vac,
+	Triggered,
+	Vac_Fault,
+	Cls_Timeout,
+	Opn_Timeout
+
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>
