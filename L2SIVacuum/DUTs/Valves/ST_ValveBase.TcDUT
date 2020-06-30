@@ -94,6 +94,11 @@ STRUCT
 	field: TWST Differential Pressure;
 	field: THST Lost Vacuum;
 	field: FRST Ext Fault;
+	field: FVST AT Vacuum;
+	field: SXST Triggered;
+	field: SVST Vacuum Fault;
+	field: EIST Close Timeout;
+	field: NIST Open Timeout;
 	io: i;
 	'}
 	eVGC_State : E_VGC;

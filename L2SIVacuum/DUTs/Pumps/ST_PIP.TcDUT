@@ -81,14 +81,14 @@ STRUCT
 	rHYS_PR: REAL := 0.001; 
 	{attribute 'pytmc' := '
     pv: AI_Offset;
-	io: i;
+	io: io;
     '}
 	iOffset: INT:=13;
 	{attribute 'pytmc' := '
     pv: Inverted;
 	field: ZNAM NORMAL; 
 	field: ONAM INVERTED;
-	io: i;
+	io: io;
     '}
 	bOutputInverted : BOOL;
 (* IO Controls *)
@@ -135,7 +135,7 @@ STRUCT
 	
 	{attribute 'pytmc' := '
     pv: LOGGER;
-	io: i;
+	io: io;
 	field: ZNAM OFF ;
 	field: ONAM ON ;
     '}

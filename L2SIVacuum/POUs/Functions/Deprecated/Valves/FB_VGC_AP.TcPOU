@@ -39,6 +39,7 @@ VAR_INPUT
     pv: FF_Reset
 	'}
     i_xReset: BOOL;
+	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -137,6 +138,7 @@ ACT_IO();
 IF xFirstPass THEN
 	iq_stValve.eVGC_State := Vented;
 	iq_stValve.pv_xOPN_SW := FALSE;
+	fbFF.i_DevName := i_sDevName;
 END_IF
 
 
@@ -325,7 +327,7 @@ END_IF
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (* When the valve  is open MPS is OK*)
-xMPS_OK := (iq_stValve.eState=OPEN) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS; 
+xMPS_OK := i_xOpnLS XOR i_xClsLS;
 
 ///Check valve moving postion timout
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
@@ -427,7 +429,9 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VGC_AP">
-      <LineId Id="3" Count="41" />
+      <LineId Id="3" Count="33" />
+      <LineId Id="572" Count="0" />
+      <LineId Id="37" Count="7" />
       <LineId Id="369" Count="1" />
       <LineId Id="45" Count="219" />
       <LineId Id="471" Count="0" />
