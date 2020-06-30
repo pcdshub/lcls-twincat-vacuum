@@ -549,10 +549,16 @@ FB_PIP_Gamma
       - Type
       - Description
       - Pragma
+    * - $(PREFIX):AI_Offset
+      - longout
+      - $(SYMBOL).stPump.iOffset
+      - | io: output
+
+
     * - $(PREFIX):AI_Offset_RBV
       - longin
       - $(SYMBOL).stPump.iOffset
-      - | io: input
+      - | io: output
 
 
     * - $(PREFIX):AT_VAC_SP
@@ -661,12 +667,28 @@ FB_PIP_Gamma
         | io: input
 
 
+    * - $(PREFIX):Inverted
+      - bo
+      - $(SYMBOL).stPump.bOutputInverted
+      - | field: ONAM INVERTED
+        | field: ZNAM NORMAL
+        | io: output
+
+
     * - $(PREFIX):Inverted_RBV
       - bi
       - $(SYMBOL).stPump.bOutputInverted
       - | field: ONAM INVERTED
         | field: ZNAM NORMAL
-        | io: input
+        | io: output
+
+
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).stPump.xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
 
 
     * - $(PREFIX):LOGGER_RBV
@@ -674,7 +696,7 @@ FB_PIP_Gamma
       - $(SYMBOL).stPump.xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):PRESS_AI_RBV
@@ -1533,8 +1555,13 @@ FB_VGC
     * - $(PREFIX):STATE_RBV
       - mbbi
       - $(SYMBOL).iq_stValve.eVGC_State
-      - | field: FRST Ext Fault
+      - | field: EIST Close Timeout
+        | field: FRST Ext Fault
+        | field: FVST AT Vacuum
+        | field: NIST Open Timeout
         | field: ONST At Vacuum
+        | field: SVST Vacuum Fault
+        | field: SXST Triggered
         | field: THST Lost Vacuum
         | field: TWST Differential Pressure
         | field: ZRST Vented
@@ -1710,8 +1737,13 @@ FB_VRC
     * - $(PREFIX):STATE_RBV
       - mbbi
       - $(SYMBOL).iq_stValve.eVGC_State
-      - | field: FRST Ext Fault
+      - | field: EIST Close Timeout
+        | field: FRST Ext Fault
+        | field: FVST AT Vacuum
+        | field: NIST Open Timeout
         | field: ONST At Vacuum
+        | field: SVST Vacuum Fault
+        | field: SXST Triggered
         | field: THST Lost Vacuum
         | field: TWST Differential Pressure
         | field: ZRST Vented
@@ -21978,10 +22010,16 @@ ST_PIP
       - Type
       - Description
       - Pragma
+    * - $(PREFIX):AI_Offset
+      - longout
+      - $(SYMBOL).iOffset
+      - | io: output
+
+
     * - $(PREFIX):AI_Offset_RBV
       - longin
       - $(SYMBOL).iOffset
-      - | io: input
+      - | io: output
 
 
     * - $(PREFIX):AT_VAC_SP
@@ -22090,12 +22128,28 @@ ST_PIP
         | io: input
 
 
+    * - $(PREFIX):Inverted
+      - bo
+      - $(SYMBOL).bOutputInverted
+      - | field: ONAM INVERTED
+        | field: ZNAM NORMAL
+        | io: output
+
+
     * - $(PREFIX):Inverted_RBV
       - bi
       - $(SYMBOL).bOutputInverted
       - | field: ONAM INVERTED
         | field: ZNAM NORMAL
-        | io: input
+        | io: output
+
+
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
 
 
     * - $(PREFIX):LOGGER_RBV
@@ -22103,7 +22157,7 @@ ST_PIP
       - $(SYMBOL).xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):PRESS_AI_RBV
@@ -22502,8 +22556,13 @@ ST_ValveBase
     * - $(PREFIX):STATE_RBV
       - mbbi
       - $(SYMBOL).eVGC_State
-      - | field: FRST Ext Fault
+      - | field: EIST Close Timeout
+        | field: FRST Ext Fault
+        | field: FVST AT Vacuum
+        | field: NIST Open Timeout
         | field: ONST At Vacuum
+        | field: SVST Vacuum Fault
+        | field: SXST Triggered
         | field: THST Lost Vacuum
         | field: TWST Differential Pressure
         | field: ZRST Vented
@@ -22961,8 +23020,13 @@ ST_VGC
     * - $(PREFIX):STATE_RBV
       - mbbi
       - $(SYMBOL).eVGC_State
-      - | field: FRST Ext Fault
+      - | field: EIST Close Timeout
+        | field: FRST Ext Fault
+        | field: FVST AT Vacuum
+        | field: NIST Open Timeout
         | field: ONST At Vacuum
+        | field: SVST Vacuum Fault
+        | field: SXST Triggered
         | field: THST Lost Vacuum
         | field: TWST Differential Pressure
         | field: ZRST Vented
@@ -23138,8 +23202,13 @@ ST_VRC
     * - $(PREFIX):STATE_RBV
       - mbbi
       - $(SYMBOL).eVGC_State
-      - | field: FRST Ext Fault
+      - | field: EIST Close Timeout
+        | field: FRST Ext Fault
+        | field: FVST AT Vacuum
+        | field: NIST Open Timeout
         | field: ONST At Vacuum
+        | field: SVST Vacuum Fault
+        | field: SXST Triggered
         | field: THST Lost Vacuum
         | field: TWST Differential Pressure
         | field: ZRST Vented

@@ -874,15 +874,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>$(PREFIX):AI_Offset_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AI_Offset</p></td>
+<td><p>longout</p></td>
 <td><p>$(SYMBOL).stPump.iOffset</p></td>
 <td><div class="line-block">
-<div class="line">io: input</div>
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AT_VAC_SP</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AI_Offset_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).stPump.iOffset</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AT_VAC_SP</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).stPump.rHVEna_SP</p></td>
 <td><div class="line-block">
@@ -895,7 +903,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AT_VAC_SP_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AT_VAC_SP_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).stPump.rHVEna_SP</p></td>
 <td><div class="line-block">
@@ -908,7 +916,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Auto_On_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Auto_On_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).stPump.xAutoOn</p></td>
 <td><div class="line-block">
@@ -918,7 +926,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ERROR_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):ERROR_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).stPump.xError</p></td>
 <td><div class="line-block">
@@ -928,7 +936,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):FORCE_START</p></td>
+<tr class="row-even"><td><p>$(PREFIX):FORCE_START</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).stPump.pv_xOvrdStart</p></td>
 <td><div class="line-block">
@@ -938,7 +946,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):FORCE_START_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):FORCE_START_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).stPump.pv_xOvrdStart</p></td>
 <td><div class="line-block">
@@ -948,7 +956,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_DI_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_DI_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).stPump.i_xHV_DI</p></td>
 <td><div class="line-block">
@@ -958,7 +966,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_DO_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_DO_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).stPump.q_xHVEna_DO</p></td>
 <td><div class="line-block">
@@ -968,7 +976,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_SW</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_SW</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).stPump.xHVEna_SW</p></td>
 <td><div class="line-block">
@@ -978,7 +986,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_SW_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_SW_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).stPump.xHVEna_SW</p></td>
 <td><div class="line-block">
@@ -988,7 +996,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):ILK_DEVICE</p></td>
+<tr class="row-even"><td><p>$(PREFIX):ILK_DEVICE</p></td>
 <td><p>waveform</p></td>
 <td><p>$(SYMBOL).stPump.sIlkDeviceName</p></td>
 <td><div class="line-block">
@@ -996,7 +1004,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ILK_DEVICE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):ILK_DEVICE_RBV</p></td>
 <td><p>waveform</p></td>
 <td><p>$(SYMBOL).stPump.sIlkDeviceName</p></td>
 <td><div class="line-block">
@@ -1004,7 +1012,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).stPump.xILKOk</p></td>
 <td><div class="line-block">
@@ -1014,27 +1022,47 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):Inverted</p></td>
+<td><p>bo</p></td>
+<td><p>$(SYMBOL).stPump.bOutputInverted</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM INVERTED</div>
+<div class="line">field: ZNAM NORMAL</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):Inverted_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).stPump.bOutputInverted</p></td>
 <td><div class="line-block">
 <div class="line">field: ONAM INVERTED</div>
 <div class="line">field: ZNAM NORMAL</div>
-<div class="line">io: input</div>
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):LOGGER_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):LOGGER</p></td>
+<td><p>bo</p></td>
+<td><p>$(SYMBOL).stPump.xLog</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM ON</div>
+<div class="line">field: ZNAM OFF</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):LOGGER_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).stPump.xLog</p></td>
 <td><div class="line-block">
 <div class="line">field: ONAM ON</div>
 <div class="line">field: ZNAM OFF</div>
-<div class="line">io: input</div>
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).stPump.i_iPRESS</p></td>
 <td><div class="line-block">
@@ -1042,7 +1070,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRESS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRESS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).stPump.rPRESS</p></td>
 <td><div class="line-block">
@@ -1054,7 +1082,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):SP_HYS</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):SP_HYS</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).stPump.rHYS_PR</p></td>
 <td><div class="line-block">
@@ -1067,7 +1095,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).stPump.rHYS_PR</p></td>
 <td><div class="line-block">
@@ -1080,7 +1108,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):STATE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):STATE_RBV</p></td>
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).stPump.eState</p></td>
 <td><div class="line-block">
@@ -2115,8 +2143,13 @@
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).iq_stValve.eVGC_State</p></td>
 <td><div class="line-block">
+<div class="line">field: EIST Close Timeout</div>
 <div class="line">field: FRST Ext Fault</div>
+<div class="line">field: FVST AT Vacuum</div>
+<div class="line">field: NIST Open Timeout</div>
 <div class="line">field: ONST At Vacuum</div>
+<div class="line">field: SVST Vacuum Fault</div>
+<div class="line">field: SXST Triggered</div>
 <div class="line">field: THST Lost Vacuum</div>
 <div class="line">field: TWST Differential Pressure</div>
 <div class="line">field: ZRST Vented</div>
@@ -2342,8 +2375,13 @@
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).iq_stValve.eVGC_State</p></td>
 <td><div class="line-block">
+<div class="line">field: EIST Close Timeout</div>
 <div class="line">field: FRST Ext Fault</div>
+<div class="line">field: FVST AT Vacuum</div>
+<div class="line">field: NIST Open Timeout</div>
 <div class="line">field: ONST At Vacuum</div>
+<div class="line">field: SVST Vacuum Fault</div>
+<div class="line">field: SXST Triggered</div>
 <div class="line">field: THST Lost Vacuum</div>
 <div class="line">field: TWST Differential Pressure</div>
 <div class="line">field: ZRST Vented</div>
@@ -29361,15 +29399,23 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>$(PREFIX):AI_Offset_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AI_Offset</p></td>
+<td><p>longout</p></td>
 <td><p>$(SYMBOL).iOffset</p></td>
 <td><div class="line-block">
-<div class="line">io: input</div>
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AT_VAC_SP</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AI_Offset_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).iOffset</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AT_VAC_SP</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).rHVEna_SP</p></td>
 <td><div class="line-block">
@@ -29382,7 +29428,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AT_VAC_SP_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AT_VAC_SP_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).rHVEna_SP</p></td>
 <td><div class="line-block">
@@ -29395,7 +29441,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Auto_On_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Auto_On_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xAutoOn</p></td>
 <td><div class="line-block">
@@ -29405,7 +29451,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ERROR_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):ERROR_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xError</p></td>
 <td><div class="line-block">
@@ -29415,7 +29461,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):FORCE_START</p></td>
+<tr class="row-even"><td><p>$(PREFIX):FORCE_START</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).pv_xOvrdStart</p></td>
 <td><div class="line-block">
@@ -29425,7 +29471,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):FORCE_START_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):FORCE_START_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).pv_xOvrdStart</p></td>
 <td><div class="line-block">
@@ -29435,7 +29481,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_DI_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_DI_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).i_xHV_DI</p></td>
 <td><div class="line-block">
@@ -29445,7 +29491,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_DO_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_DO_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).q_xHVEna_DO</p></td>
 <td><div class="line-block">
@@ -29455,7 +29501,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_SW</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_SW</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).xHVEna_SW</p></td>
 <td><div class="line-block">
@@ -29465,7 +29511,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_SW_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_SW_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xHVEna_SW</p></td>
 <td><div class="line-block">
@@ -29475,7 +29521,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):ILK_DEVICE</p></td>
+<tr class="row-even"><td><p>$(PREFIX):ILK_DEVICE</p></td>
 <td><p>waveform</p></td>
 <td><p>$(SYMBOL).sIlkDeviceName</p></td>
 <td><div class="line-block">
@@ -29483,7 +29529,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ILK_DEVICE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):ILK_DEVICE_RBV</p></td>
 <td><p>waveform</p></td>
 <td><p>$(SYMBOL).sIlkDeviceName</p></td>
 <td><div class="line-block">
@@ -29491,7 +29537,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xILKOk</p></td>
 <td><div class="line-block">
@@ -29501,27 +29547,47 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):Inverted</p></td>
+<td><p>bo</p></td>
+<td><p>$(SYMBOL).bOutputInverted</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM INVERTED</div>
+<div class="line">field: ZNAM NORMAL</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):Inverted_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).bOutputInverted</p></td>
 <td><div class="line-block">
 <div class="line">field: ONAM INVERTED</div>
 <div class="line">field: ZNAM NORMAL</div>
-<div class="line">io: input</div>
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):LOGGER_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):LOGGER</p></td>
+<td><p>bo</p></td>
+<td><p>$(SYMBOL).xLog</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM ON</div>
+<div class="line">field: ZNAM OFF</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):LOGGER_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xLog</p></td>
 <td><div class="line-block">
 <div class="line">field: ONAM ON</div>
 <div class="line">field: ZNAM OFF</div>
-<div class="line">io: input</div>
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).i_iPRESS</p></td>
 <td><div class="line-block">
@@ -29529,7 +29595,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRESS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRESS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).rPRESS</p></td>
 <td><div class="line-block">
@@ -29541,7 +29607,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):SP_HYS</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):SP_HYS</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).rHYS_PR</p></td>
 <td><div class="line-block">
@@ -29554,7 +29620,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).rHYS_PR</p></td>
 <td><div class="line-block">
@@ -29567,7 +29633,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):STATE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):STATE_RBV</p></td>
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).eState</p></td>
 <td><div class="line-block">
@@ -30022,8 +30088,13 @@
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).eVGC_State</p></td>
 <td><div class="line-block">
+<div class="line">field: EIST Close Timeout</div>
 <div class="line">field: FRST Ext Fault</div>
+<div class="line">field: FVST AT Vacuum</div>
+<div class="line">field: NIST Open Timeout</div>
 <div class="line">field: ONST At Vacuum</div>
+<div class="line">field: SVST Vacuum Fault</div>
+<div class="line">field: SXST Triggered</div>
 <div class="line">field: THST Lost Vacuum</div>
 <div class="line">field: TWST Differential Pressure</div>
 <div class="line">field: ZRST Vented</div>
@@ -30599,8 +30670,13 @@
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).eVGC_State</p></td>
 <td><div class="line-block">
+<div class="line">field: EIST Close Timeout</div>
 <div class="line">field: FRST Ext Fault</div>
+<div class="line">field: FVST AT Vacuum</div>
+<div class="line">field: NIST Open Timeout</div>
 <div class="line">field: ONST At Vacuum</div>
+<div class="line">field: SVST Vacuum Fault</div>
+<div class="line">field: SXST Triggered</div>
 <div class="line">field: THST Lost Vacuum</div>
 <div class="line">field: TWST Differential Pressure</div>
 <div class="line">field: ZRST Vented</div>
@@ -30826,8 +30902,13 @@
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).eVGC_State</p></td>
 <td><div class="line-block">
+<div class="line">field: EIST Close Timeout</div>
 <div class="line">field: FRST Ext Fault</div>
+<div class="line">field: FVST AT Vacuum</div>
+<div class="line">field: NIST Open Timeout</div>
 <div class="line">field: ONST At Vacuum</div>
+<div class="line">field: SVST Vacuum Fault</div>
+<div class="line">field: SXST Triggered</div>
 <div class="line">field: THST Lost Vacuum</div>
 <div class="line">field: TWST Differential Pressure</div>
 <div class="line">field: ZRST Vented</div>
