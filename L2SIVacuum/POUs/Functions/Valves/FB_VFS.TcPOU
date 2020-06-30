@@ -67,7 +67,7 @@ VAR
 	i_xPress_OK AT%I*:BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
 	i_xOPN_SW AT%I*:BOOL;
 	i_xCLS_SW AT%I*:BOOL; (*external open signal e.g epics*)
-	i_xResetFault	AT%I*: BOOL;(*FFO iReset*)
+	i_xVAC_FAULT_Reset	AT%I*: BOOL;(*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 	i_xOverrideMode AT%I*: BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 	i_xOverrideOpen AT%I*: BOOL;
 	q_xTrigger	AT%Q*: BOOL; (*Interface*)
@@ -145,7 +145,7 @@ xOPN_OK := (NOT xERR_ExtFault) AND NOT i_xTrigger;
 
 
 (* When the valve  is open MPS is OK*)
-q_xMPS_OK := i_xOpnLS AND NOT i_xTrigger AND i_xPress_OK AND NOT(i_xCLS_SW);//gauge is connected
+q_xMPS_OK := i_xOpnLS AND NOT i_xTrigger AND i_xPress_OK AND NOT(i_xCLS_SW);
 
 
 (* Override logic *)
@@ -182,7 +182,7 @@ CloseTimer ( IN:=xClose, PT:= TimDur, Q=>);
 OpenTimer ( IN:=i_xOpnLS, PT:= OpenTimDur, Q=>);
 tOPNtimeout(IN:= q_xOPN_DO, PT := tOPNTimeOutDuration);
 tCLStimeout(IN:= q_xClose_A, PT := tCLSTimeOutDuration);
-rtOPN_SW(CLK:= xOpen);
+rtOPN_SW(CLK:= i_xOPN_SW);
 
 (* Soft IO Mapping*)
 IO();
@@ -192,7 +192,7 @@ ACT_ResetAlarms();
 
 (*FAST FAULT*)
 fbFF(i_xOK := q_xMPS_OK,
-    i_xReset := i_xResetFault,
+    i_xReset := i_xVAC_FAULT_Reset,
 	i_xAutoReset :=TRUE,
     io_fbFFHWO := io_fbFFHWO);
 
@@ -207,8 +207,9 @@ fbFF(i_xOK := q_xMPS_OK,
 
 //iq_stValve.bErrorPresent R= i_xResetFault;
 
-IF NOT i_xTrigger  THEN
-	xERR_ExtFault R= i_xResetFault;
+IF NOT i_xTrigger AND i_xPress_OK THEN
+	xERR_ExtFault R= i_xVAC_FAULT_Reset;
+	i_xVAC_FAULT_Reset:=FALSE;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -254,7 +255,9 @@ q_xVFS_Open:= i_xOpnLS;]]></ST>
       <LineId Id="2" Count="1" />
       <LineId Id="1" Count="0" />
       <LineId Id="5" Count="1" />
-      <LineId Id="8" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_VFS.IO">
       <LineId Id="10" Count="0" />

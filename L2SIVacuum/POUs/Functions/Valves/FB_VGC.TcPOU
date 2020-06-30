@@ -402,7 +402,7 @@ IF ePrevState <> iq_stValve.eState THEN
 		OPEN:
 			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
 		OPEN_F:
-			fbLogger(sMsg:='Valve Open without open do.', eSevr:=TcEventSeverity.Info);
+			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
 		CLOSED:
 			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
 	  END_CASE

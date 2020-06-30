@@ -6,10 +6,7 @@
 FUNCTION_BLOCK FB_VFS_Interface EXTENDS FB_Valve
 VAR_INPUT
 	IG : ST_VG; // The MKS422 Cold Cathode Data Structure
-	{attribute 'pytmc' := '
-    pv: FF_Reset
-	'}
-    i_xFFReset: BOOL;
+
 END_VAR
 VAR
 	{attribute 'pytmc' := '
@@ -44,7 +41,6 @@ END_VAR]]></Declaration>
       <ST><![CDATA[(*soft IO Mapping*)
 
 q_xPRESS_OK := IG.xPRESS_OK;
-
 
 (* Soft IO Mapping*)
 IO();
@@ -122,15 +118,16 @@ q_xCLS_SW:= iq_stValve.xCLS_SW;
 q_xVAC_FAULT_Reset :=  iq_stValve.pv_xAlmRst;
 q_xOverrideMode :=iq_stValve.xOverrideMode;
 q_xOverrideOpen := iq_stValve.pv_xOvrdOpn ;
+iq_stValve.sGFS := IG.sPath;
 
-
-iq_stValve.sGFS := IG.sPath;]]></ST>
+//reset the commands 
+IF ( iq_stValve.i_xOpnLS) THEN iq_stValve.pv_xOPN_SW := FALSE; END_IF
+IF ( iq_stValve.i_xClsLS) THEN iq_stValve.xCLS_SW := FALSE; END_IF]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_VFS_Interface">
       <LineId Id="68" Count="1" />
       <LineId Id="9" Count="0" />
-      <LineId Id="163" Count="0" />
       <LineId Id="257" Count="14" />
       <LineId Id="296" Count="0" />
       <LineId Id="289" Count="0" />
@@ -152,8 +149,10 @@ iq_stValve.sGFS := IG.sPath;]]></ST>
       <LineId Id="23" Count="0" />
       <LineId Id="25" Count="2" />
       <LineId Id="19" Count="1" />
-      <LineId Id="16" Count="1" />
       <LineId Id="13" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>
