@@ -28,7 +28,7 @@ END_VAR
 
 VAR CONSTANT
 	MinPressure: REAL := 1E-4;
-	rDeadband : REAL :=0.02;
+	rDeadband : REAL :=0.05;
 	rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
 	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
 	rDisconnectedBoundary	:	REAL := 0.3;
@@ -59,7 +59,7 @@ ELSIF V >= rValidLoBoundary AND V < rValidLoBoundary +rDeadband  THEN
 	
 ELSIF V >= rValidLoBoundary AND V < 2.842 THEN
 	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
-	PG.eState := ValidLo;
+	PG.eState := Valid;
 
 ELSIF V >= 2.842 AND V < 4.945 THEN
 	PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
