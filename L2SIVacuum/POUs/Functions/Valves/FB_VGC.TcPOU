@@ -38,6 +38,7 @@ VAR_INPUT
 	'}
     i_xReset: BOOL;
 	i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
+	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -134,6 +135,7 @@ ACT_IO();
 IF xFirstPass THEN
 	iq_stValve.eVGC_State := Vented;
 	iq_stValve.pv_xOPN_SW := FALSE;
+	FFO.i_DevName := i_sDevName;
 END_IF
 
 
@@ -307,7 +309,7 @@ iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOv
 (*MPS Fault setting*)
 If (i_xIsAperture ) THEN 
 	(* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
-	xMPS_OK := i_xOpnLS OR i_xClsLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
+	xMPS_OK := i_xOpnLS XOR i_xClsLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
 ELSE
 	(* When the valve  is open MPS is OK*)
 	xMPS_OK := i_xOpnLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS; 
@@ -481,7 +483,9 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VGC">
-      <LineId Id="3" Count="41" />
+      <LineId Id="3" Count="33" />
+      <LineId Id="796" Count="0" />
+      <LineId Id="37" Count="7" />
       <LineId Id="580" Count="1" />
       <LineId Id="45" Count="48" />
       <LineId Id="100" Count="8" />

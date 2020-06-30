@@ -39,6 +39,7 @@ VAR_INPUT
     pv: FF_Reset
 	'}
     i_xReset: BOOL;
+	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -137,6 +138,7 @@ ACT_IO();
 IF xFirstPass THEN
 	iq_stValve.eVGC_State := Vented;
 	iq_stValve.pv_xOPN_SW := FALSE;
+	fbFF.i_DevName := i_sDevName;
 END_IF
 
 
@@ -431,7 +433,9 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VGC_EBD">
-      <LineId Id="3" Count="261" />
+      <LineId Id="3" Count="33" />
+      <LineId Id="471" Count="0" />
+      <LineId Id="37" Count="227" />
       <LineId Id="369" Count="0" />
       <LineId Id="265" Count="3" />
       <LineId Id="2" Count="0" />
