@@ -36,17 +36,7 @@ STRUCT
 	io: i ;
 	'}
 	i_xVAC_FAULT_OK : BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
-	
-	{attribute 'pytmc' := '
-	pv: STATE;
-	field: ZRST AT Vacuum;
-	field: ONST Triggered;
-	field: TWST Vacuum Fault;
-	field: THST Close Timeout;
-	field: FRST Open Timeout;
-	io: i;
-	'}
-	eVFS_State : E_VFS;
+
 	
 (*ILK Devices*)
 	{attribute 'pytmc' := '

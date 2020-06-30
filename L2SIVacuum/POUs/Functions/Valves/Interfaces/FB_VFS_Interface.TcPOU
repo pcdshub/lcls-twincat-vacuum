@@ -30,12 +30,6 @@ VAR
 	i_xTrigger AT %I* : BOOL;
 	i_xVFS_Open AT %I* : BOOL;
 	i_xVFS_Closed AT %I* : BOOL;
-	{attribute 'pytmc' := '
-	pv: VAC_FAULT_OK; 
-	field: ZNAM FAULT ; 
-	field: ONAM FAULT OK;
-	io: i ;
-	'}
 	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 	{attribute 'pytmc' := '
     pv: MPS_FAULT_OK
@@ -44,7 +38,7 @@ VAR
 	io: i ;
 	'}
 	i_xMPS_OK AT%I*: BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
-	i_eVFS_State AT%I*: E_VFS; (*Interface*)
+	i_eVFS_State AT%I*: E_VGC; (*Interface*)
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*soft IO Mapping*)
@@ -120,7 +114,8 @@ IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSe
 iq_stValve.i_xTrigger := i_xTrigger;
 iq_stValve.i_xOpnLS := 	i_xVFS_Open;
 iq_stValve.i_xClsLS:=	i_xVFS_Closed;
-iq_stValve.eVFS_State := i_eVFS_State;
+iq_stValve.eVGC_State := i_eVFS_State;
+iq_stValve.i_xVAC_FAULT_OK:= i_xVAC_FAULT_OK;
 (*output*)
 q_xOPN_SW := iq_stValve.pv_xOPN_SW;
 q_xCLS_SW:= iq_stValve.xCLS_SW;
@@ -152,7 +147,9 @@ iq_stValve.sGFS := IG.sPath;]]></ST>
       <LineId Id="2" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="3" Count="1" />
-      <LineId Id="22" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="23" Count="0" />
       <LineId Id="25" Count="2" />
       <LineId Id="19" Count="1" />
       <LineId Id="16" Count="1" />

@@ -10,6 +10,7 @@ FUNCTION_BLOCK FB_VFS EXTENDS FB_Valve
 VAR_INPUT
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
 	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
+	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
 END_VAR
 VAR_IN_OUT
 	io_fbFFHWO    :    FB_HardwareFFOutput;
@@ -28,7 +29,7 @@ VAR
 	set : BOOL;
     reset: BOOL;
 	  
-	xFirstPass	:	BOOL;
+	xFirstPass	:	BOOL := TRUE;
 	//fbFSInit		:	R_TRIG;
 	rtOPN_SW :	R_TRIG;
 		
@@ -74,7 +75,7 @@ VAR
 	q_xVFS_Closed AT%Q*: BOOL; (*Interface*)
 	q_xVAC_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 	q_xMPS_OK	 AT%Q*:	BOOL; (*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
-	q_eVFS_State AT%Q*: E_VFS; (*Interface*)
+	q_eVFS_State AT%Q*: E_VGC; (*Interface*)
 	
 END_VAR]]></Declaration>
     <Implementation>
@@ -91,7 +92,11 @@ the shutter and the isolation gate valve.
 In the case where a gauge is not installed, the neigboring gate Valves should not be opened unless the shutter 
 is Open. 
 *)
-
+(* On first PLC pass, put valve into vented state, which implies a closed valve *)
+IF xFirstPass THEN
+	fbFF.i_DevName := i_sDevName;
+	xFirstPass := FALSE;
+END_IF
 
 (* Input Trigger to close the Fast Shutter*)
 (* Neighboring Valves Should also be triggered to Close*)
@@ -140,7 +145,7 @@ xOPN_OK := (NOT xERR_ExtFault) AND NOT i_xTrigger;
 
 
 (* When the valve  is open MPS is OK*)
-q_xMPS_OK := i_xOpnLS AND NOT i_xTrigger AND i_xPress_OK;//gauge is connected
+q_xMPS_OK := i_xOpnLS AND NOT i_xTrigger AND i_xPress_OK AND NOT(i_xCLS_SW);//gauge is connected
 
 
 (* Override logic *)
@@ -163,13 +168,13 @@ tonOvrd(IN:=i_xOverrideOpen, PT:=tOvrd);
 
 
 //Assign valve state
-IF (i_xTrigger) THEN q_eVFS_State := E_VFS.Triggered;
-ELSIF xERR_ExtFault THEN q_eVFS_State :=  E_VFS.Vac_Fault;
+IF (i_xTrigger) THEN q_eVFS_State := E_VGC.Triggered;
+ELSIF xERR_ExtFault THEN q_eVFS_State :=  E_VGC.Vac_Fault;
 ELSIF NOT i_xClsLS AND tCLStimeout.Q THEN 
-	q_eVFS_State :=  E_VFS.Cls_Timeout;
+	q_eVFS_State :=  E_VGC.Cls_Timeout;
 ELSIF NOT i_xOpnLS AND tOPNtimeout.Q THEN 
-	q_eVFS_State :=  E_VFS.Opn_Timeout;
-ELSE q_eVFS_State :=  E_VFS.At_Vac;
+	q_eVFS_State :=  E_VGC.Opn_Timeout;
+ELSE q_eVFS_State :=  E_VGC.At_Vac;
 END_IF
 
 (*Timers*)
@@ -217,6 +222,8 @@ q_xVFS_Open:= i_xOpnLS;]]></ST>
     </Action>
     <LineIds Name="FB_VFS">
       <LineId Id="567" Count="12" />
+      <LineId Id="1043" Count="1" />
+      <LineId Id="1047" Count="1" />
       <LineId Id="581" Count="0" />
       <LineId Id="595" Count="0" />
       <LineId Id="601" Count="12" />
