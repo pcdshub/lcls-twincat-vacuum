@@ -56,7 +56,8 @@ END_IF
 (* Enable HV *)
 IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
 	IF (stPump.xAutoOn) AND NOT (stPump.q_xHVEna_DO) THEN  stPump.q_xHVEna_DO := TRUE;
-	ELSIF NOT (stPump.q_xHVEna_DO) THEN stPump.q_xHVEna_DO := stPump.xHVEna_SW;  END_IF
+	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW;  
+	END_IF
 	stPump.xILKOk:= TRUE;
 ELSIF stPump.q_xHVEna_DO AND timer.Q THEN 
 	IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
@@ -240,7 +241,9 @@ this^.stPump.xHVEna_SW := run;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_PIP_Gamma">
-      <LineId Id="3" Count="23" />
+      <LineId Id="3" Count="13" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="17" Count="9" />
       <LineId Id="109" Count="0" />
       <LineId Id="108" Count="0" />
       <LineId Id="27" Count="40" />
