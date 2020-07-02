@@ -9,6 +9,7 @@ less than the maximum differential pressure.
 3. Once at-vac, the valve will close if the pressure on either side rises above the setpoint.*)
 (*This function block also implements PMPS and EPS interlocks, as well as Fast MPS trigger*)
 {attribute 'no_check'}
+{attribute 'reflection'} 
 FUNCTION_BLOCK FB_VGC Extends FB_Valve
 VAR_IN_OUT
 	
