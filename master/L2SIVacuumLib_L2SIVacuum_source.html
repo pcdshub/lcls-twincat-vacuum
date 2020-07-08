@@ -2716,7 +2716,8 @@ END_ACTION
 </div>
 <div class="section" id="fb-gaugebase">
 <h2>FB_GaugeBase<a class="headerlink" href="#fb-gaugebase" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_GaugeBase</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;reflection&#39;</span><span class="p">}</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_GaugeBase</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
 <span class="n">VAR_OUTPUT</span>
@@ -6784,6 +6785,7 @@ less than the maximum differential pressure.
 3. Once at-vac, the valve will close if the pressure on either side rises above the setpoint.*)
 (*This function block also implements PMPS and EPS interlocks, as well as Fast MPS trigger*)
 {attribute &#39;no_check&#39;}
+{attribute &#39;reflection&#39;}
 FUNCTION_BLOCK FB_VGC Extends FB_Valve
 VAR_IN_OUT
 
