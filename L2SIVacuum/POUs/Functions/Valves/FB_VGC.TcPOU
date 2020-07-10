@@ -80,6 +80,8 @@ VAR
 	tonDelOK : TON;
 	rtOK	:	R_TRIG;
 	tonOvrd	:	TON;
+	rtOpen	:	R_TRIG;
+	ftClose: F_TRIG;
 	
 	tDelOK	:	TIME := T#60S;
 	tOvrd	:	TIME := T#10s;
@@ -292,28 +294,33 @@ IF NOT (i_xOverrideMode) THEN  iq_stValve.pv_xOvrdOpn :=FALSE; END_IF
 //Override timer
 tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
-(* If Epics Command to close the Valve while it was open, check if PMPS and EPS are ok, otherwise Keep command set to open valve *)
-IF NOT(iq_stValve.pv_xOPN_SW) AND (iq_stValve.eState =OPEN) AND (NOT (i_xPMPS_OK) OR (i_xEPS_OK)) THEN
-	//iq_stValve.pv_xOPN_SW := TRUE; // plc to only reset never to set this signal
-END_IF
-(* Reset the EPICS command to open the valve if the interlock is lost *) 
-(* based on EPS ok state, EPS overrides OPN_OK*)
-IF NOT iq_stValve.xOPN_OK THEN
-	IF i_xEPS_OK THEN iq_stValve.pv_xOPN_SW := FALSE; iq_stValve.sErrorMessage := 'ILK Active';
-	ELSE //iq_stValve.pv_xOPN_SW := TRUE;		// plc to only reset never to set this signal
+
+(* Valve operation *)
+(* Here's where we evaluate sw actions and operate the valve *)
+(* Valve operation *)
+
+ftClose(CLK:= iq_stValve.pv_xOPN_SW);
+rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
+(*when interlock is lost the Valve closes regarldess of the status of the PMPS and EPS*)
+IF NOT (iq_stValve.xOPN_OK) THEN
+	iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
+	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+ELSIF i_xPMPS_OK THEN 
+	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+ELSIF NOT (i_xPMPS_OK) THEN
+	IF (tonOvrd.Q AND i_xOverrideMode) THEN // Only override mode
+		iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
 	END_IF
 END_IF
 
-(* Here's where the valve opens *)
-iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (*MPS Fault setting*)
 If (i_xIsAperture ) THEN 
 	(* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
-	xMPS_OK := i_xOpnLS XOR i_xClsLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
+	xMPS_OK := i_xOpnLS XOR i_xClsLS; 
 ELSE
 	(* When the valve  is open MPS is OK*)
-	xMPS_OK := i_xOpnLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS; 
+	xMPS_OK := i_xOpnLS AND NOT i_xClsLS AND q_xOPN_DO; 
 END_IF
 
 
@@ -503,7 +510,10 @@ END_VAR
       <LineId Id="201" Count="0" />
       <LineId Id="369" Count="0" />
       <LineId Id="371" Count="0" />
-      <LineId Id="203" Count="16" />
+      <LineId Id="203" Count="1" />
+      <LineId Id="908" Count="1" />
+      <LineId Id="1011" Count="0" />
+      <LineId Id="1013" Count="16" />
       <LineId Id="472" Count="0" />
       <LineId Id="220" Count="0" />
       <LineId Id="473" Count="1" />
