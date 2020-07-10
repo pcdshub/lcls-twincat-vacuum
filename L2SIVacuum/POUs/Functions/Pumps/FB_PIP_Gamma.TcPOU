@@ -59,7 +59,7 @@ IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
 	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW;  
 	END_IF
 	stPump.xILKOk:= TRUE;
-ELSIF stPump.q_xHVEna_DO AND timer.Q THEN 
+ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN 
 	IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
 		stPump.q_xHVEna_DO := FALSE;
 		stPump.xHVEna_SW := FALSE;
