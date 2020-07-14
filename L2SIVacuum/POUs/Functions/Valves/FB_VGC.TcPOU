@@ -250,7 +250,7 @@ CASE iq_stValve.eVGC_State OF
 		END_IF
 		
 	ERR_ExtFault:
-		IF NOT (iq_stValve.xERR_ExtFault) AND (NOT i_xExt_OK) THEN
+		IF NOT (iq_stValve.xERR_ExtFault) AND (i_xExt_OK) THEN
 			IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
 		    	iq_stValve.eVGC_State := AtVacuum;
 			ELSE
@@ -308,9 +308,8 @@ IF NOT (iq_stValve.xOPN_OK) THEN
 ELSIF i_xPMPS_OK THEN 
 	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 ELSIF NOT (i_xPMPS_OK) THEN
-	IF (tonOvrd.Q AND i_xOverrideMode) THEN // Only override mode
-		iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
-	END_IF
+	// Only override mode
+	iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
 END_IF
 
 
@@ -455,6 +454,7 @@ IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSe
         <ST><![CDATA[iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
 iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
 iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;
+iq_stValve.xERR_ExtFault R= iq_stValve.pv_xAlmRst;
 
 IF ( iq_stValve.pv_xAlmRst) THEN
 	iq_stValve.sErrorMessage :='';
@@ -513,7 +513,8 @@ END_VAR
       <LineId Id="203" Count="1" />
       <LineId Id="908" Count="1" />
       <LineId Id="1011" Count="0" />
-      <LineId Id="1013" Count="16" />
+      <LineId Id="1013" Count="13" />
+      <LineId Id="1028" Count="1" />
       <LineId Id="472" Count="0" />
       <LineId Id="220" Count="0" />
       <LineId Id="473" Count="1" />
@@ -548,7 +549,9 @@ END_VAR
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC.ACT_ResetAlarms">
-      <LineId Id="2" Count="5" />
+      <LineId Id="2" Count="2" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="5" Count="2" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC.M_IsClosed">
