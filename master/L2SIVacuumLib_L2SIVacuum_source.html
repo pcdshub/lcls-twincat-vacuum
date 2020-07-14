@@ -4405,6 +4405,7 @@ END_ACTION
 <h2>FB_PIP_Gamma<a class="headerlink" href="#fb-pip-gamma" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="n">FOR</span> <span class="n">the</span> <span class="n">ION</span> <span class="n">pump</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">a</span> <span class="n">Gamma</span> <span class="n">QPCe</span> <span class="n">controller</span><span class="o">.</span>
  <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.</span> <span class="n">Enable</span> <span class="n">HV</span> <span class="n">only</span> <span class="n">when</span> <span class="n">interlock</span> <span class="n">gauge</span> <span class="n">press</span> <span class="ow">is</span> <span class="n">less</span> <span class="n">than</span> <span class="mf">1.0E-4</span> <span class="n">Torr</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;reflection&#39;</span><span class="p">}</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PIP_Gamma</span> <span class="n">Extends</span> <span class="n">FB_Pump</span>
 <span class="n">VAR_INPUT</span>
     <span class="n">i_stGauge</span>       <span class="p">:</span>       <span class="n">ST_VG</span><span class="p">;</span> <span class="o">//</span><span class="n">Ion</span> <span class="ow">or</span> <span class="n">Pirani</span> <span class="n">gauge</span> <span class="k">for</span> <span class="n">pump</span> <span class="n">interlock</span>
@@ -4442,6 +4443,10 @@ END_ACTION
     <span class="n">tonDelOK</span> <span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
     <span class="n">rtOK</span>    <span class="p">:</span>       <span class="n">R_TRIG</span><span class="p">;</span>
     <span class="n">tOvrd</span>   <span class="p">:</span>       <span class="n">TIME</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#10s;</span>
+
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;instance-path&#39;</span><span class="p">}</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;noinit&#39;</span><span class="p">}</span>
+    <span class="n">sPath</span><span class="p">:</span> <span class="n">STRING</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Does</span> <span class="n">Gamma</span> <span class="n">Ion</span> <span class="n">pump</span> <span class="n">HV</span> <span class="n">interlock</span><span class="o">.</span> <span class="n">Enable</span> <span class="n">HV</span> <span class="n">only</span> <span class="n">when</span> <span class="n">interlock</span> <span class="n">gauge</span> <span class="n">press</span> <span class="ow">is</span> <span class="n">less</span> <span class="n">than</span> <span class="mf">1.0E-4</span> <span class="n">Torr</span> <span class="o">*</span><span class="p">)</span>
 
@@ -4459,7 +4464,7 @@ END_ACTION
     <span class="n">ELSE</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span><span class="p">;</span>
     <span class="n">END_IF</span>
     <span class="n">stPump</span><span class="o">.</span><span class="n">xILKOk</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
-<span class="n">ELSIF</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="n">AND</span> <span class="n">timer</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+<span class="n">ELSIF</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="p">(</span><span class="o">*</span><span class="n">AND</span> <span class="n">timer</span><span class="o">.</span><span class="n">Q</span><span class="o">*</span><span class="p">)</span> <span class="n">THEN</span>
     <span class="n">IF</span> <span class="n">q_IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">+</span> <span class="n">stPump</span><span class="o">.</span><span class="n">rHYS_PR</span><span class="p">)</span> <span class="n">THEN</span> <span class="o">//</span> <span class="n">Ion</span> <span class="n">pumps</span> <span class="n">when</span> <span class="n">running</span> <span class="n">switches</span> <span class="n">off</span> <span class="n">based</span> <span class="n">on</span> <span class="n">their</span> <span class="n">own</span> <span class="n">pressure</span> <span class="n">readings</span>
             <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
             <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
@@ -4606,6 +4611,8 @@ END_ACTION
 <span class="n">stPump</span><span class="o">.</span><span class="n">i_xHV_DI</span><span class="o">:=</span>   <span class="n">i_xSP_DI</span><span class="p">;</span>
 <span class="p">(</span><span class="o">*</span><span class="n">output</span><span class="o">*</span><span class="p">)</span>
 <span class="n">q_xHVEna_DO</span><span class="o">:=</span>  <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span><span class="p">;</span> <span class="o">//</span><span class="n">According</span> <span class="n">to</span> <span class="n">Manual</span> <span class="n">pin</span> <span class="n">should</span> <span class="n">be</span> <span class="n">grounded</span> <span class="n">to</span> <span class="n">activate</span> <span class="n">function</span>
+
+ <span class="n">This</span><span class="o">^.</span><span class="n">stPump</span><span class="o">.</span><span class="n">sPath</span><span class="o">:=</span> <span class="n">sPath</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 </pre></div>
 </div>
@@ -6658,13 +6665,16 @@ END_ACTION
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_VFS_Interface</span> <span class="n">EXTENDS</span> <span class="n">FB_Valve</span>
 <span class="n">VAR_INPUT</span>
     <span class="n">IG</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">MKS422</span> <span class="n">Cold</span> <span class="n">Cathode</span> <span class="n">Data</span> <span class="n">Structure</span>
-
 <span class="n">END_VAR</span>
-<span class="n">VAR</span>
+<span class="n">VAR_OUTPUT</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">iq_stValve</span> <span class="p">:</span> <span class="n">ST_VFS</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span> <span class="n">All</span> <span class="n">valve</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">states</span> <span class="n">will</span> <span class="n">be</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">struct</span><span class="o">*</span><span class="p">)</span>
+    <span class="n">i_xVAC_FAULT_OK</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">Valve</span> <span class="n">Vacuum</span> <span class="n">OK</span><span class="p">,</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">to</span> <span class="kc">False</span> <span class="n">when</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">Vacuum</span> <span class="n">Fault</span><span class="o">*</span><span class="p">)</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+
     <span class="n">tonOvrd</span> <span class="p">:</span>       <span class="n">TON</span><span class="p">;</span>
     <span class="n">tOvrd</span>   <span class="p">:</span>       <span class="n">TIME</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#10s;</span>
     <span class="p">(</span><span class="o">*</span><span class="n">outputs</span><span class="o">*</span><span class="p">)</span>
@@ -6679,7 +6689,6 @@ END_ACTION
     <span class="n">i_xTrigger</span> <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xVFS_Open</span> <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xVFS_Closed</span> <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
-    <span class="n">i_xVAC_FAULT_OK</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">Valve</span> <span class="n">Vacuum</span> <span class="n">OK</span><span class="p">,</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">to</span> <span class="kc">False</span> <span class="n">when</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">Vacuum</span> <span class="n">Fault</span><span class="o">*</span><span class="p">)</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">MPS_FAULT_OK</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">MPS</span> <span class="n">FAULT</span> <span class="p">;</span>
@@ -6856,6 +6865,8 @@ VAR
     tonDelOK : TON;
     rtOK    :       R_TRIG;
     tonOvrd :       TON;
+    rtOpen  :       R_TRIG;
+    ftClose: F_TRIG;
 
     tDelOK  :       TIME := T#60S;
     tOvrd   :       TIME := T#10s;
@@ -7023,7 +7034,7 @@ CASE iq_stValve.eVGC_State OF
             END_IF
 
     ERR_ExtFault:
-            IF NOT (iq_stValve.xERR_ExtFault) AND (NOT i_xExt_OK) THEN
+            IF NOT (iq_stValve.xERR_ExtFault) AND (i_xExt_OK) THEN
                     IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
                     iq_stValve.eVGC_State := AtVacuum;
                     ELSE
@@ -7067,28 +7078,32 @@ IF NOT (i_xOverrideMode) THEN  iq_stValve.pv_xOvrdOpn :=FALSE; END_IF
 //Override timer
 tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
-(* If Epics Command to close the Valve while it was open, check if PMPS and EPS are ok, otherwise Keep command set to open valve *)
-IF NOT(iq_stValve.pv_xOPN_SW) AND (iq_stValve.eState =OPEN) AND (NOT (i_xPMPS_OK) OR (i_xEPS_OK)) THEN
-    //iq_stValve.pv_xOPN_SW := TRUE; // plc to only reset never to set this signal
-END_IF
-(* Reset the EPICS command to open the valve if the interlock is lost *)
-(* based on EPS ok state, EPS overrides OPN_OK*)
-IF NOT iq_stValve.xOPN_OK THEN
-    IF i_xEPS_OK THEN iq_stValve.pv_xOPN_SW := FALSE; iq_stValve.sErrorMessage := &#39;ILK Active&#39;;
-    ELSE //iq_stValve.pv_xOPN_SW := TRUE;           // plc to only reset never to set this signal
-    END_IF
+
+(* Valve operation *)
+(* Here&#39;s where we evaluate sw actions and operate the valve *)
+(* Valve operation *)
+
+ftClose(CLK:= iq_stValve.pv_xOPN_SW);
+rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
+(*when interlock is lost the Valve closes regarldess of the status of the PMPS and EPS*)
+IF NOT (iq_stValve.xOPN_OK) THEN
+    iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
+    iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+ELSIF i_xPMPS_OK THEN
+    iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+ELSIF NOT (i_xPMPS_OK) THEN
+    // Only override mode
+    iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
 END_IF
 
-(* Here&#39;s where the valve opens *)
-iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (*MPS Fault setting*)
 If (i_xIsAperture ) THEN
     (* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
-    xMPS_OK := i_xOpnLS XOR i_xClsLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
+    xMPS_OK := i_xOpnLS XOR i_xClsLS;
 ELSE
     (* When the valve  is open MPS is OK*)
-    xMPS_OK := i_xOpnLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS;
+    xMPS_OK := i_xOpnLS AND NOT i_xClsLS AND q_xOPN_DO;
 END_IF
 
 
@@ -7212,6 +7227,7 @@ ACTION ACT_ResetAlarms:
 iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
 iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
 iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;
+iq_stValve.xERR_ExtFault R= iq_stValve.pv_xAlmRst;
 
 IF ( iq_stValve.pv_xAlmRst) THEN
     iq_stValve.sErrorMessage :=&#39;&#39;;

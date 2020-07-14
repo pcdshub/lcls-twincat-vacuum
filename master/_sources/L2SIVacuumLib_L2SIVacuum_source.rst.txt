@@ -4269,6 +4269,7 @@ FB_PIP_Gamma
 
     (* This function block does basic controls FOR the ION pump connected to a Gamma QPCe controller.
      Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
+    {attribute 'reflection'} 
     FUNCTION_BLOCK FB_PIP_Gamma Extends FB_Pump
     VAR_INPUT
     	i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock
@@ -4306,6 +4307,10 @@ FB_PIP_Gamma
     	tonDelOK : TON;
     	rtOK	:	R_TRIG;
     	tOvrd	:	TIME := T#10s;
+    	
+    	{attribute 'instance-path'}
+    	{attribute 'noinit'}
+    	sPath: STRING;
     END_VAR
     (* Does Gamma Ion pump HV interlock. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
 
@@ -4323,7 +4328,7 @@ FB_PIP_Gamma
     	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW;  
     	END_IF
     	stPump.xILKOk:= TRUE;
-    ELSIF stPump.q_xHVEna_DO AND timer.Q THEN 
+    ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN 
     	IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
     		stPump.q_xHVEna_DO := FALSE;
     		stPump.xHVEna_SW := FALSE;
@@ -4470,6 +4475,8 @@ FB_PIP_Gamma
     stPump.i_xHV_DI:=	i_xSP_DI;
     (*output*)
     q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function
+
+     This^.stPump.sPath:= sPath;
     END_ACTION
 
 
@@ -6570,13 +6577,16 @@ FB_VFS_Interface
     FUNCTION_BLOCK FB_VFS_Interface EXTENDS FB_Valve
     VAR_INPUT
     	IG : ST_VG; // The MKS422 Cold Cathode Data Structure
-
     END_VAR
-    VAR
+    VAR_OUTPUT
     	{attribute 'pytmc' := '
         pv: ;
         '}
     	iq_stValve : ST_VFS; (* All valve data and states will be in this struct*)
+    	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+    END_VAR
+    VAR
+    	
     	tonOvrd	:	TON;
     	tOvrd	:	TIME := T#10s;
     	(*outputs*)
@@ -6591,7 +6601,6 @@ FB_VFS_Interface
     	i_xTrigger AT %I* : BOOL;
     	i_xVFS_Open AT %I* : BOOL;
     	i_xVFS_Closed AT %I* : BOOL;
-    	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
     	{attribute 'pytmc' := '
         pv: MPS_FAULT_OK
     	field: ZNAM MPS FAULT ;
@@ -6770,6 +6779,8 @@ FB_VGC
     	tonDelOK : TON;
     	rtOK	:	R_TRIG;
     	tonOvrd	:	TON;
+    	rtOpen	:	R_TRIG;
+    	ftClose: F_TRIG;
     	
     	tDelOK	:	TIME := T#60S;
     	tOvrd	:	TIME := T#10s;
@@ -6937,7 +6948,7 @@ FB_VGC
     		END_IF
     		
     	ERR_ExtFault:
-    		IF NOT (iq_stValve.xERR_ExtFault) AND (NOT i_xExt_OK) THEN
+    		IF NOT (iq_stValve.xERR_ExtFault) AND (i_xExt_OK) THEN
     			IF iq_stValve.xAT_VAC AND (NOT (iq_stValve.xERR_DifPres)) AND (NOT (iq_stValve.xERR_SP)) AND (NOT (iq_stValve.xERR_ExtFault))THEN
     		    	iq_stValve.eVGC_State := AtVacuum;
     			ELSE
@@ -6981,28 +6992,32 @@ FB_VGC
     //Override timer
     tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
-    (* If Epics Command to close the Valve while it was open, check if PMPS and EPS are ok, otherwise Keep command set to open valve *)
-    IF NOT(iq_stValve.pv_xOPN_SW) AND (iq_stValve.eState =OPEN) AND (NOT (i_xPMPS_OK) OR (i_xEPS_OK)) THEN
-    	//iq_stValve.pv_xOPN_SW := TRUE; // plc to only reset never to set this signal
-    END_IF
-    (* Reset the EPICS command to open the valve if the interlock is lost *) 
-    (* based on EPS ok state, EPS overrides OPN_OK*)
-    IF NOT iq_stValve.xOPN_OK THEN
-    	IF i_xEPS_OK THEN iq_stValve.pv_xOPN_SW := FALSE; iq_stValve.sErrorMessage := 'ILK Active';
-    	ELSE //iq_stValve.pv_xOPN_SW := TRUE;		// plc to only reset never to set this signal
-    	END_IF
+
+    (* Valve operation *)
+    (* Here's where we evaluate sw actions and operate the valve *)
+    (* Valve operation *)
+
+    ftClose(CLK:= iq_stValve.pv_xOPN_SW);
+    rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
+    (*when interlock is lost the Valve closes regarldess of the status of the PMPS and EPS*)
+    IF NOT (iq_stValve.xOPN_OK) THEN
+    	iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
+    	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+    ELSIF i_xPMPS_OK THEN 
+    	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+    ELSIF NOT (i_xPMPS_OK) THEN
+    	// Only override mode
+    	iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
     END_IF
 
-    (* Here's where the valve opens *)
-    iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
     (*MPS Fault setting*)
     If (i_xIsAperture ) THEN 
     	(* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
-    	xMPS_OK := i_xOpnLS XOR i_xClsLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F) OR (iq_stValve.eState=CLOSED);//iq_stValve.i_xOpnLS;
+    	xMPS_OK := i_xOpnLS XOR i_xClsLS; 
     ELSE
     	(* When the valve  is open MPS is OK*)
-    	xMPS_OK := i_xOpnLS; //(iq_stValve.eState=OPEN) OR (iq_stValve.eState=OPEN_F);//iq_stValve.i_xOpnLS; 
+    	xMPS_OK := i_xOpnLS AND NOT i_xClsLS AND q_xOPN_DO; 
     END_IF
 
 
@@ -7126,6 +7141,7 @@ FB_VGC
     iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
     iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
     iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;
+    iq_stValve.xERR_ExtFault R= iq_stValve.pv_xAlmRst;
 
     IF ( iq_stValve.pv_xAlmRst) THEN
     	iq_stValve.sErrorMessage :='';
