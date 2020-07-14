@@ -6,13 +6,16 @@
 FUNCTION_BLOCK FB_VFS_Interface EXTENDS FB_Valve
 VAR_INPUT
 	IG : ST_VG; // The MKS422 Cold Cathode Data Structure
-
 END_VAR
-VAR
+VAR_OUTPUT
 	{attribute 'pytmc' := '
     pv: ;
     '}
 	iq_stValve : ST_VFS; (* All valve data and states will be in this struct*)
+	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+END_VAR
+VAR
+	
 	tonOvrd	:	TON;
 	tOvrd	:	TIME := T#10s;
 	(*outputs*)
@@ -27,7 +30,6 @@ VAR
 	i_xTrigger AT %I* : BOOL;
 	i_xVFS_Open AT %I* : BOOL;
 	i_xVFS_Closed AT %I* : BOOL;
-	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 	{attribute 'pytmc' := '
     pv: MPS_FAULT_OK
 	field: ZNAM MPS FAULT ;
