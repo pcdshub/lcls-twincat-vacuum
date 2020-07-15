@@ -61,7 +61,7 @@ END_IF
 (* Enable HV *)
 IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
 	IF (stPump.xAutoOn) AND NOT (stPump.q_xHVEna_DO) THEN  stPump.q_xHVEna_DO := TRUE;
-	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW;  
+	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));  
 	END_IF
 	stPump.xILKOk:= TRUE;
 ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN 
@@ -70,7 +70,7 @@ ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN
 		stPump.xHVEna_SW := FALSE;
 		stPump.xILKOk := FALSE;
 	ELSE
-		stPump.q_xHVEna_DO := stPump.xHVEna_SW; 
+		stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode)); 
 	END_IF
 ELSIF (tonOvrd.Q AND i_xOverrideMode) THEN
 	stPump.q_xHVEna_DO := TRUE;
@@ -114,7 +114,7 @@ END_IF
 ACT_SetGauge();
 (*Soft IO Mapping*)
 IO();
-
+ACT_IlkOverride();
 // Log States and triggers
 ACT_Logger();]]></ST>
     </Implementation>
@@ -144,8 +144,8 @@ tonOvrd(IN:= stPump.pv_xOvrdStart, PT:=tOvrd);
     <Action Name="ACT_Logger" Id="{dd00b334-c786-42ee-ae98-6142e7f8ba70}">
       <Implementation>
         <ST><![CDATA[// ILK logger
-tAction(CLK:= );
-IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTARTING)) THEN 
+
+IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTARTING)) AND NOT tonOvrd.Q THEN 
 	fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); 
 END_IF
 
@@ -216,7 +216,7 @@ q_IG.sPath := This^.stPump.sPath;
       <Implementation>
         <ST><![CDATA[stPump.sIlkDeviceName := This^.i_stGauge.sPath;
 stPump.xError := (stPump.eState = pumpFAULT);
- 
+stPump.xOverrideMode := i_xOverrideMode; 
 (*inputs*)
 stPump.i_iPRESS:=	i_iPRESS;  
 stPump.i_xHV_DI:=	i_xSP_DI;
