@@ -458,6 +458,7 @@ iq_stValve.xERR_ExtFault R= iq_stValve.pv_xAlmRst;
 
 IF ( iq_stValve.pv_xAlmRst) THEN
 	iq_stValve.sErrorMessage :='';
+	 iq_stValve.pv_xAlmRst := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -552,6 +553,7 @@ END_VAR
       <LineId Id="2" Count="2" />
       <LineId Id="8" Count="0" />
       <LineId Id="5" Count="2" />
+      <LineId Id="9" Count="0" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC.M_IsClosed">
