@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="ST_PfeifferPTM" Id="{5258f2ac-d965-4bdd-8c4b-be7691cce5d3}">
     <Declaration><![CDATA[TYPE ST_PfeifferPTM EXTENDS ST_PTM :
 STRUCT
@@ -8,6 +8,13 @@ Applicable to:
 HiPace series w/ onboard controllers
 More?
 *)
+	{attribute 'pytmc' := '
+    pv: RESET;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
+	io: i;
+	'}
+	q_xReset   : BOOL;
 	//Readbacks
 	{attribute 'pytmc' := '
 	pv: DrivePower_RBV;
@@ -56,6 +63,7 @@ More?
 	io: i;
 	'}
 	i_uiPowerPctRbk :   UINT;
+	
 	
 //Controls
 	q_uiPowerPct : UINT := 100; //Should normally be 100
