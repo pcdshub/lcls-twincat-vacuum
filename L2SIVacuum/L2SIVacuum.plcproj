@@ -252,6 +252,12 @@
     <Compile Include="POUs\Functions\Pumps\functions\F_TurboExtILKLogic_2.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\Interfaces\FB_PIP_Interface_In.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Pumps\Interfaces\FB_PIP_Interface_Out.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Pumps\Interfaces\FB_TPIP_ADS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
