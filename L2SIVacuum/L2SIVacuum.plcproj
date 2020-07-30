@@ -115,6 +115,9 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\ADS\FB_ADS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\ADS\FB_ADS_WATCHDOG.TcPOU">
       <SubType>Code</SubType>
     </Compile>

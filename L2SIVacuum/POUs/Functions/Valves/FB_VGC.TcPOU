@@ -521,7 +521,9 @@ END_VAR
       <LineId Id="473" Count="1" />
       <LineId Id="476" Count="3" />
       <LineId Id="475" Count="0" />
-      <LineId Id="222" Count="37" />
+      <LineId Id="222" Count="18" />
+      <LineId Id="1131" Count="11" />
+      <LineId Id="253" Count="6" />
       <LineId Id="695" Count="1" />
       <LineId Id="260" Count="0" />
       <LineId Id="697" Count="0" />

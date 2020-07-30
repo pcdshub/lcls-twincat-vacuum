@@ -36,7 +36,7 @@ STRUCT
 	
 	{attribute 'pytmc' := '
     pv: ILK_DEVICE;
-	io: o;
+	io: i;
     '}
 	sIlkDeviceName: STRING;
 	//Required for other devices using this gauge as interlock

@@ -120,7 +120,7 @@ STRUCT
 	sErrorMessage: STRING;
 	{attribute 'pytmc' := '
     pv: LOGGER;
-	io: i;
+	io: io;
 	field: ZNAM OFF ;
 	field: ONAM ON ;
     '}
