@@ -341,17 +341,6 @@ END_IF
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
 tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
 
-// Log valve timeouts
-tErrorPresent(CLK:=iq_stValve.bErrorPresent);
-IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
-
-// Log valve open
-tAction(CLK:= iq_stValve.q_xOPN_DO);
-IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
-
-// Log override mode enabled
-tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
-IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 
 // Alarm reset
 //////////////////////////////////////
@@ -394,10 +383,10 @@ iq_stValve.sIlkDSDeviceName := This^.i_stDSG.sPath;
       <Implementation>
         <ST><![CDATA[// ILK logger
 
-(*IF NOT i_xExtILK_OK AND ePrevState = OPEN THEN
- 		fbLogger(sMsg:='Lost external interlock while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+IF NOT (iq_stValve.xOPN_OK) AND (ePrevState = OPEN) AND NOT (TonOvrd.Q) THEN
+ 		fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);  	
 END_IF
-*)
+
 
 //Positiong STATE Logger  
 IF ePrevState <> iq_stValve.eState THEN
@@ -522,7 +511,7 @@ END_VAR
       <LineId Id="476" Count="3" />
       <LineId Id="475" Count="0" />
       <LineId Id="222" Count="18" />
-      <LineId Id="1131" Count="11" />
+      <LineId Id="1131" Count="0" />
       <LineId Id="253" Count="6" />
       <LineId Id="695" Count="1" />
       <LineId Id="260" Count="0" />
