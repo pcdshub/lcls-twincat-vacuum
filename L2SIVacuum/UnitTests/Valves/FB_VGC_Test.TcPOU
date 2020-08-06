@@ -43,19 +43,20 @@ This^.US_IG.xAT_VAC := TRUE;
 This^.DS_IG.rPRESS := 1E-9;
 This^.DS_IG.xPRESS_OK := TRUE;
 
-This^.VGC(
+(*This^.VGC(
 	i_stUSG:= This^.US_IG, 
 	i_stDSG:= This^.DS_IG , 
 	i_xDis_DPIlk:= FALSE, 
 	i_xEPS_OK:= TRUE , 
-	i_xPMPS_OK:= TRUE, 
+	//i_xPMPS_OK:= TRUE, 
 	i_xExt_OK:= TRUE, 
 	i_xOverrideMode:= , 
 	i_xReset:= , 
 	iq_stValve=> , 
 	xMPS_OK=> , 
-	io_fbFFHWO:= This^.io_fbFFHWO);
-
+	io_fbFFHWO:= This^.io_fbFFHWO,
+	fbArbiter:=g_fbArbiter);
+*)
 AssertFalse(This^.VGC.iq_stValve.pv_xOPN_SW,'VGC pv_xOPN_SW is set to true');
 AssertFalse(VGC.iq_stValve.q_xOPN_DO,'VGC q_xOPN_DO is set to true');
 TEST_FINISHED_NAMED('VGC_Startup');
@@ -83,7 +84,7 @@ This^.US_IG.xPRESS_OK := FALSE;
 This^.DS_IG.xPRESS_OK := FALSE;
 VGC.M_Set_OPN_SW(TRUE);
 // run the function block one more time
-VGC(
+(*VGC(
 	i_stUSG:= US_IG, 
 	i_stDSG:= DS_IG , 
 	i_xDis_DPIlk:= FALSE, 
@@ -94,7 +95,7 @@ VGC(
 	i_xReset:= , 
 	iq_stValve=> , 
 	xMPS_OK=> , 
-	io_fbFFHWO:= io_fbFFHWO);
+	io_fbFFHWO:= io_fbFFHWO);*)
 AssertFalse(VGC.iq_stValve.pv_xOPN_SW,'VGC pv_xOPN_SW is set to true');
 AssertFalse(VGC.iq_stValve.q_xOPN_DO,'VGC q_xOPN_DO is set to true');
 TEST_FINISHED_NAMED('VGC_Interlock_Active');
@@ -104,7 +105,7 @@ This^.US_IG.xPRESS_OK := TRUE;
 This^.DS_IG.xPRESS_OK := TRUE;
 VGC.M_Set_OPN_SW(TRUE);
 // run the function block one more time
-VGC(
+(*VGC(
 	i_stUSG:= US_IG, 
 	i_stDSG:= DS_IG , 
 	i_xDis_DPIlk:= FALSE, 
@@ -115,7 +116,7 @@ VGC(
 	i_xReset:= , 
 	iq_stValve=> , 
 	xMPS_OK=> , 
-	io_fbFFHWO:= io_fbFFHWO);
+	io_fbFFHWO:= io_fbFFHWO);*)
 AssertTrue(VGC.iq_stValve.pv_xOPN_SW,'VGC pv_xOPN_SW is set to false');
 AssertTrue(VGC.iq_stValve.q_xOPN_DO,'VGC q_xOPN_DO is set to false');
 TEST_FINISHED_NAMED('VGC_Interlock_OK');
@@ -124,7 +125,7 @@ TEST('VGC_Interlock_Lost');
 This^.US_IG.xPRESS_OK := False; 
 This^.DS_IG.xPRESS_OK := TRUE;
 // run the function block one more time
-VGC(
+(*VGC(
 	i_stUSG:= US_IG, 
 	i_stDSG:= DS_IG , 
 	i_xDis_DPIlk:= FALSE, 
@@ -135,7 +136,7 @@ VGC(
 	i_xReset:= , 
 	iq_stValve=> , 
 	xMPS_OK=> , 
-	io_fbFFHWO:= io_fbFFHWO);
+	io_fbFFHWO:= io_fbFFHWO);*)
 AssertFalse(VGC.iq_stValve.pv_xOPN_SW,'VGC pv_xOPN_SW is set to true');
 AssertFalse(VGC.iq_stValve.q_xOPN_DO,'VGC q_xOPN_DO is set to true');
 TEST_FINISHED_NAMED('VGC_Interlock_Lost');
@@ -152,7 +153,9 @@ TEST_FINISHED_NAMED('VGC_Interlock_Lost');
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC_Test.M_INIT">
-      <LineId Id="3" Count="31" />
+      <LineId Id="3" Count="19" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="23" Count="11" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC_Test.M_Interlock">
