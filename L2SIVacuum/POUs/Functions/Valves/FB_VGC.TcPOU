@@ -27,11 +27,7 @@ VAR_INPUT
     pv: EPS_OK
 	'}
 	i_xEPS_OK:	BOOL	:= TRUE; (*External EPS interlock, Set to TRUE when no EPS interlock is required, otherwise set to correct interlock signal*)
-	{attribute 'pytmc' := '
-    pv: MPS_OK
-	'}
-	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
-		i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required. If this Valve is neigboring a Fast Shutter this should be linked to the fast shutter xVAC_FAULT_OK*)
+	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required. If this Valve is neigboring a Fast Shutter this should be linked to the fast shutter xVAC_FAULT_OK*)
 	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 	// Reset fault
 	{attribute 'pytmc' := '
@@ -40,6 +36,7 @@ VAR_INPUT
     i_xReset: BOOL;
 	i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
 	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
+	i_nTransitionRootID: UDINT; //A unique transition Root ID that is equal to or greater than 1000
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -56,9 +53,18 @@ VAR_OUTPUT
 END_VAR
 VAR_IN_OUT
 	io_fbFFHWO    :    FB_HardwareFFOutput;
+	fbArbiter: FB_Arbiter();
 END_VAR
 VAR
 	// PMPS
+	{attribute 'pytmc' := '
+    pv: MPS_OK
+	'}
+	i_xPMPS_OK:	BOOL	; (*PMPS interlock*)
+	bMoving : BOOL;
+	bDone :BOOL;
+	tBPTMtimeout:TON;
+	bptm: BeamParameterTransitionManager;  
 	FFO    :    FB_FastFault :=(
         i_DevName := 'VGC',
         i_Desc := 'Fault occurs when the valve is not in open state',
@@ -301,15 +307,15 @@ tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
 ftClose(CLK:= iq_stValve.pv_xOPN_SW);
 rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
-(*when interlock is lost the Valve closes regarldess of the status of the PMPS and EPS*)
+(*when interlock is lost the Valve closes regardless of the status of the PMPS and EPS*)
 IF NOT (iq_stValve.xOPN_OK) THEN
 	iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
 	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 ELSIF i_xPMPS_OK THEN 
 	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
-ELSIF NOT (i_xPMPS_OK) THEN
+//ELSIF NOT (i_xPMPS_OK) THEN
 	// Only override mode
-	iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
+	//iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
 END_IF
 
 
@@ -341,17 +347,6 @@ END_IF
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
 tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
 
-// Log valve timeouts
-tErrorPresent(CLK:=iq_stValve.bErrorPresent);
-IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
-
-// Log valve open
-tAction(CLK:= iq_stValve.q_xOPN_DO);
-IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
-
-// Log override mode enabled
-tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
-IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 
 // Alarm reset
 //////////////////////////////////////
@@ -363,6 +358,8 @@ ACT_IO();
 // Log States and triggers
 ACT_Logger();
 
+(*PMPS*)
+ACT_PMPS();
 (*FAST FAULT*)
 FFO(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
@@ -394,10 +391,10 @@ iq_stValve.sIlkDSDeviceName := This^.i_stDSG.sPath;
       <Implementation>
         <ST><![CDATA[// ILK logger
 
-(*IF NOT i_xExtILK_OK AND ePrevState = OPEN THEN
- 		fbLogger(sMsg:='Lost external interlock while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+IF NOT (iq_stValve.xOPN_OK) AND (ePrevState = OPEN) AND NOT (TonOvrd.Q) THEN
+ 		fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);  	
 END_IF
-*)
+
 
 //Positiong STATE Logger  
 IF ePrevState <> iq_stValve.eState THEN
@@ -449,6 +446,29 @@ IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSe
 ]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_PMPS" Id="{681d3417-9168-4ed2-a720-6960ced65f1e}">
+      <Implementation>
+        <ST><![CDATA[bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);
+bDone := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xOpnLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xClsLS);
+If (i_xIsAperture ) OR (iq_stValve.pv_xOPN_SW )THEN
+	bptm.i_stRequestedAssertion := PMPS_GVL.cstFullBeam;
+ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cstSafeBeam;
+END_IF
+bptm(fbArbiter:=fbArbiter,
+     i_TransitionAssertionID:=i_nTransitionRootID+2,
+     i_stTransitionAssertion:=PMPS_GVL.cstSafeBeam,
+     i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xOPN_SW),
+     i_stRequestedAssertion:=,
+     i_xMoving:=bMoving,
+     i_xDoneMoving:= bDone,
+     stCurrentBeamParameters:=PMPS_GVL.stCurrentBeamParameters,
+     q_xTransitionAuthorized=>);
+// Timeout
+tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
+i_xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
+	 ]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="ACT_ResetAlarms" Id="{8962b369-e8aa-42c4-9c4c-4249c380363a}">
       <Implementation>
         <ST><![CDATA[iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
@@ -458,6 +478,7 @@ iq_stValve.xERR_ExtFault R= iq_stValve.pv_xAlmRst;
 
 IF ( iq_stValve.pv_xAlmRst) THEN
 	iq_stValve.sErrorMessage :='';
+	 iq_stValve.pv_xAlmRst := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -520,10 +541,14 @@ END_VAR
       <LineId Id="473" Count="1" />
       <LineId Id="476" Count="3" />
       <LineId Id="475" Count="0" />
-      <LineId Id="222" Count="37" />
+      <LineId Id="222" Count="18" />
+      <LineId Id="1131" Count="0" />
+      <LineId Id="253" Count="6" />
       <LineId Id="695" Count="1" />
       <LineId Id="260" Count="0" />
+      <LineId Id="1257" Count="0" />
       <LineId Id="697" Count="0" />
+      <LineId Id="1258" Count="0" />
       <LineId Id="261" Count="2" />
       <LineId Id="682" Count="0" />
       <LineId Id="264" Count="3" />
@@ -548,10 +573,15 @@ END_VAR
       <LineId Id="24" Count="13" />
       <LineId Id="1" Count="0" />
     </LineIds>
+    <LineIds Name="FB_VGC.ACT_PMPS">
+      <LineId Id="30" Count="17" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
     <LineIds Name="FB_VGC.ACT_ResetAlarms">
       <LineId Id="2" Count="2" />
       <LineId Id="8" Count="0" />
       <LineId Id="5" Count="2" />
+      <LineId Id="9" Count="0" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC.M_IsClosed">

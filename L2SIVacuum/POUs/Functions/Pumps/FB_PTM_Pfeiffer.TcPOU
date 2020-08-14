@@ -17,15 +17,17 @@ VAR_OUTPUT
 	iq_stPTM : ST_PfeifferPTM;
 END_VAR
 VAR
+	TOF_RESET: TON :=(PT:=T#1S);
 	(*IO*)
 	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
 	i_xFaultNC AT%I*: BOOL; // Error
 	i_xWarn AT%I*: BOOL;
  	i_xRemote AT%I*: BOOL;
 	
-	q_RunDO AT%Q*: BOOL; // Start/Stop
+	q_RunDO AT%Q*: BOOL; // Start/Stop for TC110 link this output to the Pumping station bit
 	q_PumpingStation AT%Q*: BOOL; // Start/Stop interlock
 	q_xRemote AT%Q*: BOOL;
+	q_xReset AT%Q*: BOOL;
 END_VAR
 
 ]]></Declaration>
@@ -35,17 +37,20 @@ END_VAR
 q_xRemote := TRUE;
 (* Interlock Sum *)
 iq_stPtm.xExtRunOk:= i_xExtILKOk;
-IF iq_stPTM.xExtRunOk THEN
+//For compatability with TC110
+(*IF iq_stPTM.xExtRunOk THEN
 	q_PumpingStation:= TRUE;
 ELSE 
 	q_PumpingStation:= FALSE;
-END_IF
+END_IF*)
 
-IF iq_stPTM.xExtRunOk AND NOT iq_stPTM.i_xFault OR iq_stPTM.i_xTempFault THEN
+IF iq_stPTM.xExtRunOk AND NOT (iq_stPTM.i_xFault) (*OR iq_stPTM.i_xTempFault)*) THEN
 	iq_stPTM.q_RunDO:=iq_stPTM.xRunSW;
+	q_PumpingStation:=iq_stPTM.xRunSW;
 ELSE
 	iq_stPTM.xRunSW:=FALSE;
 	iq_stPTM.q_RunDO:=FALSE;
+	q_PumpingStation:=FALSE;
 END_IF
 
 
@@ -62,6 +67,15 @@ ELSE
 	iq_stPtm.eState := pumpFAULT;
 END_IF
 
+(*Error Reset*)
+(* to reset the Reset Bit *)
+ IF (iq_stPTM.xResetSW ) THEN  iq_stPTM.q_xReset := TRUE; 
+ END_IF
+ TOF_RESET (IN:= iq_stPTM.q_xReset, Q => );
+ IF TOF_RESET.Q THEN 
+	iq_stPTM.q_xReset:= FALSE;
+	iq_stPTM.xResetSW := FALSE; 
+ END_IF
 
 (*Soft IO Mapping*)
 ACT_IO();
@@ -73,6 +87,7 @@ ACT_Logger();
       <Implementation>
         <ST><![CDATA[(*outputs*)
 q_RunDO := iq_stPTM.q_RunDO;
+q_xReset := iq_stPTM.q_xReset;
 //q_xRemote := iq_stPTM.
 //q_PumpingStation AT%Q*: BOOL; // Start/Stop
 	
@@ -152,7 +167,7 @@ to the generic turbo structures *)
 
 (* Readbacks *)
 iq_stPTM.i_xAccel := st_Pfeiffer_RBK.xPumpAccelerating_307;
-iq_stPTM.i_xAtSpd := st_Pfeiffer_RBK.xRotationSpeedAttn_306;
+//iq_stPTM.i_xAtSpd := st_Pfeiffer_RBK.xRotationSpeedAttn_306; The Atspd is already linked via Digital I/Os
 iq_stPTM.i_diCurSpd := st_Pfeiffer_RBK.diActiveRotationSpeed_309;
 iq_stPTM.i_diPwr := st_Pfeiffer_RBK.diDrivePower_316;
 iq_stPTM.i_diElecTemp := st_Pfeiffer_RBK.diTempElec_326;
@@ -183,11 +198,24 @@ END_IF
       </Implementation>
     </Method>
     <LineIds Name="FB_PTM_Pfeiffer">
-      <LineId Id="3" Count="36" />
+      <LineId Id="3" Count="4" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="8" Count="7" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="19" Count="14" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="70" Count="6" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="35" Count="4" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Pfeiffer.ACT_IO">
-      <LineId Id="2" Count="9" />
+      <LineId Id="2" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="4" Count="7" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Pfeiffer.ACT_Logger">

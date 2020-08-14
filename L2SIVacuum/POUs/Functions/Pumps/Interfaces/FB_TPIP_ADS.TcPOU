@@ -4,7 +4,7 @@
     <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
 (* Not all the Variables in the original structure is required, just few signals *)
 (* The variable values are read via ADS using the symbol name*)
-FUNCTION_BLOCK FB_TPIP_ADS
+FUNCTION_BLOCK FB_TPIP_ADS Extends FB_ADS
 VAR_INPUT
 	sNetId : String; //NetID of the Destination PLC controller
 	nPort : uint; // port number
@@ -21,6 +21,7 @@ VAR
 	fb_Read_VG: FB_ReadAdsSymByName;
 	ftReset: F_TRIG;
 	xFirstPass: BOOL:= true;
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -50,18 +51,44 @@ fb_CheckWatchdog(
 	nCnt:= iWatchdog , 
 	bWatchdog=> , 
 	nLastCnt=> );
+
 bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
+tErrorPresent(CLK:=bError);
 
 IF (fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog) THEN
 IG.xPRESS_OK := FALSE;
-END_IF;]]></ST>
+END_IF;
+
+(*Logger*)
+ACT_Logger();
+]]></ST>
     </Implementation>
+    <Action Name="ACT_Logger" Id="{38972a06-b23c-4eea-ac8d-b4d990fc9b09}">
+      <Implementation>
+        <ST><![CDATA[IF tErrorPresent.Q THEN
+ IF(fb_Read_VG.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+ IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+END_IF
+]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="FB_TPIP_ADS">
-      <LineId Id="3" Count="26" />
+      <LineId Id="3" Count="25" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="29" Count="0" />
       <LineId Id="52" Count="0" />
+      <LineId Id="79" Count="0" />
       <LineId Id="30" Count="0" />
       <LineId Id="2" Count="0" />
       <LineId Id="53" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="80" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TPIP_ADS.ACT_Logger">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

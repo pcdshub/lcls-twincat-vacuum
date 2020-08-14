@@ -1,21 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
-  <POU Name="FB_Gauge_Interface" Id="{1ed0a657-4e26-4a4b-9434-968a1918180c}" SpecialFunc="None">
+  <POU Name="FB_PIP_Interface_In" Id="{53a4c0c6-278d-4605-a46d-3fb4c975aa66}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
 (* Not all the Variables in the original structure is required, just few signals *)
 (* They have to be linked to the custom created variables on the EL6692/5 primary side*)
-FUNCTION_BLOCK FB_Gauge_Interface
+FUNCTION_BLOCK FB_PIP_Interface_In
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := 'pv:'}
 	VG : ST_VG;
 END_VAR
 VAR
-	i_rPRESS AT%I*: REAL;  
+	i_rPRESS AT%I*: REAL;  //This is the human-readable pressure
 	i_xAT_VAC AT%I*: BOOL;
 	i_xPRESS_OK AT%I*: BOOL;
-	
+	i_xIs_Connected AT%I*: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -26,14 +25,16 @@ END_VAR
 VG.rPRESS := i_rPRESS;
 VG.xAT_VAC := i_xAT_VAC;
 VG.xPRESS_OK := i_xPRESS_OK;
-]]></ST>
+
+
+IF NOT(i_xIs_Connected) THEN
+	i_xPRESS_OK := FALSE;
+END_IF]]></ST>
     </Implementation>
-    <LineIds Name="FB_Gauge_Interface">
-      <LineId Id="11" Count="2" />
-      <LineId Id="24" Count="0" />
+    <LineIds Name="FB_PIP_Interface_In">
+      <LineId Id="18" Count="8" />
       <LineId Id="9" Count="0" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="43" Count="0" />
+      <LineId Id="27" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

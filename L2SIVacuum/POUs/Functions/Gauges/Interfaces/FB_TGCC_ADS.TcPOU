@@ -4,7 +4,7 @@
     <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
 (* Not all the Variables in the original structure is required, just few signals *)
 (* The variable values are read via ADS using the symbol name*)
-FUNCTION_BLOCK FB_TGCC_ADS
+FUNCTION_BLOCK FB_TGCC_ADS Extends FB_ADS
 VAR_INPUT
 	sNetId : String; //NetID of the Destination PLC controller
 	nPort : uint; // port number
@@ -56,8 +56,20 @@ bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
 
 IF (fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog) THEN
 IG.xPRESS_OK := FALSE;
-END_IF;]]></ST>
+END_IF;
+
+(*Logger*)
+ACT_Logger();]]></ST>
     </Implementation>
+    <Action Name="ACT_Logger" Id="{2e0087d1-d4d0-4792-a1d4-195e83c448e4}">
+      <Implementation>
+        <ST><![CDATA[IF tErrorPresent.Q THEN
+ IF(fb_Read_VG.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+ IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+END_IF
+]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="FB_TGCC_ADS">
       <LineId Id="3" Count="3" />
       <LineId Id="53" Count="0" />
@@ -66,6 +78,12 @@ END_IF;]]></ST>
       <LineId Id="8" Count="22" />
       <LineId Id="75" Count="1" />
       <LineId Id="2" Count="0" />
+      <LineId Id="99" Count="1" />
+      <LineId Id="98" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TGCC_ADS.ACT_Logger">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

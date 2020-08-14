@@ -134,7 +134,7 @@ STRUCT
 	xILKOk	:	BOOL; (* also a control *)
 	{attribute 'pytmc' := '
     pv: LOGGER;
-	io: i;
+	io: io;
 	field: ZNAM OFF ;
 	field: ONAM ON ;
     '}

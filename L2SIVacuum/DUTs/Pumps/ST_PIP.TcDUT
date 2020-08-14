@@ -36,7 +36,7 @@ STRUCT
 	
 	{attribute 'pytmc' := '
     pv: ILK_DEVICE;
-	io: o;
+	io: i;
     '}
 	sIlkDeviceName: STRING;
 	//Required for other devices using this gauge as interlock
@@ -58,6 +58,13 @@ STRUCT
     '}
 	xAutoOn : BOOL;
 
+	{attribute 'pytmc' := '
+	pv: OVRD_ON ;
+	field: ZNAM Override OFF ;
+	field: ONAM Override ON;
+	io: io;
+	'}
+	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 	
 	{attribute 'pytmc' := '
     pv: FORCE_START;

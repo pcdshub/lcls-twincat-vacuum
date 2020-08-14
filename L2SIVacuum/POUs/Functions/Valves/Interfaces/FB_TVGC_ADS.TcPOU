@@ -4,7 +4,7 @@
     <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
 (* Not all the fields in the original structure is required, just few signals *)
 (*Use with FB_ADS_WATCHDOG on remotePLC*)
-FUNCTION_BLOCK FB_TVGC_ADS
+FUNCTION_BLOCK FB_TVGC_ADS extends FB_ADS
 VAR_INPUT
 	sNetId : String; //NetID of the Destination PLC controller
 	nPort : UINT; // port number
@@ -49,15 +49,30 @@ fb_CheckWatchdog(
 	bWatchdog=> , 
 	nLastCnt=> );
 bError:= fb_Read_VGC.bError OR fb_CheckWatchdog.bWatchdog;
-]]></ST>
+
+ACT_Logger();]]></ST>
     </Implementation>
+    <Action Name="ACT_Logger" Id="{f968819d-a5e1-4bf2-b23f-a713f977eb83}">
+      <Implementation>
+        <ST><![CDATA[IF tErrorPresent.Q THEN
+ IF(fb_Read_VGC.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+ IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+END_IF
+]]></ST>
+      </Implementation>
+    </Action>
     <LineIds Name="FB_TVGC_ADS">
       <LineId Id="18" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="34" Count="12" />
       <LineId Id="58" Count="0" />
       <LineId Id="107" Count="8" />
+      <LineId Id="137" Count="0" />
       <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_TVGC_ADS.ACT_Logger">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
