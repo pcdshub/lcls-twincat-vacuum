@@ -576,6 +576,13 @@ ST_PfeifferPTM
     HiPace series w/ onboard controllers
     More?
     *)
+    	{attribute 'pytmc' := '
+        pv: RESET;
+    	field: ZNAM FALSE; 
+    	field: ONAM TRUE;
+    	io: i;
+    	'}
+    	q_xReset   : BOOL;
     	//Readbacks
     	{attribute 'pytmc' := '
     	pv: DrivePower_RBV;
@@ -625,6 +632,7 @@ ST_PfeifferPTM
     	'}
     	i_uiPowerPctRbk :   UINT;
     	
+    	
     //Controls
     	q_uiPowerPct : UINT := 100; //Should normally be 100
     	
@@ -672,7 +680,7 @@ ST_PIP
     	
     	{attribute 'pytmc' := '
         pv: ILK_DEVICE;
-    	io: o;
+    	io: i;
         '}
     	sIlkDeviceName: STRING;
     	//Required for other devices using this gauge as interlock
@@ -694,6 +702,13 @@ ST_PIP
         '}
     	xAutoOn : BOOL;
 
+    	{attribute 'pytmc' := '
+    	pv: OVRD_ON ;
+    	field: ZNAM Override OFF ;
+    	field: ONAM Override ON;
+    	io: io;
+    	'}
+    	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
     	
     	{attribute 'pytmc' := '
         pv: FORCE_START;
@@ -1141,7 +1156,7 @@ ST_ValveBase
     	sErrorMessage: STRING;
     	{attribute 'pytmc' := '
         pv: LOGGER;
-    	io: i;
+    	io: io;
     	field: ZNAM OFF ;
     	field: ONAM ON ;
         '}
@@ -1457,7 +1472,7 @@ ST_VG
     	xILKOk	:	BOOL; (* also a control *)
     	{attribute 'pytmc' := '
         pv: LOGGER;
-    	io: i;
+    	io: io;
     	field: ZNAM OFF ;
     	field: ONAM ON ;
         '}
@@ -2144,6 +2159,25 @@ FB_9XX
     END_ACTION
 
 
+FB_ADS
+^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_ADS
+    VAR_INPUT
+    END_VAR
+    VAR_OUTPUT
+    END_VAR
+    VAR
+    	 fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.FIELDBUS);
+    	tErrorPresent : R_TRIG;
+    END_VAR
+
+
+    END_FUNCTION_BLOCK
+
+
 FB_ADS_WATCHDOG
 ^^^^^^^^^^^^^^^
 
@@ -2521,7 +2555,7 @@ FB_Gauge_Interface
     	VG : ST_VG;
     END_VAR
     VAR
-    	i_rPRESS AT%I*: REAL;  //This is the human-readable pressure
+    	i_rPRESS AT%I*: REAL;  
     	i_xAT_VAC AT%I*: BOOL;
     	i_xPRESS_OK AT%I*: BOOL;
     	
@@ -4325,7 +4359,7 @@ FB_PIP_Gamma
     (* Enable HV *)
     IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
     	IF (stPump.xAutoOn) AND NOT (stPump.q_xHVEna_DO) THEN  stPump.q_xHVEna_DO := TRUE;
-    	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW;  
+    	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));  
     	END_IF
     	stPump.xILKOk:= TRUE;
     ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN 
@@ -4334,7 +4368,7 @@ FB_PIP_Gamma
     		stPump.xHVEna_SW := FALSE;
     		stPump.xILKOk := FALSE;
     	ELSE
-    		stPump.q_xHVEna_DO := stPump.xHVEna_SW; 
+    		stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode)); 
     	END_IF
     ELSIF (tonOvrd.Q AND i_xOverrideMode) THEN
     	stPump.q_xHVEna_DO := TRUE;
@@ -4378,7 +4412,7 @@ FB_PIP_Gamma
     ACT_SetGauge();
     (*Soft IO Mapping*)
     IO();
-
+    ACT_IlkOverride();
     // Log States and triggers
     ACT_Logger();
 
@@ -4405,8 +4439,8 @@ FB_PIP_Gamma
     END_ACTION
     ACTION ACT_Logger:
     // ILK logger
-    tAction(CLK:= );
-    IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTARTING)) THEN 
+
+    IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTARTING)) AND NOT tonOvrd.Q THEN 
     	fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); 
     END_IF
 
@@ -4469,7 +4503,7 @@ FB_PIP_Gamma
     ACTION IO:
     stPump.sIlkDeviceName := This^.i_stGauge.sPath;
     stPump.xError := (stPump.eState = pumpFAULT);
-     
+    stPump.xOverrideMode := i_xOverrideMode; 
     (*inputs*)
     stPump.i_iPRESS:=	i_iPRESS;  
     stPump.i_xHV_DI:=	i_xSP_DI;
@@ -4478,6 +4512,72 @@ FB_PIP_Gamma
 
      This^.stPump.sPath:= sPath;
     END_ACTION
+
+
+FB_PIP_Interface_In
+^^^^^^^^^^^^^^^^^^^
+
+::
+
+    (* This function block is created for interface devices between different PLC*)
+    (* Not all the Variables in the original structure is required, just few signals *)
+    (* They have to be linked to the custom created variables on the EL6692/5 primary side*)
+    FUNCTION_BLOCK FB_PIP_Interface_In
+    VAR_INPUT
+    END_VAR
+    VAR_OUTPUT
+    	VG : ST_VG;
+    END_VAR
+    VAR
+    	i_rPRESS AT%I*: REAL;  //This is the human-readable pressure
+    	i_xAT_VAC AT%I*: BOOL;
+    	i_xPRESS_OK AT%I*: BOOL;
+    	i_xIs_Connected AT%I*: BOOL;
+    END_VAR
+    (* This function block is created for interface devices between different PLC*)
+    (* Not all the Variables in the original structure is required, just few signals *)
+    (* They have to be linked to the custom created variables on the EL6692/5 primary side*)
+
+    VG.rPRESS := i_rPRESS;
+    VG.xAT_VAC := i_xAT_VAC;
+    VG.xPRESS_OK := i_xPRESS_OK;
+
+
+    IF NOT(i_xIs_Connected) THEN
+    	i_xPRESS_OK := FALSE;
+    END_IF
+
+    END_FUNCTION_BLOCK
+
+
+FB_PIP_Interface_Out
+^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    (* This function block is created for interface devices between different PLC*)
+    (* Not all the Variables in the original structure is required, just few signals *)
+    (* They have to be linked to the custom created variables on the EL6692/5 primary side*)
+    FUNCTION_BLOCK FB_PIP_Interface_Out
+    VAR_INPUT
+    	VG : ST_VG;
+    END_VAR
+    VAR_OUTPUT
+    END_VAR
+    VAR
+    	i_rPRESS AT%Q*: REAL; 
+    	i_xAT_VAC AT%Q*: BOOL;
+    	i_xPRESS_OK AT%Q*: BOOL;
+    END_VAR
+    (* This function block is created for interface devices between different PLC*)
+    (* Not all the Variables in the original structure is required, just few signals *)
+    (* They have to be linked to the custom created variables on the EL6692/5 primary side*)
+
+    i_rPRESS:=VG.rPRESS;
+    i_xAT_VAC:= VG.xAT_VAC;
+    i_xPRESS_OK:=VG.xPRESS_OK;
+
+    END_FUNCTION_BLOCK
 
 
 FB_PIP_Test
@@ -5408,32 +5508,37 @@ FB_PTM_Pfeiffer
     	iq_stPTM : ST_PfeifferPTM;
     END_VAR
     VAR
+    	TOF_RESET: TON :=(PT:=T#1S);
     	(*IO*)
     	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
     	i_xFaultNC AT%I*: BOOL; // Error
     	i_xWarn AT%I*: BOOL;
      	i_xRemote AT%I*: BOOL;
     	
-    	q_RunDO AT%Q*: BOOL; // Start/Stop
+    	q_RunDO AT%Q*: BOOL; // Start/Stop for TC110 link this output to the Pumping station bit
     	q_PumpingStation AT%Q*: BOOL; // Start/Stop interlock
     	q_xRemote AT%Q*: BOOL;
+    	q_xReset AT%Q*: BOOL;
     END_VAR
     (* Basic pump supervisory section *)
 
     q_xRemote := TRUE;
     (* Interlock Sum *)
     iq_stPtm.xExtRunOk:= i_xExtILKOk;
-    IF iq_stPTM.xExtRunOk THEN
+    //For compatability with TC110
+    (*IF iq_stPTM.xExtRunOk THEN
     	q_PumpingStation:= TRUE;
     ELSE 
     	q_PumpingStation:= FALSE;
-    END_IF
+    END_IF*)
 
-    IF iq_stPTM.xExtRunOk AND NOT iq_stPTM.i_xFault OR iq_stPTM.i_xTempFault THEN
+    IF iq_stPTM.xExtRunOk AND NOT (iq_stPTM.i_xFault) (*OR iq_stPTM.i_xTempFault)*) THEN
     	iq_stPTM.q_RunDO:=iq_stPTM.xRunSW;
+    	q_PumpingStation:=iq_stPTM.xRunSW;
     ELSE
     	iq_stPTM.xRunSW:=FALSE;
     	iq_stPTM.q_RunDO:=FALSE;
+    	q_PumpingStation:=FALSE;
     END_IF
 
 
@@ -5450,6 +5555,15 @@ FB_PTM_Pfeiffer
     	iq_stPtm.eState := pumpFAULT;
     END_IF
 
+    (*Error Reset*)
+    (* to reset the Reset Bit *)
+     IF (iq_stPTM.xResetSW ) THEN  iq_stPTM.q_xReset := TRUE; 
+     END_IF
+     TOF_RESET (IN:= iq_stPTM.q_xReset, Q => );
+     IF TOF_RESET.Q THEN 
+    	iq_stPTM.q_xReset:= FALSE;
+    	iq_stPTM.xResetSW := FALSE; 
+     END_IF
 
     (*Soft IO Mapping*)
     ACT_IO();
@@ -5460,6 +5574,7 @@ FB_PTM_Pfeiffer
     ACTION ACT_IO:
     (*outputs*)
     q_RunDO := iq_stPTM.q_RunDO;
+    q_xReset := iq_stPTM.q_xReset;
     //q_xRemote := iq_stPTM.
     //q_PumpingStation AT%Q*: BOOL; // Start/Stop
     	
@@ -5846,7 +5961,7 @@ FB_TGCC_ADS
     (* This function block is created for interface devices between different PLC*)
     (* Not all the Variables in the original structure is required, just few signals *)
     (* The variable values are read via ADS using the symbol name*)
-    FUNCTION_BLOCK FB_TGCC_ADS
+    FUNCTION_BLOCK FB_TGCC_ADS Extends FB_ADS
     VAR_INPUT
     	sNetId : String; //NetID of the Destination PLC controller
     	nPort : uint; // port number
@@ -5897,7 +6012,16 @@ FB_TGCC_ADS
     IG.xPRESS_OK := FALSE;
     END_IF;
 
+    (*Logger*)
+    ACT_Logger();
+
     END_FUNCTION_BLOCK
+    ACTION ACT_Logger:
+    IF tErrorPresent.Q THEN
+     IF(fb_Read_VG.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+     IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+    END_IF
+    END_ACTION
 
 
 FB_TPIP_ADS
@@ -5908,7 +6032,7 @@ FB_TPIP_ADS
     (* This function block is created for interface devices between different PLC*)
     (* Not all the Variables in the original structure is required, just few signals *)
     (* The variable values are read via ADS using the symbol name*)
-    FUNCTION_BLOCK FB_TPIP_ADS
+    FUNCTION_BLOCK FB_TPIP_ADS Extends FB_ADS
     VAR_INPUT
     	sNetId : String; //NetID of the Destination PLC controller
     	nPort : uint; // port number
@@ -5925,6 +6049,7 @@ FB_TPIP_ADS
     	fb_Read_VG: FB_ReadAdsSymByName;
     	ftReset: F_TRIG;
     	xFirstPass: BOOL:= true;
+    	
     END_VAR
     ftReset(CLK:= fb_Read_VG.bBusy OR xFirstPass);
     xFirstPass := false;
@@ -5951,13 +6076,24 @@ FB_TPIP_ADS
     	nCnt:= iWatchdog , 
     	bWatchdog=> , 
     	nLastCnt=> );
+
     bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
+    tErrorPresent(CLK:=bError);
 
     IF (fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog) THEN
     IG.xPRESS_OK := FALSE;
     END_IF;
 
+    (*Logger*)
+    ACT_Logger();
+
     END_FUNCTION_BLOCK
+    ACTION ACT_Logger:
+    IF tErrorPresent.Q THEN
+     IF(fb_Read_VG.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+     IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+    END_IF
+    END_ACTION
 
 
 FB_TurboExtLogic
@@ -6027,7 +6163,7 @@ FB_TVGC_ADS
     (* This function block is created for interface devices between different PLC*)
     (* Not all the fields in the original structure is required, just few signals *)
     (*Use with FB_ADS_WATCHDOG on remotePLC*)
-    FUNCTION_BLOCK FB_TVGC_ADS
+    FUNCTION_BLOCK FB_TVGC_ADS extends FB_ADS
     VAR_INPUT
     	sNetId : String; //NetID of the Destination PLC controller
     	nPort : UINT; // port number
@@ -6071,7 +6207,15 @@ FB_TVGC_ADS
     	nLastCnt=> );
     bError:= fb_Read_VGC.bError OR fb_CheckWatchdog.bWatchdog;
 
+    ACT_Logger();
+
     END_FUNCTION_BLOCK
+    ACTION ACT_Logger:
+    IF tErrorPresent.Q THEN
+     IF(fb_Read_VGC.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+     IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+    END_IF
+    END_ACTION
 
 
 FB_Valve
@@ -6726,11 +6870,7 @@ FB_VGC
         pv: EPS_OK
     	'}
     	i_xEPS_OK:	BOOL	:= TRUE; (*External EPS interlock, Set to TRUE when no EPS interlock is required, otherwise set to correct interlock signal*)
-    	{attribute 'pytmc' := '
-        pv: MPS_OK
-    	'}
-    	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
-    		i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required. If this Valve is neigboring a Fast Shutter this should be linked to the fast shutter xVAC_FAULT_OK*)
+    	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required. If this Valve is neigboring a Fast Shutter this should be linked to the fast shutter xVAC_FAULT_OK*)
     	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
     	// Reset fault
     	{attribute 'pytmc' := '
@@ -6739,6 +6879,7 @@ FB_VGC
         i_xReset: BOOL;
     	i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
     	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
+    	i_nTransitionRootID: UDINT; //A unique transition Root ID that is equal to or greater than 1000
     END_VAR
     VAR_OUTPUT
     	{attribute 'pytmc' := '
@@ -6755,9 +6896,18 @@ FB_VGC
     END_VAR
     VAR_IN_OUT
     	io_fbFFHWO    :    FB_HardwareFFOutput;
+    	fbArbiter: FB_Arbiter();
     END_VAR
     VAR
     	// PMPS
+    	{attribute 'pytmc' := '
+        pv: MPS_OK
+    	'}
+    	i_xPMPS_OK:	BOOL	; (*PMPS interlock*)
+    	bMoving : BOOL;
+    	bDone :BOOL;
+    	tBPTMtimeout:TON;
+    	bptm: BeamParameterTransitionManager;  
     	FFO    :    FB_FastFault :=(
             i_DevName := 'VGC',
             i_Desc := 'Fault occurs when the valve is not in open state',
@@ -6999,15 +7149,15 @@ FB_VGC
 
     ftClose(CLK:= iq_stValve.pv_xOPN_SW);
     rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
-    (*when interlock is lost the Valve closes regarldess of the status of the PMPS and EPS*)
+    (*when interlock is lost the Valve closes regardless of the status of the PMPS and EPS*)
     IF NOT (iq_stValve.xOPN_OK) THEN
     	iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
     	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
     ELSIF i_xPMPS_OK THEN 
     	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
-    ELSIF NOT (i_xPMPS_OK) THEN
+    //ELSIF NOT (i_xPMPS_OK) THEN
     	// Only override mode
-    	iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
+    	//iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
     END_IF
 
 
@@ -7039,17 +7189,6 @@ FB_VGC
     tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
     tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
 
-    // Log valve timeouts
-    tErrorPresent(CLK:=iq_stValve.bErrorPresent);
-    IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
-
-    // Log valve open
-    tAction(CLK:= iq_stValve.q_xOPN_DO);
-    IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
-
-    // Log override mode enabled
-    tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
-    IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 
     // Alarm reset
     //////////////////////////////////////
@@ -7061,6 +7200,8 @@ FB_VGC
     // Log States and triggers
     ACT_Logger();
 
+    (*PMPS*)
+    ACT_PMPS();
     (*FAST FAULT*)
     FFO(i_xOK := xMPS_OK,
         i_xReset := i_xReset,
@@ -7084,10 +7225,10 @@ FB_VGC
     ACTION ACT_Logger:
     // ILK logger
 
-    (*IF NOT i_xExtILK_OK AND ePrevState = OPEN THEN
-     		fbLogger(sMsg:='Lost external interlock while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+    IF NOT (iq_stValve.xOPN_OK) AND (ePrevState = OPEN) AND NOT (TonOvrd.Q) THEN
+     		fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);  	
     END_IF
-    *)
+
 
     //Positiong STATE Logger  
     IF ePrevState <> iq_stValve.eState THEN
@@ -7137,6 +7278,26 @@ FB_VGC
     tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
     END_ACTION
+    ACTION ACT_PMPS:
+    bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);
+    bDone := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xOpnLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xClsLS);
+    If (i_xIsAperture ) OR (iq_stValve.pv_xOPN_SW )THEN
+    	bptm.i_stRequestedAssertion := PMPS_GVL.cstFullBeam;
+    ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cstSafeBeam;
+    END_IF
+    bptm(fbArbiter:=fbArbiter,
+         i_TransitionAssertionID:=i_nTransitionRootID+2,
+         i_stTransitionAssertion:=PMPS_GVL.cstSafeBeam,
+         i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xOPN_SW),
+         i_stRequestedAssertion:=,
+         i_xMoving:=bMoving,
+         i_xDoneMoving:= bDone,
+         stCurrentBeamParameters:=PMPS_GVL.stCurrentBeamParameters,
+         q_xTransitionAuthorized=>);
+    // Timeout
+    tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
+    i_xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
+    END_ACTION
     ACTION ACT_ResetAlarms:
     iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
     iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
@@ -7145,6 +7306,7 @@ FB_VGC
 
     IF ( iq_stValve.pv_xAlmRst) THEN
     	iq_stValve.sErrorMessage :='';
+    	 iq_stValve.pv_xAlmRst := FALSE;
     END_IF
     END_ACTION
 

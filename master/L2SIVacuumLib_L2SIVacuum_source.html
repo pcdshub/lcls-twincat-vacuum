@@ -143,6 +143,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#f-vrc-diode-ilk-ok">F_VRC_DIODE_ILK_OK</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-972">FB_972</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-9xx">FB_9XX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ads">FB_ADS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-ads-watchdog">FB_ADS_WATCHDOG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-cmr362">FB_CMR362</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-ebaradrypump">FB_EbaraDryPump</a></li>
@@ -168,6 +169,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks-937a">FB_MKS_937A</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks-937b">FB_MKS_937B</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-pip-gamma">FB_PIP_Gamma</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-pip-interface-in">FB_PIP_Interface_In</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-pip-interface-out">FB_PIP_Interface_Out</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-pip-test">FB_PIP_Test</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-pressurestate">FB_PressureState</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-ptm-agilent">FB_PTM_Agilent</a></li>
@@ -818,6 +821,13 @@ Applicable to:
 HiPace series w/ onboard controllers
 More?
 *)
+    {attribute &#39;pytmc&#39; := &#39;
+    pv: RESET;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    &#39;}
+    q_xReset   : BOOL;
     //Readbacks
     {attribute &#39;pytmc&#39; := &#39;
     pv: DrivePower_RBV;
@@ -867,6 +877,7 @@ More?
     &#39;}
     i_uiPowerPctRbk :   UINT;
 
+
 //Controls
     q_uiPowerPct : UINT := 100; //Should normally be 100
 
@@ -912,7 +923,7 @@ END_TYPE
 
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">ILK_DEVICE</span><span class="p">;</span>
-    <span class="n">io</span><span class="p">:</span> <span class="n">o</span><span class="p">;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">i</span><span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">sIlkDeviceName</span><span class="p">:</span> <span class="n">STRING</span><span class="p">;</span>
     <span class="o">//</span><span class="n">Required</span> <span class="k">for</span> <span class="n">other</span> <span class="n">devices</span> <span class="n">using</span> <span class="n">this</span> <span class="n">gauge</span> <span class="k">as</span> <span class="n">interlock</span>
@@ -934,6 +945,13 @@ END_TYPE
     <span class="s1">&#39;}</span>
     <span class="n">xAutoOn</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
 
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">OVRD_ON</span> <span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">Override</span> <span class="n">OFF</span> <span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">Override</span> <span class="n">ON</span><span class="p">;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">xOverrideMode</span>   <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span> <span class="n">Shows</span> <span class="n">the</span> <span class="n">override</span> <span class="n">status</span> <span class="n">of</span> <span class="n">this</span> <span class="n">valve</span> <span class="o">*</span><span class="p">)</span>
 
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">FORCE_START</span><span class="p">;</span>
@@ -1375,7 +1393,7 @@ END_TYPE
     <span class="n">sErrorMessage</span><span class="p">:</span> <span class="n">STRING</span><span class="p">;</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">LOGGER</span><span class="p">;</span>
-    <span class="n">io</span><span class="p">:</span> <span class="n">i</span><span class="p">;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OFF</span> <span class="p">;</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">ON</span> <span class="p">;</span>
     <span class="s1">&#39;}</span>
@@ -1683,7 +1701,7 @@ END_TYPE
     <span class="n">xILKOk</span>  <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span> <span class="n">also</span> <span class="n">a</span> <span class="n">control</span> <span class="o">*</span><span class="p">)</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">LOGGER</span><span class="p">;</span>
-    <span class="n">io</span><span class="p">:</span> <span class="n">i</span><span class="p">;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OFF</span> <span class="p">;</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">ON</span> <span class="p">;</span>
     <span class="s1">&#39;}</span>
@@ -2331,6 +2349,23 @@ END_FUNCTION
 </pre></div>
 </div>
 </div>
+<div class="section" id="fb-ads">
+<h2>FB_ADS<a class="headerlink" href="#fb-ads" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_ADS</span>
+<span class="n">VAR_INPUT</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+     <span class="n">fbLogger</span> <span class="p">:</span> <span class="n">FB_LogMessage</span> <span class="o">:=</span> <span class="p">(</span><span class="n">eSubsystem</span><span class="o">:=</span><span class="n">E_SubSystem</span><span class="o">.</span><span class="n">FIELDBUS</span><span class="p">);</span>
+    <span class="n">tErrorPresent</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+
+
+<span class="n">END_FUNCTION_BLOCK</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="fb-ads-watchdog">
 <h2>FB_ADS_WATCHDOG<a class="headerlink" href="#fb-ads-watchdog" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span><span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">be</span> <span class="n">used</span> <span class="n">whenever</span> <span class="n">deivce</span> <span class="n">data</span> <span class="n">going</span> <span class="n">to</span> <span class="n">be</span> <span class="n">read</span> <span class="n">over</span> <span class="n">ADS</span><span class="o">*</span><span class="p">)</span>
@@ -2697,7 +2732,7 @@ END_ACTION
     <span class="n">VG</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 <span class="n">VAR</span>
-    <span class="n">i_rPRESS</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>  <span class="o">//</span><span class="n">This</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">human</span><span class="o">-</span><span class="n">readable</span> <span class="n">pressure</span>
+    <span class="n">i_rPRESS</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
     <span class="n">i_xAT_VAC</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xPRESS_OK</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
 
@@ -4461,7 +4496,7 @@ END_ACTION
 <span class="p">(</span><span class="o">*</span> <span class="n">Enable</span> <span class="n">HV</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">IF</span> <span class="n">i_stGauge</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="n">AND</span> <span class="n">i_stGauge</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">THEN</span>
     <span class="n">IF</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">xAutoOn</span><span class="p">)</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span><span class="p">)</span> <span class="n">THEN</span>  <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
-    <span class="n">ELSE</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span><span class="p">;</span>
+    <span class="n">ELSE</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span> <span class="n">OR</span> <span class="p">((</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">));</span>
     <span class="n">END_IF</span>
     <span class="n">stPump</span><span class="o">.</span><span class="n">xILKOk</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
 <span class="n">ELSIF</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="p">(</span><span class="o">*</span><span class="n">AND</span> <span class="n">timer</span><span class="o">.</span><span class="n">Q</span><span class="o">*</span><span class="p">)</span> <span class="n">THEN</span>
@@ -4470,7 +4505,7 @@ END_ACTION
             <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
             <span class="n">stPump</span><span class="o">.</span><span class="n">xILKOk</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
     <span class="n">ELSE</span>
-            <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span><span class="p">;</span>
+            <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span> <span class="n">OR</span> <span class="p">((</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">));</span>
     <span class="n">END_IF</span>
 <span class="n">ELSIF</span> <span class="p">(</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">)</span> <span class="n">THEN</span>
     <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
@@ -4514,7 +4549,7 @@ END_ACTION
 <span class="n">ACT_SetGauge</span><span class="p">();</span>
 <span class="p">(</span><span class="o">*</span><span class="n">Soft</span> <span class="n">IO</span> <span class="n">Mapping</span><span class="o">*</span><span class="p">)</span>
 <span class="n">IO</span><span class="p">();</span>
-
+<span class="n">ACT_IlkOverride</span><span class="p">();</span>
 <span class="o">//</span> <span class="n">Log</span> <span class="n">States</span> <span class="ow">and</span> <span class="n">triggers</span>
 <span class="n">ACT_Logger</span><span class="p">();</span>
 
@@ -4541,8 +4576,8 @@ END_ACTION
 <span class="n">END_ACTION</span>
 <span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
 <span class="o">//</span> <span class="n">ILK</span> <span class="n">logger</span>
-<span class="n">tAction</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="p">);</span>
-<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">xILKOk</span><span class="p">)</span> <span class="n">AND</span> <span class="p">((</span><span class="n">ePrevState</span> <span class="o">=</span> <span class="n">pumpRUNNING</span><span class="p">)</span> <span class="n">OR</span> <span class="p">(</span><span class="n">ePrevState</span> <span class="o">=</span> <span class="n">pumpSTARTING</span><span class="p">))</span> <span class="n">THEN</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">xILKOk</span><span class="p">)</span> <span class="n">AND</span> <span class="p">((</span><span class="n">ePrevState</span> <span class="o">=</span> <span class="n">pumpRUNNING</span><span class="p">)</span> <span class="n">OR</span> <span class="p">(</span><span class="n">ePrevState</span> <span class="o">=</span> <span class="n">pumpSTARTING</span><span class="p">))</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
     <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump turned off due to loss of interlock.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
 <span class="n">END_IF</span>
 
@@ -4605,7 +4640,7 @@ END_ACTION
 <span class="n">ACTION</span> <span class="n">IO</span><span class="p">:</span>
 <span class="n">stPump</span><span class="o">.</span><span class="n">sIlkDeviceName</span> <span class="o">:=</span> <span class="n">This</span><span class="o">^.</span><span class="n">i_stGauge</span><span class="o">.</span><span class="n">sPath</span><span class="p">;</span>
 <span class="n">stPump</span><span class="o">.</span><span class="n">xError</span> <span class="o">:=</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">pumpFAULT</span><span class="p">);</span>
-
+<span class="n">stPump</span><span class="o">.</span><span class="n">xOverrideMode</span> <span class="o">:=</span> <span class="n">i_xOverrideMode</span><span class="p">;</span>
 <span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="o">*</span><span class="p">)</span>
 <span class="n">stPump</span><span class="o">.</span><span class="n">i_iPRESS</span><span class="o">:=</span>   <span class="n">i_iPRESS</span><span class="p">;</span>
 <span class="n">stPump</span><span class="o">.</span><span class="n">i_xHV_DI</span><span class="o">:=</span>   <span class="n">i_xSP_DI</span><span class="p">;</span>
@@ -4614,6 +4649,68 @@ END_ACTION
 
  <span class="n">This</span><span class="o">^.</span><span class="n">stPump</span><span class="o">.</span><span class="n">sPath</span><span class="o">:=</span> <span class="n">sPath</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fb-pip-interface-in">
+<h2>FB_PIP_Interface_In<a class="headerlink" href="#fb-pip-interface-in" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Variables</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">They</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="n">the</span> <span class="n">custom</span> <span class="n">created</span> <span class="n">variables</span> <span class="n">on</span> <span class="n">the</span> <span class="n">EL6692</span><span class="o">/</span><span class="mi">5</span> <span class="n">primary</span> <span class="n">side</span><span class="o">*</span><span class="p">)</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PIP_Interface_In</span>
+<span class="n">VAR_INPUT</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+    <span class="n">VG</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">i_rPRESS</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>  <span class="o">//</span><span class="n">This</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">human</span><span class="o">-</span><span class="n">readable</span> <span class="n">pressure</span>
+    <span class="n">i_xAT_VAC</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">i_xPRESS_OK</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">i_xIs_Connected</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Variables</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">They</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="n">the</span> <span class="n">custom</span> <span class="n">created</span> <span class="n">variables</span> <span class="n">on</span> <span class="n">the</span> <span class="n">EL6692</span><span class="o">/</span><span class="mi">5</span> <span class="n">primary</span> <span class="n">side</span><span class="o">*</span><span class="p">)</span>
+
+<span class="n">VG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">i_rPRESS</span><span class="p">;</span>
+<span class="n">VG</span><span class="o">.</span><span class="n">xAT_VAC</span> <span class="o">:=</span> <span class="n">i_xAT_VAC</span><span class="p">;</span>
+<span class="n">VG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">i_xPRESS_OK</span><span class="p">;</span>
+
+
+<span class="n">IF</span> <span class="n">NOT</span><span class="p">(</span><span class="n">i_xIs_Connected</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">i_xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fb-pip-interface-out">
+<h2>FB_PIP_Interface_Out<a class="headerlink" href="#fb-pip-interface-out" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Variables</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">They</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="n">the</span> <span class="n">custom</span> <span class="n">created</span> <span class="n">variables</span> <span class="n">on</span> <span class="n">the</span> <span class="n">EL6692</span><span class="o">/</span><span class="mi">5</span> <span class="n">primary</span> <span class="n">side</span><span class="o">*</span><span class="p">)</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PIP_Interface_Out</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">VG</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">i_rPRESS</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
+    <span class="n">i_xAT_VAC</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">i_xPRESS_OK</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Variables</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">They</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="n">the</span> <span class="n">custom</span> <span class="n">created</span> <span class="n">variables</span> <span class="n">on</span> <span class="n">the</span> <span class="n">EL6692</span><span class="o">/</span><span class="mi">5</span> <span class="n">primary</span> <span class="n">side</span><span class="o">*</span><span class="p">)</span>
+
+<span class="n">i_rPRESS</span><span class="o">:=</span><span class="n">VG</span><span class="o">.</span><span class="n">rPRESS</span><span class="p">;</span>
+<span class="n">i_xAT_VAC</span><span class="o">:=</span> <span class="n">VG</span><span class="o">.</span><span class="n">xAT_VAC</span><span class="p">;</span>
+<span class="n">i_xPRESS_OK</span><span class="o">:=</span><span class="n">VG</span><span class="o">.</span><span class="n">xPRESS_OK</span><span class="p">;</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
 </pre></div>
 </div>
 </div>
@@ -5530,32 +5627,37 @@ END_ACTION
     <span class="n">iq_stPTM</span> <span class="p">:</span> <span class="n">ST_PfeifferPTM</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 <span class="n">VAR</span>
+    <span class="n">TOF_RESET</span><span class="p">:</span> <span class="n">TON</span> <span class="o">:=</span><span class="p">(</span><span class="n">PT</span><span class="o">:=</span><span class="n">T</span><span class="c1">#1S);</span>
     <span class="p">(</span><span class="o">*</span><span class="n">IO</span><span class="o">*</span><span class="p">)</span>
     <span class="n">i_xAtSpd</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Normaml</span> <span class="n">operation</span> <span class="n">when</span> <span class="n">true</span>
     <span class="n">i_xFaultNC</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Error</span>
     <span class="n">i_xWarn</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xRemote</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
 
-    <span class="n">q_RunDO</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Start</span><span class="o">/</span><span class="n">Stop</span>
+    <span class="n">q_RunDO</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Start</span><span class="o">/</span><span class="n">Stop</span> <span class="k">for</span> <span class="n">TC110</span> <span class="n">link</span> <span class="n">this</span> <span class="n">output</span> <span class="n">to</span> <span class="n">the</span> <span class="n">Pumping</span> <span class="n">station</span> <span class="n">bit</span>
     <span class="n">q_PumpingStation</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Start</span><span class="o">/</span><span class="n">Stop</span> <span class="n">interlock</span>
     <span class="n">q_xRemote</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">q_xReset</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Basic</span> <span class="n">pump</span> <span class="n">supervisory</span> <span class="n">section</span> <span class="o">*</span><span class="p">)</span>
 
 <span class="n">q_xRemote</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Interlock</span> <span class="n">Sum</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">iq_stPtm</span><span class="o">.</span><span class="n">xExtRunOk</span><span class="o">:=</span> <span class="n">i_xExtILKOk</span><span class="p">;</span>
-<span class="n">IF</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">xExtRunOk</span> <span class="n">THEN</span>
+<span class="o">//</span><span class="n">For</span> <span class="n">compatability</span> <span class="k">with</span> <span class="n">TC110</span>
+<span class="p">(</span><span class="o">*</span><span class="n">IF</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">xExtRunOk</span> <span class="n">THEN</span>
     <span class="n">q_PumpingStation</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
 <span class="n">ELSE</span>
     <span class="n">q_PumpingStation</span><span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
-<span class="n">END_IF</span>
+<span class="n">END_IF</span><span class="o">*</span><span class="p">)</span>
 
-<span class="n">IF</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">xExtRunOk</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">i_xFault</span> <span class="n">OR</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">i_xTempFault</span> <span class="n">THEN</span>
+<span class="n">IF</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">xExtRunOk</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">i_xFault</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">OR</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">i_xTempFault</span><span class="p">)</span><span class="o">*</span><span class="p">)</span> <span class="n">THEN</span>
     <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">q_RunDO</span><span class="o">:=</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">xRunSW</span><span class="p">;</span>
+    <span class="n">q_PumpingStation</span><span class="o">:=</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">xRunSW</span><span class="p">;</span>
 <span class="n">ELSE</span>
     <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">xRunSW</span><span class="o">:=</span><span class="n">FALSE</span><span class="p">;</span>
     <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">q_RunDO</span><span class="o">:=</span><span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">q_PumpingStation</span><span class="o">:=</span><span class="n">FALSE</span><span class="p">;</span>
 <span class="n">END_IF</span>
 
 
@@ -5572,6 +5674,15 @@ END_ACTION
     <span class="n">iq_stPtm</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpFAULT</span><span class="p">;</span>
 <span class="n">END_IF</span>
 
+<span class="p">(</span><span class="o">*</span><span class="n">Error</span> <span class="n">Reset</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">to</span> <span class="n">reset</span> <span class="n">the</span> <span class="n">Reset</span> <span class="n">Bit</span> <span class="o">*</span><span class="p">)</span>
+ <span class="n">IF</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">xResetSW</span> <span class="p">)</span> <span class="n">THEN</span>  <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">q_xReset</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+ <span class="n">END_IF</span>
+ <span class="n">TOF_RESET</span> <span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">q_xReset</span><span class="p">,</span> <span class="n">Q</span> <span class="o">=&gt;</span> <span class="p">);</span>
+ <span class="n">IF</span> <span class="n">TOF_RESET</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+    <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">q_xReset</span><span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">xResetSW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+ <span class="n">END_IF</span>
 
 <span class="p">(</span><span class="o">*</span><span class="n">Soft</span> <span class="n">IO</span> <span class="n">Mapping</span><span class="o">*</span><span class="p">)</span>
 <span class="n">ACT_IO</span><span class="p">();</span>
@@ -5582,6 +5693,7 @@ END_ACTION
 <span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
 <span class="p">(</span><span class="o">*</span><span class="n">outputs</span><span class="o">*</span><span class="p">)</span>
 <span class="n">q_RunDO</span> <span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">q_RunDO</span><span class="p">;</span>
+<span class="n">q_xReset</span> <span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">q_xReset</span><span class="p">;</span>
 <span class="o">//</span><span class="n">q_xRemote</span> <span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span>
 <span class="o">//</span><span class="n">q_PumpingStation</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Start</span><span class="o">/</span><span class="n">Stop</span>
 
@@ -5956,7 +6068,7 @@ END_ACTION
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Variables</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">variable</span> <span class="n">values</span> <span class="n">are</span> <span class="n">read</span> <span class="n">via</span> <span class="n">ADS</span> <span class="n">using</span> <span class="n">the</span> <span class="n">symbol</span> <span class="n">name</span><span class="o">*</span><span class="p">)</span>
-<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TGCC_ADS</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TGCC_ADS</span> <span class="n">Extends</span> <span class="n">FB_ADS</span>
 <span class="n">VAR_INPUT</span>
     <span class="n">sNetId</span> <span class="p">:</span> <span class="n">String</span><span class="p">;</span> <span class="o">//</span><span class="n">NetID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Destination</span> <span class="n">PLC</span> <span class="n">controller</span>
     <span class="n">nPort</span> <span class="p">:</span> <span class="n">uint</span><span class="p">;</span> <span class="o">//</span> <span class="n">port</span> <span class="n">number</span>
@@ -6007,7 +6119,16 @@ END_ACTION
 <span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
 <span class="n">END_IF</span><span class="p">;</span>
 
+<span class="p">(</span><span class="o">*</span><span class="n">Logger</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Logger</span><span class="p">();</span>
+
 <span class="n">END_FUNCTION_BLOCK</span>
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="n">IF</span> <span class="n">tErrorPresent</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bError</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Read Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Watchdog Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
 </pre></div>
 </div>
 </div>
@@ -6016,7 +6137,7 @@ END_ACTION
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Variables</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">variable</span> <span class="n">values</span> <span class="n">are</span> <span class="n">read</span> <span class="n">via</span> <span class="n">ADS</span> <span class="n">using</span> <span class="n">the</span> <span class="n">symbol</span> <span class="n">name</span><span class="o">*</span><span class="p">)</span>
-<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TPIP_ADS</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TPIP_ADS</span> <span class="n">Extends</span> <span class="n">FB_ADS</span>
 <span class="n">VAR_INPUT</span>
     <span class="n">sNetId</span> <span class="p">:</span> <span class="n">String</span><span class="p">;</span> <span class="o">//</span><span class="n">NetID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Destination</span> <span class="n">PLC</span> <span class="n">controller</span>
     <span class="n">nPort</span> <span class="p">:</span> <span class="n">uint</span><span class="p">;</span> <span class="o">//</span> <span class="n">port</span> <span class="n">number</span>
@@ -6033,6 +6154,7 @@ END_ACTION
     <span class="n">fb_Read_VG</span><span class="p">:</span> <span class="n">FB_ReadAdsSymByName</span><span class="p">;</span>
     <span class="n">ftReset</span><span class="p">:</span> <span class="n">F_TRIG</span><span class="p">;</span>
     <span class="n">xFirstPass</span><span class="p">:</span> <span class="n">BOOL</span><span class="o">:=</span> <span class="n">true</span><span class="p">;</span>
+
 <span class="n">END_VAR</span>
 <span class="n">ftReset</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bBusy</span> <span class="n">OR</span> <span class="n">xFirstPass</span><span class="p">);</span>
 <span class="n">xFirstPass</span> <span class="o">:=</span> <span class="n">false</span><span class="p">;</span>
@@ -6059,13 +6181,24 @@ END_ACTION
     <span class="n">nCnt</span><span class="o">:=</span> <span class="n">iWatchdog</span> <span class="p">,</span>
     <span class="n">bWatchdog</span><span class="o">=&gt;</span> <span class="p">,</span>
     <span class="n">nLastCnt</span><span class="o">=&gt;</span> <span class="p">);</span>
+
 <span class="n">bError</span><span class="o">:=</span> <span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bError</span> <span class="n">OR</span> <span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">;</span>
+<span class="n">tErrorPresent</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span><span class="n">bError</span><span class="p">);</span>
 
 <span class="n">IF</span> <span class="p">(</span><span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bError</span> <span class="n">OR</span> <span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">)</span> <span class="n">THEN</span>
 <span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
 <span class="n">END_IF</span><span class="p">;</span>
 
+<span class="p">(</span><span class="o">*</span><span class="n">Logger</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Logger</span><span class="p">();</span>
+
 <span class="n">END_FUNCTION_BLOCK</span>
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="n">IF</span> <span class="n">tErrorPresent</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bError</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Read Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Watchdog Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
 </pre></div>
 </div>
 </div>
@@ -6129,7 +6262,7 @@ END_ACTION
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">fields</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span><span class="n">Use</span> <span class="k">with</span> <span class="n">FB_ADS_WATCHDOG</span> <span class="n">on</span> <span class="n">remotePLC</span><span class="o">*</span><span class="p">)</span>
-<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TVGC_ADS</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TVGC_ADS</span> <span class="n">extends</span> <span class="n">FB_ADS</span>
 <span class="n">VAR_INPUT</span>
     <span class="n">sNetId</span> <span class="p">:</span> <span class="n">String</span><span class="p">;</span> <span class="o">//</span><span class="n">NetID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Destination</span> <span class="n">PLC</span> <span class="n">controller</span>
     <span class="n">nPort</span> <span class="p">:</span> <span class="n">UINT</span><span class="p">;</span> <span class="o">//</span> <span class="n">port</span> <span class="n">number</span>
@@ -6173,7 +6306,15 @@ END_ACTION
     <span class="n">nLastCnt</span><span class="o">=&gt;</span> <span class="p">);</span>
 <span class="n">bError</span><span class="o">:=</span> <span class="n">fb_Read_VGC</span><span class="o">.</span><span class="n">bError</span> <span class="n">OR</span> <span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">;</span>
 
+<span class="n">ACT_Logger</span><span class="p">();</span>
+
 <span class="n">END_FUNCTION_BLOCK</span>
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="n">IF</span> <span class="n">tErrorPresent</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_Read_VGC</span><span class="o">.</span><span class="n">bError</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Read Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Watchdog Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
 </pre></div>
 </div>
 </div>
@@ -6812,11 +6953,7 @@ VAR_INPUT
     pv: EPS_OK
     &#39;}
     i_xEPS_OK:      BOOL    := TRUE; (*External EPS interlock, Set to TRUE when no EPS interlock is required, otherwise set to correct interlock signal*)
-    {attribute &#39;pytmc&#39; := &#39;
-    pv: MPS_OK
-    &#39;}
-    i_xPMPS_OK:     BOOL    ; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
-            i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required. If this Valve is neigboring a Fast Shutter this should be linked to the fast shutter xVAC_FAULT_OK*)
+    i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required. If this Valve is neigboring a Fast Shutter this should be linked to the fast shutter xVAC_FAULT_OK*)
     i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
     // Reset fault
     {attribute &#39;pytmc&#39; := &#39;
@@ -6825,6 +6962,7 @@ VAR_INPUT
     i_xReset: BOOL;
     i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
     i_sDevName : T_MaxString :=  &#39;VGC&#39;; // Device name for diagnostic
+    i_nTransitionRootID: UDINT; //A unique transition Root ID that is equal to or greater than 1000
 END_VAR
 VAR_OUTPUT
     {attribute &#39;pytmc&#39; := &#39;
@@ -6841,9 +6979,18 @@ VAR_OUTPUT
 END_VAR
 VAR_IN_OUT
     io_fbFFHWO    :    FB_HardwareFFOutput;
+    fbArbiter: FB_Arbiter();
 END_VAR
 VAR
     // PMPS
+    {attribute &#39;pytmc&#39; := &#39;
+    pv: MPS_OK
+    &#39;}
+    i_xPMPS_OK:     BOOL    ; (*PMPS interlock*)
+    bMoving : BOOL;
+    bDone :BOOL;
+    tBPTMtimeout:TON;
+    bptm: BeamParameterTransitionManager;
     FFO    :    FB_FastFault :=(
         i_DevName := &#39;VGC&#39;,
         i_Desc := &#39;Fault occurs when the valve is not in open state&#39;,
@@ -7085,15 +7232,15 @@ tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
 ftClose(CLK:= iq_stValve.pv_xOPN_SW);
 rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
-(*when interlock is lost the Valve closes regarldess of the status of the PMPS and EPS*)
+(*when interlock is lost the Valve closes regardless of the status of the PMPS and EPS*)
 IF NOT (iq_stValve.xOPN_OK) THEN
     iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
     iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 ELSIF i_xPMPS_OK THEN
     iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
-ELSIF NOT (i_xPMPS_OK) THEN
+//ELSIF NOT (i_xPMPS_OK) THEN
     // Only override mode
-    iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
+    //iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
 END_IF
 
 
@@ -7125,17 +7272,6 @@ END_IF
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
 tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
 
-// Log valve timeouts
-tErrorPresent(CLK:=iq_stValve.bErrorPresent);
-IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
-
-// Log valve open
-tAction(CLK:= iq_stValve.q_xOPN_DO);
-IF tAction.Q THEN fbLogger(sMsg:=&#39;Valve commanded open&#39;, eSevr:=TcEventSeverity.Info); END_IF
-
-// Log override mode enabled
-tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
-IF tOverrideActivated.Q THEN fbLogger(sMsg:=&#39;Valve override mode activated&#39;, eSevr:=TcEventSeverity.Warning); END_IF
 
 // Alarm reset
 //////////////////////////////////////
@@ -7147,6 +7283,8 @@ ACT_IO();
 // Log States and triggers
 ACT_Logger();
 
+(*PMPS*)
+ACT_PMPS();
 (*FAST FAULT*)
 FFO(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
@@ -7170,10 +7308,10 @@ END_ACTION
 ACTION ACT_Logger:
 // ILK logger
 
-(*IF NOT i_xExtILK_OK AND ePrevState = OPEN THEN
-            fbLogger(sMsg:=&#39;Lost external interlock while valve was open.&#39;, eSevr:=TcEventSeverity.Critical);
+IF NOT (iq_stValve.xOPN_OK) AND (ePrevState = OPEN) AND NOT (TonOvrd.Q) THEN
+            fbLogger(sMsg:=&#39;Lost interlock ok bit while valve was open.&#39;, eSevr:=TcEventSeverity.Critical);
 END_IF
-*)
+
 
 //Positiong STATE Logger
 IF ePrevState &lt;&gt; iq_stValve.eState THEN
@@ -7223,6 +7361,26 @@ IF tAction.Q THEN fbLogger(sMsg:=&#39;Valve commanded open&#39;, eSevr:=TcEventS
 tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
 IF tOverrideActivated.Q THEN fbLogger(sMsg:=&#39;Valve override mode activated&#39;, eSevr:=TcEventSeverity.Warning); END_IF
 END_ACTION
+ACTION ACT_PMPS:
+bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);
+bDone := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xOpnLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xClsLS);
+If (i_xIsAperture ) OR (iq_stValve.pv_xOPN_SW )THEN
+    bptm.i_stRequestedAssertion := PMPS_GVL.cstFullBeam;
+ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cstSafeBeam;
+END_IF
+bptm(fbArbiter:=fbArbiter,
+     i_TransitionAssertionID:=i_nTransitionRootID+2,
+     i_stTransitionAssertion:=PMPS_GVL.cstSafeBeam,
+     i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xOPN_SW),
+     i_stRequestedAssertion:=,
+     i_xMoving:=bMoving,
+     i_xDoneMoving:= bDone,
+     stCurrentBeamParameters:=PMPS_GVL.stCurrentBeamParameters,
+     q_xTransitionAuthorized=&gt;);
+// Timeout
+tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
+i_xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
+END_ACTION
 ACTION ACT_ResetAlarms:
 iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
 iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
@@ -7231,6 +7389,7 @@ iq_stValve.xERR_ExtFault R= iq_stValve.pv_xAlmRst;
 
 IF ( iq_stValve.pv_xAlmRst) THEN
     iq_stValve.sErrorMessage :=&#39;&#39;;
+     iq_stValve.pv_xAlmRst := FALSE;
 END_IF
 END_ACTION
 </pre></div>

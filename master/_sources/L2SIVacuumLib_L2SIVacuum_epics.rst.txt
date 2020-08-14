@@ -69,12 +69,20 @@ FB_MKS275
         | io: input
 
 
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).PG.xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
     * - $(PREFIX):LOGGER_RBV
       - bi
       - $(SYMBOL).PG.xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):PRESS_AI_RBV
@@ -247,12 +255,20 @@ FB_MKS317
         | io: input
 
 
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).PG.xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
     * - $(PREFIX):LOGGER_RBV
       - bi
       - $(SYMBOL).PG.xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):PRESS_AI_RBV
@@ -425,12 +441,20 @@ FB_MKS422
         | io: input
 
 
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).IG.xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
     * - $(PREFIX):LOGGER_RBV
       - bi
       - $(SYMBOL).IG.xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):PRESS_AI_RBV
@@ -647,16 +671,10 @@ FB_PIP_Gamma
         | io: output
 
 
-    * - $(PREFIX):ILK_DEVICE
-      - waveform
-      - $(SYMBOL).stPump.sIlkDeviceName
-      - | io: output
-
-
     * - $(PREFIX):ILK_DEVICE_RBV
       - waveform
       - $(SYMBOL).stPump.sIlkDeviceName
-      - | io: output
+      - | io: input
 
 
     * - $(PREFIX):ILK_OK_RBV
@@ -696,6 +714,22 @@ FB_PIP_Gamma
       - $(SYMBOL).stPump.xLog
       - | field: ONAM ON
         | field: ZNAM OFF
+        | io: output
+
+
+    * - $(PREFIX):OVRD_ON
+      - bo
+      - $(SYMBOL).stPump.xOverrideMode
+      - | field: ONAM Override ON
+        | field: ZNAM Override OFF
+        | io: output
+
+
+    * - $(PREFIX):OVRD_ON_RBV
+      - bi
+      - $(SYMBOL).stPump.xOverrideMode
+      - | field: ONAM Override ON
+        | field: ZNAM Override OFF
         | io: output
 
 
@@ -1448,12 +1482,20 @@ FB_VGC
       - | io: input
 
 
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).iq_stValve.xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
     * - $(PREFIX):LOGGER_RBV
       - bi
       - $(SYMBOL).iq_stValve.xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):MPS_FAULT_OK
@@ -1658,12 +1700,20 @@ FB_VRC
         | io: output
 
 
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).iq_stValve.xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
     * - $(PREFIX):LOGGER_RBV
       - bi
       - $(SYMBOL).iq_stValve.xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):OPN_DI_RBV
@@ -1750,7 +1800,7 @@ FB_VRC
         | io: input
 
 
-                     
+                       
 LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -1906,7 +1956,1243 @@ LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
         | io: output
 
 
-    
+       
+PMPS.FB_Arbiter
+^^^^^^^^^^^^^^^
+
+.. list-table::
+    :header-rows: 1
+    :align: center
+
+    * - Record
+      - Type
+      - Description
+      - Pragma
+    * - $(PREFIX):AssertionPool:Entries:0000:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[0].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0001:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[1].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0002:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[2].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0003:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[3].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0004:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[4].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0005:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[5].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0006:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[6].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0007:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[7].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0008:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[8].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0009:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[9].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0010:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[10].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0011:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[11].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0012:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[12].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0013:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[13].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0014:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[14].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0015:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[15].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0016:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[16].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0017:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[17].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0018:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[18].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0019:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[19].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0020:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[20].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0021:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[21].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0022:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[22].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0023:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[23].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0024:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[24].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0025:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[25].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0026:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[26].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0027:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[27].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0028:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[28].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0029:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[29].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0030:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[30].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0031:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[31].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0032:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[32].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0033:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[33].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0034:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[34].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0035:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[35].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0036:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[36].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0037:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[37].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0038:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[38].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0039:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[39].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0040:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[40].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0041:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[41].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0042:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[42].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0043:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[43].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0044:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[44].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0045:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[45].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0046:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[46].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0047:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[47].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0048:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[48].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0049:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[49].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0050:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[50].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0051:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[51].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0052:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[52].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0053:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[53].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0054:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[54].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0055:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[55].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0056:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[56].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0057:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[57].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0058:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[58].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0059:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[59].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0060:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[60].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0061:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[61].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0062:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[62].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0063:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[63].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0064:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[64].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0065:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[65].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0066:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[66].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0067:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[67].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0068:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[68].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0069:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[69].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0070:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[70].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0071:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[71].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0072:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[72].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0073:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[73].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0074:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[74].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0075:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[75].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0076:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[76].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0077:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[77].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0078:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[78].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0079:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[79].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0080:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[80].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0081:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[81].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0082:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[82].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0083:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[83].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0084:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[84].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0085:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[85].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0086:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[86].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0087:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[87].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0088:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[88].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0089:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[89].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0090:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[90].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0091:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[91].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0092:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[92].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0093:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[93].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0094:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[94].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0095:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[95].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0096:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[96].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0097:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[97].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0098:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[98].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0099:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[99].key
+      - | io: input
+
+
+    * - $(PREFIX):AssertionPool:Entries:0100:Key_RBV
+      - longin
+      - $(SYMBOL).fbBPAssertionPool.entries[100].key
+      - | io: input
+
+
+ 
+PMPS.FB_BeamParamAssertionPool
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. list-table::
+    :header-rows: 1
+    :align: center
+
+    * - Record
+      - Type
+      - Description
+      - Pragma
+    * - $(PREFIX):Entries:0000:Key_RBV
+      - longin
+      - $(SYMBOL).entries[0].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0001:Key_RBV
+      - longin
+      - $(SYMBOL).entries[1].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0002:Key_RBV
+      - longin
+      - $(SYMBOL).entries[2].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0003:Key_RBV
+      - longin
+      - $(SYMBOL).entries[3].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0004:Key_RBV
+      - longin
+      - $(SYMBOL).entries[4].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0005:Key_RBV
+      - longin
+      - $(SYMBOL).entries[5].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0006:Key_RBV
+      - longin
+      - $(SYMBOL).entries[6].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0007:Key_RBV
+      - longin
+      - $(SYMBOL).entries[7].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0008:Key_RBV
+      - longin
+      - $(SYMBOL).entries[8].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0009:Key_RBV
+      - longin
+      - $(SYMBOL).entries[9].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0010:Key_RBV
+      - longin
+      - $(SYMBOL).entries[10].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0011:Key_RBV
+      - longin
+      - $(SYMBOL).entries[11].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0012:Key_RBV
+      - longin
+      - $(SYMBOL).entries[12].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0013:Key_RBV
+      - longin
+      - $(SYMBOL).entries[13].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0014:Key_RBV
+      - longin
+      - $(SYMBOL).entries[14].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0015:Key_RBV
+      - longin
+      - $(SYMBOL).entries[15].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0016:Key_RBV
+      - longin
+      - $(SYMBOL).entries[16].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0017:Key_RBV
+      - longin
+      - $(SYMBOL).entries[17].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0018:Key_RBV
+      - longin
+      - $(SYMBOL).entries[18].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0019:Key_RBV
+      - longin
+      - $(SYMBOL).entries[19].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0020:Key_RBV
+      - longin
+      - $(SYMBOL).entries[20].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0021:Key_RBV
+      - longin
+      - $(SYMBOL).entries[21].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0022:Key_RBV
+      - longin
+      - $(SYMBOL).entries[22].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0023:Key_RBV
+      - longin
+      - $(SYMBOL).entries[23].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0024:Key_RBV
+      - longin
+      - $(SYMBOL).entries[24].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0025:Key_RBV
+      - longin
+      - $(SYMBOL).entries[25].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0026:Key_RBV
+      - longin
+      - $(SYMBOL).entries[26].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0027:Key_RBV
+      - longin
+      - $(SYMBOL).entries[27].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0028:Key_RBV
+      - longin
+      - $(SYMBOL).entries[28].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0029:Key_RBV
+      - longin
+      - $(SYMBOL).entries[29].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0030:Key_RBV
+      - longin
+      - $(SYMBOL).entries[30].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0031:Key_RBV
+      - longin
+      - $(SYMBOL).entries[31].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0032:Key_RBV
+      - longin
+      - $(SYMBOL).entries[32].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0033:Key_RBV
+      - longin
+      - $(SYMBOL).entries[33].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0034:Key_RBV
+      - longin
+      - $(SYMBOL).entries[34].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0035:Key_RBV
+      - longin
+      - $(SYMBOL).entries[35].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0036:Key_RBV
+      - longin
+      - $(SYMBOL).entries[36].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0037:Key_RBV
+      - longin
+      - $(SYMBOL).entries[37].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0038:Key_RBV
+      - longin
+      - $(SYMBOL).entries[38].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0039:Key_RBV
+      - longin
+      - $(SYMBOL).entries[39].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0040:Key_RBV
+      - longin
+      - $(SYMBOL).entries[40].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0041:Key_RBV
+      - longin
+      - $(SYMBOL).entries[41].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0042:Key_RBV
+      - longin
+      - $(SYMBOL).entries[42].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0043:Key_RBV
+      - longin
+      - $(SYMBOL).entries[43].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0044:Key_RBV
+      - longin
+      - $(SYMBOL).entries[44].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0045:Key_RBV
+      - longin
+      - $(SYMBOL).entries[45].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0046:Key_RBV
+      - longin
+      - $(SYMBOL).entries[46].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0047:Key_RBV
+      - longin
+      - $(SYMBOL).entries[47].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0048:Key_RBV
+      - longin
+      - $(SYMBOL).entries[48].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0049:Key_RBV
+      - longin
+      - $(SYMBOL).entries[49].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0050:Key_RBV
+      - longin
+      - $(SYMBOL).entries[50].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0051:Key_RBV
+      - longin
+      - $(SYMBOL).entries[51].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0052:Key_RBV
+      - longin
+      - $(SYMBOL).entries[52].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0053:Key_RBV
+      - longin
+      - $(SYMBOL).entries[53].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0054:Key_RBV
+      - longin
+      - $(SYMBOL).entries[54].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0055:Key_RBV
+      - longin
+      - $(SYMBOL).entries[55].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0056:Key_RBV
+      - longin
+      - $(SYMBOL).entries[56].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0057:Key_RBV
+      - longin
+      - $(SYMBOL).entries[57].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0058:Key_RBV
+      - longin
+      - $(SYMBOL).entries[58].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0059:Key_RBV
+      - longin
+      - $(SYMBOL).entries[59].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0060:Key_RBV
+      - longin
+      - $(SYMBOL).entries[60].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0061:Key_RBV
+      - longin
+      - $(SYMBOL).entries[61].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0062:Key_RBV
+      - longin
+      - $(SYMBOL).entries[62].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0063:Key_RBV
+      - longin
+      - $(SYMBOL).entries[63].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0064:Key_RBV
+      - longin
+      - $(SYMBOL).entries[64].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0065:Key_RBV
+      - longin
+      - $(SYMBOL).entries[65].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0066:Key_RBV
+      - longin
+      - $(SYMBOL).entries[66].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0067:Key_RBV
+      - longin
+      - $(SYMBOL).entries[67].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0068:Key_RBV
+      - longin
+      - $(SYMBOL).entries[68].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0069:Key_RBV
+      - longin
+      - $(SYMBOL).entries[69].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0070:Key_RBV
+      - longin
+      - $(SYMBOL).entries[70].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0071:Key_RBV
+      - longin
+      - $(SYMBOL).entries[71].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0072:Key_RBV
+      - longin
+      - $(SYMBOL).entries[72].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0073:Key_RBV
+      - longin
+      - $(SYMBOL).entries[73].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0074:Key_RBV
+      - longin
+      - $(SYMBOL).entries[74].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0075:Key_RBV
+      - longin
+      - $(SYMBOL).entries[75].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0076:Key_RBV
+      - longin
+      - $(SYMBOL).entries[76].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0077:Key_RBV
+      - longin
+      - $(SYMBOL).entries[77].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0078:Key_RBV
+      - longin
+      - $(SYMBOL).entries[78].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0079:Key_RBV
+      - longin
+      - $(SYMBOL).entries[79].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0080:Key_RBV
+      - longin
+      - $(SYMBOL).entries[80].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0081:Key_RBV
+      - longin
+      - $(SYMBOL).entries[81].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0082:Key_RBV
+      - longin
+      - $(SYMBOL).entries[82].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0083:Key_RBV
+      - longin
+      - $(SYMBOL).entries[83].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0084:Key_RBV
+      - longin
+      - $(SYMBOL).entries[84].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0085:Key_RBV
+      - longin
+      - $(SYMBOL).entries[85].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0086:Key_RBV
+      - longin
+      - $(SYMBOL).entries[86].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0087:Key_RBV
+      - longin
+      - $(SYMBOL).entries[87].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0088:Key_RBV
+      - longin
+      - $(SYMBOL).entries[88].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0089:Key_RBV
+      - longin
+      - $(SYMBOL).entries[89].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0090:Key_RBV
+      - longin
+      - $(SYMBOL).entries[90].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0091:Key_RBV
+      - longin
+      - $(SYMBOL).entries[91].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0092:Key_RBV
+      - longin
+      - $(SYMBOL).entries[92].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0093:Key_RBV
+      - longin
+      - $(SYMBOL).entries[93].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0094:Key_RBV
+      - longin
+      - $(SYMBOL).entries[94].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0095:Key_RBV
+      - longin
+      - $(SYMBOL).entries[95].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0096:Key_RBV
+      - longin
+      - $(SYMBOL).entries[96].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0097:Key_RBV
+      - longin
+      - $(SYMBOL).entries[97].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0098:Key_RBV
+      - longin
+      - $(SYMBOL).entries[98].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0099:Key_RBV
+      - longin
+      - $(SYMBOL).entries[99].key
+      - | io: input
+
+
+    * - $(PREFIX):Entries:0100:Key_RBV
+      - longin
+      - $(SYMBOL).entries[100].key
+      - | io: input
+
+
+ 
 PMPS.FB_FastFault
 ^^^^^^^^^^^^^^^^^
 
@@ -21496,7 +22782,7 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
- 
+  
 PMPS.ST_BeamParams
 ^^^^^^^^^^^^^^^^^^
 
@@ -21709,6 +22995,24 @@ PMPS.ST_FFVeto
     * - $(PREFIX):ElapsedTime_RBV
       - longin
       - $(SYMBOL).ElapsedTime
+      - | io: input
+
+
+ 
+PMPS.T_HashTableEntry
+^^^^^^^^^^^^^^^^^^^^^
+
+.. list-table::
+    :header-rows: 1
+    :align: center
+
+    * - Record
+      - Type
+      - Description
+      - Pragma
+    * - $(PREFIX):Key_RBV
+      - longin
+      - $(SYMBOL).key
       - | io: input
 
 
@@ -22108,16 +23412,10 @@ ST_PIP
         | io: output
 
 
-    * - $(PREFIX):ILK_DEVICE
-      - waveform
-      - $(SYMBOL).sIlkDeviceName
-      - | io: output
-
-
     * - $(PREFIX):ILK_DEVICE_RBV
       - waveform
       - $(SYMBOL).sIlkDeviceName
-      - | io: output
+      - | io: input
 
 
     * - $(PREFIX):ILK_OK_RBV
@@ -22157,6 +23455,22 @@ ST_PIP
       - $(SYMBOL).xLog
       - | field: ONAM ON
         | field: ZNAM OFF
+        | io: output
+
+
+    * - $(PREFIX):OVRD_ON
+      - bo
+      - $(SYMBOL).xOverrideMode
+      - | field: ONAM Override ON
+        | field: ZNAM Override OFF
+        | io: output
+
+
+    * - $(PREFIX):OVRD_ON_RBV
+      - bi
+      - $(SYMBOL).xOverrideMode
+      - | field: ONAM Override ON
+        | field: ZNAM Override OFF
         | io: output
 
 
@@ -22477,12 +23791,20 @@ ST_ValveBase
         | io: output
 
 
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
     * - $(PREFIX):LOGGER_RBV
       - bi
       - $(SYMBOL).xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):OPN_DI_RBV
@@ -22635,12 +23957,20 @@ ST_VG
         | io: input
 
 
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
     * - $(PREFIX):LOGGER_RBV
       - bi
       - $(SYMBOL).xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):PRESS_AI_RBV
@@ -22941,12 +24271,20 @@ ST_VGC
       - | io: input
 
 
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
     * - $(PREFIX):LOGGER_RBV
       - bi
       - $(SYMBOL).xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):OPN_DI_RBV
@@ -23123,12 +24461,20 @@ ST_VRC
         | io: output
 
 
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
     * - $(PREFIX):LOGGER_RBV
       - bi
       - $(SYMBOL).xLog
       - | field: ONAM ON
         | field: ZNAM OFF
-        | io: input
+        | io: output
 
 
     * - $(PREFIX):OPN_DI_RBV
@@ -23215,7 +24561,7 @@ ST_VRC
         | io: input
 
 
-                                                
+                                                   
 Database Records
 ----------------
 
