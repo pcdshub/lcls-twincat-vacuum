@@ -14,6 +14,7 @@ VAR
     tErrorPresent : R_TRIG;
     tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)	
 	tFault : F_TRIG;
+	tILK: TON;
 END_VAR
 ]]></Declaration>
     <Implementation>

@@ -36,6 +36,9 @@ VAR
 	xBackingPressureOK: BOOL;
 	iMaxSpeed : INT:=963;
 	
+	rPowerScale: REAL:=10;//W
+	rCurrentScale: REAL:=1;//A
+	
 	(*I/Os*)
 	i_xSTART 	AT%I*:	BOOL;
 	i_xR1	AT%I*	:  BOOL;
@@ -44,7 +47,7 @@ VAR
 	i_iTempMon AT%I*: INT;
 	i_iPowerMon AT%I*: INT;
 	i_iCurrentMon AT%I*: INT;
-	i_iRawSpeed AT %I* : INT; // Link to Analog input
+	i_iRawSpeed AT %I* : INT; 
 	i_xFault AT%I*	:	BOOL;
 	q_RunDO AT%Q*	:	BOOL;
 	q_xLSpd	AT%Q*	:  BOOL;
@@ -181,7 +184,7 @@ END_IF
 //xBackingPressureOK := i_stGauge.xPRESS_OK AND ( i_stGauge.rPRESS < iq_stPtm.rBackingPressureSP);
 
 (* Interlock Sum *)
-iq_stPtm.xExtRunOk := i_xExtILKOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock;// AND xBackingPressureOK;
+iq_stPtm.xExtRunOk := i_xExtILKOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock AND NOT(tILK.Q);
 
 IF NOT iq_stPtm.xExtRunOk AND (NOT (step >= 90)) THEN
 	step:=0; 
@@ -218,9 +221,15 @@ iq_stPtm.sError := ErrorMessage(nErrorCode, iq_stPtm.eState);
 ACT_Logger();
 (*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
 iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
-
+ACT_Interlock();
 ]]></ST>
     </Implementation>
+    <Action Name="ACT_Interlock" Id="{0061bc54-6d3d-42f4-b4c3-04fe9be5aabf}">
+      <Implementation>
+        <ST><![CDATA[This^.tILK(IN:= (iq_stPtm.rBackingPressureSP>= i_stGauge.i_iPRESS_R), PT:=T#5S, Q=> );
+]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="ACT_Logger" Id="{ed7ad0a5-9a78-4047-aa81-61698840506a}">
       <Implementation>
         <ST><![CDATA[//STATE Logger  
@@ -304,10 +313,10 @@ iq_stPtm.i_xLSpd:=	i_xLSpd;
 iq_stPtm.i_xFault:=	i_xFault;
 (* Real-value calculation *)
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
-iq_stPtm.i_rCurrentMon := 10*INT_TO_REAL(i_iCurrentMon)/iTermBits; // 1v is equal to 1A  Manual page 73
-iq_stPtm.i_rTempMon := 10*INT_TO_REAL(i_iTempMon)/iTermBits; // 1v is equal to 1A  Manual page 73
-iq_stPtm.i_rPowerMon := 10*INT_TO_REAL(i_iPowerMon)/iTermBits; // 1v is equal to 1A  Manual page 73
-iq_stPtm.i_diCurSpd := 10*LREAL_TO_DINT(INT_TO_REAL(i_iRawSpeed)/iTermBits); // 1v is equal to 1A  Manual page 73
+iq_stPtm.i_rCurrentMon := (10*INT_TO_REAL(i_iCurrentMon)/iTermBits)*rCurrentScale; 
+iq_stPtm.i_rTempMon := 10*INT_TO_REAL(i_iTempMon)/iTermBits; 
+iq_stPtm.i_rPowerMon := (10*INT_TO_REAL(i_iPowerMon)/iTermBits)*rPowerScale; 
+iq_stPtm.i_diCurSpd := 10*LREAL_TO_DINT(INT_TO_REAL(i_iRawSpeed)/iTermBits);
 
 
 (*outputs*)
@@ -337,6 +346,16 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_SetCurrentScale" Id="{f7cfad44-f08e-4002-9a34-334614f8c6f6}">
+      <Declaration><![CDATA[METHOD M_SetCurrentScale : BOOL
+VAR_INPUT
+	Scale:REAL;//In Amps
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.rCurrentScale := Scale;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_SetMaxSpeed" Id="{b01139cd-82e5-4729-bc78-ddb4924b1c2d}">
       <Declaration><![CDATA[METHOD M_SetMaxSpeed : BOOL
 VAR_INPUT
@@ -345,6 +364,16 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[this^.iMaxSpeed := iMaxSpeed;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetPowerScale" Id="{63b337d1-99aa-4065-bf73-6af689ae8c87}">
+      <Declaration><![CDATA[METHOD M_SetPowerScale : BOOL
+VAR_INPUT
+	Scale:REAL;//In Watt
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.rPowerScale := Scale;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_TurboIsOn" Id="{fd80a5ac-8a80-41d5-8e07-a92996986023}">
@@ -359,6 +388,10 @@ END_VAR
     <LineIds Name="FB_PTM_Agilent">
       <LineId Id="3" Count="159" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.ACT_Interlock">
+      <LineId Id="2" Count="0" />
+      <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Agilent.ACT_Logger">
       <LineId Id="2" Count="29" />
@@ -382,8 +415,14 @@ END_VAR
     <LineIds Name="FB_PTM_Agilent.M_SetBits">
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_SetCurrentScale">
+      <LineId Id="5" Count="0" />
+    </LineIds>
     <LineIds Name="FB_PTM_Agilent.M_SetMaxSpeed">
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PTM_Agilent.M_SetPowerScale">
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="FB_PTM_Agilent.M_TurboIsOn">
       <LineId Id="2" Count="0" />

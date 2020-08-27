@@ -3,7 +3,7 @@
   <POU Name="FB_9XX" Id="{2b25be69-d890-49a3-9eed-41a1523a8d75}" SpecialFunc="None">
     <Declaration><![CDATA[(* Standard MKS 9XX series conversion *)
 (* works for 925 *)
-FUNCTION_BLOCK FB_9XX EXTENDS FB_GaugeBAse
+FUNCTION_BLOCK FB_9XX EXTENDS FB_GaugeBase
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -69,12 +69,7 @@ ACT_IO();]]></ST>
     </Action>
     <Action Name="ACT_Logger" Id="{8202116e-e944-4d2f-9609-fb14baf15925}">
       <Implementation>
-        <ST><![CDATA[// ILK logger
-IF NOT PG.xILKOk AND NOT PG.q_xHV_DIS THEN
- 		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
-END_IF
-
-
+        <ST><![CDATA[
 //STATE Logger  
 IF ePrevState <> PG.eState THEN
 	  CASE PG.eState OF
@@ -118,7 +113,7 @@ END_VAR
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_9XX.ACT_Logger">
-      <LineId Id="2" Count="27" />
+      <LineId Id="7" Count="22" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_9XX.M_SetBits">

@@ -23,6 +23,7 @@ VAR_INPUT
     pv: Dis_DPIlk
 	'}
 	i_xDis_DPIlk : BOOL := FALSE;  (* Set to true when calling the function to disable the differential pressure interlock *)
+	i_xPMPS_OK:	BOOL	; (*Set to True To switch of the bptm*)
 	{attribute 'pytmc' := '
     pv: EPS_OK
 	'}
@@ -60,7 +61,7 @@ VAR
 	{attribute 'pytmc' := '
     pv: MPS_OK
 	'}
-	i_xPMPS_OK:	BOOL	; (*PMPS interlock*)
+	xPMPS_OK:	BOOL	; (*PMPS interlock*)
 	bMoving : BOOL;
 	bDone :BOOL;
 	tBPTMtimeout:TON;
@@ -307,11 +308,18 @@ tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
 ftClose(CLK:= iq_stValve.pv_xOPN_SW);
 rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
+
+
+(*PMPS*)
+IF NOT(i_xPMPS_OK) THEN
+	ACT_PMPS();
+END_IF
 (*when interlock is lost the Valve closes regardless of the status of the PMPS and EPS*)
+xPMPS_OK := i_xPMPS_OK OR (bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q);
 IF NOT (iq_stValve.xOPN_OK) THEN
 	iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
 	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
-ELSIF i_xPMPS_OK THEN 
+ELSIF xPMPS_OK THEN 
 	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 //ELSIF NOT (i_xPMPS_OK) THEN
 	// Only override mode
@@ -358,8 +366,8 @@ ACT_IO();
 // Log States and triggers
 ACT_Logger();
 
-(*PMPS*)
-ACT_PMPS();
+
+
 (*FAST FAULT*)
 FFO(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
@@ -465,7 +473,7 @@ bptm(fbArbiter:=fbArbiter,
      q_xTransitionAuthorized=>);
 // Timeout
 tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
-i_xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
+//xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
 	 ]]></ST>
       </Implementation>
     </Action>
@@ -534,7 +542,12 @@ END_VAR
       <LineId Id="203" Count="1" />
       <LineId Id="908" Count="1" />
       <LineId Id="1011" Count="0" />
-      <LineId Id="1013" Count="13" />
+      <LineId Id="1013" Count="4" />
+      <LineId Id="1372" Count="4" />
+      <LineId Id="1371" Count="0" />
+      <LineId Id="1018" Count="0" />
+      <LineId Id="1366" Count="0" />
+      <LineId Id="1019" Count="7" />
       <LineId Id="1028" Count="1" />
       <LineId Id="472" Count="0" />
       <LineId Id="220" Count="0" />
@@ -547,7 +560,7 @@ END_VAR
       <LineId Id="695" Count="1" />
       <LineId Id="260" Count="0" />
       <LineId Id="1257" Count="0" />
-      <LineId Id="697" Count="0" />
+      <LineId Id="1370" Count="0" />
       <LineId Id="1258" Count="0" />
       <LineId Id="261" Count="2" />
       <LineId Id="682" Count="0" />
