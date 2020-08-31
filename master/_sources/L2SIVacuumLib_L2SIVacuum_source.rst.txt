@@ -201,8 +201,6 @@ ST_AgilentPTM
     	// Error messages
     	{attribute 'pytmc' := '
         pv: ErrorMessage;
-    	field: ZNAM FALSE; 
-    	field: ONAM TRUE;
     	io: i;
     	'}
     	sError : STRING;
@@ -1784,6 +1782,26 @@ F_TurboExtILK_NO
     END_FUNCTION
 
 
+F_TurboExtILK_NO_1
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    (* This function Block interfaces with a NO turbo valve*)
+    (* Mainly used in the FEE HXR GATT*)
+    FUNCTION F_TurboExtILK_NO_1 : BOOL
+    VAR_INPUT
+    	Turbo		:	ST_PTM;
+    	BackingGauge:	ST_VG;
+    	InletGauge	:	ST_VG;
+    	VentValve	:	ST_VCC_NO; //NO type turbo valve
+    	ScrollPump	:	ST_RoughPump;
+    END_VAR
+
+
+    END_FUNCTION
+
+
 F_TurboExtILKLogic
 ^^^^^^^^^^^^^^^^^^
 
@@ -2068,7 +2086,7 @@ FB_9XX
 
     (* Standard MKS 9XX series conversion *)
     (* works for 925 *)
-    FUNCTION_BLOCK FB_9XX EXTENDS FB_GaugeBAse
+    FUNCTION_BLOCK FB_9XX EXTENDS FB_GaugeBase
     VAR_INPUT
     END_VAR
     VAR_OUTPUT
@@ -2130,12 +2148,6 @@ FB_9XX
     PG.i_iPRESS_R :=i_iPRESS_R;
     END_ACTION
     ACTION ACT_Logger:
-    // ILK logger
-    IF NOT PG.xILKOk AND NOT PG.q_xHV_DIS THEN
-     		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
-    END_IF
-
-
     //STATE Logger  
     IF ePrevState <> PG.eState THEN
     	  CASE PG.eState OF
@@ -4727,6 +4739,9 @@ FB_PTM_Agilent
     	xBackingPressureOK: BOOL;
     	iMaxSpeed : INT:=963;
     	
+    	rPowerScale: REAL:=10;//W
+    	rCurrentScale: REAL:=1;//A
+    	
     	(*I/Os*)
     	i_xSTART 	AT%I*:	BOOL;
     	i_xR1	AT%I*	:  BOOL;
@@ -4735,7 +4750,7 @@ FB_PTM_Agilent
     	i_iTempMon AT%I*: INT;
     	i_iPowerMon AT%I*: INT;
     	i_iCurrentMon AT%I*: INT;
-    	i_iRawSpeed AT %I* : INT; // Link to Analog input
+    	i_iRawSpeed AT %I* : INT; 
     	i_xFault AT%I*	:	BOOL;
     	q_RunDO AT%Q*	:	BOOL;
     	q_xLSpd	AT%Q*	:  BOOL;
@@ -4870,7 +4885,7 @@ FB_PTM_Agilent
     //xBackingPressureOK := i_stGauge.xPRESS_OK AND ( i_stGauge.rPRESS < iq_stPtm.rBackingPressureSP);
 
     (* Interlock Sum *)
-    iq_stPtm.xExtRunOk := i_xExtILKOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock;// AND xBackingPressureOK;
+    iq_stPtm.xExtRunOk := i_xExtILKOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock AND NOT(tILK.Q);
 
     IF NOT iq_stPtm.xExtRunOk AND (NOT (step >= 90)) THEN
     	step:=0; 
@@ -4907,8 +4922,12 @@ FB_PTM_Agilent
     ACT_Logger();
     (*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
     iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
+    ACT_Interlock();
 
     END_FUNCTION_BLOCK
+    ACTION ACT_Interlock:
+    This^.tILK(IN:= (iq_stPtm.rBackingPressureSP>= i_stGauge.i_iPRESS_R), PT:=T#5S, Q=> );
+    END_ACTION
     ACTION ACT_Logger:
     //STATE Logger  
     // ILK logger
@@ -4949,10 +4968,10 @@ FB_PTM_Agilent
     iq_stPtm.i_xFault:=	i_xFault;
     (* Real-value calculation *)
     If (iTermBits=0) THEN iTermBits := 32767;END_IF
-    iq_stPtm.i_rCurrentMon := 10*INT_TO_REAL(i_iCurrentMon)/iTermBits; // 1v is equal to 1A  Manual page 73
-    iq_stPtm.i_rTempMon := 10*INT_TO_REAL(i_iTempMon)/iTermBits; // 1v is equal to 1A  Manual page 73
-    iq_stPtm.i_rPowerMon := 10*INT_TO_REAL(i_iPowerMon)/iTermBits; // 1v is equal to 1A  Manual page 73
-    iq_stPtm.i_diCurSpd := 10*LREAL_TO_DINT(INT_TO_REAL(i_iRawSpeed)/iTermBits); // 1v is equal to 1A  Manual page 73
+    iq_stPtm.i_rCurrentMon := (10*INT_TO_REAL(i_iCurrentMon)/iTermBits)*rCurrentScale; 
+    iq_stPtm.i_rTempMon := 10*INT_TO_REAL(i_iTempMon)/iTermBits; 
+    iq_stPtm.i_rPowerMon := (10*INT_TO_REAL(i_iPowerMon)/iTermBits)*rPowerScale; 
+    iq_stPtm.i_diCurSpd := 10*LREAL_TO_DINT(INT_TO_REAL(i_iRawSpeed)/iTermBits);
 
 
     (*outputs*)
@@ -5882,6 +5901,7 @@ FB_Pump
         tErrorPresent : R_TRIG;
         tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)	
     	tFault : F_TRIG;
+    	tILK: TON;
     END_VAR
 
 
@@ -6006,7 +6026,9 @@ FB_TGCC_ADS
     	nCnt:= iWatchdog , 
     	bWatchdog=> , 
     	nLastCnt=> );
+    	
     bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
+    tErrorPresent(CLK:=bError);
 
     IF (fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog) THEN
     IG.xPRESS_OK := FALSE;
@@ -6866,6 +6888,7 @@ FB_VGC
         pv: Dis_DPIlk
     	'}
     	i_xDis_DPIlk : BOOL := FALSE;  (* Set to true when calling the function to disable the differential pressure interlock *)
+    	i_xPMPS_OK:	BOOL	; (*Set to True To switch of the bptm*)
     	{attribute 'pytmc' := '
         pv: EPS_OK
     	'}
@@ -6903,7 +6926,7 @@ FB_VGC
     	{attribute 'pytmc' := '
         pv: MPS_OK
     	'}
-    	i_xPMPS_OK:	BOOL	; (*PMPS interlock*)
+    	xPMPS_OK:	BOOL	; (*PMPS interlock*)
     	bMoving : BOOL;
     	bDone :BOOL;
     	tBPTMtimeout:TON;
@@ -7149,11 +7172,18 @@ FB_VGC
 
     ftClose(CLK:= iq_stValve.pv_xOPN_SW);
     rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
+
+
+    (*PMPS*)
+    IF NOT(i_xPMPS_OK) THEN
+    	ACT_PMPS();
+    END_IF
     (*when interlock is lost the Valve closes regardless of the status of the PMPS and EPS*)
+    xPMPS_OK := i_xPMPS_OK OR (bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q);
     IF NOT (iq_stValve.xOPN_OK) THEN
     	iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
     	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
-    ELSIF i_xPMPS_OK THEN 
+    ELSIF xPMPS_OK THEN 
     	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
     //ELSIF NOT (i_xPMPS_OK) THEN
     	// Only override mode
@@ -7200,8 +7230,8 @@ FB_VGC
     // Log States and triggers
     ACT_Logger();
 
-    (*PMPS*)
-    ACT_PMPS();
+
+
     (*FAST FAULT*)
     FFO(i_xOK := xMPS_OK,
         i_xReset := i_xReset,
@@ -7296,7 +7326,7 @@ FB_VGC
          q_xTransitionAuthorized=>);
     // Timeout
     tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
-    i_xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
+    //xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
     END_ACTION
     ACTION ACT_ResetAlarms:
     iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;

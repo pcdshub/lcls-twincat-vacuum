@@ -133,6 +133,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#f-roughpumpinlet-ilk">F_RoughPumpInlet_ILK</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#f-turbo-vrc-ilk">F_TURBO_VRC_ILK</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#f-turboextilk-no">F_TurboExtILK_NO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#f-turboextilk-no-1">F_TurboExtILK_NO_1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#f-turboextilklogic">F_TurboExtILKLogic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#f-turboextilklogic-2">F_TurboExtILKLogic_2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#f-turbogatevalve-ilk">F_TurboGateValve_ILK</a></li>
@@ -458,8 +459,6 @@
     <span class="o">//</span> <span class="n">Error</span> <span class="n">messages</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">ErrorMessage</span><span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">FALSE</span><span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">TRUE</span><span class="p">;</span>
     <span class="n">io</span><span class="p">:</span> <span class="n">i</span><span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">sError</span> <span class="p">:</span> <span class="n">STRING</span><span class="p">;</span>
@@ -1994,6 +1993,24 @@ END_TYPE
 </pre></div>
 </div>
 </div>
+<div class="section" id="f-turboextilk-no-1">
+<h2>F_TurboExtILK_NO_1<a class="headerlink" href="#f-turboextilk-no-1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">Block</span> <span class="n">interfaces</span> <span class="k">with</span> <span class="n">a</span> <span class="n">NO</span> <span class="n">turbo</span> <span class="n">valve</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Mainly</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">FEE</span> <span class="n">HXR</span> <span class="n">GATT</span><span class="o">*</span><span class="p">)</span>
+<span class="n">FUNCTION</span> <span class="n">F_TurboExtILK_NO_1</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">Turbo</span>           <span class="p">:</span>       <span class="n">ST_PTM</span><span class="p">;</span>
+    <span class="n">BackingGauge</span><span class="p">:</span>   <span class="n">ST_VG</span><span class="p">;</span>
+    <span class="n">InletGauge</span>      <span class="p">:</span>       <span class="n">ST_VG</span><span class="p">;</span>
+    <span class="n">VentValve</span>       <span class="p">:</span>       <span class="n">ST_VCC_NO</span><span class="p">;</span> <span class="o">//</span><span class="n">NO</span> <span class="nb">type</span> <span class="n">turbo</span> <span class="n">valve</span>
+    <span class="n">ScrollPump</span>      <span class="p">:</span>       <span class="n">ST_RoughPump</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+
+
+<span class="n">END_FUNCTION</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="f-turboextilklogic">
 <h2>F_TurboExtILKLogic<a class="headerlink" href="#f-turboextilklogic" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">evaluates</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">ILK</span> <span class="n">logic</span><span class="o">*</span><span class="p">)</span>
@@ -2257,7 +2274,7 @@ END_FUNCTION
 <h2>FB_9XX<a class="headerlink" href="#fb-9xx" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">Standard</span> <span class="n">MKS</span> <span class="mi">9</span><span class="n">XX</span> <span class="n">series</span> <span class="n">conversion</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">works</span> <span class="k">for</span> <span class="mi">925</span> <span class="o">*</span><span class="p">)</span>
-<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_9XX</span> <span class="n">EXTENDS</span> <span class="n">FB_GaugeBAse</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_9XX</span> <span class="n">EXTENDS</span> <span class="n">FB_GaugeBase</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
 <span class="n">VAR_OUTPUT</span>
@@ -2319,12 +2336,6 @@ END_FUNCTION
 <span class="n">PG</span><span class="o">.</span><span class="n">i_iPRESS_R</span> <span class="o">:=</span><span class="n">i_iPRESS_R</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 <span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
-<span class="o">//</span> <span class="n">ILK</span> <span class="n">logger</span>
-<span class="n">IF</span> <span class="n">NOT</span> <span class="n">PG</span><span class="o">.</span><span class="n">xILKOk</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">PG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="n">THEN</span>
-            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Lost external interlock while gauge was on.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
-<span class="n">END_IF</span>
-
-
 <span class="o">//</span><span class="n">STATE</span> <span class="n">Logger</span>
 <span class="n">IF</span> <span class="n">ePrevState</span> <span class="o">&lt;&gt;</span> <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="n">THEN</span>
       <span class="n">CASE</span> <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="n">OF</span>
@@ -4854,6 +4865,9 @@ VAR
     xBackingPressureOK: BOOL;
     iMaxSpeed : INT:=963;
 
+    rPowerScale: REAL:=10;//W
+    rCurrentScale: REAL:=1;//A
+
     (*I/Os*)
     i_xSTART        AT%I*:  BOOL;
     i_xR1   AT%I*   :  BOOL;
@@ -4862,7 +4876,7 @@ VAR
     i_iTempMon AT%I*: INT;
     i_iPowerMon AT%I*: INT;
     i_iCurrentMon AT%I*: INT;
-    i_iRawSpeed AT %I* : INT; // Link to Analog input
+    i_iRawSpeed AT %I* : INT;
     i_xFault AT%I*  :       BOOL;
     q_RunDO AT%Q*   :       BOOL;
     q_xLSpd AT%Q*   :  BOOL;
@@ -4997,7 +5011,7 @@ END_IF
 //xBackingPressureOK := i_stGauge.xPRESS_OK AND ( i_stGauge.rPRESS &lt; iq_stPtm.rBackingPressureSP);
 
 (* Interlock Sum *)
-iq_stPtm.xExtRunOk := i_xExtILKOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock;// AND xBackingPressureOK;
+iq_stPtm.xExtRunOk := i_xExtILKOk AND NOT iq_stPtm.i_xFault AND NOT iq_stPtm.xPumpFaultLock AND NOT(tILK.Q);
 
 IF NOT iq_stPtm.xExtRunOk AND (NOT (step &gt;= 90)) THEN
     step:=0;
@@ -5034,8 +5048,12 @@ iq_stPtm.sError := ErrorMessage(nErrorCode, iq_stPtm.eState);
 ACT_Logger();
 (*Validate Backing Pressure set point doesn&#39;t exceed the Maximum backingPressure*)
 iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
+ACT_Interlock();
 
 END_FUNCTION_BLOCK
+ACTION ACT_Interlock:
+This^.tILK(IN:= (iq_stPtm.rBackingPressureSP&gt;= i_stGauge.i_iPRESS_R), PT:=T#5S, Q=&gt; );
+END_ACTION
 ACTION ACT_Logger:
 //STATE Logger
 // ILK logger
@@ -5076,10 +5094,10 @@ iq_stPtm.i_xLSpd:=  i_xLSpd;
 iq_stPtm.i_xFault:= i_xFault;
 (* Real-value calculation *)
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
-iq_stPtm.i_rCurrentMon := 10*INT_TO_REAL(i_iCurrentMon)/iTermBits; // 1v is equal to 1A  Manual page 73
-iq_stPtm.i_rTempMon := 10*INT_TO_REAL(i_iTempMon)/iTermBits; // 1v is equal to 1A  Manual page 73
-iq_stPtm.i_rPowerMon := 10*INT_TO_REAL(i_iPowerMon)/iTermBits; // 1v is equal to 1A  Manual page 73
-iq_stPtm.i_diCurSpd := 10*LREAL_TO_DINT(INT_TO_REAL(i_iRawSpeed)/iTermBits); // 1v is equal to 1A  Manual page 73
+iq_stPtm.i_rCurrentMon := (10*INT_TO_REAL(i_iCurrentMon)/iTermBits)*rCurrentScale;
+iq_stPtm.i_rTempMon := 10*INT_TO_REAL(i_iTempMon)/iTermBits;
+iq_stPtm.i_rPowerMon := (10*INT_TO_REAL(i_iPowerMon)/iTermBits)*rPowerScale;
+iq_stPtm.i_diCurSpd := 10*LREAL_TO_DINT(INT_TO_REAL(i_iRawSpeed)/iTermBits);
 
 
 (*outputs*)
@@ -5993,6 +6011,7 @@ END_ACTION
     <span class="n">tErrorPresent</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span>
     <span class="n">tAction</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span> <span class="o">//</span> <span class="n">Primary</span> <span class="n">action</span> <span class="n">of</span> <span class="n">this</span> <span class="n">device</span> <span class="p">(</span><span class="n">OPN_DO</span><span class="p">,</span> <span class="n">PUMP_RUN</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span><span class="p">)</span>
     <span class="n">tFault</span> <span class="p">:</span> <span class="n">F_TRIG</span><span class="p">;</span>
+    <span class="n">tILK</span><span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 
 
@@ -6113,7 +6132,9 @@ END_ACTION
     <span class="n">nCnt</span><span class="o">:=</span> <span class="n">iWatchdog</span> <span class="p">,</span>
     <span class="n">bWatchdog</span><span class="o">=&gt;</span> <span class="p">,</span>
     <span class="n">nLastCnt</span><span class="o">=&gt;</span> <span class="p">);</span>
+
 <span class="n">bError</span><span class="o">:=</span> <span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bError</span> <span class="n">OR</span> <span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">;</span>
+<span class="n">tErrorPresent</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span><span class="n">bError</span><span class="p">);</span>
 
 <span class="n">IF</span> <span class="p">(</span><span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bError</span> <span class="n">OR</span> <span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">)</span> <span class="n">THEN</span>
 <span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
@@ -6949,6 +6970,7 @@ VAR_INPUT
     pv: Dis_DPIlk
     &#39;}
     i_xDis_DPIlk : BOOL := FALSE;  (* Set to true when calling the function to disable the differential pressure interlock *)
+    i_xPMPS_OK:     BOOL    ; (*Set to True To switch of the bptm*)
     {attribute &#39;pytmc&#39; := &#39;
     pv: EPS_OK
     &#39;}
@@ -6986,7 +7008,7 @@ VAR
     {attribute &#39;pytmc&#39; := &#39;
     pv: MPS_OK
     &#39;}
-    i_xPMPS_OK:     BOOL    ; (*PMPS interlock*)
+    xPMPS_OK:       BOOL    ; (*PMPS interlock*)
     bMoving : BOOL;
     bDone :BOOL;
     tBPTMtimeout:TON;
@@ -7232,11 +7254,18 @@ tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
 ftClose(CLK:= iq_stValve.pv_xOPN_SW);
 rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
+
+
+(*PMPS*)
+IF NOT(i_xPMPS_OK) THEN
+    ACT_PMPS();
+END_IF
 (*when interlock is lost the Valve closes regardless of the status of the PMPS and EPS*)
+xPMPS_OK := i_xPMPS_OK OR (bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q);
 IF NOT (iq_stValve.xOPN_OK) THEN
     iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
     iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
-ELSIF i_xPMPS_OK THEN
+ELSIF xPMPS_OK THEN
     iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 //ELSIF NOT (i_xPMPS_OK) THEN
     // Only override mode
@@ -7283,8 +7312,8 @@ ACT_IO();
 // Log States and triggers
 ACT_Logger();
 
-(*PMPS*)
-ACT_PMPS();
+
+
 (*FAST FAULT*)
 FFO(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
@@ -7379,7 +7408,7 @@ bptm(fbArbiter:=fbArbiter,
      q_xTransitionAuthorized=&gt;);
 // Timeout
 tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
-i_xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
+//xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
 END_ACTION
 ACTION ACT_ResetAlarms:
 iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
