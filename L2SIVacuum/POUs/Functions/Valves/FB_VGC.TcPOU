@@ -474,7 +474,12 @@ bptm(fbArbiter:=fbArbiter,
 // Timeout
 tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
 //xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
-	 ]]></ST>
+
+//Timeout and clear request
+IF (tBPTMtimeout.Q) THEN
+	fbArbiter.RemoveRequest(bptm.i_TransitionAssertionID);
+	fbArbiter.RemoveRequest(bptm.i_nRequestedAssertionID);
+END_IF]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_ResetAlarms" Id="{8962b369-e8aa-42c4-9c4c-4249c380363a}">
@@ -587,7 +592,7 @@ END_VAR
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC.ACT_PMPS">
-      <LineId Id="30" Count="17" />
+      <LineId Id="30" Count="22" />
       <LineId Id="1" Count="0" />
     </LineIds>
     <LineIds Name="FB_VGC.ACT_ResetAlarms">
