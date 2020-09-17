@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_GaugeModbus" Id="{a3fde534-3e0e-4f6e-ae05-bc79ebe7e08a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_GaugeModbus
+VAR_INPUT
+	IP: STRING;	//IP of Legacy PLC
+    i_PLC_CnBits	:	ARRAY [0..20] OF BYTE; // Address of the gauge sp relay coil
+	tTimeout :TIME:= T#5s;
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	VG: ST_VG;
+	xNoPLCResponse: BOOL;
+END_VAR
+VAR
+	fbPLCInputCoilsRx	:	FB_MBReadInputs;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="M_Read" Id="{351bef3b-a494-446a-811a-165de7b19154}">
+      <Declaration><![CDATA[METHOD M_Read : BOOL
+VAR_INPUT
+	ftReset	: F_TRIG; 
+	tonRetry : TON;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*Credit to Alex Wallace*)
+(* Modbus Info for Koyo
+Modbus Addresses for
+Koyo DL05/06/240/250/260/430/440/450 PLCs
+PLC Memory Type		| Modbus start address Decimal (octal) | Function codes
+Inputs (X)			  2048 (04000)							2
+Special Relays (SP)	  3072 (06000)							2
+Outputs (Y)			  2048 (04000)							1, 5, 15
+Control Relays (C)	  3072 (06000)							1, 5, 15
+Timer Contacts (T)	  6144 (014000)							1, 5, 15
+Counter Contacts (CT) 6400 (014400)							1, 5, 15
+Stage Status Bits (S) 6144 (012000)							1, 5, 15
+*)
+
+// Retry after some time
+tonRetry.IN := NOT fbPLCInputCoilsRx.bBusy;
+tonRetry.PT := T#10S;
+tonRetry();
+
+ftReset(CLK:=fbPLCInputCoilsRx.bBusy);
+fbPLCInputCoilsRx.bExecute := ftReset.Q OR tonRetry.Q;
+
+fbPLCInputCoilsRx(sIPAddr:=IP, nTCPPort:=502, nQuantity:=32, nMBAddr:=8#6000, cbLength:=SIZEOF(i_PLC_CnBits),  pDestAddr:=ADR(i_PLC_CnBits), tTimeout:=tTimeout);
+//if there's a modbus error, set all incoming bits to zero
+IF fbPLCInputCoilsRx.bError THEN
+	i_PLC_CnBits[0].0 := 0;
+	i_PLC_CnBits[0].1 := 0;
+	i_PLC_CnBits[0].2 := 0;
+	i_PLC_CnBits[0].3 := 0;
+	i_PLC_CnBits[0].4 := 0;
+	i_PLC_CnBits[1].0 := 0;
+	i_PLC_CnBits[1].1 := 0;
+	i_PLC_CnBits[1].2 := 0;
+	VG.xPRESS_OK := FALSE;
+	xNoPLCResponse:= TRUE;	
+ELSIF NOT ftReset.Q AND fbPLCInputCoilsRx.cbRead > 0 THEN
+	xNoPLCResponse:= FALSE;
+	VG.rPRESS := 1E-8;
+	VG.xPRESS_OK := i_PLC_CnBits[0].2;
+	fbPLCInputCoilsRx.bExecute :=False;
+ELSIF ftReset.Q AND fbPLCInputCoilsRx.cbRead = 0 THEN
+	xNoPLCResponse:= TRUE;		
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

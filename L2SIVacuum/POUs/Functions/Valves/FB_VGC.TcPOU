@@ -330,7 +330,7 @@ END_IF
 (*MPS Fault setting*)
 If (i_xIsAperture ) THEN 
 	(* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
-	xMPS_OK := i_xOpnLS XOR i_xClsLS; 
+	xMPS_OK := (i_xOpnLS  AND q_xOPN_DO) XOR (i_xClsLS  AND NOT q_xOPN_DO); 
 ELSE
 	(* When the valve  is open MPS is OK*)
 	xMPS_OK := i_xOpnLS AND NOT i_xClsLS AND q_xOPN_DO; 
@@ -524,92 +524,5 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VGC">
-      <LineId Id="3" Count="33" />
-      <LineId Id="796" Count="0" />
-      <LineId Id="37" Count="7" />
-      <LineId Id="580" Count="1" />
-      <LineId Id="45" Count="48" />
-      <LineId Id="100" Count="8" />
-      <LineId Id="115" Count="23" />
-      <LineId Id="145" Count="0" />
-      <LineId Id="683" Count="3" />
-      <LineId Id="146" Count="4" />
-      <LineId Id="156" Count="0" />
-      <LineId Id="687" Count="3" />
-      <LineId Id="157" Count="3" />
-      <LineId Id="166" Count="0" />
-      <LineId Id="691" Count="3" />
-      <LineId Id="167" Count="32" />
-      <LineId Id="201" Count="0" />
-      <LineId Id="369" Count="0" />
-      <LineId Id="371" Count="0" />
-      <LineId Id="203" Count="1" />
-      <LineId Id="908" Count="1" />
-      <LineId Id="1011" Count="0" />
-      <LineId Id="1013" Count="4" />
-      <LineId Id="1372" Count="4" />
-      <LineId Id="1371" Count="0" />
-      <LineId Id="1018" Count="0" />
-      <LineId Id="1366" Count="0" />
-      <LineId Id="1019" Count="7" />
-      <LineId Id="1028" Count="1" />
-      <LineId Id="472" Count="0" />
-      <LineId Id="220" Count="0" />
-      <LineId Id="473" Count="1" />
-      <LineId Id="476" Count="3" />
-      <LineId Id="475" Count="0" />
-      <LineId Id="222" Count="18" />
-      <LineId Id="1131" Count="0" />
-      <LineId Id="253" Count="6" />
-      <LineId Id="695" Count="1" />
-      <LineId Id="260" Count="0" />
-      <LineId Id="1257" Count="0" />
-      <LineId Id="1370" Count="0" />
-      <LineId Id="1258" Count="0" />
-      <LineId Id="261" Count="2" />
-      <LineId Id="682" Count="0" />
-      <LineId Id="264" Count="3" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.ACT_IO">
-      <LineId Id="2" Count="6" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="12" Count="1" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.ACT_Logger">
-      <LineId Id="2" Count="7" />
-      <LineId Id="11" Count="7" />
-      <LineId Id="38" Count="1" />
-      <LineId Id="19" Count="4" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="42" Count="14" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="24" Count="13" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.ACT_PMPS">
-      <LineId Id="30" Count="22" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.ACT_ResetAlarms">
-      <LineId Id="2" Count="2" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="5" Count="2" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.M_IsClosed">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.M_IsOpen">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC.M_Set_OPN_SW">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

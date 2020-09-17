@@ -226,7 +226,7 @@ ACT_Interlock();
     </Implementation>
     <Action Name="ACT_Interlock" Id="{0061bc54-6d3d-42f4-b4c3-04fe9be5aabf}">
       <Implementation>
-        <ST><![CDATA[This^.tILK(IN:= (iq_stPtm.rBackingPressureSP>= i_stGauge.i_iPRESS_R), PT:=T#5S, Q=> );
+        <ST><![CDATA[This^.tILK(IN:= (i_stGauge.rPRESS>=iq_stPtm.rBackingPressureSP), PT:=T#5S, Q=> );
 ]]></ST>
       </Implementation>
     </Action>
