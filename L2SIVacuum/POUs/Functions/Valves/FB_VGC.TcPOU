@@ -23,7 +23,7 @@ VAR_INPUT
     pv: Dis_DPIlk
 	'}
 	i_xDis_DPIlk : BOOL := FALSE;  (* Set to true when calling the function to disable the differential pressure interlock *)
-	i_xPMPS_OK:	BOOL	; (*Set to True To switch of the bptm*)
+	i_xPMPS_OK:	BOOL	; (*Set to True To switch off the bptm and PMPS Arbiter*)
 	{attribute 'pytmc' := '
     pv: EPS_OK
 	'}
