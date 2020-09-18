@@ -94,6 +94,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html">Settings</a></li>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html#pragmas">Pragmas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html#libraries">Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html#symbols">Symbols</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Data Types</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks275">FB_MKS275</a></li>
@@ -2099,7 +2100,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):MPS_OK</p></td>
 <td><p>bo</p></td>
-<td><p>$(SYMBOL).i_xPMPS_OK</p></td>
+<td><p>$(SYMBOL).xPMPS_OK</p></td>
 <td><div class="line-block">
 <div class="line">io: output</div>
 </div>
@@ -2107,7 +2108,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):MPS_OK_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).i_xPMPS_OK</p></td>
+<td><p>$(SYMBOL).xPMPS_OK</p></td>
 <td><div class="line-block">
 <div class="line">io: output</div>
 </div>
@@ -2729,7 +2730,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:000:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[0].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2737,7 +2738,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:000:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[0].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2745,7 +2746,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:000:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[0].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2753,7 +2754,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:000:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[0].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -2762,7 +2763,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:000:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[0].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -2771,7 +2772,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:000:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[0].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -2780,7 +2781,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:000:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[0].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2788,7 +2789,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:000:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[0].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -2797,7 +2798,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:000:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[0].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2805,7 +2806,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:001:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[1].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2813,7 +2814,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:001:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[1].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2821,7 +2822,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:001:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[1].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2829,7 +2830,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:001:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[1].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -2838,7 +2839,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:001:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[1].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -2847,7 +2848,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:001:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[1].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -2856,7 +2857,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:001:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[1].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2864,7 +2865,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:001:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[1].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -2873,7 +2874,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:001:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[1].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2881,7 +2882,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:002:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[2].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2889,7 +2890,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:002:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[2].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2897,7 +2898,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:002:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[2].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2905,7 +2906,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:002:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[2].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -2914,7 +2915,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:002:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[2].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -2923,7 +2924,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:002:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[2].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -2932,7 +2933,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:002:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[2].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2940,7 +2941,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:002:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[2].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -2949,7 +2950,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:002:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[2].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2957,7 +2958,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:003:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[3].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2965,7 +2966,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:003:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[3].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2973,7 +2974,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:003:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[3].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2981,7 +2982,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:003:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[3].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -2990,7 +2991,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:003:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[3].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -2999,7 +3000,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:003:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[3].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3008,7 +3009,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:003:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[3].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3016,7 +3017,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:003:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[3].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3025,7 +3026,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:003:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[3].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3033,7 +3034,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:004:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[4].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3041,7 +3042,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:004:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[4].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3049,7 +3050,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:004:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[4].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3057,7 +3058,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:004:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[4].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3066,7 +3067,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:004:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[4].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3075,7 +3076,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:004:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[4].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3084,7 +3085,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:004:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[4].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3092,7 +3093,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:004:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[4].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3101,7 +3102,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:004:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[4].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3109,7 +3110,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:005:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[5].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3117,7 +3118,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:005:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[5].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3125,7 +3126,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:005:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[5].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3133,7 +3134,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:005:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[5].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3142,7 +3143,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:005:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[5].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3151,7 +3152,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:005:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[5].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3160,7 +3161,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:005:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[5].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3168,7 +3169,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:005:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[5].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3177,7 +3178,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:005:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[5].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3185,7 +3186,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:006:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[6].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3193,7 +3194,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:006:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[6].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3201,7 +3202,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:006:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[6].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3209,7 +3210,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:006:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[6].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3218,7 +3219,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:006:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[6].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3227,7 +3228,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:006:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[6].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3236,7 +3237,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:006:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[6].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3244,7 +3245,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:006:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[6].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3253,7 +3254,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:006:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[6].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3261,7 +3262,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:007:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[7].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3269,7 +3270,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:007:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[7].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3277,7 +3278,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:007:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[7].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3285,7 +3286,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:007:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[7].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3294,7 +3295,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:007:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[7].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3303,7 +3304,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:007:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[7].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3312,7 +3313,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:007:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[7].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3320,7 +3321,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:007:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[7].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3329,7 +3330,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:007:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[7].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3337,7 +3338,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:008:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[8].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3345,7 +3346,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:008:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[8].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3353,7 +3354,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:008:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[8].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3361,7 +3362,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:008:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[8].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3370,7 +3371,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:008:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[8].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3379,7 +3380,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:008:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[8].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3388,7 +3389,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:008:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[8].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3396,7 +3397,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:008:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[8].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3405,7 +3406,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:008:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[8].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3413,7 +3414,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:009:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[9].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3421,7 +3422,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:009:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[9].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3429,7 +3430,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:009:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[9].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3437,7 +3438,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:009:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[9].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3446,7 +3447,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:009:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[9].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3455,7 +3456,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:009:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[9].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3464,7 +3465,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:009:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[9].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3472,7 +3473,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:009:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[9].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3481,7 +3482,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:009:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[9].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3489,7 +3490,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:010:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[10].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3497,7 +3498,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:010:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[10].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3505,7 +3506,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:010:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[10].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3513,7 +3514,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:010:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[10].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3522,7 +3523,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:010:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[10].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3531,7 +3532,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:010:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[10].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3540,7 +3541,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:010:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[10].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3548,7 +3549,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:010:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[10].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3557,7 +3558,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:010:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[10].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3565,7 +3566,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:011:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[11].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3573,7 +3574,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:011:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[11].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3581,7 +3582,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:011:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[11].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3589,7 +3590,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:011:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[11].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3598,7 +3599,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:011:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[11].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3607,7 +3608,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:011:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[11].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3616,7 +3617,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:011:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[11].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3624,7 +3625,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:011:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[11].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3633,7 +3634,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:011:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[11].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3641,7 +3642,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:012:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[12].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3649,7 +3650,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:012:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[12].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3657,7 +3658,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:012:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[12].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3665,7 +3666,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:012:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[12].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3674,7 +3675,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:012:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[12].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3683,7 +3684,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:012:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[12].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3692,7 +3693,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:012:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[12].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3700,7 +3701,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:012:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[12].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3709,7 +3710,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:012:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[12].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3717,7 +3718,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:013:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[13].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3725,7 +3726,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:013:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[13].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3733,7 +3734,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:013:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[13].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3741,7 +3742,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:013:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[13].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3750,7 +3751,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:013:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[13].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3759,7 +3760,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:013:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[13].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3768,7 +3769,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:013:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[13].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3776,7 +3777,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:013:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[13].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3785,7 +3786,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:013:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[13].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3793,7 +3794,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:014:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[14].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3801,7 +3802,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:014:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[14].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3809,7 +3810,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:014:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[14].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3817,7 +3818,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:014:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[14].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3826,7 +3827,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:014:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[14].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3835,7 +3836,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:014:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[14].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3844,7 +3845,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:014:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[14].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3852,7 +3853,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:014:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[14].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3861,7 +3862,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:014:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[14].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3869,7 +3870,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:015:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[15].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3877,7 +3878,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:015:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[15].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3885,7 +3886,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:015:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[15].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3893,7 +3894,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:015:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[15].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3902,7 +3903,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:015:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[15].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3911,7 +3912,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:015:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[15].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3920,7 +3921,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:015:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[15].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3928,7 +3929,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:015:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[15].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -3937,7 +3938,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:015:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[15].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3945,7 +3946,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:016:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[16].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3953,7 +3954,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:016:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[16].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3961,7 +3962,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:016:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[16].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3969,7 +3970,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:016:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[16].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -3978,7 +3979,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:016:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[16].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -3987,7 +3988,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:016:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[16].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -3996,7 +3997,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:016:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[16].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4004,7 +4005,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:016:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[16].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -4013,7 +4014,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:016:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[16].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4021,7 +4022,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:017:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[17].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4029,7 +4030,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:017:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[17].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4037,7 +4038,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:017:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[17].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4045,7 +4046,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:017:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[17].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -4054,7 +4055,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:017:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[17].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -4063,7 +4064,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:017:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[17].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -4072,7 +4073,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:017:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[17].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4080,7 +4081,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:017:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[17].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -4089,7 +4090,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:017:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[17].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4097,7 +4098,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:018:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[18].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4105,7 +4106,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:018:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[18].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4113,7 +4114,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:018:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[18].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4121,7 +4122,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:018:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[18].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -4130,7 +4131,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:018:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[18].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -4139,7 +4140,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:018:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[18].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -4148,7 +4149,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:018:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[18].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4156,7 +4157,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:018:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[18].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -4165,7 +4166,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:018:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[18].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4173,7 +4174,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:019:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[19].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4181,7 +4182,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:019:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[19].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4189,7 +4190,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:019:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[19].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4197,7 +4198,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:019:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[19].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -4206,7 +4207,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:019:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[19].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -4215,7 +4216,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:019:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[19].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -4224,7 +4225,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:019:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[19].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4232,7 +4233,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:019:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[19].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -4241,7 +4242,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:019:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[19].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4249,7 +4250,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:020:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[20].nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4257,7 +4258,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:020:ID_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[20].nId</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4265,7 +4266,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:020:Live_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[20].LiveInTable</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4273,7 +4274,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:020:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[20].neVRange</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
@@ -4282,7 +4283,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:020:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[20].fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
@@ -4291,7 +4292,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:020:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[20].nRate</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU Hz</div>
 <div class="line">io: input</div>
@@ -4300,7 +4301,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:020:ST_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[20].aStoppers</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4308,7 +4309,7 @@
 </tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:020:Transmission_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[20].nTran</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU %</div>
 <div class="line">io: input</div>
@@ -4317,7 +4318,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:020:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>$(SYMBOL).fbBPAssertionPool.dataPool[20].xValid</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -16307,7 +16308,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX)CurrentBP:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>PMPS_GVL.stCurrentBeamParameters.nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">io: input</div>
@@ -16561,7 +16562,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX)RequestedBP:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>PMPS_GVL.stRequestedBeamParameters.nCohortInt</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">io: input</div>
@@ -16580,7 +16581,7 @@
 </tr>
 <tr class="row-odd"><td><p>$(PREFIX)RequestedBP:PulseEnergy_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>PMPS_GVL.stRequestedBeamParameters.fPP_mJ</p></td>
+<td><p>This beam parameter is non-op for now.</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">field: EGU mJ</div>

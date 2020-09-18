@@ -1516,13 +1516,13 @@ FB_VGC
 
     * - $(PREFIX):MPS_OK
       - bo
-      - $(SYMBOL).i_xPMPS_OK
+      - $(SYMBOL).xPMPS_OK
       - | io: output
 
 
     * - $(PREFIX):MPS_OK_RBV
       - bi
-      - $(SYMBOL).i_xPMPS_OK
+      - $(SYMBOL).xPMPS_OK
       - | io: output
 
 
@@ -1800,7 +1800,7 @@ FB_VRC
         | io: input
 
 
-      
+    
 LCLS_General.FB_LogMessage
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -2006,1219 +2006,1219 @@ PMPS.FB_Arbiter
 
     * - $(PREFIX):AP:Entry:000:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[0].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:000:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[0].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:000:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[0].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:000:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[0].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:000:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[0].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:000:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[0].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:000:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[0].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:000:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[0].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:000:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[0].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:001:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[1].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:001:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[1].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:001:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[1].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:001:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[1].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:001:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[1].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:001:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[1].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:001:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[1].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:001:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[1].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:001:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[1].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:002:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[2].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:002:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[2].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:002:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[2].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:002:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[2].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:002:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[2].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:002:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[2].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:002:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[2].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:002:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[2].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:002:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[2].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:003:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[3].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:003:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[3].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:003:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[3].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:003:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[3].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:003:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[3].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:003:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[3].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:003:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[3].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:003:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[3].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:003:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[3].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:004:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[4].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:004:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[4].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:004:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[4].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:004:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[4].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:004:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[4].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:004:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[4].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:004:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[4].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:004:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[4].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:004:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[4].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:005:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[5].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:005:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[5].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:005:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[5].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:005:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[5].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:005:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[5].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:005:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[5].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:005:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[5].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:005:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[5].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:005:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[5].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:006:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[6].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:006:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[6].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:006:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[6].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:006:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[6].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:006:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[6].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:006:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[6].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:006:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[6].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:006:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[6].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:006:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[6].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:007:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[7].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:007:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[7].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:007:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[7].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:007:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[7].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:007:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[7].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:007:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[7].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:007:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[7].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:007:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[7].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:007:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[7].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:008:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[8].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:008:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[8].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:008:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[8].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:008:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[8].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:008:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[8].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:008:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[8].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:008:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[8].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:008:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[8].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:008:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[8].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:009:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[9].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:009:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[9].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:009:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[9].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:009:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[9].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:009:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[9].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:009:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[9].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:009:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[9].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:009:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[9].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:009:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[9].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:010:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[10].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:010:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[10].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:010:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[10].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:010:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[10].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:010:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[10].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:010:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[10].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:010:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[10].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:010:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[10].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:010:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[10].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:011:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[11].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:011:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[11].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:011:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[11].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:011:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[11].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:011:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[11].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:011:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[11].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:011:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[11].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:011:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[11].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:011:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[11].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:012:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[12].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:012:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[12].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:012:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[12].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:012:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[12].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:012:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[12].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:012:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[12].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:012:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[12].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:012:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[12].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:012:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[12].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:013:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[13].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:013:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[13].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:013:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[13].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:013:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[13].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:013:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[13].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:013:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[13].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:013:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[13].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:013:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[13].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:013:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[13].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:014:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[14].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:014:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[14].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:014:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[14].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:014:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[14].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:014:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[14].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:014:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[14].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:014:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[14].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:014:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[14].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:014:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[14].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:015:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[15].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:015:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[15].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:015:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[15].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:015:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[15].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:015:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[15].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:015:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[15].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:015:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[15].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:015:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[15].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:015:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[15].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:016:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[16].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:016:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[16].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:016:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[16].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:016:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[16].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:016:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[16].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:016:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[16].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:016:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[16].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:016:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[16].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:016:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[16].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:017:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[17].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:017:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[17].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:017:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[17].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:017:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[17].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:017:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[17].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:017:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[17].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:017:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[17].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:017:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[17].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:017:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[17].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:018:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[18].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:018:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[18].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:018:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[18].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:018:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[18].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:018:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[18].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:018:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[18].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:018:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[18].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:018:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[18].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:018:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[18].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:019:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[19].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:019:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[19].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:019:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[19].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:019:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[19].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:019:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[19].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:019:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[19].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:019:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[19].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:019:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[19].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:019:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[19].xValid
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:020:Cohort_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[20].nCohortInt
+      - Cohort inc on each arb cycle
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:020:ID_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[20].nId
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:020:Live_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[20].LiveInTable
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:020:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[20].neVRange
+      - Assertion Pool
       - | field: EGU eV
         | io: input
 
 
     * - $(PREFIX):AP:Entry:020:PulseEnergy_RBV
       - ai
-      - $(SYMBOL).fbBPAssertionPool.dataPool[20].fPP_mJ
+      - This beam parameter is non-op for now.
       - | field: EGU mJ
         | io: input
 
 
     * - $(PREFIX):AP:Entry:020:Rate_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[20].nRate
+      - Assertion Pool
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):AP:Entry:020:ST_RBV
       - waveform
-      - $(SYMBOL).fbBPAssertionPool.dataPool[20].aStoppers
+      - Assertion Pool
       - | io: input
 
 
     * - $(PREFIX):AP:Entry:020:Transmission_RBV
       - longin
-      - $(SYMBOL).fbBPAssertionPool.dataPool[20].nTran
+      - Assertion Pool
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):AP:Entry:020:Valid_RBV
       - bi
-      - $(SYMBOL).fbBPAssertionPool.dataPool[20].xValid
+      - Assertion Pool
       - | io: input
 
 
@@ -12285,7 +12285,7 @@ Database Records
 
     * - $(PREFIX)CurrentBP:Cohort_RBV
       - longin
-      - PMPS_GVL.stCurrentBeamParameters.nCohortInt
+      - Cohort inc on each arb cycle
       - | archive: 1s monitor
         | io: input
 
@@ -12483,7 +12483,7 @@ Database Records
 
     * - $(PREFIX)RequestedBP:Cohort_RBV
       - longin
-      - PMPS_GVL.stRequestedBeamParameters.nCohortInt
+      - Cohort inc on each arb cycle
       - | archive: 1s monitor
         | io: input
 
@@ -12498,7 +12498,7 @@ Database Records
 
     * - $(PREFIX)RequestedBP:PulseEnergy_RBV
       - ai
-      - PMPS_GVL.stRequestedBeamParameters.fPP_mJ
+      - This beam parameter is non-op for now.
       - | archive: 1s monitor
         | field: EGU mJ
         | io: input

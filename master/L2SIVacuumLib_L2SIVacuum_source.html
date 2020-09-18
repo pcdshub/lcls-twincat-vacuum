@@ -93,6 +93,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html">Settings</a></li>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html#pragmas">Pragmas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html#libraries">Libraries</a></li>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_summary.html#symbols">Symbols</a></li>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_epics.html">Data Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_epics.html#database-records">Database Records</a></li>
@@ -151,6 +152,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#fb-ebaraeva">FB_EbaraEVA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-gauge-interface">FB_Gauge_Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-gaugebase">FB_GaugeBase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-gaugemodbus">FB_GaugeModbus</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-gcc-test">FB_GCC_Test</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-gcm">FB_GCM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-gpi-test">FB_GPI_Test</a></li>
@@ -2787,6 +2789,106 @@ END_ACTION
 </pre></div>
 </div>
 </div>
+<div class="section" id="fb-gaugemodbus">
+<h2>FB_GaugeModbus<a class="headerlink" href="#fb-gaugemodbus" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_GaugeModbus</span> <span class="n">EXTENDS</span> <span class="n">FB_GaugeBase</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">IP</span><span class="p">:</span> <span class="n">STRING</span><span class="p">;</span>     <span class="o">//</span><span class="n">IP</span> <span class="n">of</span> <span class="n">Legacy</span> <span class="n">PLC</span>
+    <span class="n">nMBAddr</span> <span class="p">:</span><span class="n">WORD</span><span class="p">;</span> <span class="o">//</span><span class="n">Start</span> <span class="n">address</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Register</span> <span class="n">Memory</span>
+    <span class="n">iBitOffset</span><span class="p">:</span><span class="n">INT</span> <span class="o">:=</span><span class="mi">0</span><span class="p">;</span> <span class="o">//</span> <span class="n">must</span> <span class="n">be</span> <span class="n">smaller</span> <span class="n">than</span> <span class="mi">32</span>
+    <span class="n">tTimeout</span> <span class="p">:</span><span class="n">TIME</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#1s;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+    <span class="n">VG</span><span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span>
+    <span class="n">xNoPLCResponse</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">fbPLCInputCoilsRx</span>       <span class="p">:</span>       <span class="n">FB_MBReadInputs</span><span class="p">;</span><span class="o">//</span> <span class="p">(</span><span class="n">Modbus</span> <span class="n">function</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">i_PLC_nBits</span>     <span class="p">:</span>       <span class="n">ARRAY</span> <span class="p">[</span><span class="mf">1.</span><span class="o">.</span><span class="mi">4</span><span class="p">]</span> <span class="n">OF</span> <span class="n">BYTE</span><span class="p">;</span>
+    <span class="n">ftReset</span> <span class="p">:</span> <span class="n">F_TRIG</span><span class="p">;</span>
+    <span class="n">tonRetry</span> <span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
+    <span class="n">ErrCount</span><span class="p">:</span><span class="n">INT</span> <span class="o">:=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="n">iIndex</span> <span class="p">:</span><span class="n">INT</span><span class="p">;</span>
+    <span class="n">iBit</span><span class="p">:</span><span class="n">INT</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span> <span class="n">CONSTANT</span>
+    <span class="n">nZero</span> <span class="p">:</span> <span class="n">INT</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">nOne</span> <span class="p">:</span> <span class="n">INT</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">nTwo</span> <span class="p">:</span> <span class="n">INT</span> <span class="o">:=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">nThree</span> <span class="p">:</span> <span class="n">INT</span> <span class="o">:=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="n">nFour</span> <span class="p">:</span> <span class="n">INT</span> <span class="o">:=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="n">nFive</span> <span class="p">:</span> <span class="n">INT</span> <span class="o">:=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="n">nSix</span> <span class="p">:</span> <span class="n">INT</span> <span class="o">:=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="n">nSeven</span> <span class="p">:</span> <span class="n">INT</span> <span class="o">:=</span> <span class="mi">7</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">A_ReadMB</span><span class="p">();</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+<span class="n">ACTION</span> <span class="n">A_ReadMB</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Credit</span> <span class="n">to</span> <span class="n">Alex</span> <span class="n">Wallace</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Modbus</span> <span class="n">Info</span> <span class="k">for</span> <span class="n">Koyo</span>
+<span class="n">Modbus</span> <span class="n">Addresses</span> <span class="k">for</span>
+<span class="n">Koyo</span> <span class="n">DL05</span><span class="o">/</span><span class="mi">06</span><span class="o">/</span><span class="mi">240</span><span class="o">/</span><span class="mi">250</span><span class="o">/</span><span class="mi">260</span><span class="o">/</span><span class="mi">430</span><span class="o">/</span><span class="mi">440</span><span class="o">/</span><span class="mi">450</span> <span class="n">PLCs</span>
+<span class="n">PLC</span> <span class="n">Memory</span> <span class="n">Type</span>             <span class="o">|</span> <span class="n">Modbus</span> <span class="n">start</span> <span class="n">address</span> <span class="n">Decimal</span> <span class="p">(</span><span class="n">octal</span><span class="p">)</span> <span class="o">|</span> <span class="n">Function</span> <span class="n">codes</span>
+<span class="n">Inputs</span> <span class="p">(</span><span class="n">X</span><span class="p">)</span>                    <span class="mi">2048</span> <span class="p">(</span><span class="mi">04000</span><span class="p">)</span>                                                  <span class="mi">2</span>
+<span class="n">Special</span> <span class="n">Relays</span> <span class="p">(</span><span class="n">SP</span><span class="p">)</span>   <span class="mi">3072</span> <span class="p">(</span><span class="mi">06000</span><span class="p">)</span>                                                  <span class="mi">2</span>
+<span class="n">Outputs</span> <span class="p">(</span><span class="n">Y</span><span class="p">)</span>                   <span class="mi">2048</span> <span class="p">(</span><span class="mi">04000</span><span class="p">)</span>                                                  <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">15</span>
+<span class="n">Control</span> <span class="n">Relays</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span>    <span class="mi">3072</span> <span class="p">(</span><span class="mi">06000</span><span class="p">)</span>                                                  <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">15</span>
+<span class="n">Timer</span> <span class="n">Contacts</span> <span class="p">(</span><span class="n">T</span><span class="p">)</span>    <span class="mi">6144</span> <span class="p">(</span><span class="mi">014000</span><span class="p">)</span>                                                 <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">15</span>
+<span class="n">Counter</span> <span class="n">Contacts</span> <span class="p">(</span><span class="n">CT</span><span class="p">)</span> <span class="mi">6400</span> <span class="p">(</span><span class="mi">014400</span><span class="p">)</span>                                                 <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">15</span>
+<span class="n">Stage</span> <span class="n">Status</span> <span class="n">Bits</span> <span class="p">(</span><span class="n">S</span><span class="p">)</span> <span class="mi">6144</span> <span class="p">(</span><span class="mi">012000</span><span class="p">)</span>                                                 <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">15</span>
+<span class="o">*</span><span class="p">)</span>
+
+<span class="o">//</span> <span class="n">Retry</span> <span class="n">after</span> <span class="n">some</span> <span class="n">time</span>
+<span class="n">tonRetry</span><span class="o">.</span><span class="n">IN</span> <span class="o">:=</span> <span class="n">NOT</span> <span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">bBusy</span><span class="p">;</span>
+<span class="n">tonRetry</span><span class="o">.</span><span class="n">PT</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#10S;</span>
+<span class="n">tonRetry</span><span class="p">();</span>
+
+<span class="n">ftReset</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span><span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">bBusy</span><span class="p">);</span>
+<span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">bExecute</span> <span class="o">:=</span> <span class="n">ftReset</span><span class="o">.</span><span class="n">Q</span> <span class="n">OR</span> <span class="n">tonRetry</span><span class="o">.</span><span class="n">Q</span><span class="p">;</span>
+
+<span class="n">fbPLCInputCoilsRx</span><span class="p">(</span><span class="n">sIPAddr</span><span class="o">:=</span><span class="n">IP</span><span class="p">,</span> <span class="n">nTCPPort</span><span class="o">:=</span><span class="mi">502</span><span class="p">,</span> <span class="n">nQuantity</span><span class="o">:=</span><span class="mi">32</span><span class="p">,</span> <span class="n">nMBAddr</span><span class="o">:=</span><span class="n">nMBAddr</span><span class="p">,</span> <span class="n">cbLength</span><span class="o">:=</span><span class="n">SIZEOF</span><span class="p">(</span><span class="n">i_PLC_nBits</span><span class="p">),</span>  <span class="n">pDestAddr</span><span class="o">:=</span><span class="n">ADR</span><span class="p">(</span><span class="n">i_PLC_nBits</span><span class="p">),</span> <span class="n">tTimeout</span><span class="o">:=</span><span class="n">tTimeout</span><span class="p">);</span>
+<span class="o">//</span><span class="k">if</span> <span class="n">there</span><span class="s1">&#39;s a modbus error, set all incoming bits to zero</span>
+<span class="n">IF</span> <span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">bError</span> <span class="n">THEN</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">0</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">1</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">2</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">3</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">4</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">5</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">6</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">7</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">0</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">1</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">2</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">3</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">4</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">5</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">6</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">7</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">VG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">xNoPLCResponse</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">ftReset</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">cbRead</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="n">THEN</span>
+    <span class="n">xNoPLCResponse</span><span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">VG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="mf">1E-8</span><span class="p">;</span>
+    <span class="n">iIndex</span><span class="o">:=</span> <span class="n">REAL_TO_INT</span><span class="p">(</span><span class="n">iBitOffset</span><span class="o">/</span><span class="mi">8</span><span class="p">);</span>
+    <span class="n">iBit</span><span class="o">:=</span> <span class="p">(</span><span class="mi">24</span> <span class="n">MOD</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="n">VG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">M_GetBit</span><span class="p">(</span><span class="n">iIndex</span><span class="p">,</span><span class="n">iBit</span><span class="p">);</span>
+    <span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">bExecute</span> <span class="o">:=</span><span class="kc">False</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="p">(</span><span class="o">*</span><span class="n">ftReset</span><span class="o">.</span><span class="n">Q</span><span class="o">*</span><span class="p">)</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">bExecute</span><span class="p">)</span> <span class="n">AND</span> <span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">cbRead</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">THEN</span>
+    <span class="n">xNoPLCResponse</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="o">//</span> <span class="n">Log</span> <span class="n">Action</span>
+<span class="n">tAction</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span>   <span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">bError</span> <span class="ow">or</span> <span class="n">xNoPLCResponse</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">tAction</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+<span class="n">ErrCount</span><span class="o">:=</span> <span class="n">ErrCount</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Modbus read error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+<span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="fb-gcc-test">
 <h2>FB_GCC_Test<a class="headerlink" href="#fb-gcc-test" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_GCC_Test</span> <span class="n">EXTENDS</span> <span class="n">TcUnit</span><span class="o">.</span><span class="n">FB_TestSuite</span>
@@ -5052,7 +5154,7 @@ ACT_Interlock();
 
 END_FUNCTION_BLOCK
 ACTION ACT_Interlock:
-This^.tILK(IN:= (iq_stPtm.rBackingPressureSP&gt;= i_stGauge.i_iPRESS_R), PT:=T#5S, Q=&gt; );
+This^.tILK(IN:= (i_stGauge.rPRESS&gt;=iq_stPtm.rBackingPressureSP), PT:=T#5S, Q=&gt; );
 END_ACTION
 ACTION ACT_Logger:
 //STATE Logger
@@ -6970,7 +7072,7 @@ VAR_INPUT
     pv: Dis_DPIlk
     &#39;}
     i_xDis_DPIlk : BOOL := FALSE;  (* Set to true when calling the function to disable the differential pressure interlock *)
-    i_xPMPS_OK:     BOOL    ; (*Set to True To switch of the bptm*)
+    i_xPMPS_OK:     BOOL    ; (*Set to True To switch off the bptm and PMPS Arbiter*)
     {attribute &#39;pytmc&#39; := &#39;
     pv: EPS_OK
     &#39;}
@@ -7276,7 +7378,7 @@ END_IF
 (*MPS Fault setting*)
 If (i_xIsAperture ) THEN
     (* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
-    xMPS_OK := i_xOpnLS XOR i_xClsLS;
+    xMPS_OK := (i_xOpnLS  AND q_xOPN_DO) XOR (i_xClsLS  AND NOT q_xOPN_DO);
 ELSE
     (* When the valve  is open MPS is OK*)
     xMPS_OK := i_xOpnLS AND NOT i_xClsLS AND q_xOPN_DO;
@@ -7395,11 +7497,11 @@ bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.p
 bDone := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xOpnLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xClsLS);
 If (i_xIsAperture ) OR (iq_stValve.pv_xOPN_SW )THEN
     bptm.i_stRequestedAssertion := PMPS_GVL.cstFullBeam;
-ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cstSafeBeam;
+ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cst0RateBeam;
 END_IF
 bptm(fbArbiter:=fbArbiter,
      i_TransitionAssertionID:=i_nTransitionRootID+2,
-     i_stTransitionAssertion:=PMPS_GVL.cstSafeBeam,
+     i_stTransitionAssertion:=PMPS_GVL.cst0RateBeam,
      i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xOPN_SW),
      i_stRequestedAssertion:=,
      i_xMoving:=bMoving,
@@ -7409,6 +7511,12 @@ bptm(fbArbiter:=fbArbiter,
 // Timeout
 tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
 //xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
+
+//Timeout and clear request
+IF (tBPTMtimeout.Q) THEN
+    fbArbiter.RemoveRequest(bptm.i_TransitionAssertionID);
+    fbArbiter.RemoveRequest(bptm.i_nRequestedAssertionID);
+END_IF
 END_ACTION
 ACTION ACT_ResetAlarms:
 iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
