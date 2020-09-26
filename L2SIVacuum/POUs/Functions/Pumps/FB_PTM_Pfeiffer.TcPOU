@@ -69,7 +69,13 @@ END_IF
 
 (*Error Reset*)
 (* to reset the Reset Bit *)
- IF (iq_stPTM.xResetSW ) THEN  iq_stPTM.q_xReset := TRUE; 
+ IF (iq_stPTM.xResetSW ) THEN  
+	iq_stPTM.q_xReset := TRUE; 
+	q_PumpingStation := TRUE;
+ END_IF
+
+ IF (iq_stPTM.xResetSW) AND (iq_stPTM.i_xFault)  THEN  
+	q_PumpingStation := TRUE;
  END_IF
  TOF_RESET (IN:= iq_stPTM.q_xReset, Q => );
  IF TOF_RESET.Q THEN 
@@ -197,38 +203,5 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Pfeiffer">
-      <LineId Id="3" Count="4" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="8" Count="7" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="16" Count="2" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="19" Count="14" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="70" Count="6" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="35" Count="4" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.ACT_IO">
-      <LineId Id="2" Count="1" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="4" Count="7" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.ACT_Logger">
-      <LineId Id="2" Count="32" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.M_Run">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.M_Serial_IO">
-      <LineId Id="3" Count="37" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
