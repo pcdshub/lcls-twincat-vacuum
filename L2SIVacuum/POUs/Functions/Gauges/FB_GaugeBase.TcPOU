@@ -15,7 +15,7 @@ VAR
     tErrorPresent : R_TRIG;
     tAction : R_TRIG; // Primary action of this device (OPN_DO, etc.)
     tOverrideActivated : R_TRIG;
-	
+	 tState : R_TRIG;
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
 	sPath: STRING;
@@ -24,8 +24,5 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <LineIds Name="FB_GaugeBase">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

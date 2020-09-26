@@ -139,7 +139,7 @@ IF (IG.xLog) THEN
 	
 	
 	//STATE Logger  
-	  
+	tState(CLK:=  ePrevState <> IG.eState);
 	IF ePrevState <> IG.eState THEN
 		  CASE IG.eState OF
 			ValidHi:
@@ -197,32 +197,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS500">
-      <LineId Id="3" Count="72" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS500.ACT_Logger">
-      <LineId Id="2" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="3" Count="11" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="15" Count="18" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS500.IO">
-      <LineId Id="2" Count="4" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS500.M_HVE">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS500.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
