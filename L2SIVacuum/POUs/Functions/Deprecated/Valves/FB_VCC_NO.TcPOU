@@ -4,6 +4,7 @@
     <Declaration><![CDATA[(*Deprecated*)
 (* This Function Block Implements Basic Functionality for NO Vent Valves VVC *)
 (* Note Interlock Logic is External *)
+{attribute 'obsolete' := 'FB_VCC_NO has been deprecated and is not valid!'}
 FUNCTION_BLOCK FB_VCC_NO
 VAR_IN_OUT
 	{attribute 'pytmc' := 'pv:'}
@@ -66,16 +67,5 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xCLS_SW :=Close;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VCC_NO">
-      <LineId Id="3" Count="18" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCC_NO.ACT_IO">
-      <LineId Id="2" Count="2" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCC_NO.M_Close">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
