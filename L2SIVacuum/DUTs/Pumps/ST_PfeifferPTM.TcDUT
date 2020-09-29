@@ -64,6 +64,12 @@ More?
 	'}
 	i_uiPowerPctRbk :   UINT;
 	
+	{attribute 'pytmc' := '
+	pv: SET_SPEED;
+	io: io;
+	field: EGU "Hz"
+	'}
+	i_dSetSpd	:	DINT;
 	
 //Controls
 	q_uiPowerPct : UINT := 100; //Should normally be 100

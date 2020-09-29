@@ -159,17 +159,25 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
 VAR_INPUT
 	st_Pfeiffer_CTRL: ST_PfeifferControl;
 	st_Pfeiffer_RBK: ST_PfeifferStatus;
+	bInit:BOOL := TRUE;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[(* This function block is used to map the IO points from the pfeiffer structures
 to the generic turbo structures *)
+(*
+if (bInit) Then
+	bInit := False;
+	st_Pfeiffer_CTRL.diSetRotationSpeed_309 := st_Pfeiffer_RBK.diActiveRotationSpeed_309;
+END_IF*)
 
 (* Controls *) (* Controls is via DIO*)
 //st_Pfeiffer_CTRL.xPumpingStation_010 := iq_stPTM.q_RunDO;
 //st_Pfeiffer_CTRL.xMotorPump_023 := 1; //Setting always true because parameter 10 alone can enable/disable the pump
 //st_Pfeiffer_CTRL.uiPowerPct_708 := iq_stPTM.q_uiPowerPct;
 //st_Pfeiffer_CTRL.xErrorAck_009 := iq_stPTM.xResetSW;
+
+
 
 (* Readbacks *)
 iq_stPTM.i_xAccel := st_Pfeiffer_RBK.xPumpAccelerating_307;
@@ -199,6 +207,13 @@ ELSIF st_Pfeiffer_RBK.sErrorCode_303 <> '000000' THEN
 iq_stPTM.i_xFault := TRUE;
 ELSE
 iq_stPTM.i_xFault := FALSE;
+END_IF
+
+
+IF ( iq_stPTM.i_dSetSpd <>0) THEN
+	st_Pfeiffer_CTRL.diSetRotationSpeed_309 := iq_stPTM.i_dSetSpd;
+	ELSE
+		st_Pfeiffer_CTRL.diSetRotationSpeed_309 := iq_stPTM.i_diCurSpd;
 END_IF
 ]]></ST>
       </Implementation>
