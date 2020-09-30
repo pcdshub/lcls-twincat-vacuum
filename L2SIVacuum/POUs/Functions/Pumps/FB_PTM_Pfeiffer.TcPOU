@@ -159,7 +159,6 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
 VAR_INPUT
 	st_Pfeiffer_CTRL: ST_PfeifferControl;
 	st_Pfeiffer_RBK: ST_PfeifferStatus;
-	bInit:BOOL := TRUE;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -189,7 +188,7 @@ iq_stPTM.i_diBtmTemp := st_Pfeiffer_RBK.diTempPmpBot_330;
 iq_stPTM.i_diBrngTemp := st_Pfeiffer_RBK.diTempBearng_342;
 iq_stPTM.i_diMtrTemp := st_Pfeiffer_RBK.diTempMotor_346;
 iq_stPTM.i_uiPowerPctRbk := st_Pfeiffer_RBK.uiPowerPct_708;
-
+iq_stPTM.i_rCurrentMon :=  st_Pfeiffer_RBK.lrDriveCurrent_310;
 iq_stPTM.xCommTimeout	:=	st_Pfeiffer_RBK.xTimeout;
 iq_stPTM.i_iErrorCode := st_Pfeiffer_RBK.iErrorCode_303;
 iq_stPTM.i_iWarningCode := st_Pfeiffer_RBK.iWarningCode_303;
@@ -209,11 +208,10 @@ ELSE
 iq_stPTM.i_xFault := FALSE;
 END_IF
 
-
+iq_stPTM.i_dSetSpd := LIMIT (0, iq_stPTM.i_dSetSpd, 1500); // 1500 nominal frequency
 IF ( iq_stPTM.i_dSetSpd <>0) THEN
-	st_Pfeiffer_CTRL.diSetRotationSpeed_309 := iq_stPTM.i_dSetSpd;
-	ELSE
-		st_Pfeiffer_CTRL.diSetRotationSpeed_309 := iq_stPTM.i_diCurSpd;
+	st_Pfeiffer_CTRL.iSetRotationSpeed_707 := DINT_TO_INT(iq_stPTM.i_dSetSpd * 100/1500);
+	st_Pfeiffer_CTRL.iSetRotationSpeed_707 := LIMIT(20, st_Pfeiffer_CTRL.iSetRotationSpeed_707 ,100); // Manual Page 18
 END_IF
 ]]></ST>
       </Implementation>
