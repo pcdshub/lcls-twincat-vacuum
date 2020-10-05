@@ -24,7 +24,7 @@ Settings
 Pragmas
 -------
 
-Total pragmas found: 252
+Total pragmas found: 269
 Total linter errors: 0
 
 
@@ -36,9 +36,8 @@ Libraries
     :header: Library, Vendor, Default, Version
     :align: center
 
-        L2SI Vacuum Library, SLAC, , Unset
         LCLS General, SLAC, Unset, Unset
-        LCLSVacuumSerialDriverLib, SLAC, Unset, Unset
+        LCLSVacuumSerialDriverLib, SLAC - LCLS, Unset, 0.0.0
         PMPS, SLAC - LCLS, Unset, 0.12.0
         SysFile, System, , Unset
         Tc2_DataExchange, Beckhoff Automation GmbH, Unset, Unset
@@ -53,7 +52,6 @@ Libraries
         Tc2_TcpIp, Beckhoff Automation GmbH, Unset, Unset
         Tc2_Utilities, Beckhoff Automation GmbH, Unset, Unset
         Tc3_EventLogger, Beckhoff Automation GmbH, Unset, Unset
-        Tc3_Interfaces, Beckhoff Automation GmbH, , Unset
         Tc3_JsonXml, Beckhoff Automation GmbH, Unset, Unset
         Tc3_Module, Beckhoff Automation GmbH, Unset, Unset
         TcUnit, www.tcunit.org, Unset, Unset
@@ -84,19 +82,19 @@ Constants
     :header: Symbol, Type, Offset/Size
     :align: center
 
-        Constants.bFPUSupport, BOOL, 86105976 (8)
-        Constants.bLittleEndian, BOOL, 86105960 (8)
-        Constants.bSimulationMode, BOOL, 86105968 (8)
-        Constants.CompilerVersion, VERSION, 86107680 (64)
-        Constants.CompilerVersionNumeric, DWORD, 86107776 (32)
-        Constants.gc_GaugeValidState, INT, 8559200 (16)
-        Constants.gc_GaugeValidState, INT, 8575792 (16)
-        Constants.gc_iSizeOfGGOArray, INT, 8575776 (16)
+        Constants.bFPUSupport, BOOL, 86139608 (8)
+        Constants.bLittleEndian, BOOL, 8577776 (8)
+        Constants.bSimulationMode, BOOL, 8577784 (8)
+        Constants.CompilerVersion, VERSION, 86141280 (64)
+        Constants.CompilerVersionNumeric, DWORD, 86141408 (32)
+        Constants.gc_GaugeValidState, INT, 8559488 (16)
+        Constants.gc_GaugeValidState, INT, 8570224 (16)
+        Constants.gc_iSizeOfGGOArray, INT, 8570208 (16)
         Constants.gc_iSizeOfGGOArray, INT, 4397744 (16)
-        Constants.nPackMode, UINT, 86107056 (16)
-        Constants.nRegisterSize, WORD, 86107040 (16)
-        Constants.RuntimeVersion, VERSION, 86107616 (64)
-        Constants.RuntimeVersionNumeric, DWORD, 86107744 (32)
+        Constants.nPackMode, UINT, 86141360 (16)
+        Constants.nRegisterSize, WORD, 86141344 (16)
+        Constants.RuntimeVersion, VERSION, 86141216 (64)
+        Constants.RuntimeVersionNumeric, DWORD, 86141376 (32)
 
 .. raw:: html
 
@@ -321,20 +319,20 @@ Global_Variables
         Global_Variables.DBG_OUTPUT_NONE, DWORD, 4270752 (32)
         Global_Variables.DBG_OUTPUT_VISU, DWORD, 4270848 (32)
         Global_Variables.DEFAULT_ADS_TIMEOUT, TIME, 4186528 (32)
-        Global_Variables.DEFAULT_BACKLASHVALUE, LREAL, 8575424 (64)
+        Global_Variables.DEFAULT_BACKLASHVALUE, LREAL, 8577408 (64)
         Global_Variables.DEFAULT_CSV_FIELD_DOUBLE_QUOTE, BYTE, 4250264 (8)
         Global_Variables.DEFAULT_CSV_FIELD_SEP, BYTE, 4188288 (8)
         Global_Variables.DEFAULT_CSV_RECORD_SEP_CR, BYTE, 4270896 (8)
         Global_Variables.DEFAULT_CSV_RECORD_SEP_LF, BYTE, 4270904 (8)
-        Global_Variables.DEFAULT_HOME_POSITION, LREAL, 8575360 (64)
+        Global_Variables.DEFAULT_HOME_POSITION, LREAL, 8577344 (64)
         Global_Variables.EMPTY_ARG_VALUE, T_Arg, 4252160 (128)
         Global_Variables.EMPTY_GUID_REGSTRING, STRING(38), 4392744 (312)
         Global_Variables.EMPTY_GUID_STRING, STRING(36), 4392448 (296)
         Global_Variables.EMPTY_GUID_STRUCT, GUID, 4392320 (128)
         Global_Variables.EMPTY_ROUTE_ENTRY, ST_AmsRouteEntry, 4250272 (1184)
         Global_Variables.eWatchdogConfig, E_WATCHDOG_TIME_CONFIG, 4186512 (16)
-        Global_Variables.fbGetCurTaskIdx, GETCURTASKINDEX, 86107072 (256)
-        Global_Variables.fbGetCurTaskIdx, GETCURTASKINDEX, 8559744 (256)
+        Global_Variables.fbGetCurTaskIdx, GETCURTASKINDEX, 8560704 (256)
+        Global_Variables.fbGetCurTaskIdx, GETCURTASKINDEX, 86140672 (256)
         Global_Variables.FLOATREC_EXP_IS_INF, INT, 4251632 (16)
         Global_Variables.FLOATREC_EXP_IS_NAN, INT, 4251616 (16)
         Global_Variables.FLOATREC_MAX_DIGITS, INT, 4251648 (16)
@@ -363,13 +361,13 @@ Global_Variables
         Global_Variables.FORMAT_DECASC_CODES, BYTE, 4252544 (80)
         Global_Variables.FORMAT_HEXASC_CODES, BYTE, 4252288 (256)
         Global_Variables.FORMAT_MAX_ARGS, INT, 4251600 (16)
-        Global_Variables.g_DummyVG, ST_VG, 8559328 (416)
-        Global_Variables.g_DummyVG, ST_VG, 86105984 (1056)
-        Global_Variables.g_iSizeOfGGOArray, INT, 8559216 (16)
-        Global_Variables.g_iSizeOfGGOArray, INT, 86105856 (16)
-        Global_Variables.g_stSystem, ST_System, 8559232 (88)
-        Global_Variables.g_stSystem, ST_System, 86105872 (88)
-        Global_Variables.g_stSystem.I_EcatMaster1, AMSNETID, 86105912 (48)
+        Global_Variables.g_DummyVG, ST_VG, 8559616 (1056)
+        Global_Variables.g_DummyVG, ST_VG, 86139616 (1056)
+        Global_Variables.g_iSizeOfGGOArray, INT, 8559504 (16)
+        Global_Variables.g_iSizeOfGGOArray, INT, 8577760 (16)
+        Global_Variables.g_stSystem, ST_System, 8559520 (88)
+        Global_Variables.g_stSystem, ST_System, 86139520 (88)
+        Global_Variables.g_stSystem.I_EcatMaster1, AMSNETID, 86139560 (48)
         Global_Variables.GLOBAL_DCF77_PULSE_SPLIT, TIME, 4188256 (32)
         Global_Variables.GLOBAL_DCF77_SEQUENCE_CHECK, BOOL, 4188136 (8)
         Global_Variables.GLOBAL_FORMAT_HASH_PREFIX_TYPE, E_HashPrefixTypes, 4188224 (16)
@@ -452,7 +450,7 @@ Global_Variables
         Global_Variables.TCEVENTSTATE_RESET, WORD, 4186432 (16)
         Global_Variables.TCEVENTSTATE_RESETCON, WORD, 4186464 (16)
         Global_Variables.TCEVENTSTATE_SIGNALED, WORD, 4186416 (16)
-        Global_Variables.TcMcGlobal, _TCMCGLOBAL, 8568256 (7104)
+        Global_Variables.TcMcGlobal, _TCMCGLOBAL, 8570240 (7104)
         Global_Variables.TIMESERVICE_ADJUSTTIMETORTC, UDINT, 4185568 (32)
         Global_Variables.TIMESERVICE_DATEANDTIME, UDINT, 4185472 (32)
         Global_Variables.TIMESERVICE_RTCTIMEDIFF, UDINT, 4185536 (32)
@@ -472,16 +470,17 @@ Global_Version
 .. raw:: html
 
    <details>
-       <summary>11 Symbols</summary>
+       <summary>12 Symbols</summary>
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
     :align: center
 
-        Global_Version.stLibVersion_LCLS_Vacuum, ST_LibVersion, 86107328 (288)
+        Global_Version.stLibVersion_LCLS_Vacuum, ST_LibVersion, 86140928 (288)
+        Global_Version.stLibVersion_LCLSVacuumSerialDriverLib, ST_LibVersion, 8559200 (288)
         Global_Version.stLibVersion_Tc2_IoFunctions, ST_LibVersion, 4393056 (288)
-        Global_Version.stLibVersion_Tc2_Math, ST_LibVersion, 8575488 (288)
-        Global_Version.stLibVersion_Tc2_MC2, ST_LibVersion, 8567936 (288)
+        Global_Version.stLibVersion_Tc2_Math, ST_LibVersion, 8577472 (288)
+        Global_Version.stLibVersion_Tc2_MC2, ST_LibVersion, 8569920 (288)
         Global_Version.stLibVersion_Tc2_ModbusSrv, ST_LibVersion, 4393344 (288)
         Global_Version.stLibVersion_Tc2_System, ST_LibVersion, 4182912 (288)
         Global_Version.stLibVersion_Tc2_Utilities, ST_LibVersion, 4187840 (288)
@@ -496,16 +495,6 @@ Global_Version
    <br />
 
 
-LCLSVacuumSerialDriverLib
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. csv-table::
-    :header: Symbol, Type, Offset/Size
-    :align: center
-
-        LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.Global_Variables.g_stSystem.I_EcatMaster1, AMSNETID, 8559272 (48)
-
-
 LCLS_General
 ^^^^^^^^^^^^
 
@@ -516,50 +505,66 @@ LCLS_General
         LCLS_General.DefaultGlobals.stSys.I_EcatMaster1, AMSNETID, 4096040 (48)
 
 
+LCLS_Vacuum_Serial
+^^^^^^^^^^^^^^^^^^
+
+.. csv-table::
+    :header: Symbol, Type, Offset/Size
+    :align: center
+
+        LCLS_Vacuum_Serial.LCLS_Vacuum.Global_Variables.g_stSystem.I_EcatMaster1, AMSNETID, 8559560 (48)
+
+
 PMPS_GVL
 ^^^^^^^^
 
 .. raw:: html
 
    <details>
-       <summary>27 Symbols</summary>
+       <summary>22 Symbols</summary>
 
 .. csv-table::
     :header: Symbol, Type, Offset/Size
     :align: center
 
         PMPS_GVL.AccumulatedFF, UDINT, 3072032 (32)
-        PMPS_GVL.AUX_ATTENUATORS, UINT, 8565632 (16)
-        PMPS_GVL.cnMaxStateArrayLen, INT, 8563184 (16)
-        PMPS_GVL.cstFullBeam, ST_BeamParams, 8563200 (1216)
-        PMPS_GVL.cstSafeBeam, ST_BeamParams, 8564416 (1216)
-        PMPS_GVL.DUMMY_AUX_ATT_ARRAY, ST_PMPS_Attenuator, 8565664 (512)
-        PMPS_GVL.EXCLUDED_ASSERTION_ID, UDINT, 8562976 (32)
-        PMPS_GVL.FAST_TEST_VELOCITY, LREAL, 8563072 (64)
-        PMPS_GVL.fHiK_LUnd, LREAL, 8566464 (64)
-        PMPS_GVL.fLowK_LUnd, LREAL, 8566400 (64)
-        PMPS_GVL.fPeriod_mm_LUnd, LREAL, 8566336 (64)
-        PMPS_GVL.g_areVBoundaries, REAL, 8562432 (512)
-        PMPS_GVL.g_areVBoundariesK, REAL, 8567040 (512)
-        PMPS_GVL.g_areVBoundariesL, REAL, 8566528 (512)
-        PMPS_GVL.g_cBoundaries, INT, 8566208 (16)
-        PMPS_GVL.iHighBound_LUnd, UDINT, 8566272 (32)
-        PMPS_GVL.iLowBound_LUnd, UDINT, 8566240 (32)
-        PMPS_GVL.MAX_APERTURES, UINT, 8565648 (16)
-        PMPS_GVL.MAX_ASSERTIONS, UDINT, 8566176 (32)
-        PMPS_GVL.MAX_DEVICE_STATES, UDINT, 8563136 (32)
-        PMPS_GVL.MAX_FAST_FAULTS, DINT, 8562944 (32)
-        PMPS_GVL.MAX_STOPPERS, UINT, 8563168 (16)
-        PMPS_GVL.reVHyst, REAL, 8566304 (32)
-        PMPS_GVL.stCurrentBeamParameters, ST_BeamParams, 8561216 (1216)
-        PMPS_GVL.stRequestedBeamParameters, ST_BeamParams, 8560000 (1216)
+        PMPS_GVL.AUX_ATTENUATORS, UINT, 8567808 (16)
+        PMPS_GVL.cnMaxStateArrayLen, INT, 8564144 (16)
+        PMPS_GVL.cst0RateBeam, ST_BeamParams, 8565376 (1216)
+        PMPS_GVL.cstFullBeam, ST_BeamParams, 8564160 (1216)
+        PMPS_GVL.cstSafeBeam, ST_BeamParams, 8566592 (1216)
+        PMPS_GVL.DUMMY_AUX_ATT_ARRAY, ST_PMPS_Attenuator, 8567840 (512)
+        PMPS_GVL.EXCLUDED_ASSERTION_ID, UDINT, 8560672 (32)
+        PMPS_GVL.FAST_TEST_VELOCITY, LREAL, 8564032 (64)
+        PMPS_GVL.g_areVBoundaries, REAL, 8563392 (512)
+        PMPS_GVL.g_areVBoundariesK, REAL, 8568928 (512)
+        PMPS_GVL.g_areVBoundariesL, REAL, 8568416 (512)
+        PMPS_GVL.g_cBoundaries, INT, 8568352 (16)
+        PMPS_GVL.MAX_APERTURES, UINT, 8567824 (16)
+        PMPS_GVL.MAX_DEVICE_STATES, UDINT, 8564096 (32)
+        PMPS_GVL.MAX_STOPPERS, UINT, 8564128 (16)
+        PMPS_GVL.PERange, PE_Ranges, 8563904 (64)
+        PMPS_GVL.reVHyst, REAL, 8568384 (32)
+        PMPS_GVL.stCurrentBeamParameters, ST_BeamParams, 8562176 (1216)
+        PMPS_GVL.stRequestedBeamParameters, ST_BeamParams, 8560960 (1216)
         PMPS_GVL.SuccessfulPreemption, UDINT, 3072000 (32)
-        PMPS_GVL.VISIBLE_TEST_VELOCITY, LREAL, 8563008 (64)
+        PMPS_GVL.VISIBLE_TEST_VELOCITY, LREAL, 8563968 (64)
 
 .. raw:: html
 
    </details>
    <br />
+
+
+PMPS_PARAM
+^^^^^^^^^^
+
+.. csv-table::
+    :header: Symbol, Type, Offset/Size
+    :align: center
+
+        PMPS_PARAM.MAX_ASSERTIONS, UDINT, 8569472 (32)
+        PMPS_PARAM.MAX_FAST_FAULTS, DINT, 8569440 (32)
 
 
 PMPS_TOOLS
@@ -569,7 +574,7 @@ PMPS_TOOLS
     :header: Symbol, Type, Offset/Size
     :align: center
 
-        PMPS_TOOLS.fbJson, FB_JsonSaxWriter, 8567552 (384)
+        PMPS_TOOLS.fbJson, FB_JsonSaxWriter, 8569536 (384)
 
 
 PRG_Test
@@ -584,51 +589,51 @@ PRG_Test
     :header: Symbol, Type, Offset/Size
     :align: center
 
-        PRG_Test.fb_GCC_Test, FB_GCC_Test, 73319616 (12785216)
-        PRG_Test.fb_GCC_Test.fb_MKS422.i_iPRESS_R, INT, 86104640 (16)
-        PRG_Test.fb_GCC_Test.fb_MKS422.q_xHV_DIS, BOOL, 86104656 (8)
-        PRG_Test.fb_GCC_Test.i_iPRESS_R, INT, 86104768 (16)
-        PRG_Test.fb_GPI_Test, FB_GPI_Test, 60448512 (12871104)
-        PRG_Test.fb_GPI_Test.fb_MKS275.i_iPRESS_R, INT, 73231168 (16)
-        PRG_Test.fb_GPI_Test.fb_MKS317.i_iPRESS_R, INT, 73319264 (16)
-        PRG_Test.fb_GPI_Test.i_iPRESS_R, INT, 73319552 (16)
-        PRG_Test.fb_PIP_Test, FB_PIP_Test, 34790528 (12788352)
-        PRG_Test.fb_PIP_Test.fb_PIP_GAMMA.i_iPRESS, INT, 47576880 (16)
-        PRG_Test.fb_PIP_Test.fb_PIP_GAMMA.i_xSP_DI, BOOL, 47576896 (8)
-        PRG_Test.fb_PIP_Test.fb_PIP_GAMMA.q_xHVEna_DO, BOOL, 47576864 (8)
-        PRG_Test.fb_PTM_Test, FB_PTM_Test, 47578880 (12869632)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iCurrentMon, INT, 60448272 (16)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iRawSpeed, INT, 60448240 (16)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iTempMon, INT, 60448256 (16)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xAccel, BOOL, 60448200 (8)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xAtSpd, BOOL, 60448224 (8)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xDecel, BOOL, 60448192 (8)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xNCFault, BOOL, 60448216 (8)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xRotate, BOOL, 60448208 (8)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_iSpeedSet, INT, 60448336 (16)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xProtection, BOOL, 60448312 (8)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xReset, BOOL, 60448304 (8)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xSetSpeed, BOOL, 60448320 (8)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xStart, BOOL, 60448288 (8)
-        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xStop, BOOL, 60448296 (8)
-        PRG_Test.fb_PTM_Test.fb_TwisTorr.i_xAtSpd, BOOL, 60360424 (8)
-        PRG_Test.fb_PTM_Test.fb_TwisTorr.i_xFault, BOOL, 60360432 (8)
-        PRG_Test.fb_PTM_Test.fb_TwisTorr.q_RunDO, BOOL, 60360440 (8)
-        PRG_Test.fb_PTM_Test.i_diCurSpd, INT, 60448416 (16)
-        PRG_Test.fb_PTM_Test.i_iCurrentMon, INT, 60448464 (16)
-        PRG_Test.fb_PTM_Test.i_iRawSpeed, INT, 60448432 (16)
-        PRG_Test.fb_PTM_Test.i_iTempMon, INT, 60448448 (16)
-        PRG_Test.fb_PTM_Test.q_iSpeedSet, INT, 60448400 (16)
-        PRG_Test.fb_VGC_Test, FB_VGC_Test, 8666880 (13339776)
-        PRG_Test.fb_VGC_Test.io_fbFFHWO.q_xFastFaultOut, BOOL, 21517752 (8)
-        PRG_Test.fb_VGC_Test.VGC.i_xClsLS, BOOL, 21515464 (8)
-        PRG_Test.fb_VGC_Test.VGC.i_xOpnLS, BOOL, 21515456 (8)
-        PRG_Test.fb_VGC_Test.VGC.q_xOPN_DO, BOOL, 21515472 (8)
-        PRG_Test.fb_VRC_Test, FB_VRC_Test, 22006656 (12783872)
-        PRG_Test.fb_VRC_Test.VRC.i_xClsLS, BOOL, 34790408 (8)
-        PRG_Test.fb_VRC_Test.VRC.i_xOpnLS, BOOL, 34790400 (8)
-        PRG_Test.fb_VRC_Test.VRC.q_xOPN_DO, BOOL, 34790416 (8)
-        PRG_Test.TotalTests, INT, 8566224 (16)
+        PRG_Test.fb_GCC_Test, FB_GCC_Test, 73353152 (12785344)
+        PRG_Test.fb_GCC_Test.fb_MKS422.i_iPRESS_R, INT, 86138304 (16)
+        PRG_Test.fb_GCC_Test.fb_MKS422.q_xHV_DIS, BOOL, 86138320 (8)
+        PRG_Test.fb_GCC_Test.i_iPRESS_R, INT, 86138432 (16)
+        PRG_Test.fb_GPI_Test, FB_GPI_Test, 60481792 (12871360)
+        PRG_Test.fb_GPI_Test.fb_MKS275.i_iPRESS_R, INT, 73264576 (16)
+        PRG_Test.fb_GPI_Test.fb_MKS317.i_iPRESS_R, INT, 73352800 (16)
+        PRG_Test.fb_GPI_Test.i_iPRESS_R, INT, 73353088 (16)
+        PRG_Test.fb_PIP_Test, FB_PIP_Test, 34823808 (12788352)
+        PRG_Test.fb_PIP_Test.fb_PIP_GAMMA.i_iPRESS, INT, 47610160 (16)
+        PRG_Test.fb_PIP_Test.fb_PIP_GAMMA.i_xSP_DI, BOOL, 47610176 (8)
+        PRG_Test.fb_PIP_Test.fb_PIP_GAMMA.q_xHVEna_DO, BOOL, 47610144 (8)
+        PRG_Test.fb_PTM_Test, FB_PTM_Test, 47612160 (12869632)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iCurrentMon, INT, 60481552 (16)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iRawSpeed, INT, 60481520 (16)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iTempMon, INT, 60481536 (16)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xAccel, BOOL, 60481480 (8)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xAtSpd, BOOL, 60481504 (8)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xDecel, BOOL, 60481472 (8)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xNCFault, BOOL, 60481496 (8)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_xRotate, BOOL, 60481488 (8)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_iSpeedSet, INT, 60481616 (16)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xProtection, BOOL, 60481592 (8)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xReset, BOOL, 60481584 (8)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xSetSpeed, BOOL, 60481600 (8)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xStart, BOOL, 60481568 (8)
+        PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.q_xStop, BOOL, 60481576 (8)
+        PRG_Test.fb_PTM_Test.fb_TwisTorr.i_xAtSpd, BOOL, 60393704 (8)
+        PRG_Test.fb_PTM_Test.fb_TwisTorr.i_xFault, BOOL, 60393712 (8)
+        PRG_Test.fb_PTM_Test.fb_TwisTorr.q_RunDO, BOOL, 60393720 (8)
+        PRG_Test.fb_PTM_Test.i_diCurSpd, INT, 60481696 (16)
+        PRG_Test.fb_PTM_Test.i_iCurrentMon, INT, 60481744 (16)
+        PRG_Test.fb_PTM_Test.i_iRawSpeed, INT, 60481712 (16)
+        PRG_Test.fb_PTM_Test.i_iTempMon, INT, 60481728 (16)
+        PRG_Test.fb_PTM_Test.q_iSpeedSet, INT, 60481680 (16)
+        PRG_Test.fb_VGC_Test, FB_VGC_Test, 8673984 (13365952)
+        PRG_Test.fb_VGC_Test.io_fbFFHWO.q_xFastFaultOut, BOOL, 21551032 (8)
+        PRG_Test.fb_VGC_Test.VGC.i_xClsLS, BOOL, 21548744 (8)
+        PRG_Test.fb_VGC_Test.VGC.i_xOpnLS, BOOL, 21548736 (8)
+        PRG_Test.fb_VGC_Test.VGC.q_xOPN_DO, BOOL, 21548752 (8)
+        PRG_Test.fb_VRC_Test, FB_VRC_Test, 22039936 (12783872)
+        PRG_Test.fb_VRC_Test.VRC.i_xClsLS, BOOL, 34823688 (8)
+        PRG_Test.fb_VRC_Test.VRC.i_xOpnLS, BOOL, 34823680 (8)
+        PRG_Test.fb_VRC_Test.VRC.q_xOPN_DO, BOOL, 34823696 (8)
+        PRG_Test.TotalTests, INT, 8568368 (16)
 
 .. raw:: html
 
@@ -653,7 +658,7 @@ TC_EVENTS
     :header: Symbol, Type, Offset/Size
     :align: center
 
-        TC_EVENTS.LCLSGeneralEventClass, LCLSGeneralEventClass, 86156416 (960)
+        TC_EVENTS.LCLSGeneralEventClass, LCLSGeneralEventClass, 86190016 (960)
 
 
 TwinCAT_LicenseInfoVarList
@@ -663,7 +668,7 @@ TwinCAT_LicenseInfoVarList
     :header: Symbol, Type, Offset/Size
     :align: center
 
-        TwinCAT_LicenseInfoVarList._LicenseInfo, PlcLicenseInfo, 86107808 (1024)
+        TwinCAT_LicenseInfoVarList._LicenseInfo, PlcLicenseInfo, 86141440 (1024)
 
 
 TwinCAT_SystemInfoVarList
@@ -673,10 +678,10 @@ TwinCAT_SystemInfoVarList
     :header: Symbol, Type, Offset/Size
     :align: center
 
-        TwinCAT_SystemInfoVarList.__PlcTask, _Implicit_Task_Info, 86112000 (896)
-        TwinCAT_SystemInfoVarList._AppInfo, PlcAppSystemInfo, 86108864 (2048)
-        TwinCAT_SystemInfoVarList._TaskInfo, PlcTaskSystemInfo, 86110912 (1024)
-        TwinCAT_SystemInfoVarList._TaskOid_PlcTask, OTCID, 86111936 (32)
-        TwinCAT_SystemInfoVarList._TaskPouOid_PlcTask, OTCID, 86108832 (32)
+        TwinCAT_SystemInfoVarList.__PlcTask, _Implicit_Task_Info, 86145600 (896)
+        TwinCAT_SystemInfoVarList._AppInfo, PlcAppSystemInfo, 86142464 (2048)
+        TwinCAT_SystemInfoVarList._TaskInfo, PlcTaskSystemInfo, 86144512 (1024)
+        TwinCAT_SystemInfoVarList._TaskOid_PlcTask, OTCID, 86145568 (32)
+        TwinCAT_SystemInfoVarList._TaskPouOid_PlcTask, OTCID, 86145536 (32)
 
 

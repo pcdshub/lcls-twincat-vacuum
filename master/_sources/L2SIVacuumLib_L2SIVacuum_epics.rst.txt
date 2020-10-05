@@ -1830,9 +1830,9 @@ LCLS_General.FB_LogMessage
       - | io: input
 
 
-                
-LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               
+LCLS_Vacuum_Serial.LCLS_Vacuum.ST_VG
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. list-table::
     :header-rows: 1
@@ -1896,6 +1896,22 @@ LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
         | io: input
 
 
+    * - $(PREFIX):LOGGER
+      - bo
+      - $(SYMBOL).xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
+    * - $(PREFIX):LOGGER_RBV
+      - bi
+      - $(SYMBOL).xLog
+      - | field: ONAM ON
+        | field: ZNAM OFF
+        | io: output
+
+
     * - $(PREFIX):PRESS_AI_RBV
       - longin
       - $(SYMBOL).i_iPRESS_R
@@ -1923,7 +1939,8 @@ LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
     * - $(PREFIX):PRO_SP
       - ao
       - $(SYMBOL).rPRO_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1933,7 +1950,8 @@ LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
     * - $(PREFIX):PRO_SP_RBV
       - ai
       - $(SYMBOL).rPRO_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1943,7 +1961,8 @@ LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
     * - $(PREFIX):SP_HYS
       - ao
       - $(SYMBOL).rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1953,7 +1972,8 @@ LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
     * - $(PREFIX):SP_HYS_RBV
       - ai
       - $(SYMBOL).rHYS_PR
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1963,13 +1983,22 @@ LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
     * - $(PREFIX):STATE_RBV
       - mbbi
       - $(SYMBOL).eState
-      - | io: input
+      - | field: FRST Starting
+        | field: FVST Valid
+        | field: ONST GaugeDisconnected
+        | field: SVST ValidLo
+        | field: SXST ValidHi
+        | field: THST Off
+        | field: TWST OoR
+        | field: ZRST PressInvalid
+        | io: input
 
 
     * - $(PREFIX):VAC_SP
       - ao
       - $(SYMBOL).rVAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
@@ -1979,14 +2008,15 @@ LCLSVacuumSerialDriverLib.L2SI_Vacuum_Library.ST_VG
     * - $(PREFIX):VAC_SP_RBV
       - ai
       - $(SYMBOL).rVAC_SP
-      - | field: EGU "TORR"
+      - | autosave_pass1: VAL DESC
+        | field: EGU "TORR"
         | field: HOPR 1000
         | field: LOPR 0
         | field: PREC 2
         | io: output
 
 
-     
+      
 PMPS.FB_Arbiter
 ^^^^^^^^^^^^^^^
 
@@ -2001,64 +2031,6 @@ PMPS.FB_Arbiter
     * - $(PREFIX):ActiveInArbitration_RBV
       - bi
       - True if this arbiter
-      - | io: input
-
-
-    * - $(PREFIX):AP:Entry:000:Cohort_RBV
-      - longin
-      - Cohort inc on each arb cycle
-      - | io: input
-
-
-    * - $(PREFIX):AP:Entry:000:ID_RBV
-      - longin
-      - Assertion Pool
-      - | io: input
-
-
-    * - $(PREFIX):AP:Entry:000:Live_RBV
-      - bi
-      - Assertion Pool
-      - | io: input
-
-
-    * - $(PREFIX):AP:Entry:000:PhotonEnergyRanges_RBV
-      - longin
-      - Assertion Pool
-      - | field: EGU eV
-        | io: input
-
-
-    * - $(PREFIX):AP:Entry:000:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
-    * - $(PREFIX):AP:Entry:000:Rate_RBV
-      - longin
-      - Assertion Pool
-      - | field: EGU Hz
-        | io: input
-
-
-    * - $(PREFIX):AP:Entry:000:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
-    * - $(PREFIX):AP:Entry:000:Transmission_RBV
-      - longin
-      - Assertion Pool
-      - | field: EGU %
-        | io: input
-
-
-    * - $(PREFIX):AP:Entry:000:Valid_RBV
-      - bi
-      - Assertion Pool
       - | io: input
 
 
@@ -3292,64 +3264,6 @@ PMPS.FB_BeamParamAssertionPool
       - Type
       - Description
       - Pragma
-    * - $(PREFIX):Entry:000:Cohort_RBV
-      - longin
-      - Cohort inc on each arb cycle
-      - | io: input
-
-
-    * - $(PREFIX):Entry:000:ID_RBV
-      - longin
-      - $(SYMBOL).dataPool[0].nId
-      - | io: input
-
-
-    * - $(PREFIX):Entry:000:Live_RBV
-      - bi
-      - $(SYMBOL).dataPool[0].LiveInTable
-      - | io: input
-
-
-    * - $(PREFIX):Entry:000:PhotonEnergyRanges_RBV
-      - longin
-      - $(SYMBOL).dataPool[0].neVRange
-      - | field: EGU eV
-        | io: input
-
-
-    * - $(PREFIX):Entry:000:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
-    * - $(PREFIX):Entry:000:Rate_RBV
-      - longin
-      - $(SYMBOL).dataPool[0].nRate
-      - | field: EGU Hz
-        | io: input
-
-
-    * - $(PREFIX):Entry:000:ST_RBV
-      - waveform
-      - $(SYMBOL).dataPool[0].aStoppers
-      - | io: input
-
-
-    * - $(PREFIX):Entry:000:Transmission_RBV
-      - longin
-      - $(SYMBOL).dataPool[0].nTran
-      - | field: EGU %
-        | io: input
-
-
-    * - $(PREFIX):Entry:000:Valid_RBV
-      - bi
-      - $(SYMBOL).dataPool[0].xValid
-      - | io: input
-
-
     * - $(PREFIX):Entry:001:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
@@ -3358,19 +3272,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:001:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[1].nId
+      - $(SYMBOL).epicsDataPool[1].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:001:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[1].LiveInTable
+      - $(SYMBOL).epicsDataPool[1].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:001:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[1].neVRange
+      - $(SYMBOL).epicsDataPool[1].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3384,27 +3298,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:001:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[1].nRate
+      - $(SYMBOL).epicsDataPool[1].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:001:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[1].aStoppers
+      - $(SYMBOL).epicsDataPool[1].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:001:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[1].nTran
+      - $(SYMBOL).epicsDataPool[1].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:001:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[1].xValid
+      - $(SYMBOL).epicsDataPool[1].xValid
       - | io: input
 
 
@@ -3416,19 +3330,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:002:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[2].nId
+      - $(SYMBOL).epicsDataPool[2].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:002:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[2].LiveInTable
+      - $(SYMBOL).epicsDataPool[2].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:002:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[2].neVRange
+      - $(SYMBOL).epicsDataPool[2].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3442,27 +3356,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:002:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[2].nRate
+      - $(SYMBOL).epicsDataPool[2].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:002:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[2].aStoppers
+      - $(SYMBOL).epicsDataPool[2].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:002:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[2].nTran
+      - $(SYMBOL).epicsDataPool[2].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:002:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[2].xValid
+      - $(SYMBOL).epicsDataPool[2].xValid
       - | io: input
 
 
@@ -3474,19 +3388,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:003:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[3].nId
+      - $(SYMBOL).epicsDataPool[3].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:003:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[3].LiveInTable
+      - $(SYMBOL).epicsDataPool[3].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:003:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[3].neVRange
+      - $(SYMBOL).epicsDataPool[3].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3500,27 +3414,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:003:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[3].nRate
+      - $(SYMBOL).epicsDataPool[3].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:003:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[3].aStoppers
+      - $(SYMBOL).epicsDataPool[3].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:003:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[3].nTran
+      - $(SYMBOL).epicsDataPool[3].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:003:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[3].xValid
+      - $(SYMBOL).epicsDataPool[3].xValid
       - | io: input
 
 
@@ -3532,19 +3446,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:004:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[4].nId
+      - $(SYMBOL).epicsDataPool[4].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:004:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[4].LiveInTable
+      - $(SYMBOL).epicsDataPool[4].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:004:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[4].neVRange
+      - $(SYMBOL).epicsDataPool[4].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3558,27 +3472,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:004:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[4].nRate
+      - $(SYMBOL).epicsDataPool[4].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:004:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[4].aStoppers
+      - $(SYMBOL).epicsDataPool[4].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:004:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[4].nTran
+      - $(SYMBOL).epicsDataPool[4].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:004:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[4].xValid
+      - $(SYMBOL).epicsDataPool[4].xValid
       - | io: input
 
 
@@ -3590,19 +3504,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:005:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[5].nId
+      - $(SYMBOL).epicsDataPool[5].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:005:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[5].LiveInTable
+      - $(SYMBOL).epicsDataPool[5].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:005:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[5].neVRange
+      - $(SYMBOL).epicsDataPool[5].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3616,27 +3530,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:005:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[5].nRate
+      - $(SYMBOL).epicsDataPool[5].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:005:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[5].aStoppers
+      - $(SYMBOL).epicsDataPool[5].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:005:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[5].nTran
+      - $(SYMBOL).epicsDataPool[5].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:005:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[5].xValid
+      - $(SYMBOL).epicsDataPool[5].xValid
       - | io: input
 
 
@@ -3648,19 +3562,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:006:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[6].nId
+      - $(SYMBOL).epicsDataPool[6].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:006:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[6].LiveInTable
+      - $(SYMBOL).epicsDataPool[6].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:006:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[6].neVRange
+      - $(SYMBOL).epicsDataPool[6].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3674,27 +3588,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:006:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[6].nRate
+      - $(SYMBOL).epicsDataPool[6].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:006:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[6].aStoppers
+      - $(SYMBOL).epicsDataPool[6].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:006:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[6].nTran
+      - $(SYMBOL).epicsDataPool[6].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:006:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[6].xValid
+      - $(SYMBOL).epicsDataPool[6].xValid
       - | io: input
 
 
@@ -3706,19 +3620,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:007:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[7].nId
+      - $(SYMBOL).epicsDataPool[7].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:007:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[7].LiveInTable
+      - $(SYMBOL).epicsDataPool[7].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:007:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[7].neVRange
+      - $(SYMBOL).epicsDataPool[7].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3732,27 +3646,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:007:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[7].nRate
+      - $(SYMBOL).epicsDataPool[7].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:007:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[7].aStoppers
+      - $(SYMBOL).epicsDataPool[7].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:007:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[7].nTran
+      - $(SYMBOL).epicsDataPool[7].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:007:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[7].xValid
+      - $(SYMBOL).epicsDataPool[7].xValid
       - | io: input
 
 
@@ -3764,19 +3678,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:008:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[8].nId
+      - $(SYMBOL).epicsDataPool[8].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:008:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[8].LiveInTable
+      - $(SYMBOL).epicsDataPool[8].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:008:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[8].neVRange
+      - $(SYMBOL).epicsDataPool[8].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3790,27 +3704,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:008:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[8].nRate
+      - $(SYMBOL).epicsDataPool[8].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:008:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[8].aStoppers
+      - $(SYMBOL).epicsDataPool[8].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:008:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[8].nTran
+      - $(SYMBOL).epicsDataPool[8].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:008:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[8].xValid
+      - $(SYMBOL).epicsDataPool[8].xValid
       - | io: input
 
 
@@ -3822,19 +3736,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:009:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[9].nId
+      - $(SYMBOL).epicsDataPool[9].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:009:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[9].LiveInTable
+      - $(SYMBOL).epicsDataPool[9].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:009:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[9].neVRange
+      - $(SYMBOL).epicsDataPool[9].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3848,27 +3762,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:009:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[9].nRate
+      - $(SYMBOL).epicsDataPool[9].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:009:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[9].aStoppers
+      - $(SYMBOL).epicsDataPool[9].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:009:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[9].nTran
+      - $(SYMBOL).epicsDataPool[9].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:009:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[9].xValid
+      - $(SYMBOL).epicsDataPool[9].xValid
       - | io: input
 
 
@@ -3880,19 +3794,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:010:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[10].nId
+      - $(SYMBOL).epicsDataPool[10].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:010:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[10].LiveInTable
+      - $(SYMBOL).epicsDataPool[10].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:010:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[10].neVRange
+      - $(SYMBOL).epicsDataPool[10].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3906,27 +3820,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:010:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[10].nRate
+      - $(SYMBOL).epicsDataPool[10].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:010:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[10].aStoppers
+      - $(SYMBOL).epicsDataPool[10].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:010:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[10].nTran
+      - $(SYMBOL).epicsDataPool[10].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:010:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[10].xValid
+      - $(SYMBOL).epicsDataPool[10].xValid
       - | io: input
 
 
@@ -3938,19 +3852,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:011:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[11].nId
+      - $(SYMBOL).epicsDataPool[11].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:011:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[11].LiveInTable
+      - $(SYMBOL).epicsDataPool[11].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:011:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[11].neVRange
+      - $(SYMBOL).epicsDataPool[11].neVRange
       - | field: EGU eV
         | io: input
 
@@ -3964,27 +3878,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:011:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[11].nRate
+      - $(SYMBOL).epicsDataPool[11].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:011:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[11].aStoppers
+      - $(SYMBOL).epicsDataPool[11].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:011:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[11].nTran
+      - $(SYMBOL).epicsDataPool[11].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:011:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[11].xValid
+      - $(SYMBOL).epicsDataPool[11].xValid
       - | io: input
 
 
@@ -3996,19 +3910,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:012:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[12].nId
+      - $(SYMBOL).epicsDataPool[12].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:012:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[12].LiveInTable
+      - $(SYMBOL).epicsDataPool[12].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:012:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[12].neVRange
+      - $(SYMBOL).epicsDataPool[12].neVRange
       - | field: EGU eV
         | io: input
 
@@ -4022,27 +3936,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:012:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[12].nRate
+      - $(SYMBOL).epicsDataPool[12].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:012:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[12].aStoppers
+      - $(SYMBOL).epicsDataPool[12].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:012:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[12].nTran
+      - $(SYMBOL).epicsDataPool[12].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:012:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[12].xValid
+      - $(SYMBOL).epicsDataPool[12].xValid
       - | io: input
 
 
@@ -4054,19 +3968,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:013:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[13].nId
+      - $(SYMBOL).epicsDataPool[13].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:013:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[13].LiveInTable
+      - $(SYMBOL).epicsDataPool[13].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:013:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[13].neVRange
+      - $(SYMBOL).epicsDataPool[13].neVRange
       - | field: EGU eV
         | io: input
 
@@ -4080,27 +3994,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:013:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[13].nRate
+      - $(SYMBOL).epicsDataPool[13].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:013:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[13].aStoppers
+      - $(SYMBOL).epicsDataPool[13].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:013:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[13].nTran
+      - $(SYMBOL).epicsDataPool[13].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:013:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[13].xValid
+      - $(SYMBOL).epicsDataPool[13].xValid
       - | io: input
 
 
@@ -4112,19 +4026,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:014:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[14].nId
+      - $(SYMBOL).epicsDataPool[14].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:014:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[14].LiveInTable
+      - $(SYMBOL).epicsDataPool[14].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:014:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[14].neVRange
+      - $(SYMBOL).epicsDataPool[14].neVRange
       - | field: EGU eV
         | io: input
 
@@ -4138,27 +4052,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:014:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[14].nRate
+      - $(SYMBOL).epicsDataPool[14].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:014:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[14].aStoppers
+      - $(SYMBOL).epicsDataPool[14].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:014:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[14].nTran
+      - $(SYMBOL).epicsDataPool[14].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:014:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[14].xValid
+      - $(SYMBOL).epicsDataPool[14].xValid
       - | io: input
 
 
@@ -4170,19 +4084,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:015:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[15].nId
+      - $(SYMBOL).epicsDataPool[15].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:015:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[15].LiveInTable
+      - $(SYMBOL).epicsDataPool[15].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:015:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[15].neVRange
+      - $(SYMBOL).epicsDataPool[15].neVRange
       - | field: EGU eV
         | io: input
 
@@ -4196,27 +4110,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:015:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[15].nRate
+      - $(SYMBOL).epicsDataPool[15].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:015:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[15].aStoppers
+      - $(SYMBOL).epicsDataPool[15].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:015:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[15].nTran
+      - $(SYMBOL).epicsDataPool[15].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:015:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[15].xValid
+      - $(SYMBOL).epicsDataPool[15].xValid
       - | io: input
 
 
@@ -4228,19 +4142,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:016:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[16].nId
+      - $(SYMBOL).epicsDataPool[16].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:016:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[16].LiveInTable
+      - $(SYMBOL).epicsDataPool[16].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:016:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[16].neVRange
+      - $(SYMBOL).epicsDataPool[16].neVRange
       - | field: EGU eV
         | io: input
 
@@ -4254,27 +4168,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:016:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[16].nRate
+      - $(SYMBOL).epicsDataPool[16].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:016:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[16].aStoppers
+      - $(SYMBOL).epicsDataPool[16].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:016:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[16].nTran
+      - $(SYMBOL).epicsDataPool[16].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:016:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[16].xValid
+      - $(SYMBOL).epicsDataPool[16].xValid
       - | io: input
 
 
@@ -4286,19 +4200,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:017:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[17].nId
+      - $(SYMBOL).epicsDataPool[17].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:017:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[17].LiveInTable
+      - $(SYMBOL).epicsDataPool[17].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:017:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[17].neVRange
+      - $(SYMBOL).epicsDataPool[17].neVRange
       - | field: EGU eV
         | io: input
 
@@ -4312,27 +4226,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:017:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[17].nRate
+      - $(SYMBOL).epicsDataPool[17].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:017:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[17].aStoppers
+      - $(SYMBOL).epicsDataPool[17].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:017:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[17].nTran
+      - $(SYMBOL).epicsDataPool[17].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:017:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[17].xValid
+      - $(SYMBOL).epicsDataPool[17].xValid
       - | io: input
 
 
@@ -4344,19 +4258,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:018:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[18].nId
+      - $(SYMBOL).epicsDataPool[18].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:018:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[18].LiveInTable
+      - $(SYMBOL).epicsDataPool[18].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:018:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[18].neVRange
+      - $(SYMBOL).epicsDataPool[18].neVRange
       - | field: EGU eV
         | io: input
 
@@ -4370,27 +4284,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:018:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[18].nRate
+      - $(SYMBOL).epicsDataPool[18].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:018:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[18].aStoppers
+      - $(SYMBOL).epicsDataPool[18].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:018:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[18].nTran
+      - $(SYMBOL).epicsDataPool[18].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:018:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[18].xValid
+      - $(SYMBOL).epicsDataPool[18].xValid
       - | io: input
 
 
@@ -4402,19 +4316,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:019:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[19].nId
+      - $(SYMBOL).epicsDataPool[19].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:019:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[19].LiveInTable
+      - $(SYMBOL).epicsDataPool[19].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:019:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[19].neVRange
+      - $(SYMBOL).epicsDataPool[19].neVRange
       - | field: EGU eV
         | io: input
 
@@ -4428,27 +4342,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:019:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[19].nRate
+      - $(SYMBOL).epicsDataPool[19].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:019:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[19].aStoppers
+      - $(SYMBOL).epicsDataPool[19].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:019:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[19].nTran
+      - $(SYMBOL).epicsDataPool[19].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:019:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[19].xValid
+      - $(SYMBOL).epicsDataPool[19].xValid
       - | io: input
 
 
@@ -4460,19 +4374,19 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:020:ID_RBV
       - longin
-      - $(SYMBOL).dataPool[20].nId
+      - $(SYMBOL).epicsDataPool[20].nId
       - | io: input
 
 
     * - $(PREFIX):Entry:020:Live_RBV
       - bi
-      - $(SYMBOL).dataPool[20].LiveInTable
+      - $(SYMBOL).epicsDataPool[20].LiveInTable
       - | io: input
 
 
     * - $(PREFIX):Entry:020:PhotonEnergyRanges_RBV
       - longin
-      - $(SYMBOL).dataPool[20].neVRange
+      - $(SYMBOL).epicsDataPool[20].neVRange
       - | field: EGU eV
         | io: input
 
@@ -4486,27 +4400,27 @@ PMPS.FB_BeamParamAssertionPool
 
     * - $(PREFIX):Entry:020:Rate_RBV
       - longin
-      - $(SYMBOL).dataPool[20].nRate
+      - $(SYMBOL).epicsDataPool[20].nRate
       - | field: EGU Hz
         | io: input
 
 
     * - $(PREFIX):Entry:020:ST_RBV
       - waveform
-      - $(SYMBOL).dataPool[20].aStoppers
+      - $(SYMBOL).epicsDataPool[20].aStoppers
       - | io: input
 
 
     * - $(PREFIX):Entry:020:Transmission_RBV
       - longin
-      - $(SYMBOL).dataPool[20].nTran
+      - $(SYMBOL).epicsDataPool[20].nTran
       - | field: EGU %
         | io: input
 
 
     * - $(PREFIX):Entry:020:Valid_RBV
       - bi
-      - $(SYMBOL).dataPool[20].xValid
+      - $(SYMBOL).epicsDataPool[20].xValid
       - | io: input
 
 
@@ -10270,7 +10184,7 @@ PMPS.FB_HardwareFFOutput
       - | io: output
 
 
-   
+    
 PMPS.ST_BeamParams
 ^^^^^^^^^^^^^^^^^^
 
@@ -12277,6 +12191,59 @@ Database Records
       - Type
       - Description
       - Pragma
+    * - $(PREFIX)0RateBeamCnst:Cohort_RBV
+      - longin
+      - Cohort inc on each arb cycle
+      - | archive: 1s monitor
+        | io: input
+
+
+    * - $(PREFIX)0RateBeamCnst:PhotonEnergyRanges_RBV
+      - longin
+      - 0-rate beam constant
+      - | archive: 1s monitor
+        | field: EGU eV
+        | io: input
+
+
+    * - $(PREFIX)0RateBeamCnst:PulseEnergy_RBV
+      - ai
+      - This beam parameter is non-op for now.
+      - | archive: 1s monitor
+        | field: EGU mJ
+        | io: input
+
+
+    * - $(PREFIX)0RateBeamCnst:Rate_RBV
+      - longin
+      - 0-rate beam constant
+      - | archive: 1s monitor
+        | field: EGU Hz
+        | io: input
+
+
+    * - $(PREFIX)0RateBeamCnst:ST_RBV
+      - waveform
+      - 0-rate beam constant
+      - | archive: 1s monitor
+        | io: input
+
+
+    * - $(PREFIX)0RateBeamCnst:Transmission_RBV
+      - longin
+      - 0-rate beam constant
+      - | archive: 1s monitor
+        | field: EGU %
+        | io: input
+
+
+    * - $(PREFIX)0RateBeamCnst:Valid_RBV
+      - bi
+      - 0-rate beam constant
+      - | archive: 1s monitor
+        | io: input
+
+
     * - $(PREFIX)AccumulatedFastFaults_RBV
       - longin
       - PMPS_GVL.AccumulatedFF
@@ -12419,30 +12386,6 @@ Database Records
       - | archive: 1s monitor
         | field: EGU eV
         | io: input
-
-
-    * - $(PREFIX)L:UND:FirstSegment_RBV
-      - longin
-      - PMPS_GVL.iLowBound_LUnd
-      - | io: input
-
-
-    * - $(PREFIX)L:UND:HiK_RBV
-      - ai
-      - PMPS_GVL.fHiK_LUnd
-      - | io: input
-
-
-    * - $(PREFIX)L:UND:LastSegment_RBV
-      - longin
-      - PMPS_GVL.iHighBound_LUnd
-      - | io: input
-
-
-    * - $(PREFIX)L:UND:LowK_RBV
-      - ai
-      - PMPS_GVL.fLowK_LUnd
-      - | io: input
 
 
     * - $(PREFIX)LCLSGeneral:GlobalLogTrickleTrip_RBV
@@ -12591,13 +12534,6 @@ Database Records
       - longin
       - PMPS_GVL.SuccessfulPreemption
       - | io: input
-
-
-    * - Period_RBV
-      - ai
-      - PMPS_GVL.fPeriod_mm_LUnd
-      - | field: EGU mm
-        | io: input
 
 
 
