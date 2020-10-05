@@ -69,7 +69,13 @@ END_IF
 
 (*Error Reset*)
 (* to reset the Reset Bit *)
- IF (iq_stPTM.xResetSW ) THEN  iq_stPTM.q_xReset := TRUE; 
+ IF (iq_stPTM.xResetSW ) THEN  
+	iq_stPTM.q_xReset := TRUE; 
+	q_PumpingStation := TRUE;
+ END_IF
+
+ IF (iq_stPTM.xResetSW) AND (iq_stPTM.i_xFault)  THEN  
+	q_PumpingStation := TRUE;
  END_IF
  TOF_RESET (IN:= iq_stPTM.q_xReset, Q => );
  IF TOF_RESET.Q THEN 
@@ -151,19 +157,28 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
     <Method Name="M_Serial_IO" Id="{69cf9593-e155-45fc-9159-3adef61e53cd}">
       <Declaration><![CDATA[METHOD PUBLIC M_Serial_IO : BOOL
 VAR_INPUT
-	st_Pfeiffer_CTRL: ST_PfeifferControl;
 	st_Pfeiffer_RBK: ST_PfeifferStatus;
+END_VAR
+VAR_IN_OUT
+	st_Pfeiffer_CTRL: ST_PfeifferControl;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[(* This function block is used to map the IO points from the pfeiffer structures
 to the generic turbo structures *)
+(*
+if (bInit) Then
+	bInit := False;
+	st_Pfeiffer_CTRL.diSetRotationSpeed_309 := st_Pfeiffer_RBK.diActiveRotationSpeed_309;
+END_IF*)
 
 (* Controls *) (* Controls is via DIO*)
 //st_Pfeiffer_CTRL.xPumpingStation_010 := iq_stPTM.q_RunDO;
 //st_Pfeiffer_CTRL.xMotorPump_023 := 1; //Setting always true because parameter 10 alone can enable/disable the pump
 //st_Pfeiffer_CTRL.uiPowerPct_708 := iq_stPTM.q_uiPowerPct;
 //st_Pfeiffer_CTRL.xErrorAck_009 := iq_stPTM.xResetSW;
+
+
 
 (* Readbacks *)
 iq_stPTM.i_xAccel := st_Pfeiffer_RBK.xPumpAccelerating_307;
@@ -175,7 +190,7 @@ iq_stPTM.i_diBtmTemp := st_Pfeiffer_RBK.diTempPmpBot_330;
 iq_stPTM.i_diBrngTemp := st_Pfeiffer_RBK.diTempBearng_342;
 iq_stPTM.i_diMtrTemp := st_Pfeiffer_RBK.diTempMotor_346;
 iq_stPTM.i_uiPowerPctRbk := st_Pfeiffer_RBK.uiPowerPct_708;
-
+iq_stPTM.i_rCurrentMon :=  st_Pfeiffer_RBK.lrDriveCurrent_310;
 iq_stPTM.xCommTimeout	:=	st_Pfeiffer_RBK.xTimeout;
 iq_stPTM.i_iErrorCode := st_Pfeiffer_RBK.iErrorCode_303;
 iq_stPTM.i_iWarningCode := st_Pfeiffer_RBK.iWarningCode_303;
@@ -194,41 +209,14 @@ iq_stPTM.i_xFault := TRUE;
 ELSE
 iq_stPTM.i_xFault := FALSE;
 END_IF
+
+iq_stPTM.i_dSetSpd := LIMIT (0, iq_stPTM.i_dSetSpd, 1500); // 1500 nominal frequency
+IF ( iq_stPTM.i_dSetSpd <>0) THEN
+	st_Pfeiffer_CTRL.iSetRotationSpeed_707 := DINT_TO_INT(iq_stPTM.i_dSetSpd * 100/1500);
+	st_Pfeiffer_CTRL.iSetRotationSpeed_707 := LIMIT(20, st_Pfeiffer_CTRL.iSetRotationSpeed_707 ,100); // Manual Page 18
+END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Pfeiffer">
-      <LineId Id="3" Count="4" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="8" Count="7" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="16" Count="2" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="19" Count="14" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="70" Count="6" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="35" Count="4" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.ACT_IO">
-      <LineId Id="2" Count="1" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="4" Count="7" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.ACT_Logger">
-      <LineId Id="2" Count="32" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.M_Run">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.M_Serial_IO">
-      <LineId Id="3" Count="37" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

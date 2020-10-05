@@ -41,17 +41,17 @@ xRunOk := iq_stPtm.xExtRunOk AND iq_stPtm.i_xNCError;
 
 (* Basic pump supervisory section *)
 IF xRunOk THEN
-	iq_stPtm.q_RunDO := iq_stPTM.xRunSW;
+	q_RunDO := iq_stPTM.xRunSW;
 ELSE
 	iq_stPtm.xRunSW:=FALSE;
-	iq_stPtm.q_RunDO:=FALSE;
+	q_RunDO:=FALSE;
 END_IF
 
 (*Pump States*)
 IF (iq_stPtm.i_xFault) THEN
 		iq_stPtm.eState := pumpFAULT;
 		iq_stPtm.xRunSW:=FALSE;
-		iq_stPtm.q_RunDO:=FALSE;
+		q_RunDO:=FALSE;
 ELSIF (iq_stPtm.q_RunDO) AND (iq_stPtm.i_xAtSpd) THEN
 		iq_stPtm.eState := pumpRUNNING;
 ELSIF (iq_stPtm.q_RunDO) AND NOT (iq_stPtm.i_xAtSpd) THEN
@@ -79,7 +79,7 @@ iq_stPtm.i_xFault := NOT i_xFaultNC;
 
 
 (*Outputs*)
-q_RunDO := iq_stPtm.q_RunDO;]]></ST>
+iq_stPtm.q_RunDO := q_RunDO;]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_Logger" Id="{073bd2d6-ebd0-490d-9b1c-198b6a637e83}">
@@ -142,40 +142,21 @@ to the generic turbo structures *)
 (* Readbacks *)
 iq_stPTM.i_xAccel := i_st_TD20_RBK.wStatusWord.4;
 iq_stPTM.i_xDecel := i_st_TD20_RBK.wStatusWord.5;
-iq_stPTM.i_xAtSpd := i_st_TD20_RBK.wStatusWord.10;
-iq_stPTM.q_xRemote := i_st_TD20_RBK.wStatusWord.15; (* Remote control enabled *)
+//iq_stPTM.i_xAtSpd := i_st_TD20_RBK.wStatusWord.10;
+iq_stPTM.i_xRemote := i_st_TD20_RBK.wStatusWord.15; (* Remote control enabled *)
 iq_stPTM.i_diCurSpd := WORD_TO_DINT(i_st_TD20_RBK.wFrequency_P3);
+iq_stPTM.i_rCurrentMon := WORD_TO_INT(i_st_TD20_RBK.wMotorCurrent_P5);
 iq_stPTM.i_diPwr := WORD_TO_DINT(i_st_TD20_RBK.wMotorCurrent_P5 * i_st_TD20_RBK.wVoltage_P4);
 iq_stPTM.i_diElecTemp := WORD_TO_DINT(i_st_TD20_RBK.wConverterTemp_P11);
-iq_stPTM.i_diPumpTemp := WORD_TO_DINT(i_st_TD20_RBK.wPumpTemp_P127);
+iq_stPTM.i_rTempMon := WORD_TO_INT(i_st_TD20_RBK.wPumpTemp_P127);
 
 (* Faults and warnings *)
-iq_stPTM.i_xFault := i_st_TD20_RBK.wStatusWord.3;
+//iq_stPTM.i_xFault := i_st_TD20_RBK.wStatusWord.3;
 iq_stPTM.i_xTempFault := i_st_TD20_RBK.wStatusWord.7; (* specified as a temperature warning but it could be a fault *)
 iq_stPTM.i_xWarn := i_st_TD20_RBK.wStatusWord.14; (* warning summary bit *)
 
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_TurboDrive">
-      <LineId Id="3" Count="36" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_TurboDrive.ACT_IO">
-      <LineId Id="2" Count="7" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_TurboDrive.ACT_Logger">
-      <LineId Id="2" Count="29" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_TurboDrive.M_Run">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_TurboDrive.M_Serial_IO">
-      <LineId Id="3" Count="18" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

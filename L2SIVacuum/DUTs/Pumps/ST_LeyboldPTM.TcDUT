@@ -18,13 +18,7 @@ More?
 	'}
 	i_xDecel	:	BOOL;
 	{attribute 'pytmc' := '
-    pv: TEMP;
-	field: EGU "C";
-	io: i;
-	'}
-	i_diPumpTemp:	DINT;
-	{attribute 'pytmc' := '
-    pv: PWR;
+    pv: PWR_RBV;
 	io: i;
 	'}
 	i_diPwr   	:   DINT;
@@ -45,7 +39,8 @@ More?
 	field: ONAM TRUE;
 	io: io;
 	'}
-	q_xRemote : BOOL; (* Remote control enabled *)
+	q_xRemote :BOOL;
+	i_xRemote : BOOL; (* Remote control enabled *)
 END_STRUCT
 END_TYPE
 ]]></Declaration>

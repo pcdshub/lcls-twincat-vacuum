@@ -7,6 +7,7 @@ A separate function block is necessary for the MKS500-to-EP box interface beacus
 boxes do not natively support the 5v IO signals on the MKS500 gauge.*)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
 (* 500 Logarithmic Output Conversion, factory default configuration *)
+{attribute 'obsolete' := 'FB_MKS500_EP has been deprecated and is not valid!'}
 FUNCTION_BLOCK FB_MKS500_EP EXTENDS FB_GaugeBase
 VAR_IN_OUT
 		
@@ -43,10 +44,12 @@ VAR CONSTANT
 	MinPressure: REAL := 1E-10;
 	cDefaultPressure : REAL := 0;
 END_VAR
+
+
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* 500 Logarithmic Output Conversion, factory default configuration *)
-
+{attribute 'obsolete' := 'FB_VCC_NO has been deprecated and is not valid!'}
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
 
 (* Set Guage State based on the Analog voltage*)
@@ -167,25 +170,5 @@ END_VAR
 this^.IG.xHV_SW:= NOT(enable);]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS500_EP">
-      <LineId Id="3" Count="58" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS500_EP.ACT_Logger">
-      <LineId Id="2" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="3" Count="32" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS500_EP.IO">
-      <LineId Id="2" Count="2" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS500_EP.M_HVE">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

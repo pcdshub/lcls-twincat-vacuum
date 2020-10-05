@@ -5,7 +5,7 @@
 (* This function is for the Pirani MKS 317 connected to a 937A*)
 (* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
-
+{attribute 'obsolete' := 'FB_MKS317A has been deprecated and is not valid!'} 
 FUNCTION_BLOCK FB_MKS317A  Extends FB_GaugeBase
 VAR_IN_OUT
 	
@@ -110,18 +110,5 @@ IF ePrevState <> PG.eState THEN
 PG.sPath := sPath;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_MKS317A">
-      <LineId Id="3" Count="40" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS317A.ACT_Logger">
-      <LineId Id="2" Count="20" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="23" Count="1" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS317A.IO">
-      <LineId Id="1" Count="1" />
-    </LineIds>
   </POU>
 </TcPlcObject>

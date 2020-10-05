@@ -17,7 +17,7 @@ More?
 	q_xReset   : BOOL;
 	//Readbacks
 	{attribute 'pytmc' := '
-	pv: DrivePower_RBV;
+	pv: PWR_RBV;
 	io: i;
 	'}
 	i_diPwr		:	DINT;
@@ -64,6 +64,12 @@ More?
 	'}
 	i_uiPowerPctRbk :   UINT;
 	
+	{attribute 'pytmc' := '
+	pv: SET_SPEED;
+	io: io;
+	field: EGU "Hz"
+	'}
+	i_dSetSpd	:	DINT;
 	
 //Controls
 	q_uiPowerPct : UINT := 100; //Should normally be 100

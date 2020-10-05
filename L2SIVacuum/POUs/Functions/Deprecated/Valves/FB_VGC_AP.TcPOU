@@ -11,6 +11,7 @@ less than the maximum differential pressure.
 (*This function block also implements PMPS and EPS interlocks, as well as Fast MPS trigger*)
 (* MPS is triggered differently than the VGC *)
 {attribute 'no_check'}
+{attribute 'obsolete' := 'FB_VGC_AP has been deprecated and is not valid!'}
 FUNCTION_BLOCK FB_VGC_AP
 VAR_IN_OUT
 	
@@ -428,32 +429,5 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VGC_AP">
-      <LineId Id="3" Count="33" />
-      <LineId Id="572" Count="0" />
-      <LineId Id="37" Count="7" />
-      <LineId Id="369" Count="1" />
-      <LineId Id="45" Count="219" />
-      <LineId Id="471" Count="0" />
-      <LineId Id="265" Count="3" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_AP.ACT_IO">
-      <LineId Id="2" Count="6" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_AP.ACT_ResetAlarms">
-      <LineId Id="2" Count="5" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_AP.M_IsClosed">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_AP.M_IsOpen">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_AP.M_Set_OPN_SW">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
