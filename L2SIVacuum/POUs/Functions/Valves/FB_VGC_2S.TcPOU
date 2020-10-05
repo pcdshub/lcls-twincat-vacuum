@@ -147,6 +147,8 @@ IF xFirstPass THEN
 	iq_stValve.eVGC_State := Vented;
 	iq_stValve.pv_xOPN_SW := FALSE;
 	FFO.i_DevName := i_sDevName;
+	iq_stValve.rAT_VAC_SP_DS := 0.001;
+	iq_stValve.rAT_VAC_SP := 0.001;
 END_IF
 
 

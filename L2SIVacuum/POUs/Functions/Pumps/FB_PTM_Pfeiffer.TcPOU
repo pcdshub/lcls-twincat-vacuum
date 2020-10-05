@@ -157,8 +157,10 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
     <Method Name="M_Serial_IO" Id="{69cf9593-e155-45fc-9159-3adef61e53cd}">
       <Declaration><![CDATA[METHOD PUBLIC M_Serial_IO : BOOL
 VAR_INPUT
-	st_Pfeiffer_CTRL: ST_PfeifferControl;
 	st_Pfeiffer_RBK: ST_PfeifferStatus;
+END_VAR
+VAR_IN_OUT
+	st_Pfeiffer_CTRL: ST_PfeifferControl;
 END_VAR
 ]]></Declaration>
       <Implementation>

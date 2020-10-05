@@ -17,7 +17,7 @@ More?
 	q_xReset   : BOOL;
 	//Readbacks
 	{attribute 'pytmc' := '
-	pv: DrivePower_RBV;
+	pv: PWR_RBV;
 	io: i;
 	'}
 	i_diPwr		:	DINT;
