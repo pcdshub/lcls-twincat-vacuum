@@ -124,6 +124,9 @@
     <Compile Include="POUs\ADS\FB_ADS_WATCHDOG.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\ADS\FB_TBOOL_ADS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Deprecated\Gauges\FB_MKS317A.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -347,6 +350,9 @@
     <Compile Include="POUs\Functions\Valves\functions\F_VRC_DIODE_ILK.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\Interfaces\FB_TVGC_2S_ADS.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_VFS_Interface.TcPOU">
       <SubType>Code</SubType>

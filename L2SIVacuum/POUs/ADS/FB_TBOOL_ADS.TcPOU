@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TBOOL_ADS" Id="{55de7e0e-296a-42bd-8da3-0dfe79b7395a}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block is created for interface a boolean singal between different PLCs*)
+(* The variable values are read via ADS using the symbol name*)
+FUNCTION_BLOCK FB_TBOOL_ADS Extends FB_ADS
+VAR_INPUT
+	sNetId : String; //NetID of the Destination PLC controller
+	nPort : uint; // port number
+	sVarName : string;// the variable name of the declared pip/pin function block.
+	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := 'pv: value'}
+	bBool : BOOL;
+	{attribute 'pytmc' := 'pv: error'}
+	bError: BOOL;
+END_VAR
+VAR
+	fb_CheckWatchdog: FB_CheckWatchdog;
+	fb_Read: FB_ReadAdsSymByName;
+	ftReset: F_TRIG;
+	xFirstPass: BOOL:= true;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+ftReset(CLK:= fb_Read_VG.bBusy OR xFirstPass);
+xFirstPass := false;
+(*calling ADS read function*)
+	
+fb_Read(
+	bRead:=ftReset.Q , 
+	sNetId:= sNetId, 
+	nPort:= nPort, 
+	sVarName:= sVarName, 
+	nDestAddr:= ADR(bBool), 
+	nLen:= SIZEOF(bBool), 
+	tTimeout:= , 
+	eComMode:=eAdsComModeFastCom , 
+	bBusy=> , 
+	bError=> , 
+	nErrorId=> );	
+	
+
+(*Error*)
+fb_CheckWatchdog(
+	bEnable:= TRUE, 
+	tWatchdogTime:= T#900ms, 
+	nCnt:= iWatchdog , 
+	bWatchdog=> , 
+	nLastCnt=> );
+
+bError:= fb_Read.bError OR fb_CheckWatchdog.bWatchdog;
+tErrorPresent(CLK:=bError);
+
+IF (fb_Read.bError OR fb_CheckWatchdog.bWatchdog) THEN
+	bBool := FALSE; // If there is an error in connection the signal turns to FALSE
+END_IF;
+
+(*Logger*)
+ACT_Logger();
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_Logger" Id="{892f0adb-5f59-480d-b09f-897dbf477c82}">
+      <Implementation>
+        <ST><![CDATA[IF tErrorPresent.Q THEN
+ IF(fb_Read.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+ IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+  </POU>
+</TcPlcObject>
