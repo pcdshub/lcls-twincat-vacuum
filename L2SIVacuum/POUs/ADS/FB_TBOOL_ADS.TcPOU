@@ -26,7 +26,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-ftReset(CLK:= fb_Read_VG.bBusy OR xFirstPass);
+ftReset(CLK:= fb_Read.bBusy OR xFirstPass);
 xFirstPass := false;
 (*calling ADS read function*)
 	
