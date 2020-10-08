@@ -213,6 +213,9 @@
     <Compile Include="POUs\Functions\Gauges\Interfaces\FB_TGCC_ADS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Gauges\Interfaces\FB_TGPI_ADS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_EbaraDryPump.TcPOU">
       <SubType>Code</SubType>
     </Compile>
