@@ -2135,6 +2135,7 @@ FB_9XX
     	fbGaugeState : FB_PressureState;
     	rMaxPressure	:	REAL := 760; //Torr
     	rMinPressure	:	REAL := 1E-5; //Torr
+    	rVMin : REAL:= 0.9;
     	(*Default set point 50 mT*)
     	rVAC_SP: REAL := 5E-2;
     	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
@@ -2152,8 +2153,8 @@ FB_9XX
     If (iTermBits=0) THEN iTermBits := 30518;END_IF
     rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
-    IF rV >= 0.99 THEN
-    	IF rV >= 0.99 AND rV <= 1 THEN
+    IF rV >=rVMin THEN
+    	IF rV >= rVMin AND rV <= 1 THEN
     		PG.rPRESS := 1E-5;
     	ELSE
     		PG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-6));
@@ -6116,6 +6117,78 @@ FB_ScrollPump
     END_ACTION
 
 
+FB_TBOOL_ADS
+^^^^^^^^^^^^
+
+::
+
+    (* This function block is created for interface a boolean singal between different PLCs*)
+    (* The variable values are read via ADS using the symbol name*)
+    FUNCTION_BLOCK FB_TBOOL_ADS Extends FB_ADS
+    VAR_INPUT
+    	sNetId : String; //NetID of the Destination PLC controller
+    	nPort : uint; // port number
+    	sVarName : string;// the variable name of the declared pip/pin function block.
+    	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
+    END_VAR
+    VAR_OUTPUT
+    	{attribute 'pytmc' := 'pv: value'}
+    	bBool : BOOL;
+    	{attribute 'pytmc' := 'pv: error'}
+    	bError: BOOL;
+    END_VAR
+    VAR
+    	fb_CheckWatchdog: FB_CheckWatchdog;
+    	fb_Read: FB_ReadAdsSymByName;
+    	ftReset: F_TRIG;
+    	xFirstPass: BOOL:= true;
+    	
+    END_VAR
+    ftReset(CLK:= fb_Read.bBusy OR xFirstPass);
+    xFirstPass := false;
+    (*calling ADS read function*)
+    	
+    fb_Read(
+    	bRead:=ftReset.Q , 
+    	sNetId:= sNetId, 
+    	nPort:= nPort, 
+    	sVarName:= sVarName, 
+    	nDestAddr:= ADR(bBool), 
+    	nLen:= SIZEOF(bBool), 
+    	tTimeout:= , 
+    	eComMode:=eAdsComModeFastCom , 
+    	bBusy=> , 
+    	bError=> , 
+    	nErrorId=> );	
+    	
+
+    (*Error*)
+    fb_CheckWatchdog(
+    	bEnable:= TRUE, 
+    	tWatchdogTime:= T#900ms, 
+    	nCnt:= iWatchdog , 
+    	bWatchdog=> , 
+    	nLastCnt=> );
+
+    bError:= fb_Read.bError OR fb_CheckWatchdog.bWatchdog;
+    tErrorPresent(CLK:=bError);
+
+    IF (fb_Read.bError OR fb_CheckWatchdog.bWatchdog) THEN
+    	bBool := FALSE; // If there is an error in connection the signal turns to FALSE
+    END_IF;
+
+    (*Logger*)
+    ACT_Logger();
+
+    END_FUNCTION_BLOCK
+    ACTION ACT_Logger:
+    IF tErrorPresent.Q THEN
+     IF(fb_Read.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+     IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+    END_IF
+    END_ACTION
+
+
 FB_TGCC_ADS
 ^^^^^^^^^^^
 
@@ -6153,6 +6226,79 @@ FB_TGCC_ADS
     	sNetId:= sNetId, 
     	nPort:= nPort, 
     	sVarName:= CONCAT(sVarName,'.IG'), 
+    	nDestAddr:= ADR(IG), 
+    	nLen:= SIZEOF(IG), 
+    	tTimeout:= , 
+    	eComMode:=eAdsComModeFastCom , 
+    	bBusy=> , 
+    	bError=> , 
+    	nErrorId=> );	
+    	
+
+    (*Error*)
+    fb_CheckWatchdog(
+    	bEnable:= TRUE, 
+    	tWatchdogTime:= T#900ms, 
+    	nCnt:= iWatchdog , 
+    	bWatchdog=> , 
+    	nLastCnt=> );
+    	
+    bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
+    tErrorPresent(CLK:=bError);
+
+    IF (fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog) THEN
+    IG.xPRESS_OK := FALSE;
+    END_IF;
+
+    (*Logger*)
+    ACT_Logger();
+
+    END_FUNCTION_BLOCK
+    ACTION ACT_Logger:
+    IF tErrorPresent.Q THEN
+     IF(fb_Read_VG.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+     IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+    END_IF
+    END_ACTION
+
+
+FB_TGPI_ADS
+^^^^^^^^^^^
+
+::
+
+    (* This function block is created for interface devices between different PLC*)
+    (* Not all the Variables in the original structure is required, just few signals *)
+    (* The variable values are read via ADS using the symbol name*)
+    FUNCTION_BLOCK FB_TGPI_ADS Extends FB_ADS
+    VAR_INPUT
+    	sNetId : String; //NetID of the Destination PLC controller
+    	nPort : uint; // port number
+    	sVarName : string;// the variable name of the declared gauge function block.
+    	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
+    END_VAR
+    VAR_OUTPUT
+    	{attribute 'pytmc' := 'pv:'}
+    	IG : ST_VG;
+    	bError: BOOL;
+    END_VAR
+    VAR
+    	fb_CheckWatchdog: FB_CheckWatchdog;
+    	fb_Read_VG: FB_ReadAdsSymByName;
+    	ftReset: F_TRIG;
+    	xFirstPass: BOOL:= true;
+    END_VAR
+    ftReset(CLK:= fb_Read_VG.bBusy OR xFirstPass);
+    xFirstPass := false;
+    (*calling ADS read function*)
+
+    //IG.xPRESS_OK := false;	
+
+    fb_Read_VG(
+    	bRead:=ftReset.Q , 
+    	sNetId:= sNetId, 
+    	nPort:= nPort, 
+    	sVarName:= CONCAT(sVarName,'.PG'), 
     	nDestAddr:= ADR(IG), 
     	nLen:= SIZEOF(IG), 
     	tTimeout:= , 
@@ -6317,6 +6463,69 @@ FB_TurbVentvalve_NO
     ACTION ACT_IO:
     (*outputs*)
     q_xCLS_DO:= q_stValve.xCLS_DO;
+    END_ACTION
+
+
+FB_TVGC_2S_ADS
+^^^^^^^^^^^^^^
+
+::
+
+    (* This function block is created for interface devices between different PLC*)
+    (* Not all the fields in the original structure is required, just few signals *)
+    (*Use with FB_ADS_WATCHDOG on remotePLC*)
+    FUNCTION_BLOCK FB_TVGC_2S_ADS extends FB_ADS
+    VAR_INPUT
+    	sNetId : String; //NetID of the Destination PLC controller
+    	nPort : UINT; // port number
+    	sVarName : string;// the variable name of the (device) declared function block.
+    	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
+    END_VAR
+    VAR_OUTPUT
+    	{attribute 'pytmc' := 'pv: '}
+    	VGC:ST_VGC_2S;
+    	bError:BOOL;
+    END_VAR
+    VAR
+    	fb_CheckWatchdog: FB_CheckWatchdog;
+    	fb_Read_VGC: FB_ReadAdsSymByName;
+    	ftReset: F_TRIG;
+    	xFirstPass: bool:= true;
+    END_VAR
+    ftReset(CLK:= fb_Read_VGC.bBusy OR xFirstPass);
+    xFirstPass:=false;
+    (*calling ADS read function*)
+    fb_Read_VGC(
+    	bRead:= ftReset.Q, 
+    	sNetId:= sNetId, 
+    	nPort:= nPort, 
+    	sVarName:= CONCAT(sVarName,'.iq_stValve'), 
+    	nDestAddr:= ADR(VGC), 
+    	nLen:= SIZEOF(VGC), 
+    	tTimeout:= , 
+    	eComMode:= eAdsComModeFastCom, 
+    	bBusy=> , 
+    	bError=> , 
+    	nErrorId=> );
+    	
+
+    (*Error*)
+    fb_CheckWatchdog(
+    	bEnable:= TRUE, 
+    	tWatchdogTime:= T#900ms, 
+    	nCnt:= iWatchdog , 
+    	bWatchdog=> , 
+    	nLastCnt=> );
+    bError:= fb_Read_VGC.bError OR fb_CheckWatchdog.bWatchdog;
+
+    ACT_Logger();
+
+    END_FUNCTION_BLOCK
+    ACTION ACT_Logger:
+    IF tErrorPresent.Q THEN
+     IF(fb_Read_VGC.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+     IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+    END_IF
     END_ACTION
 
 

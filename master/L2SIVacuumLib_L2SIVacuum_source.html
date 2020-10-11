@@ -187,10 +187,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#fb-ptm-twistorr">FB_PTM_TwisTorr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-pump">FB_Pump</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-scrollpump">FB_ScrollPump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-tbool-ads">FB_TBOOL_ADS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-tgcc-ads">FB_TGCC_ADS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-tgpi-ads">FB_TGPI_ADS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-tpip-ads">FB_TPIP_ADS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-turboextlogic">FB_TurboExtLogic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-turbventvalve-no">FB_TurbVentvalve_NO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-tvgc-2s-ads">FB_TVGC_2S_ADS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-tvgc-ads">FB_TVGC_ADS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-valve">FB_Valve</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-valve-interface">FB_Valve_Interface</a></li>
@@ -2325,6 +2328,7 @@ END_FUNCTION
     <span class="n">fbGaugeState</span> <span class="p">:</span> <span class="n">FB_PressureState</span><span class="p">;</span>
     <span class="n">rMaxPressure</span>    <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">760</span><span class="p">;</span> <span class="o">//</span><span class="n">Torr</span>
     <span class="n">rMinPressure</span>    <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E-5</span><span class="p">;</span> <span class="o">//</span><span class="n">Torr</span>
+    <span class="n">rVMin</span> <span class="p">:</span> <span class="n">REAL</span><span class="o">:=</span> <span class="mf">0.9</span><span class="p">;</span>
     <span class="p">(</span><span class="o">*</span><span class="n">Default</span> <span class="nb">set</span> <span class="n">point</span> <span class="mi">50</span> <span class="n">mT</span><span class="o">*</span><span class="p">)</span>
     <span class="n">rVAC_SP</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">5E-2</span><span class="p">;</span>
     <span class="n">iTermBits</span><span class="p">:</span> <span class="n">UINT</span> <span class="o">:=</span> <span class="mi">30518</span> <span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">terminal</span><span class="s1">&#39;s maximum value in bits default el3174 as per vacuum architecture</span>
@@ -2342,8 +2346,8 @@ END_FUNCTION
 <span class="n">If</span> <span class="p">(</span><span class="n">iTermBits</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">iTermBits</span> <span class="o">:=</span> <span class="mi">30518</span><span class="p">;</span><span class="n">END_IF</span>
 <span class="n">rV</span> <span class="o">:=</span> <span class="mi">10</span><span class="o">*</span><span class="n">INT_TO_REAL</span><span class="p">(</span><span class="n">PG</span><span class="o">.</span><span class="n">i_iPRESS_R</span><span class="p">)</span><span class="o">/</span><span class="n">iTermBits</span><span class="p">;</span>
 
-<span class="n">IF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="mf">0.99</span> <span class="n">THEN</span>
-    <span class="n">IF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="mf">0.99</span> <span class="n">AND</span> <span class="n">rV</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="n">THEN</span>
+<span class="n">IF</span> <span class="n">rV</span> <span class="o">&gt;=</span><span class="n">rVMin</span> <span class="n">THEN</span>
+    <span class="n">IF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="n">rVMin</span> <span class="n">AND</span> <span class="n">rV</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="n">THEN</span>
             <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="mf">1E-5</span><span class="p">;</span>
     <span class="n">ELSE</span>
             <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">rV</span><span class="o">-</span><span class="mi">6</span><span class="p">));</span>
@@ -6225,6 +6229,76 @@ END_ACTION
 </pre></div>
 </div>
 </div>
+<div class="section" id="fb-tbool-ads">
+<h2>FB_TBOOL_ADS<a class="headerlink" href="#fb-tbool-ads" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">a</span> <span class="n">boolean</span> <span class="n">singal</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLCs</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">variable</span> <span class="n">values</span> <span class="n">are</span> <span class="n">read</span> <span class="n">via</span> <span class="n">ADS</span> <span class="n">using</span> <span class="n">the</span> <span class="n">symbol</span> <span class="n">name</span><span class="o">*</span><span class="p">)</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TBOOL_ADS</span> <span class="n">Extends</span> <span class="n">FB_ADS</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">sNetId</span> <span class="p">:</span> <span class="n">String</span><span class="p">;</span> <span class="o">//</span><span class="n">NetID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Destination</span> <span class="n">PLC</span> <span class="n">controller</span>
+    <span class="n">nPort</span> <span class="p">:</span> <span class="n">uint</span><span class="p">;</span> <span class="o">//</span> <span class="n">port</span> <span class="n">number</span>
+    <span class="n">sVarName</span> <span class="p">:</span> <span class="n">string</span><span class="p">;</span><span class="o">//</span> <span class="n">the</span> <span class="n">variable</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">declared</span> <span class="n">pip</span><span class="o">/</span><span class="n">pin</span> <span class="n">function</span> <span class="n">block</span><span class="o">.</span>
+    <span class="n">iWatchdog</span><span class="p">:</span><span class="n">UDINT</span><span class="p">;</span><span class="o">//</span><span class="n">The</span> <span class="n">watchdog</span> <span class="n">variable</span> <span class="n">name</span> <span class="n">written</span> <span class="n">to</span> <span class="n">by</span> <span class="n">the</span> <span class="n">remote</span> <span class="n">plc</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;pv: value&#39;</span><span class="p">}</span>
+    <span class="n">bBool</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;pv: error&#39;</span><span class="p">}</span>
+    <span class="n">bError</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">fb_CheckWatchdog</span><span class="p">:</span> <span class="n">FB_CheckWatchdog</span><span class="p">;</span>
+    <span class="n">fb_Read</span><span class="p">:</span> <span class="n">FB_ReadAdsSymByName</span><span class="p">;</span>
+    <span class="n">ftReset</span><span class="p">:</span> <span class="n">F_TRIG</span><span class="p">;</span>
+    <span class="n">xFirstPass</span><span class="p">:</span> <span class="n">BOOL</span><span class="o">:=</span> <span class="n">true</span><span class="p">;</span>
+
+<span class="n">END_VAR</span>
+<span class="n">ftReset</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">fb_Read</span><span class="o">.</span><span class="n">bBusy</span> <span class="n">OR</span> <span class="n">xFirstPass</span><span class="p">);</span>
+<span class="n">xFirstPass</span> <span class="o">:=</span> <span class="n">false</span><span class="p">;</span>
+<span class="p">(</span><span class="o">*</span><span class="n">calling</span> <span class="n">ADS</span> <span class="n">read</span> <span class="n">function</span><span class="o">*</span><span class="p">)</span>
+
+<span class="n">fb_Read</span><span class="p">(</span>
+    <span class="n">bRead</span><span class="o">:=</span><span class="n">ftReset</span><span class="o">.</span><span class="n">Q</span> <span class="p">,</span>
+    <span class="n">sNetId</span><span class="o">:=</span> <span class="n">sNetId</span><span class="p">,</span>
+    <span class="n">nPort</span><span class="o">:=</span> <span class="n">nPort</span><span class="p">,</span>
+    <span class="n">sVarName</span><span class="o">:=</span> <span class="n">sVarName</span><span class="p">,</span>
+    <span class="n">nDestAddr</span><span class="o">:=</span> <span class="n">ADR</span><span class="p">(</span><span class="n">bBool</span><span class="p">),</span>
+    <span class="n">nLen</span><span class="o">:=</span> <span class="n">SIZEOF</span><span class="p">(</span><span class="n">bBool</span><span class="p">),</span>
+    <span class="n">tTimeout</span><span class="o">:=</span> <span class="p">,</span>
+    <span class="n">eComMode</span><span class="o">:=</span><span class="n">eAdsComModeFastCom</span> <span class="p">,</span>
+    <span class="n">bBusy</span><span class="o">=&gt;</span> <span class="p">,</span>
+    <span class="n">bError</span><span class="o">=&gt;</span> <span class="p">,</span>
+    <span class="n">nErrorId</span><span class="o">=&gt;</span> <span class="p">);</span>
+
+
+<span class="p">(</span><span class="o">*</span><span class="n">Error</span><span class="o">*</span><span class="p">)</span>
+<span class="n">fb_CheckWatchdog</span><span class="p">(</span>
+    <span class="n">bEnable</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">,</span>
+    <span class="n">tWatchdogTime</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#900ms,</span>
+    <span class="n">nCnt</span><span class="o">:=</span> <span class="n">iWatchdog</span> <span class="p">,</span>
+    <span class="n">bWatchdog</span><span class="o">=&gt;</span> <span class="p">,</span>
+    <span class="n">nLastCnt</span><span class="o">=&gt;</span> <span class="p">);</span>
+
+<span class="n">bError</span><span class="o">:=</span> <span class="n">fb_Read</span><span class="o">.</span><span class="n">bError</span> <span class="n">OR</span> <span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">;</span>
+<span class="n">tErrorPresent</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span><span class="n">bError</span><span class="p">);</span>
+
+<span class="n">IF</span> <span class="p">(</span><span class="n">fb_Read</span><span class="o">.</span><span class="n">bError</span> <span class="n">OR</span> <span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">bBool</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span> <span class="o">//</span> <span class="n">If</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">an</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">connection</span> <span class="n">the</span> <span class="n">signal</span> <span class="n">turns</span> <span class="n">to</span> <span class="n">FALSE</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Logger</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Logger</span><span class="p">();</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="n">IF</span> <span class="n">tErrorPresent</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_Read</span><span class="o">.</span><span class="n">bError</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Read Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Watchdog Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="fb-tgcc-ads">
 <h2>FB_TGCC_ADS<a class="headerlink" href="#fb-tgcc-ads" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
@@ -6259,6 +6333,77 @@ END_ACTION
     <span class="n">sNetId</span><span class="o">:=</span> <span class="n">sNetId</span><span class="p">,</span>
     <span class="n">nPort</span><span class="o">:=</span> <span class="n">nPort</span><span class="p">,</span>
     <span class="n">sVarName</span><span class="o">:=</span> <span class="n">CONCAT</span><span class="p">(</span><span class="n">sVarName</span><span class="p">,</span><span class="s1">&#39;.IG&#39;</span><span class="p">),</span>
+    <span class="n">nDestAddr</span><span class="o">:=</span> <span class="n">ADR</span><span class="p">(</span><span class="n">IG</span><span class="p">),</span>
+    <span class="n">nLen</span><span class="o">:=</span> <span class="n">SIZEOF</span><span class="p">(</span><span class="n">IG</span><span class="p">),</span>
+    <span class="n">tTimeout</span><span class="o">:=</span> <span class="p">,</span>
+    <span class="n">eComMode</span><span class="o">:=</span><span class="n">eAdsComModeFastCom</span> <span class="p">,</span>
+    <span class="n">bBusy</span><span class="o">=&gt;</span> <span class="p">,</span>
+    <span class="n">bError</span><span class="o">=&gt;</span> <span class="p">,</span>
+    <span class="n">nErrorId</span><span class="o">=&gt;</span> <span class="p">);</span>
+
+
+<span class="p">(</span><span class="o">*</span><span class="n">Error</span><span class="o">*</span><span class="p">)</span>
+<span class="n">fb_CheckWatchdog</span><span class="p">(</span>
+    <span class="n">bEnable</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">,</span>
+    <span class="n">tWatchdogTime</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#900ms,</span>
+    <span class="n">nCnt</span><span class="o">:=</span> <span class="n">iWatchdog</span> <span class="p">,</span>
+    <span class="n">bWatchdog</span><span class="o">=&gt;</span> <span class="p">,</span>
+    <span class="n">nLastCnt</span><span class="o">=&gt;</span> <span class="p">);</span>
+
+<span class="n">bError</span><span class="o">:=</span> <span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bError</span> <span class="n">OR</span> <span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">;</span>
+<span class="n">tErrorPresent</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span><span class="n">bError</span><span class="p">);</span>
+
+<span class="n">IF</span> <span class="p">(</span><span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bError</span> <span class="n">OR</span> <span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">)</span> <span class="n">THEN</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Logger</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Logger</span><span class="p">();</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="n">IF</span> <span class="n">tErrorPresent</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bError</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Read Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Watchdog Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fb-tgpi-ads">
+<h2>FB_TGPI_ADS<a class="headerlink" href="#fb-tgpi-ads" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">Variables</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">variable</span> <span class="n">values</span> <span class="n">are</span> <span class="n">read</span> <span class="n">via</span> <span class="n">ADS</span> <span class="n">using</span> <span class="n">the</span> <span class="n">symbol</span> <span class="n">name</span><span class="o">*</span><span class="p">)</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TGPI_ADS</span> <span class="n">Extends</span> <span class="n">FB_ADS</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">sNetId</span> <span class="p">:</span> <span class="n">String</span><span class="p">;</span> <span class="o">//</span><span class="n">NetID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Destination</span> <span class="n">PLC</span> <span class="n">controller</span>
+    <span class="n">nPort</span> <span class="p">:</span> <span class="n">uint</span><span class="p">;</span> <span class="o">//</span> <span class="n">port</span> <span class="n">number</span>
+    <span class="n">sVarName</span> <span class="p">:</span> <span class="n">string</span><span class="p">;</span><span class="o">//</span> <span class="n">the</span> <span class="n">variable</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">declared</span> <span class="n">gauge</span> <span class="n">function</span> <span class="n">block</span><span class="o">.</span>
+    <span class="n">iWatchdog</span><span class="p">:</span><span class="n">UDINT</span><span class="p">;</span><span class="o">//</span><span class="n">The</span> <span class="n">watchdog</span> <span class="n">variable</span> <span class="n">name</span> <span class="n">written</span> <span class="n">to</span> <span class="n">by</span> <span class="n">the</span> <span class="n">remote</span> <span class="n">plc</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;pv:&#39;</span><span class="p">}</span>
+    <span class="n">IG</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span>
+    <span class="n">bError</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">fb_CheckWatchdog</span><span class="p">:</span> <span class="n">FB_CheckWatchdog</span><span class="p">;</span>
+    <span class="n">fb_Read_VG</span><span class="p">:</span> <span class="n">FB_ReadAdsSymByName</span><span class="p">;</span>
+    <span class="n">ftReset</span><span class="p">:</span> <span class="n">F_TRIG</span><span class="p">;</span>
+    <span class="n">xFirstPass</span><span class="p">:</span> <span class="n">BOOL</span><span class="o">:=</span> <span class="n">true</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">ftReset</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">fb_Read_VG</span><span class="o">.</span><span class="n">bBusy</span> <span class="n">OR</span> <span class="n">xFirstPass</span><span class="p">);</span>
+<span class="n">xFirstPass</span> <span class="o">:=</span> <span class="n">false</span><span class="p">;</span>
+<span class="p">(</span><span class="o">*</span><span class="n">calling</span> <span class="n">ADS</span> <span class="n">read</span> <span class="n">function</span><span class="o">*</span><span class="p">)</span>
+
+<span class="o">//</span><span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">false</span><span class="p">;</span>
+
+<span class="n">fb_Read_VG</span><span class="p">(</span>
+    <span class="n">bRead</span><span class="o">:=</span><span class="n">ftReset</span><span class="o">.</span><span class="n">Q</span> <span class="p">,</span>
+    <span class="n">sNetId</span><span class="o">:=</span> <span class="n">sNetId</span><span class="p">,</span>
+    <span class="n">nPort</span><span class="o">:=</span> <span class="n">nPort</span><span class="p">,</span>
+    <span class="n">sVarName</span><span class="o">:=</span> <span class="n">CONCAT</span><span class="p">(</span><span class="n">sVarName</span><span class="p">,</span><span class="s1">&#39;.PG&#39;</span><span class="p">),</span>
     <span class="n">nDestAddr</span><span class="o">:=</span> <span class="n">ADR</span><span class="p">(</span><span class="n">IG</span><span class="p">),</span>
     <span class="n">nLen</span><span class="o">:=</span> <span class="n">SIZEOF</span><span class="p">(</span><span class="n">IG</span><span class="p">),</span>
     <span class="n">tTimeout</span><span class="o">:=</span> <span class="p">,</span>
@@ -6417,6 +6562,67 @@ END_ACTION
 <span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
 <span class="p">(</span><span class="o">*</span><span class="n">outputs</span><span class="o">*</span><span class="p">)</span>
 <span class="n">q_xCLS_DO</span><span class="o">:=</span> <span class="n">q_stValve</span><span class="o">.</span><span class="n">xCLS_DO</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fb-tvgc-2s-ads">
+<h2>FB_TVGC_2S_ADS<a class="headerlink" href="#fb-tvgc-2s-ads" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Not</span> <span class="nb">all</span> <span class="n">the</span> <span class="n">fields</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">original</span> <span class="n">structure</span> <span class="ow">is</span> <span class="n">required</span><span class="p">,</span> <span class="n">just</span> <span class="n">few</span> <span class="n">signals</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Use</span> <span class="k">with</span> <span class="n">FB_ADS_WATCHDOG</span> <span class="n">on</span> <span class="n">remotePLC</span><span class="o">*</span><span class="p">)</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_TVGC_2S_ADS</span> <span class="n">extends</span> <span class="n">FB_ADS</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">sNetId</span> <span class="p">:</span> <span class="n">String</span><span class="p">;</span> <span class="o">//</span><span class="n">NetID</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Destination</span> <span class="n">PLC</span> <span class="n">controller</span>
+    <span class="n">nPort</span> <span class="p">:</span> <span class="n">UINT</span><span class="p">;</span> <span class="o">//</span> <span class="n">port</span> <span class="n">number</span>
+    <span class="n">sVarName</span> <span class="p">:</span> <span class="n">string</span><span class="p">;</span><span class="o">//</span> <span class="n">the</span> <span class="n">variable</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="p">(</span><span class="n">device</span><span class="p">)</span> <span class="n">declared</span> <span class="n">function</span> <span class="n">block</span><span class="o">.</span>
+    <span class="n">iWatchdog</span><span class="p">:</span><span class="n">UDINT</span><span class="p">;</span><span class="o">//</span><span class="n">The</span> <span class="n">watchdog</span> <span class="n">variable</span> <span class="n">name</span> <span class="n">written</span> <span class="n">to</span> <span class="n">by</span> <span class="n">the</span> <span class="n">remote</span> <span class="n">plc</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;pv: &#39;</span><span class="p">}</span>
+    <span class="n">VGC</span><span class="p">:</span><span class="n">ST_VGC_2S</span><span class="p">;</span>
+    <span class="n">bError</span><span class="p">:</span><span class="n">BOOL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">fb_CheckWatchdog</span><span class="p">:</span> <span class="n">FB_CheckWatchdog</span><span class="p">;</span>
+    <span class="n">fb_Read_VGC</span><span class="p">:</span> <span class="n">FB_ReadAdsSymByName</span><span class="p">;</span>
+    <span class="n">ftReset</span><span class="p">:</span> <span class="n">F_TRIG</span><span class="p">;</span>
+    <span class="n">xFirstPass</span><span class="p">:</span> <span class="nb">bool</span><span class="o">:=</span> <span class="n">true</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">ftReset</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">fb_Read_VGC</span><span class="o">.</span><span class="n">bBusy</span> <span class="n">OR</span> <span class="n">xFirstPass</span><span class="p">);</span>
+<span class="n">xFirstPass</span><span class="o">:=</span><span class="n">false</span><span class="p">;</span>
+<span class="p">(</span><span class="o">*</span><span class="n">calling</span> <span class="n">ADS</span> <span class="n">read</span> <span class="n">function</span><span class="o">*</span><span class="p">)</span>
+<span class="n">fb_Read_VGC</span><span class="p">(</span>
+    <span class="n">bRead</span><span class="o">:=</span> <span class="n">ftReset</span><span class="o">.</span><span class="n">Q</span><span class="p">,</span>
+    <span class="n">sNetId</span><span class="o">:=</span> <span class="n">sNetId</span><span class="p">,</span>
+    <span class="n">nPort</span><span class="o">:=</span> <span class="n">nPort</span><span class="p">,</span>
+    <span class="n">sVarName</span><span class="o">:=</span> <span class="n">CONCAT</span><span class="p">(</span><span class="n">sVarName</span><span class="p">,</span><span class="s1">&#39;.iq_stValve&#39;</span><span class="p">),</span>
+    <span class="n">nDestAddr</span><span class="o">:=</span> <span class="n">ADR</span><span class="p">(</span><span class="n">VGC</span><span class="p">),</span>
+    <span class="n">nLen</span><span class="o">:=</span> <span class="n">SIZEOF</span><span class="p">(</span><span class="n">VGC</span><span class="p">),</span>
+    <span class="n">tTimeout</span><span class="o">:=</span> <span class="p">,</span>
+    <span class="n">eComMode</span><span class="o">:=</span> <span class="n">eAdsComModeFastCom</span><span class="p">,</span>
+    <span class="n">bBusy</span><span class="o">=&gt;</span> <span class="p">,</span>
+    <span class="n">bError</span><span class="o">=&gt;</span> <span class="p">,</span>
+    <span class="n">nErrorId</span><span class="o">=&gt;</span> <span class="p">);</span>
+
+
+<span class="p">(</span><span class="o">*</span><span class="n">Error</span><span class="o">*</span><span class="p">)</span>
+<span class="n">fb_CheckWatchdog</span><span class="p">(</span>
+    <span class="n">bEnable</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">,</span>
+    <span class="n">tWatchdogTime</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#900ms,</span>
+    <span class="n">nCnt</span><span class="o">:=</span> <span class="n">iWatchdog</span> <span class="p">,</span>
+    <span class="n">bWatchdog</span><span class="o">=&gt;</span> <span class="p">,</span>
+    <span class="n">nLastCnt</span><span class="o">=&gt;</span> <span class="p">);</span>
+<span class="n">bError</span><span class="o">:=</span> <span class="n">fb_Read_VGC</span><span class="o">.</span><span class="n">bError</span> <span class="n">OR</span> <span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">;</span>
+
+<span class="n">ACT_Logger</span><span class="p">();</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="n">IF</span> <span class="n">tErrorPresent</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_Read_VGC</span><span class="o">.</span><span class="n">bError</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Read Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+ <span class="n">IF</span><span class="p">(</span><span class="n">fb_CheckWatchdog</span><span class="o">.</span><span class="n">bWatchdog</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;ADS Watchdog Error&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
 <span class="n">END_ACTION</span>
 </pre></div>
 </div>
