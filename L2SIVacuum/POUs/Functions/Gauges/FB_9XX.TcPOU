@@ -19,6 +19,7 @@ VAR
 	fbGaugeState : FB_PressureState;
 	rMaxPressure	:	REAL := 760; //Torr
 	rMinPressure	:	REAL := 1E-5; //Torr
+	rVMin : REAL:= 0.9;
 	(*Default set point 50 mT*)
 	rVAC_SP: REAL := 5E-2;
 	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
@@ -38,8 +39,8 @@ END_IF
 If (iTermBits=0) THEN iTermBits := 30518;END_IF
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
-IF rV >= 0.99 THEN
-	IF rV >= 0.99 AND rV <= 1 THEN
+IF rV >=rVMin THEN
+	IF rV >= rVMin AND rV <= 1 THEN
 		PG.rPRESS := 1E-5;
 	ELSE
 		PG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-6));
@@ -105,19 +106,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_9XX">
-      <LineId Id="3" Count="32" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_9XX.ACT_IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_9XX.ACT_Logger">
-      <LineId Id="7" Count="22" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_9XX.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
