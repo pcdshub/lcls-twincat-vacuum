@@ -62,7 +62,7 @@ END_IF
 
 
 IF (PG.rPRESS <= IG.rPRO_SP)  AND (PG.xPRESS_OK) THEN
-		 PG.q_xHV_DIS := NOT IG.xHV_SW;
+		 IG.q_xHV_DIS := NOT IG.xHV_SW;
 		 IG.xILKOk := TRUE;
 	ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
 		IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
@@ -153,24 +153,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS909">
-      <LineId Id="3" Count="51" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="56" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS909.ACT_IO">
-      <LineId Id="2" Count="3" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS909.ACT_Logger">
-      <LineId Id="2" Count="31" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS909.M_AutoOn">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS909.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
