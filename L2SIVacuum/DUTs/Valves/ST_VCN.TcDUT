@@ -36,6 +36,21 @@ STRUCT
     '}
 	xIlkOK	:	BOOL := FALSE; // Interlock Bit
 	
+	{attribute 'pytmc' := ' 
+	pv: ILK_SP;
+	io: o;
+	field: HOPR 1000
+	field: LOPR 0
+	field: PREC 2
+	field: EGU "TORR"
+	autosave_pass1: VAL DESC
+	'}
+	rIlk_SP	:	REAL := 0.0005;	// Interlock setpoint for gauges on both sides of valve
+	
+	{attribute 'pytmc' := '
+    pv: Throttle;
+	io: io;
+    '}
 	rUpperLimit	:	REAL:=100; // Percentage9.1;	//Upper limit on valve open
 	{attribute 'pytmc' := '
 	pv: POS_REQ;

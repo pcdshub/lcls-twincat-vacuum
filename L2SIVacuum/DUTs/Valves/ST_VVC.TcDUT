@@ -22,8 +22,8 @@ STRUCT
 	xOvrdOpn	:	BOOL;
 	{attribute 'pytmc' := '
 	pv: OVRD_ON;
-	field: ZNAM Override ON ;
-	field: ONAM Override OFF;
+	field: ZNAM Override OFF ;
+	field: ONAM Override ON;
 	io: io;
 	'}
 	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
