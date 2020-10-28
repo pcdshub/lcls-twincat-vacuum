@@ -8,7 +8,7 @@ VAR_OUTPUT
 END_VAR
 VAR
 	// For logging
-    fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
+    fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM, nMinTimeViolationAcceptable:=10);
     ePrevState : E_ValvePositionState;
     tErrorPresent : R_TRIG;
     tAction : R_TRIG; // Primary action of this device (OPN_DO, etc.)
@@ -23,11 +23,5 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_Valve">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Valve.ACT_Logger">
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
