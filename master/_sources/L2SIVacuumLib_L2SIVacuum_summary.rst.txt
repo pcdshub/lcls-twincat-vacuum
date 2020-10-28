@@ -24,7 +24,7 @@ Settings
 Pragmas
 -------
 
-Total pragmas found: 273
+Total pragmas found: 275
 Total linter errors: 0
 
 
@@ -361,10 +361,10 @@ Global_Variables
         Global_Variables.FORMAT_DECASC_CODES, BYTE, 4252544 (80)
         Global_Variables.FORMAT_HEXASC_CODES, BYTE, 4252288 (256)
         Global_Variables.FORMAT_MAX_ARGS, INT, 4251600 (16)
-        Global_Variables.g_DummyVG, ST_VG, 8559616 (1056)
         Global_Variables.g_DummyVG, ST_VG, 86140448 (1056)
-        Global_Variables.g_iSizeOfGGOArray, INT, 8577760 (16)
+        Global_Variables.g_DummyVG, ST_VG, 8559616 (1056)
         Global_Variables.g_iSizeOfGGOArray, INT, 8559504 (16)
+        Global_Variables.g_iSizeOfGGOArray, INT, 8577760 (16)
         Global_Variables.g_stSystem, ST_System, 86140352 (88)
         Global_Variables.g_stSystem, ST_System, 8559520 (88)
         Global_Variables.g_stSystem.I_EcatMaster1, AMSNETID, 86140392 (48)

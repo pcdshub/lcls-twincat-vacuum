@@ -1258,6 +1258,21 @@ ST_VCN
         '}
     	xIlkOK	:	BOOL := FALSE; // Interlock Bit
     	
+    	{attribute 'pytmc' := ' 
+    	pv: ILK_SP;
+    	io: o;
+    	field: HOPR 1000
+    	field: LOPR 0
+    	field: PREC 2
+    	field: EGU "TORR"
+    	autosave_pass1: VAL DESC
+    	'}
+    	rIlk_SP	:	REAL := 0.0005;	// Interlock setpoint for gauges on both sides of valve
+    	
+    	{attribute 'pytmc' := '
+        pv: Throttle;
+    	io: io;
+        '}
     	rUpperLimit	:	REAL:=100; // Percentage9.1;	//Upper limit on valve open
     	{attribute 'pytmc' := '
     	pv: POS_REQ;
@@ -1659,8 +1674,8 @@ ST_VVC
     	xOvrdOpn	:	BOOL;
     	{attribute 'pytmc' := '
     	pv: OVRD_ON;
-    	field: ZNAM Override ON ;
-    	field: ONAM Override OFF;
+    	field: ZNAM Override OFF ;
+    	field: ONAM Override ON;
     	io: io;
     	'}
     	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
@@ -4200,7 +4215,7 @@ FB_MKS909
 
 
     IF (PG.rPRESS <= IG.rPRO_SP)  AND (PG.xPRESS_OK) THEN
-    		 PG.q_xHV_DIS := NOT IG.xHV_SW;
+    		 IG.q_xHV_DIS := NOT IG.xHV_SW;
     		 IG.xILKOk := TRUE;
     	ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
     		IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
@@ -6604,7 +6619,7 @@ FB_Valve
     END_VAR
     VAR
     	// For logging
-        fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
+        fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM, nMinTimeViolationAcceptable:=10);
         ePrevState : E_ValvePositionState;
         tErrorPresent : R_TRIG;
         tAction : R_TRIG; // Primary action of this device (OPN_DO, etc.)
@@ -9388,17 +9403,15 @@ FB_VRC_NO
 
     END_VAR
     VAR_INPUT
-    	{attribute 'pytmc' := '
-    	pv: EXT_ILK_OK ;
-    	field: ZNAM NOT OK ;
-    	field: ONAM OK ;
-    	io: i ;
-    	'}
+
     	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
     	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 
     END_VAR
     VAR_OUTPUT
+    	{attribute 'pytmc' := '
+        pv:
+    	'}
     		iq_stValve : ST_VRC;
     END_VAR
     VAR

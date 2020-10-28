@@ -1499,6 +1499,21 @@ END_TYPE
     <span class="s1">&#39;}</span>
     <span class="n">xIlkOK</span>  <span class="p">:</span>       <span class="n">BOOL</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span> <span class="o">//</span> <span class="n">Interlock</span> <span class="n">Bit</span>
 
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">ILK_SP</span><span class="p">;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">o</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">HOPR</span> <span class="mi">1000</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">LOPR</span> <span class="mi">0</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">PREC</span> <span class="mi">2</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">EGU</span> <span class="s2">&quot;TORR&quot;</span>
+    <span class="n">autosave_pass1</span><span class="p">:</span> <span class="n">VAL</span> <span class="n">DESC</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">rIlk_SP</span> <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">0.0005</span><span class="p">;</span> <span class="o">//</span> <span class="n">Interlock</span> <span class="n">setpoint</span> <span class="k">for</span> <span class="n">gauges</span> <span class="n">on</span> <span class="n">both</span> <span class="n">sides</span> <span class="n">of</span> <span class="n">valve</span>
+
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">Throttle</span><span class="p">;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
+    <span class="s1">&#39;}</span>
     <span class="n">rUpperLimit</span>     <span class="p">:</span>       <span class="n">REAL</span><span class="o">:=</span><span class="mi">100</span><span class="p">;</span> <span class="o">//</span> <span class="n">Percentage9</span><span class="o">.</span><span class="mi">1</span><span class="p">;</span>    <span class="o">//</span><span class="n">Upper</span> <span class="n">limit</span> <span class="n">on</span> <span class="n">valve</span> <span class="nb">open</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">POS_REQ</span><span class="p">;</span>
@@ -1888,8 +1903,8 @@ END_TYPE
     <span class="n">xOvrdOpn</span>        <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">OVRD_ON</span><span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">Override</span> <span class="n">ON</span> <span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">Override</span> <span class="n">OFF</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">Override</span> <span class="n">OFF</span> <span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">Override</span> <span class="n">ON</span><span class="p">;</span>
     <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">xOverrideMode</span>   <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span> <span class="n">Shows</span> <span class="n">the</span> <span class="n">override</span> <span class="n">status</span> <span class="n">of</span> <span class="n">this</span> <span class="n">valve</span> <span class="o">*</span><span class="p">)</span>
@@ -4345,7 +4360,7 @@ END_IF
 
 
 IF (PG.rPRESS &lt;= IG.rPRO_SP)  AND (PG.xPRESS_OK) THEN
-             PG.q_xHV_DIS := NOT IG.xHV_SW;
+             IG.q_xHV_DIS := NOT IG.xHV_SW;
              IG.xILKOk := TRUE;
     ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
             IF IG.rPRESS &gt; (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS &gt; (IG.rPRO_SP + IG.rHYS_PR) THEN
@@ -6697,7 +6712,7 @@ END_ACTION
 <span class="n">END_VAR</span>
 <span class="n">VAR</span>
     <span class="o">//</span> <span class="n">For</span> <span class="n">logging</span>
-    <span class="n">fbLogger</span> <span class="p">:</span> <span class="n">FB_LogMessage</span> <span class="o">:=</span> <span class="p">(</span><span class="n">eSubsystem</span><span class="o">:=</span><span class="n">E_SubSystem</span><span class="o">.</span><span class="n">VACUUM</span><span class="p">);</span>
+    <span class="n">fbLogger</span> <span class="p">:</span> <span class="n">FB_LogMessage</span> <span class="o">:=</span> <span class="p">(</span><span class="n">eSubsystem</span><span class="o">:=</span><span class="n">E_SubSystem</span><span class="o">.</span><span class="n">VACUUM</span><span class="p">,</span> <span class="n">nMinTimeViolationAcceptable</span><span class="o">:=</span><span class="mi">10</span><span class="p">);</span>
     <span class="n">ePrevState</span> <span class="p">:</span> <span class="n">E_ValvePositionState</span><span class="p">;</span>
     <span class="n">tErrorPresent</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span>
     <span class="n">tAction</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span> <span class="o">//</span> <span class="n">Primary</span> <span class="n">action</span> <span class="n">of</span> <span class="n">this</span> <span class="n">device</span> <span class="p">(</span><span class="n">OPN_DO</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span><span class="p">)</span>
@@ -9453,17 +9468,15 @@ END_ACTION
 
 <span class="n">END_VAR</span>
 <span class="n">VAR_INPUT</span>
-    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-    <span class="n">pv</span><span class="p">:</span> <span class="n">EXT_ILK_OK</span> <span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">NOT</span> <span class="n">OK</span> <span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">OK</span> <span class="p">;</span>
-    <span class="n">io</span><span class="p">:</span> <span class="n">i</span> <span class="p">;</span>
-    <span class="s1">&#39;}</span>
+
     <span class="n">i_xExtILK_OK</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span><span class="n">Connect</span> <span class="n">to</span> <span class="n">Interlock</span> <span class="n">logic</span> <span class="n">condition</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span> <span class="n">F_TURBO_VRC_ILK</span> <span class="n">Function</span><span class="p">),</span> <span class="n">otherwise</span><span class="p">,</span> <span class="n">Set</span> <span class="n">to</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">the</span> <span class="n">valve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">interlocked</span>
     <span class="n">i_xOverrideMode</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">To</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="k">global</span> <span class="n">override</span> <span class="n">bit</span><span class="o">.</span> <span class="n">This</span> <span class="n">Overrides</span> <span class="n">Vacuum</span> <span class="n">logic</span> <span class="n">only</span><span class="p">,</span> <span class="n">EPS</span><span class="p">,</span> <span class="n">MPS</span> <span class="ow">and</span> <span class="n">PMPS</span> <span class="n">are</span> <span class="n">still</span> <span class="n">enforces</span><span class="o">*</span><span class="p">)</span>
 
 <span class="n">END_VAR</span>
 <span class="n">VAR_OUTPUT</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span>
+    <span class="s1">&#39;}</span>
             <span class="n">iq_stValve</span> <span class="p">:</span> <span class="n">ST_VRC</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 <span class="n">VAR</span>
