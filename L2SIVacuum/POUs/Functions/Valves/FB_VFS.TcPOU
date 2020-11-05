@@ -11,7 +11,7 @@ VAR_INPUT
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
 	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
 	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
-	i_xVeto:BOOL:= FALSE; (*Set to TRUE if there is a Veto Valve to that VFS*)
+	i_xVeto:BOOL:= FALSE; (*Set to TRUE if there is a Veto Valve to this VFS*)
 END_VAR
 VAR_IN_OUT
 	io_fbFFHWO    :    FB_HardwareFFOutput;
@@ -110,9 +110,11 @@ IF (i_xVeto) THEN
 	xVeto := (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
 	ELSE xVeto:=FALSE;
 END_IF
+
+//xVeto:= i_xVeto AND (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
 (* Input Trigger to close the Fast Shutter*)
 (* Neighboring Valves Should also be triggered to Close*)
-IF (i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK)  AND NOT(xVeto) AND NOT (tonOvrd.Q AND i_xOverrideMode) THEN 
+IF ((i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK))  AND NOT(xVeto) AND NOT (tonOvrd.Q AND i_xOverrideMode) THEN 
 	xClose:= TRUE;
 	xOpen:= FALSE;
 	q_xVAC_FAULT_OK:= FALSE;
@@ -152,12 +154,12 @@ IF(OpenTimer.Q) AND (i_xOpnLS) THEN
 END_IF
 
 (* Neighboring Valves Interlock bit is reset When the Vacuum event error is reset and the Shutter is opened *)
-IF (NOT i_xTrigger) AND (NOT xERR_ExtFault) AND i_xOpnLS THEN
+IF ((NOT i_xTrigger) OR xVeto) AND (NOT xERR_ExtFault) AND i_xOpnLS THEN
 	q_xVAC_FAULT_OK := TRUE;
 END_IF
 
 (*OPN OK evaluation bit *)
-xOPN_OK := (NOT xERR_ExtFault) AND NOT i_xTrigger;
+xOPN_OK := (NOT xERR_ExtFault) AND (NOT i_xTrigger OR xVeto) ;
 
 (* If Epics Command to close the Valve, check if PMPS, otherwise Keep command set to open valve *)
 // is there really a PMPS requirment.
@@ -165,7 +167,7 @@ xOPN_OK := (NOT xERR_ExtFault) AND NOT i_xTrigger;
 
 
 (* When the valve  is open MPS is OK*)
-q_xMPS_OK := i_xOpnLS AND NOT i_xTrigger AND i_xPress_OK AND NOT(i_xCLS_SW);
+q_xMPS_OK := i_xOpnLS AND ((NOT i_xTrigger AND i_xPress_OK) OR xVeto)  AND NOT(i_xCLS_SW);
 
 
 (* Override logic *)
@@ -227,8 +229,13 @@ fbFF(i_xOK := q_xMPS_OK,
 
 //iq_stValve.bErrorPresent R= i_xResetFault;
 
-IF NOT i_xTrigger AND i_xPress_OK THEN
-	xERR_ExtFault R= i_xVAC_FAULT_Reset;
+IF (NOT i_xTrigger AND i_xPress_OK) OR xVeto THEN
+	xERR_ExtFault := FALSE;
+	//i_xVAC_FAULT_Reset:=FALSE;
+END_IF
+
+
+IF (i_xTrigger OR NOT i_xPress_OK) AND NOT xVeto THEN
 	i_xVAC_FAULT_Reset:=FALSE;
 END_IF]]></ST>
       </Implementation>
