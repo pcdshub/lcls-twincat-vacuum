@@ -44,6 +44,12 @@ STRUCT
 	io: i;
     '}	
 	sGFS: String;
+	
+	{attribute 'pytmc' := '
+    pv: VETO_DEVICE;
+	io: i;
+    '}
+	sVetoDeviceName: STRING;
 
 END_STRUCT
 END_TYPE]]></Declaration>

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_VWC_NO" Id="{00904a76-0b8d-4527-b20a-255e2a186ec3}">
+    <Declaration><![CDATA[TYPE ST_VWC_NO EXTENDS ST_VGC:
+STRUCT
+(* Readbacks *)
+	//In case VRC is normally open
+	{attribute 'pytmc' := '
+    pv: CLS_OK;
+	field: ONAM CLOSE; 
+	field: ZNAM OPEN;
+	io: i;
+    '}
+	xCLS_OK : BOOL := TRUE;
+	{attribute 'pytmc' := '
+	pv: CLS_SW ;
+	field: ONAM CLOSE; 
+	field: ZNAM OPEN;
+	io: io ;
+	'}
+	pv_xCLS_SW	: BOOL;
+	{attribute 'pytmc' := '
+    pv: FORCE_CLS;
+	field: ONAM CLOSE; 
+	field: ZNAM OPEN;
+	io: io;
+	'}
+	pv_xOvrdCls	:	BOOL;
+
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

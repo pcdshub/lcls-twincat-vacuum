@@ -6,6 +6,7 @@
 FUNCTION_BLOCK FB_VFS_Interface EXTENDS FB_Valve
 VAR_INPUT
 	IG : ST_VG; // The MKS422 Cold Cathode Data Structure
+	Veto_Valve: ST_VGC;// The VGC structure for the Veto Valve
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -26,6 +27,9 @@ VAR
 	q_xOverrideMode AT%Q*: BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 	q_xOverrideOpen AT%Q*: BOOL;
 	
+	(*VETO Devices*)
+	q_xVetoValveOpenDO AT%Q*: BOOL;
+	q_xVetoValveClosed AT%Q*: BOOL;
 	(*inputs*)
 	i_xTrigger AT %I* : BOOL;
 	i_xVFS_Open AT %I* : BOOL;
@@ -38,6 +42,9 @@ VAR
 	'}
 	i_xMPS_OK AT%I*: BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
 	i_eVFS_State AT%I*: E_VGC; (*Interface*)
+	
+	
+	
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*soft IO Mapping*)
@@ -122,39 +129,19 @@ q_xOverrideMode :=iq_stValve.xOverrideMode;
 q_xOverrideOpen := iq_stValve.pv_xOvrdOpn ;
 iq_stValve.sGFS := IG.sPath;
 
+(*Veto*)
+(*VETO Devices*)
+q_xVetoValveOpenDO := Veto_Valve.q_xOPN_DO;
+q_xVetoValveClosed := Veto_Valve.i_xClsLS;
+
 //reset the commands 
 IF ( iq_stValve.i_xOpnLS) THEN iq_stValve.pv_xOPN_SW := FALSE; END_IF
-IF ( iq_stValve.i_xClsLS) THEN iq_stValve.xCLS_SW := FALSE; END_IF]]></ST>
+IF ( iq_stValve.i_xClsLS) THEN iq_stValve.xCLS_SW := FALSE; END_IF
+
+//Veto device name
+iq_stValve.sVetoDeviceName := Veto_Valve.sDevName;
+]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_VFS_Interface">
-      <LineId Id="68" Count="1" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="257" Count="14" />
-      <LineId Id="296" Count="0" />
-      <LineId Id="289" Count="0" />
-      <LineId Id="291" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="294" Count="0" />
-      <LineId Id="293" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VFS_Interface.ACT_Logger">
-      <LineId Id="2" Count="35" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VFS_Interface.IO">
-      <LineId Id="2" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="3" Count="1" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="25" Count="2" />
-      <LineId Id="19" Count="1" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="31" Count="1" />
-    </LineIds>
   </POU>
 </TcPlcObject>

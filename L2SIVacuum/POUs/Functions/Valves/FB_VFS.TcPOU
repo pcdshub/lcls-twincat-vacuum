@@ -11,6 +11,7 @@ VAR_INPUT
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
 	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
 	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
+	i_xVeto:BOOL:= FALSE; (*Set to TRUE if there is a Veto Valve to that VFS*)
 END_VAR
 VAR_IN_OUT
 	io_fbFFHWO    :    FB_HardwareFFOutput;
@@ -18,6 +19,7 @@ END_VAR
 VAR
 	xOPN_OK :BOOL;
 	xERR_ExtFault :BOOL; 
+	xVeto: BOOL;
 	// PMPS
 	fbFF    :    FB_FastFault :=(
         i_DevName := 'VFS',
@@ -63,6 +65,10 @@ VAR
 	q_xOPN_DO	AT%Q*: BOOL;
 	i_xTrigger	AT%I*: BOOL; 
 	
+	(*VETO Devices*)
+	i_xVetoValveOpenDO AT%I*: BOOL;
+	i_xVetoValveClosed AT%I*: BOOL;
+	
 	// Interface
 	i_xPress_OK AT%I*:BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
 	i_xOPN_SW AT%I*:BOOL;
@@ -98,13 +104,27 @@ IF xFirstPass THEN
 	xFirstPass := FALSE;
 END_IF
 
+
+(*set Veto bit*)
+IF (i_xVeto) THEN
+	xVeto := (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
+	ELSE xVeto:=FALSE;
+END_IF
 (* Input Trigger to close the Fast Shutter*)
 (* Neighboring Valves Should also be triggered to Close*)
-IF (i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK)  OR i_xCLS_SW  THEN 
+IF (i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK)  AND NOT(xVeto) AND NOT (tonOvrd.Q AND i_xOverrideMode) THEN 
 	xClose:= TRUE;
 	xOpen:= FALSE;
 	q_xVAC_FAULT_OK:= FALSE;
-	IF (NOT i_xCLS_SW) THEN xERR_ExtFault := TRUE; END_IF;
+	xERR_ExtFault := TRUE; ;
+	i_xCLS_SW := TRUE;
+	q_xOPN_DO := FALSE;
+	//i_xOPN_SW :=FALSE;
+	xOpen:=FALSE;
+ELSIF (i_xCLS_SW) THEN
+	xClose:= TRUE;
+	xOpen:= FALSE;
+	q_xVAC_FAULT_OK:= FALSE;
 	i_xCLS_SW := TRUE;
 	q_xOPN_DO := FALSE;
 	//i_xOPN_SW :=FALSE;
@@ -221,49 +241,5 @@ q_xVFS_Closed:= i_xClsLS;
 q_xVFS_Open:= i_xOpnLS;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_VFS">
-      <LineId Id="567" Count="12" />
-      <LineId Id="1043" Count="1" />
-      <LineId Id="1047" Count="1" />
-      <LineId Id="581" Count="0" />
-      <LineId Id="595" Count="0" />
-      <LineId Id="601" Count="12" />
-      <LineId Id="615" Count="46" />
-      <LineId Id="866" Count="1" />
-      <LineId Id="662" Count="7" />
-      <LineId Id="958" Count="0" />
-      <LineId Id="961" Count="0" />
-      <LineId Id="963" Count="2" />
-      <LineId Id="962" Count="0" />
-      <LineId Id="966" Count="0" />
-      <LineId Id="960" Count="0" />
-      <LineId Id="676" Count="5" />
-      <LineId Id="781" Count="0" />
-      <LineId Id="682" Count="0" />
-      <LineId Id="955" Count="0" />
-      <LineId Id="684" Count="0" />
-      <LineId Id="782" Count="0" />
-      <LineId Id="685" Count="0" />
-      <LineId Id="687" Count="0" />
-      <LineId Id="777" Count="3" />
-      <LineId Id="951" Count="0" />
-      <LineId Id="776" Count="0" />
-      <LineId Id="688" Count="3" />
-      <LineId Id="117" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VFS.ACT_ResetAlarms">
-      <LineId Id="2" Count="1" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="5" Count="1" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VFS.IO">
-      <LineId Id="10" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="13" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
