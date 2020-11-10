@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VCN" Id="{b91718c1-ee94-477e-afdc-a1b96008e0fd}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function implements the Basic functions for the Pfeiffer EVR 116 needle valve*)
-FUNCTION_BLOCK FB_VCN
+FUNCTION_BLOCK FB_VCN EXTENDS FB_Valve
 VAR_INPUT
 	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
 	i_ReqPos	:	REAL; //Requested position
@@ -93,6 +93,48 @@ q_iRawPosition := iq_stVCN.q_iRawPosition;
 iq_stVCN.i_iPosition := iq_stvcn.q_iRawPosition;]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_Logger" Id="{27c2c208-aab6-43da-87a4-9a73b02208f3}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+
+IF NOT (iq_stVCN.xIlkOK ) AND NOT(ePrevState = CloseValve) THEN
+ 		fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+//Control STATE Logger  
+IF ePrevState <> iq_stVCN.eValveControl THEN
+	  CASE iq_stVCN.eValveControl OF
+		ManualControl:
+			fbLogger(sMsg:='Valve in manual control mode', eSevr:=TcEventSeverity.Warning);
+		OpenValve:
+			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+		PressureControl:
+			fbLogger(sMsg:='Valve in pressure control mode.', eSevr:=TcEventSeverity.Info);
+		CloseValve:
+			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stVCN.eValveControl;  
+  END_IF
+ 
+
+// Log valve open
+tAction(CLK:= (iq_stVCN.eValveControl = OpenValve) );
+IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEventSeverity.Info); END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_SetThrottle" Id="{6aa2c134-f3ab-4cc1-9ed9-8718a4b7a174}">
+      <Declaration><![CDATA[METHOD M_SetThrottle : BOOL
+VAR_INPUT
+	rUpperLimit	:	REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+iq_stVCN.rUpperLimit := LIMIT(0, rUpperLimit, 100);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_ValveControl" Id="{cbcd5e0b-59b7-45f1-86d7-5c7278df4f56}">
       <Declaration><![CDATA[METHOD M_ValveControl : BOOL
 VAR_INPUT
@@ -103,31 +145,5 @@ END_VAR
         <ST><![CDATA[iq_stVCN.eValveControl := state;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VCN">
-      <LineId Id="3" Count="18" />
-      <LineId Id="25" Count="2" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="31" Count="3" />
-      <LineId Id="75" Count="1" />
-      <LineId Id="35" Count="2" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="46" Count="1" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="120" Count="4" />
-      <LineId Id="119" Count="0" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="84" Count="0" />
-      <LineId Id="73" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN.ACT_IO">
-      <LineId Id="2" Count="0" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="3" Count="1" />
-    </LineIds>
-    <LineIds Name="FB_VCN.M_ValveControl">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
