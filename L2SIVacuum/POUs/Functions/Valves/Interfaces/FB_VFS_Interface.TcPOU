@@ -16,7 +16,8 @@ VAR_OUTPUT
 	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 END_VAR
 VAR
-	
+	rtTriggerVetoed : R_TRIG;
+	rtTriggered : R_TRIG;
 	tonOvrd	:	TON;
 	tOvrd	:	TIME := T#10s;
 	(*outputs*)
@@ -110,7 +111,13 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.
 // Log override mode enabled
 tOverrideActivated(CLK:= (tonOvrd.Q AND q_xOverrideMode));
 IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
-]]></ST>
+
+//Log when the trigger is vetoed
+rtTriggerVetoed(CLK:= (NOT(q_xPRESS_OK) OR NOT(i_xTrigger)) AND (NOT q_xVetoValveOpenDO AND q_xVetoValveClosed));
+IF rtTriggerVetoed.Q THEN fbLogger(sMsg:='Valve triggered while veto device is in', eSevr:=TcEventSeverity.Warning); END_IF
+
+rtTriggered(CLK:= ((q_xPRESS_OK) OR (i_xTrigger)) AND ( q_xVetoValveOpenDO AND NOT q_xVetoValveClosed));
+IF rtTriggered.Q THEN fbLogger(sMsg:='Fast valve triggered!', eSevr:=TcEventSeverity.Critical); END_IF]]></ST>
       </Implementation>
     </Action>
     <Action Name="IO" Id="{312ade16-8536-4df0-9a4e-8f0b63330a33}">
