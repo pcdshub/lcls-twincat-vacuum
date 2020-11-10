@@ -11,7 +11,7 @@ VAR_INPUT
 	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
 	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
 	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
-	i_xVeto:BOOL:= FALSE; (*Set to TRUE if there is a Veto Valve to this VFS*)
+	i_xVeto_Enable:BOOL:= FALSE; (*Set to TRUE if there is a Veto Valve to this VFS*)
 END_VAR
 VAR_IN_OUT
 	io_fbFFHWO    :    FB_HardwareFFOutput;
@@ -106,7 +106,7 @@ END_IF
 
 
 (*set Veto bit*)
-IF (i_xVeto) THEN
+IF (i_xVeto_Enable) THEN
 	xVeto := (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
 	ELSE xVeto:=FALSE;
 END_IF
