@@ -75,7 +75,7 @@ STRUCT
     '}
 	xERR_ExtFault		: 	BOOL;
 	xAlmSum			: 	BOOL;
-	
+	sDevName :STRING;
 (*ILK Devices*)
 {attribute 'pytmc' := '
     pv: ILK_DEVICE_US;

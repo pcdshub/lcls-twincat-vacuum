@@ -16,7 +16,7 @@ VAR_OUTPUT
 	{attribute 'pytmc' := '
     pv:
 	'}
-		iq_stValve : ST_VRC;
+		iq_stValve : ST_VRC_NO;
 END_VAR
 VAR
 
@@ -32,18 +32,7 @@ VAR
 	tTimeOutDuration: TIME:= T#30S;
 	tOPNtimeout: TON;
 	tCLStimeout:TON;
-		{attribute 'pytmc' := '
-	pv: CLS_SW ;
-	field: ONAM CLOSE; 
-	field: ZNAM OPEN;
-	io: io ;
-	'}
-	pv_xCLS_SW	: BOOL;
-	{attribute 'pytmc' := '
-    pv: FORCE_CLS;
-	io: io;
-	'}
-	pv_xOvrdCls	:	BOOL;
+	
 
 (*IO*)
 	i_xOpnLS	AT%I*: BOOL;
@@ -57,7 +46,7 @@ END_VAR]]></Declaration>
 (* On first PLC pass, put valve into vented state, which implies a closed valve *)
 fbFSInit( CLK := TRUE, Q => xFirstPass);
 IF xFirstPass THEN
-	pv_xCLS_SW := FALSE;
+	iq_stValve.pv_xCLS_SW := FALSE;
 END_IF
 
 
@@ -80,7 +69,7 @@ END_IF
 (*evaluate Valve CLose external interlock*)
 iq_stValve.xCLS_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xCLS_OK and NOT tonOvrd.Q THEN
-	pv_xCLS_SW := FALSE;
+	iq_stValve.pv_xCLS_SW := FALSE;
 END_IF
 
 
@@ -92,18 +81,18 @@ when the valve permission goes true for more than ten seconds consistently, remo
 
 tonDelOK(IN:=iq_stValve.xCLS_OK, PT:=T#10S);
 rtOK(CLK:=tonDelOK.Q);
-IF rtOK.Q AND pv_xOvrdCls THEN 
-	pv_xOvrdCls :=FALSE; 
-	if (iq_stValve.eState=CLOSED) AND (i_xOverrideMode) THEN pv_xCLS_SW := TRUE; END_IF
+IF rtOK.Q AND iq_stValve.pv_xOvrdCls THEN 
+	iq_stValve.pv_xOvrdCls :=FALSE; 
+	if (iq_stValve.eState=CLOSED) AND (i_xOverrideMode) THEN iq_stValve.pv_xCLS_SW := TRUE; END_IF
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
 
 //Override timer
-tonOvrd(IN:=pv_xOvrdCls, PT:=tOvrd);
+tonOvrd(IN:=iq_stValve.pv_xOvrdCls, PT:=tOvrd);
 
 (* Here's where the valve Actuates *)
-q_xCLS_DO := ((iq_stValve.xCLS_OK  AND pv_xCLS_SW)OR (tonOvrd.Q AND i_xOverrideMode));
+q_xCLS_DO := ((iq_stValve.xCLS_OK  AND iq_stValve.pv_xCLS_SW)OR (tonOvrd.Q AND i_xOverrideMode));
 iq_stValve.q_xOPN_DO := NOT q_xCLS_DO;
 
 
@@ -170,7 +159,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[This^.pv_xCLS_SW := value;]]></ST>
+        <ST><![CDATA[This^.iq_stValve.pv_xCLS_SW := value;]]></ST>
       </Implementation>
     </Method>
   </POU>

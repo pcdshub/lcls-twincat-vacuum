@@ -92,6 +92,12 @@
     <Compile Include="DUTs\Valves\ST_VGC_2S.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Valves\ST_VRC_NO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\ST_VWC_NO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Valves\ST_VVC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -303,6 +309,10 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VRC_NO.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VRC_NO_FFO.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>

@@ -210,6 +210,7 @@ ELSE
 iq_stPTM.i_xFault := FALSE;
 END_IF
 
+st_Pfeiffer_CTRL.xSetSpdMode_026:= iq_stPTM.q_bSetSpd;
 iq_stPTM.i_dSetSpd := LIMIT (0, iq_stPTM.i_dSetSpd, 1500); // 1500 nominal frequency
 IF ( iq_stPTM.i_dSetSpd <>0) THEN
 	st_Pfeiffer_CTRL.iSetRotationSpeed_707 := DINT_TO_INT(iq_stPTM.i_dSetSpd * 100/1500);

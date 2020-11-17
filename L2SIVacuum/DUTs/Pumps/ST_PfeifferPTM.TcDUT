@@ -71,6 +71,14 @@ More?
 	'}
 	i_dSetSpd	:	DINT;
 	
+	{attribute 'pytmc' := '
+	pv: SET_SPEED_MODE;
+	io: io;
+	field: ZNAM FALSE;
+	field: ONAM TRUE;
+	'}
+	q_bSetSpd	:	BOOL;
+	
 //Controls
 	q_uiPowerPct : UINT := 100; //Should normally be 100
 	
