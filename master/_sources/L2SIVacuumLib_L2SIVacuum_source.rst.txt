@@ -632,6 +632,14 @@ ST_PfeifferPTM
     	'}
     	i_dSetSpd	:	DINT;
     	
+    	{attribute 'pytmc' := '
+    	pv: SET_SPEED_MODE;
+    	io: io;
+    	field: ZNAM FALSE;
+    	field: ONAM TRUE;
+    	'}
+    	q_bSetSpd	:	BOOL;
+    	
     //Controls
     	q_uiPowerPct : UINT := 100; //Should normally be 100
     	
@@ -1343,6 +1351,12 @@ ST_VFS
     	io: i;
         '}	
     	sGFS: String;
+    	
+    	{attribute 'pytmc' := '
+        pv: VETO_DEVICE;
+    	io: i;
+        '}
+    	sVetoDeviceName: STRING;
 
     END_STRUCT
     END_TYPE
@@ -1580,7 +1594,7 @@ ST_VGC
         '}
     	xERR_ExtFault		: 	BOOL;
     	xAlmSum			: 	BOOL;
-    	
+    	sDevName :STRING;
     (*ILK Devices*)
     {attribute 'pytmc' := '
         pv: ILK_DEVICE_US;
@@ -1648,6 +1662,41 @@ ST_VRC
     END_TYPE
 
 
+ST_VRC_NO
+^^^^^^^^^
+
+::
+
+    TYPE ST_VRC_NO EXTENDS ST_ValveBase:
+    STRUCT
+    (* Readbacks *)
+    	//In case VRC is normally open
+    	{attribute 'pytmc' := '
+        pv: CLS_OK;
+    	field: ONAM CLOSE; 
+    	field: ZNAM OPEN;
+    	io: i;
+        '}
+    	xCLS_OK : BOOL := TRUE;
+    	{attribute 'pytmc' := '
+    	pv: CLS_SW ;
+    	field: ONAM CLOSE; 
+    	field: ZNAM OPEN;
+    	io: io ;
+    	'}
+    	pv_xCLS_SW	: BOOL;
+    	{attribute 'pytmc' := '
+        pv: FORCE_CLS;
+    	field: ONAM CLOSE; 
+    	field: ZNAM OPEN;
+    	io: io;
+    	'}
+    	pv_xOvrdCls	:	BOOL;
+
+    END_STRUCT
+    END_TYPE
+
+
 ST_VVC
 ^^^^^^
 
@@ -1695,6 +1744,41 @@ ST_VVC
     	io: i;
     	'}
     	q_xOPN_DO	: BOOL;
+
+    END_STRUCT
+    END_TYPE
+
+
+ST_VWC_NO
+^^^^^^^^^
+
+::
+
+    TYPE ST_VWC_NO EXTENDS ST_VGC:
+    STRUCT
+    (* Readbacks *)
+    	//In case VRC is normally open
+    	{attribute 'pytmc' := '
+        pv: CLS_OK;
+    	field: ONAM CLOSE; 
+    	field: ZNAM OPEN;
+    	io: i;
+        '}
+    	xCLS_OK : BOOL := TRUE;
+    	{attribute 'pytmc' := '
+    	pv: CLS_SW ;
+    	field: ONAM CLOSE; 
+    	field: ZNAM OPEN;
+    	io: io ;
+    	'}
+    	pv_xCLS_SW	: BOOL;
+    	{attribute 'pytmc' := '
+        pv: FORCE_CLS;
+    	field: ONAM CLOSE; 
+    	field: ZNAM OPEN;
+    	io: io;
+    	'}
+    	pv_xOvrdCls	:	BOOL;
 
     END_STRUCT
     END_TYPE
@@ -6797,7 +6881,7 @@ FB_VCN
 ::
 
     (* This function implements the Basic functions for the Pfeiffer EVR 116 needle valve*)
-    FUNCTION_BLOCK FB_VCN
+    FUNCTION_BLOCK FB_VCN EXTENDS FB_Valve
     VAR_INPUT
     	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
     	i_ReqPos	:	REAL; //Requested position
@@ -6884,6 +6968,34 @@ FB_VCN
     (*inputs*)
     iq_stVCN.i_iPosition := iq_stvcn.q_iRawPosition;
     END_ACTION
+    ACTION ACT_Logger:
+    // ILK logger
+
+    IF NOT (iq_stVCN.xIlkOK ) AND NOT(ePrevState = CloseValve) THEN
+     		fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+    END_IF
+
+
+    //Control STATE Logger  
+    IF ePrevState <> iq_stVCN.eValveControl THEN
+    	  CASE iq_stVCN.eValveControl OF
+    		ManualControl:
+    			fbLogger(sMsg:='Valve in manual control mode', eSevr:=TcEventSeverity.Warning);
+    		OpenValve:
+    			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+    		PressureControl:
+    			fbLogger(sMsg:='Valve in pressure control mode.', eSevr:=TcEventSeverity.Info);
+    		CloseValve:
+    			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+    	  END_CASE
+    	  ePrevState := iq_stVCN.eValveControl;  
+      END_IF
+     
+
+    // Log valve open
+    tAction(CLK:= (iq_stVCN.eValveControl = OpenValve) );
+    IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEventSeverity.Info); END_IF
+    END_ACTION
 
 
 FB_VFS
@@ -6901,6 +7013,7 @@ FB_VFS
     	i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
     	i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
     	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
+    	i_xVeto_Enable:BOOL:= FALSE; (*Set to TRUE if there is a Veto Valve to this VFS*)
     END_VAR
     VAR_IN_OUT
     	io_fbFFHWO    :    FB_HardwareFFOutput;
@@ -6908,6 +7021,7 @@ FB_VFS
     VAR
     	xOPN_OK :BOOL;
     	xERR_ExtFault :BOOL; 
+    	xVeto: BOOL;
     	// PMPS
     	fbFF    :    FB_FastFault :=(
             i_DevName := 'VFS',
@@ -6953,6 +7067,10 @@ FB_VFS
     	q_xOPN_DO	AT%Q*: BOOL;
     	i_xTrigger	AT%I*: BOOL; 
     	
+    	(*VETO Devices*)
+    	i_xVetoValveOpenDO AT%I*: BOOL;
+    	i_xVetoValveClosed AT%I*: BOOL;
+    	
     	// Interface
     	i_xPress_OK AT%I*:BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
     	i_xOPN_SW AT%I*:BOOL;
@@ -6985,13 +7103,29 @@ FB_VFS
     	xFirstPass := FALSE;
     END_IF
 
+
+    (*set Veto bit*)
+    IF (i_xVeto_Enable) THEN
+    	xVeto := (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
+    	ELSE xVeto:=FALSE;
+    END_IF
+
+    //xVeto:= i_xVeto AND (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
     (* Input Trigger to close the Fast Shutter*)
     (* Neighboring Valves Should also be triggered to Close*)
-    IF (i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK)  OR i_xCLS_SW  THEN 
+    IF ((i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK))  AND NOT(xVeto) AND NOT (tonOvrd.Q AND i_xOverrideMode) THEN 
     	xClose:= TRUE;
     	xOpen:= FALSE;
     	q_xVAC_FAULT_OK:= FALSE;
-    	IF (NOT i_xCLS_SW) THEN xERR_ExtFault := TRUE; END_IF;
+    	xERR_ExtFault := TRUE; ;
+    	i_xCLS_SW := TRUE;
+    	q_xOPN_DO := FALSE;
+    	//i_xOPN_SW :=FALSE;
+    	xOpen:=FALSE;
+    ELSIF (i_xCLS_SW) THEN
+    	xClose:= TRUE;
+    	xOpen:= FALSE;
+    	q_xVAC_FAULT_OK:= FALSE;
     	i_xCLS_SW := TRUE;
     	q_xOPN_DO := FALSE;
     	//i_xOPN_SW :=FALSE;
@@ -7019,12 +7153,12 @@ FB_VFS
     END_IF
 
     (* Neighboring Valves Interlock bit is reset When the Vacuum event error is reset and the Shutter is opened *)
-    IF (NOT i_xTrigger) AND (NOT xERR_ExtFault) AND i_xOpnLS THEN
+    IF ((NOT i_xTrigger) OR xVeto) AND (NOT xERR_ExtFault) AND i_xOpnLS THEN
     	q_xVAC_FAULT_OK := TRUE;
     END_IF
 
     (*OPN OK evaluation bit *)
-    xOPN_OK := (NOT xERR_ExtFault) AND NOT i_xTrigger;
+    xOPN_OK := (NOT xERR_ExtFault) AND (NOT i_xTrigger OR xVeto) ;
 
     (* If Epics Command to close the Valve, check if PMPS, otherwise Keep command set to open valve *)
     // is there really a PMPS requirment.
@@ -7032,7 +7166,7 @@ FB_VFS
 
 
     (* When the valve  is open MPS is OK*)
-    q_xMPS_OK := i_xOpnLS AND NOT i_xTrigger AND i_xPress_OK AND NOT(i_xCLS_SW);
+    q_xMPS_OK := i_xOpnLS AND ((NOT i_xTrigger AND i_xPress_OK) OR xVeto)  AND NOT(i_xCLS_SW);
 
 
     (* Override logic *)
@@ -7089,8 +7223,13 @@ FB_VFS
 
     //iq_stValve.bErrorPresent R= i_xResetFault;
 
-    IF NOT i_xTrigger AND i_xPress_OK THEN
-    	xERR_ExtFault R= i_xVAC_FAULT_Reset;
+    IF (NOT i_xTrigger AND i_xPress_OK) OR xVeto THEN
+    	xERR_ExtFault := FALSE;
+    	//i_xVAC_FAULT_Reset:=FALSE;
+    END_IF
+
+
+    IF (i_xTrigger OR NOT i_xPress_OK) AND NOT xVeto THEN
     	i_xVAC_FAULT_Reset:=FALSE;
     END_IF
     END_ACTION
@@ -7111,6 +7250,7 @@ FB_VFS_Interface
     FUNCTION_BLOCK FB_VFS_Interface EXTENDS FB_Valve
     VAR_INPUT
     	IG : ST_VG; // The MKS422 Cold Cathode Data Structure
+    	Veto_Valve: ST_VGC;// The VGC structure for the Veto Valve
     END_VAR
     VAR_OUTPUT
     	{attribute 'pytmc' := '
@@ -7120,7 +7260,8 @@ FB_VFS_Interface
     	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
     END_VAR
     VAR
-    	
+    	rtTriggerVetoed : R_TRIG;
+    	rtTriggered : R_TRIG;
     	tonOvrd	:	TON;
     	tOvrd	:	TIME := T#10s;
     	(*outputs*)
@@ -7131,6 +7272,9 @@ FB_VFS_Interface
     	q_xOverrideMode AT%Q*: BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
     	q_xOverrideOpen AT%Q*: BOOL;
     	
+    	(*VETO Devices*)
+    	q_xVetoValveOpenDO AT%Q*: BOOL;
+    	q_xVetoValveClosed AT%Q*: BOOL;
     	(*inputs*)
     	i_xTrigger AT %I* : BOOL;
     	i_xVFS_Open AT %I* : BOOL;
@@ -7143,6 +7287,9 @@ FB_VFS_Interface
     	'}
     	i_xMPS_OK AT%I*: BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
     	i_eVFS_State AT%I*: E_VGC; (*Interface*)
+    	
+    	
+    	
     END_VAR
     (*soft IO Mapping*)
 
@@ -7207,6 +7354,13 @@ FB_VFS_Interface
     // Log override mode enabled
     tOverrideActivated(CLK:= (tonOvrd.Q AND q_xOverrideMode));
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
+
+    //Log when the trigger is vetoed
+    rtTriggerVetoed(CLK:= (NOT(q_xPRESS_OK) OR NOT(i_xTrigger)) AND (NOT q_xVetoValveOpenDO AND q_xVetoValveClosed));
+    IF rtTriggerVetoed.Q THEN fbLogger(sMsg:='Valve triggered while veto device is in', eSevr:=TcEventSeverity.Warning); END_IF
+
+    rtTriggered(CLK:= ((q_xPRESS_OK) OR (i_xTrigger)) AND ( q_xVetoValveOpenDO AND NOT q_xVetoValveClosed));
+    IF rtTriggered.Q THEN fbLogger(sMsg:='Fast valve triggered!', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
     ACTION IO:
     (*inputs*)
@@ -7223,9 +7377,17 @@ FB_VFS_Interface
     q_xOverrideOpen := iq_stValve.pv_xOvrdOpn ;
     iq_stValve.sGFS := IG.sPath;
 
+    (*Veto*)
+    (*VETO Devices*)
+    q_xVetoValveOpenDO := Veto_Valve.q_xOPN_DO;
+    q_xVetoValveClosed := Veto_Valve.i_xClsLS;
+
     //reset the commands 
     IF ( iq_stValve.i_xOpnLS) THEN iq_stValve.pv_xOPN_SW := FALSE; END_IF
     IF ( iq_stValve.i_xClsLS) THEN iq_stValve.xCLS_SW := FALSE; END_IF
+
+    //Veto device name
+    iq_stValve.sVetoDeviceName := Veto_Valve.sDevName;
     END_ACTION
 
 
@@ -7378,6 +7540,7 @@ FB_VGC
     	iq_stValve.eVGC_State := Vented;
     	iq_stValve.pv_xOPN_SW := FALSE;
     	FFO.i_DevName := i_sDevName;
+    	iq_stValve.sDevName := i_sDevName;
     END_IF
 
 
@@ -9412,7 +9575,7 @@ FB_VRC_NO
     	{attribute 'pytmc' := '
         pv:
     	'}
-    		iq_stValve : ST_VRC;
+    		iq_stValve : ST_VRC_NO;
     END_VAR
     VAR
 
@@ -9428,18 +9591,7 @@ FB_VRC_NO
     	tTimeOutDuration: TIME:= T#30S;
     	tOPNtimeout: TON;
     	tCLStimeout:TON;
-    		{attribute 'pytmc' := '
-    	pv: CLS_SW ;
-    	field: ONAM CLOSE; 
-    	field: ZNAM OPEN;
-    	io: io ;
-    	'}
-    	pv_xCLS_SW	: BOOL;
-    	{attribute 'pytmc' := '
-        pv: FORCE_CLS;
-    	io: io;
-    	'}
-    	pv_xOvrdCls	:	BOOL;
+    	
 
     (*IO*)
     	i_xOpnLS	AT%I*: BOOL;
@@ -9452,7 +9604,7 @@ FB_VRC_NO
     (* On first PLC pass, put valve into vented state, which implies a closed valve *)
     fbFSInit( CLK := TRUE, Q => xFirstPass);
     IF xFirstPass THEN
-    	pv_xCLS_SW := FALSE;
+    	iq_stValve.pv_xCLS_SW := FALSE;
     END_IF
 
 
@@ -9475,7 +9627,7 @@ FB_VRC_NO
     (*evaluate Valve CLose external interlock*)
     iq_stValve.xCLS_OK := i_xExtILK_OK;
     IF NOT iq_stValve.xCLS_OK and NOT tonOvrd.Q THEN
-    	pv_xCLS_SW := FALSE;
+    	iq_stValve.pv_xCLS_SW := FALSE;
     END_IF
 
 
@@ -9487,18 +9639,18 @@ FB_VRC_NO
 
     tonDelOK(IN:=iq_stValve.xCLS_OK, PT:=T#10S);
     rtOK(CLK:=tonDelOK.Q);
-    IF rtOK.Q AND pv_xOvrdCls THEN 
-    	pv_xOvrdCls :=FALSE; 
-    	if (iq_stValve.eState=CLOSED) AND (i_xOverrideMode) THEN pv_xCLS_SW := TRUE; END_IF
+    IF rtOK.Q AND iq_stValve.pv_xOvrdCls THEN 
+    	iq_stValve.pv_xOvrdCls :=FALSE; 
+    	if (iq_stValve.eState=CLOSED) AND (i_xOverrideMode) THEN iq_stValve.pv_xCLS_SW := TRUE; END_IF
         //Log
         fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
     END_IF
 
     //Override timer
-    tonOvrd(IN:=pv_xOvrdCls, PT:=tOvrd);
+    tonOvrd(IN:=iq_stValve.pv_xOvrdCls, PT:=tOvrd);
 
     (* Here's where the valve Actuates *)
-    q_xCLS_DO := ((iq_stValve.xCLS_OK  AND pv_xCLS_SW)OR (tonOvrd.Q AND i_xOverrideMode));
+    q_xCLS_DO := ((iq_stValve.xCLS_OK  AND iq_stValve.pv_xCLS_SW)OR (tonOvrd.Q AND i_xOverrideMode));
     iq_stValve.q_xOPN_DO := NOT q_xCLS_DO;
 
 
@@ -9536,6 +9688,109 @@ FB_VRC_NO
     iq_stValve.xOverrideMode := i_xOverrideMode;
     (*outputs*)
     //q_xOPN_DO:= iq_stValve.q_xOPN_DO;
+    END_ACTION
+
+
+FB_VRC_NO_FFO
+^^^^^^^^^^^^^
+
+::
+
+    (* This function block is different from the regular VRC in that CLOSING must be permitted. *)
+    FUNCTION_BLOCK FB_VRC_NO_FFO EXTENDS FB_VRC_NO
+    VAR_IN_OUT
+    	io_fbFFHWO    :    FB_HardwareFFOutput;
+    	fbArbiter: FB_Arbiter();
+    END_VAR
+    VAR_INPUT
+    	i_xPMPS_OK:	BOOL	; (*Set to True To switch off the bptm and PMPS Arbiter*)
+    	i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
+    	i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
+    	i_nTransitionRootID: UDINT; //A unique transition Root ID that is equal to or greater than 1000i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
+    END_VAR
+    VAR_OUTPUT
+    	
+    END_VAR
+    VAR
+
+    	xPMPS_OK:	BOOL	; (*PMPS interlock*)
+    	bMoving : BOOL;
+    	bDone :BOOL;
+    	tBPTMtimeout:TON;
+    	bptm: BeamParameterTransitionManager;  
+    	FFO    :    FB_FastFault :=(
+            i_DevName := 'VGC',
+            i_Desc := 'Fault occurs when the valve is not in safe state',
+            i_TypeCode := 16#1010);
+    	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
+
+    END_VAR
+    (*PMPS*)
+    IF NOT(i_xPMPS_OK) THEN
+    	ACT_PMPS();
+    END_IF
+    (*when interlock is lost the Valve closes regardless of the status of the PMPS and EPS*)
+    xPMPS_OK := i_xPMPS_OK OR (bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q);
+    IF NOT (iq_stValve.xOPN_OK) THEN
+    	iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
+    	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+    ELSIF xPMPS_OK THEN 
+    	iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+    //ELSIF NOT (i_xPMPS_OK) THEN
+    	// Only override mode
+    	//iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
+    END_IF
+
+    (*MPS Fault setting*)
+    If (i_xIsAperture ) THEN 
+    	(* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
+    	xMPS_OK := (i_xOpnLS  AND NOT q_xCLS_DO) XOR (i_xClsLS  AND q_xCLS_DO); 
+    ELSE
+    	(* When the valve  is open MPS is OK*)
+    	xMPS_OK := i_xOpnLS AND NOT i_xClsLS AND q_xCLS_DO; 
+    END_IF
+
+    (*FAST FAULT*)
+    FFO(i_xOK := xMPS_OK,
+        i_xReset := ,
+    	i_xAutoReset :=TRUE,
+        io_fbFFHWO := io_fbFFHWO);
+
+    END_FUNCTION_BLOCK
+    ACTION ACT_IO:
+    (*inputs*)
+    iq_stValve.i_xOpnLS := 	i_xOpnLS;
+    iq_stValve.i_xClsLS:=	i_xClsLS;
+    //iq_stValve. := i_xEXT_OK;
+    iq_stValve.xOverrideMode := i_xOverrideMode;
+    (*outputs*)
+    //q_xOPN_DO:= iq_stValve.q_xOPN_DO;
+    END_ACTION
+    ACTION ACT_PMPS:
+    bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);
+    bDone := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xOpnLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xClsLS);
+    If (i_xIsAperture ) OR (iq_stValve.pv_xOPN_SW )THEN
+    	bptm.i_stRequestedAssertion := PMPS_GVL.cstFullBeam;
+    ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cst0RateBeam;
+    END_IF
+    bptm(fbArbiter:=fbArbiter,
+         i_TransitionAssertionID:=i_nTransitionRootID+2,
+         i_stTransitionAssertion:=PMPS_GVL.cst0RateBeam,
+         i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xOPN_SW),
+         i_stRequestedAssertion:=,
+         i_xMoving:=bMoving,
+         i_xDoneMoving:= bDone,
+         stCurrentBeamParameters:=PMPS_GVL.stCurrentBeamParameters,
+         q_xTransitionAuthorized=>);
+    // Timeout
+    tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
+    //xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
+
+    //Timeout and clear request
+    IF (tBPTMtimeout.Q) THEN
+    	fbArbiter.RemoveRequest(bptm.i_TransitionAssertionID);
+    	fbArbiter.RemoveRequest(bptm.i_nRequestedAssertionID);
+    END_IF
     END_ACTION
 
 
