@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_VRC_ADS" Id="{62d6dcd1-3220-4c73-8e2c-10ee9b1d759d}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block is created for interface devices between different PLC*)
+(* Not all the fields in the original structure is required, just few signals *)
+(*Use with FB_ADS_WATCHDOG on remotePLC*)
+FUNCTION_BLOCK FB_VRC_ADS extends FB_ADS
+VAR_INPUT
+	sNetId : String; //NetID of the Destination PLC controller
+	nPort : UINT; // port number
+	sVarName : string;// the variable name of the (device) declared function block.
+	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := 'pv: '}
+	VRC:ST_VRC;
+	bError:BOOL;
+END_VAR
+VAR
+	fb_CheckWatchdog: FB_CheckWatchdog;
+	fb_Read_VRC: FB_ReadAdsSymByName;
+	ftReset: F_TRIG;
+	xFirstPass: bool:= true;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ftReset(CLK:= fb_Read_VRC.bBusy OR xFirstPass);
+xFirstPass:=false;
+(*calling ADS read function*)
+fb_Read_VRC(
+	bRead:= ftReset.Q, 
+	sNetId:= sNetId, 
+	nPort:= nPort, 
+	sVarName:= CONCAT(sVarName,'.iq_stValve'), 
+	nDestAddr:= ADR(VRC), 
+	nLen:= SIZEOF(VRC), 
+	tTimeout:= , 
+	eComMode:= eAdsComModeFastCom, 
+	bBusy=> , 
+	bError=> , 
+	nErrorId=> );
+	
+
+(*Error*)
+fb_CheckWatchdog(
+	bEnable:= TRUE, 
+	tWatchdogTime:= T#900ms, 
+	nCnt:= iWatchdog , 
+	bWatchdog=> , 
+	nLastCnt=> );
+bError:= fb_Read_VRC.bError OR fb_CheckWatchdog.bWatchdog;
+
+ACT_Logger();]]></ST>
+    </Implementation>
+    <Action Name="ACT_Logger" Id="{2f6483d2-1341-4cbf-b9e4-42e2ac469146}">
+      <Implementation>
+        <ST><![CDATA[IF tErrorPresent.Q THEN
+ IF(fb_Read_VRC.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
+ IF(fb_CheckWatchdog.bWatchdog) THEN fbLogger(sMsg:='ADS Watchdog Error', eSevr:=TcEventSeverity.Critical); END_IF;
+END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+  </POU>
+</TcPlcObject>

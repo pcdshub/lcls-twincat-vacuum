@@ -367,6 +367,12 @@
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_TVGC_2S_ADS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\Interfaces\FB_VRC_NO_ADS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\Interfaces\FB_VRC_ADS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_VFS_Interface.TcPOU">
       <SubType>Code</SubType>
     </Compile>
