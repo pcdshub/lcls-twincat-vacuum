@@ -19,6 +19,14 @@ STRUCT
 	io: io ;
 	'}
 	pv_xCLS_SW	: BOOL;
+	
+	{attribute 'pytmc' := '
+	pv: CLS_DO ;
+	field: ONAM CLOSE; 
+	field: ZNAM OPEN;
+	io: io ;
+	'}
+	q_xCLS_DO	: BOOL;
 	{attribute 'pytmc' := '
     pv: FORCE_CLS;
 	field: ONAM CLOSE; 
