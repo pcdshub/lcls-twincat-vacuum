@@ -41,6 +41,7 @@ VAR
 	
 	tDelOK	:	TIME := T#60S;
 	tOvrd	:	TIME := T#10s;
+	rTrigOverrideOpen : R_TRIG;
 	
 	xClose: BOOL;
 	xOpen: BOOL;
@@ -175,12 +176,12 @@ q_xMPS_OK := i_xOpnLS AND ((NOT i_xTrigger AND i_xPress_OK) OR xVeto)  AND NOT(i
 Solution: Override only after ten seconds of override, protect against blips,
 when the valve permission goes true for more than ten seconds consistently, remove override
 *)
-
+rTrigOverrideOpen(CLK:= i_xOverrideOpen);
 tonDelOK(IN:=xOPN_OK, PT:=tDelOK);
 rtOK(CLK:=tonDelOK.Q);
 IF rtOK.Q AND i_xOverrideOpen THEN 
 	i_xOverrideOpen :=FALSE;
-	//if (iq_stValve.eState = OPEN) AND (i_xOverrideMode) THEN iq_stValve.pv_xOPN_SW := TRUE; END_IF //for seamless transition   
+	//if (i_xOpnLS) AND (i_xOverrideMode) THEN i_xOPN_SW := TRUE; END_IF //for seamless transition   
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
@@ -229,9 +230,9 @@ fbFF(i_xOK := q_xMPS_OK,
 
 //iq_stValve.bErrorPresent R= i_xResetFault;
 
-IF (NOT i_xTrigger AND i_xPress_OK) OR xVeto THEN
+IF (NOT i_xTrigger AND i_xPress_OK AND i_xVAC_FAULT_Reset) OR xVeto THEN
 	xERR_ExtFault := FALSE;
-	//i_xVAC_FAULT_Reset:=FALSE;
+	i_xVAC_FAULT_Reset:=FALSE;
 END_IF
 
 

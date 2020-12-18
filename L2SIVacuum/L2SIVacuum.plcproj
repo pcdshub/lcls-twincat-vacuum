@@ -160,6 +160,10 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_901_ECAT.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_9XX.TcPOU">
       <SubType>Code</SubType>
     </Compile>

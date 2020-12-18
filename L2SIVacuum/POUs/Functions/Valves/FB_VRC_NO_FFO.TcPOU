@@ -172,7 +172,7 @@ END_IF
 bptm(fbArbiter:=fbArbiter,
      i_TransitionAssertionID:=i_nTransitionRootID+2,
      i_stTransitionAssertion:=PMPS_GVL.cst0RateBeam,
-     i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xCLS_SW),
+     i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT(NOT iq_stValve.pv_xCLS_SW),
      i_stRequestedAssertion:=,
      i_xMoving:=bMoving,
      i_xDoneMoving:= bDone,
