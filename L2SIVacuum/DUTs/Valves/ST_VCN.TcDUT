@@ -48,10 +48,11 @@ STRUCT
 	rIlk_SP	:	REAL := 0.0005;	// Interlock setpoint for gauges on both sides of valve
 	
 	{attribute 'pytmc' := '
-    pv: Throttle;
+    pv: Limit;
 	io: io;
+	autosave_pass1: VAL DESC
     '}
-	rUpperLimit	:	REAL:=100; // Percentage9.1;	//Upper limit on valve open
+	rUpperLimit	:	REAL:=100; // Percentage//Upper limit on valve open
 	{attribute 'pytmc' := '
 	pv: POS_REQ;
 	io: io;
