@@ -57,12 +57,14 @@ Valve position/flow linearization
 Note: Raw position calc is based on 0.5 to 9V span, 32767 bits
 *)
 
+iq_stVCN.rUpperLimit :=  LIMIT(0, iq_stVCN.rUpperLimit, 100);
+
 // Interlocking
 iq_stVCN.xIlkOK := i_xExtIlkOK;
 (*Checking which Control mode is selected*)
 IF iq_stVCN.xIlkOK THEN
 	IF iq_stVCN.eValveControl = OpenValve THEN
-		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;(*Percentage*)// iq_stVCN.rUpperLimit;
+		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;(*Percentage*)
 	ELSIF iq_stVCN.eValveControl = CloseValve THEN
 		iq_stVCN.rReqPosition := 0; (*Percentage*)
 	ELSIF (iq_stVCN.eValveControl = ManualControl) (*AND (iq_stVCN.xOPN_SW)*) THEN

@@ -37,6 +37,7 @@ stPump.xIlkOK := i_xExtIlkOK AND stPump.i_xAlarmOK ;
 
 IF stPump.xIlkOK THEN
 	stPump.q_xRunDO := stPump.pv_xRunSW;
+	stPump.q_xRemote := stPump.pv_xRunSW;
 ELSE
 		stPump.PV_xRunSW := FALSE;
         stPump.q_xRunDO := FALSE;
@@ -107,17 +108,5 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
 ]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_EbaraEVA">
-      <LineId Id="3" Count="30" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_EbaraEVA.ACT_IO">
-      <LineId Id="2" Count="4" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_EbaraEVA.ACT_Logger">
-      <LineId Id="2" Count="28" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

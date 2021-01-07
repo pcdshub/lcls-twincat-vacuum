@@ -20,6 +20,11 @@ VAR
 	rtTriggered : R_TRIG;
 	tonOvrd	:	TON;
 	tOvrd	:	TIME := T#10s;
+	rtOK	:	R_TRIG;
+	tonDelOK : TON;
+	xOPN_OK : BOOL;
+	tDelOK	:	TIME := T#60S;
+
 	(*outputs*)
 	q_xPRESS_OK AT%Q*: BOOL;
 	q_xOPN_SW AT%Q*:BOOL;
@@ -68,6 +73,16 @@ ELSE
 END_IF
 //Override timer
 tonOvrd(IN:=q_xOverrideOpen, PT:=tOvrd);
+tonDelOK(IN:=xOPN_OK, PT:=tDelOK);
+rtOK(CLK:=tonDelOK.Q);
+IF rtOK.Q AND q_xOverrideOpen THEN 
+	q_xOverrideOpen :=FALSE;
+	//if (i_xOpnLS) AND (i_xOverrideMode) THEN i_xOPN_SW := TRUE; END_IF //for seamless transition   
+    //Log
+    fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
+END_IF
+(*OPN OK evaluation bit *)
+xOPN_OK := (i_xVAC_FAULT_OK) AND (NOT i_xTrigger OR (q_xVetoValveClosed AND NOT q_xVetoValveOpenDO)) ;
 (* Soft IO Mapping*)
 IO();
 (*Logger*)

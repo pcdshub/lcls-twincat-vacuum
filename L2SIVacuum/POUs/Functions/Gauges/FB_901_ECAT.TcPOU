@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_901_ECAT" Id="{84706132-589d-4d51-8b00-ab55510b97b2}" SpecialFunc="None">
+    <Declaration><![CDATA[(* works for 901 with Ethercat interface*)
+{attribute 'no_check'}
+FUNCTION_BLOCK FB_901_ECAT  EXTENDS FB_GaugeBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	PG	: ST_VG;
+END_VAR
+VAR_IN_OUT
+	
+END_VAR
+VAR
+	bInit: BOOL:= TRUE;(*IO*)
+	xPress_OK AT%I* : BOOL;
+	xOverrange AT%I* : BOOL;
+	xUnderrange AT%I* : BOOL; 
+	i_iPRESS_R AT%I* :REAL; // input Pressure // Link to analog Input
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Standard MKS 9XX series conversion *)
+(* works for 901 with Ethercat interface*)
+// no div by zero
+PG.rPRESS :=i_iPRESS_R;
+PG.xPRESS_OK := xPress_OK;
+IF xPress_OK THEN
+	PG.xPRESS_OK := TRUE;
+	PG.eState := Valid; //Press OK
+ELSIF xOverrange THEN
+	PG.xPRESS_OK := FALSE;
+	PG.eState := OoR;
+ELSIF xUnderrange THEN
+	PG.xPRESS_OK := FALSE;
+	PG.eState := PressInvalid;
+END_IF
+
+
+
+(*Logger*)
+ACT_Logger();
+(* Soft IO Mapping*)
+ACT_IO();]]></ST>
+    </Implementation>
+    <Action Name="ACT_Init" Id="{79fc3e26-9526-4887-bb81-9ff0cb209da7}">
+      <Implementation>
+        <ST><![CDATA[IF (bInit) THEN
+	bInit := False;
+	
+	//set pressure units to Torr
+	// value 0x00A10000 SDO index 0xf840, si 0x01 UDINT
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_IO" Id="{afe7d8e6-827d-4f4d-895b-401bfcc2f6f0}">
+      <Implementation>
+        <ST><![CDATA[PG.i_iPRESS_R := REAL_TO_INT(i_iPRESS_R);]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Logger" Id="{4887216a-c77e-43cb-a418-2b8dd97c0d8a}">
+      <Implementation>
+        <ST><![CDATA[
+//STATE Logger  
+IF ePrevState <> PG.eState THEN
+	  CASE PG.eState OF
+		ValidHi:
+			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+		ValidLo:
+			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+		Valid:
+			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+  		GaugeDisconnected:
+			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+		PressInvalid:
+			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+		OoR:
+			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+		Starting:
+			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := PG.eState;  
+  END_IF
+  
+
+]]></ST>
+      </Implementation>
+    </Action>
+  </POU>
+</TcPlcObject>
