@@ -1278,10 +1278,11 @@ ST_VCN
     	rIlk_SP	:	REAL := 0.0005;	// Interlock setpoint for gauges on both sides of valve
     	
     	{attribute 'pytmc' := '
-        pv: Throttle;
+        pv: Limit;
     	io: io;
+    	autosave_pass1: VAL DESC
         '}
-    	rUpperLimit	:	REAL:=100; // Percentage9.1;	//Upper limit on valve open
+    	rUpperLimit	:	REAL:=100; // Percentage//Upper limit on valve open
     	{attribute 'pytmc' := '
     	pv: POS_REQ;
     	io: io;
@@ -2169,6 +2170,91 @@ F_VRC_DIODE_ILK_OK
     END_FUNCTION
 
 
+FB_901_ECAT
+^^^^^^^^^^^
+
+::
+
+    (* works for 901 with Ethercat interface*)
+    {attribute 'no_check'}
+    FUNCTION_BLOCK FB_901_ECAT  EXTENDS FB_GaugeBase
+    VAR_INPUT
+    END_VAR
+    VAR_OUTPUT
+    	{attribute 'pytmc' := '
+        pv: 
+    	'}
+    	PG	: ST_VG;
+    END_VAR
+    VAR_IN_OUT
+    	
+    END_VAR
+    VAR
+    	bInit: BOOL:= TRUE;(*IO*)
+    	xPress_OK AT%I* : BOOL;
+    	xOverrange AT%I* : BOOL;
+    	xUnderrange AT%I* : BOOL; 
+    	i_iPRESS_R AT%I* :REAL; // input Pressure // Link to analog Input
+    END_VAR
+    (* Standard MKS 9XX series conversion *)
+    (* works for 901 with Ethercat interface*)
+    // no div by zero
+    PG.rPRESS :=i_iPRESS_R;
+    PG.xPRESS_OK := xPress_OK;
+    IF xPress_OK THEN
+    	PG.xPRESS_OK := TRUE;
+    	PG.eState := Valid; //Press OK
+    ELSIF xOverrange THEN
+    	PG.xPRESS_OK := FALSE;
+    	PG.eState := OoR;
+    ELSIF xUnderrange THEN
+    	PG.xPRESS_OK := FALSE;
+    	PG.eState := PressInvalid;
+    END_IF
+
+
+
+    (*Logger*)
+    ACT_Logger();
+    (* Soft IO Mapping*)
+    ACT_IO();
+
+    END_FUNCTION_BLOCK
+    ACTION ACT_Init:
+    IF (bInit) THEN
+    	bInit := False;
+    	
+    	//set pressure units to Torr
+    	// value 0x00A10000 SDO index 0xf840, si 0x01 UDINT
+    END_IF
+    END_ACTION
+    ACTION ACT_IO:
+    PG.i_iPRESS_R := REAL_TO_INT(i_iPRESS_R);
+    END_ACTION
+    ACTION ACT_Logger:
+    //STATE Logger  
+    IF ePrevState <> PG.eState THEN
+    	  CASE PG.eState OF
+    		ValidHi:
+    			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+    		ValidLo:
+    			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+    		Valid:
+    			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+      		GaugeDisconnected:
+    			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+    		PressInvalid:
+    			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+    		OoR:
+    			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+    		Starting:
+    			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+    	  END_CASE
+    	  ePrevState := PG.eState;  
+      END_IF
+    END_ACTION
+
+
 FB_972
 ^^^^^^
 
@@ -2625,6 +2711,7 @@ FB_EbaraEVA
 
     IF stPump.xIlkOK THEN
     	stPump.q_xRunDO := stPump.pv_xRunSW;
+    	stPump.q_xRemote := stPump.pv_xRunSW;
     ELSE
     		stPump.PV_xRunSW := FALSE;
             stPump.q_xRunDO := FALSE;
@@ -6942,12 +7029,14 @@ FB_VCN
     Note: Raw position calc is based on 0.5 to 9V span, 32767 bits
     *)
 
+    iq_stVCN.rUpperLimit :=  LIMIT(0, iq_stVCN.rUpperLimit, 100);
+
     // Interlocking
     iq_stVCN.xIlkOK := i_xExtIlkOK;
     (*Checking which Control mode is selected*)
     IF iq_stVCN.xIlkOK THEN
     	IF iq_stVCN.eValveControl = OpenValve THEN
-    		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;(*Percentage*)// iq_stVCN.rUpperLimit;
+    		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;(*Percentage*)
     	ELSIF iq_stVCN.eValveControl = CloseValve THEN
     		iq_stVCN.rReqPosition := 0; (*Percentage*)
     	ELSIF (iq_stVCN.eValveControl = ManualControl) (*AND (iq_stVCN.xOPN_SW)*) THEN
@@ -7051,6 +7140,7 @@ FB_VFS
     	
     	tDelOK	:	TIME := T#60S;
     	tOvrd	:	TIME := T#10s;
+    	rTrigOverrideOpen : R_TRIG;
     	
     	xClose: BOOL;
     	xOpen: BOOL;
@@ -7182,12 +7272,12 @@ FB_VFS
     Solution: Override only after ten seconds of override, protect against blips,
     when the valve permission goes true for more than ten seconds consistently, remove override
     *)
-
+    rTrigOverrideOpen(CLK:= i_xOverrideOpen);
     tonDelOK(IN:=xOPN_OK, PT:=tDelOK);
     rtOK(CLK:=tonDelOK.Q);
     IF rtOK.Q AND i_xOverrideOpen THEN 
     	i_xOverrideOpen :=FALSE;
-    	//if (iq_stValve.eState = OPEN) AND (i_xOverrideMode) THEN iq_stValve.pv_xOPN_SW := TRUE; END_IF //for seamless transition   
+    	//if (i_xOpnLS) AND (i_xOverrideMode) THEN i_xOPN_SW := TRUE; END_IF //for seamless transition   
         //Log
         fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
     END_IF
@@ -7231,9 +7321,9 @@ FB_VFS
 
     //iq_stValve.bErrorPresent R= i_xResetFault;
 
-    IF (NOT i_xTrigger AND i_xPress_OK) OR xVeto THEN
+    IF (NOT i_xTrigger AND i_xPress_OK AND i_xVAC_FAULT_Reset) OR xVeto THEN
     	xERR_ExtFault := FALSE;
-    	//i_xVAC_FAULT_Reset:=FALSE;
+    	i_xVAC_FAULT_Reset:=FALSE;
     END_IF
 
 
@@ -7272,6 +7362,11 @@ FB_VFS_Interface
     	rtTriggered : R_TRIG;
     	tonOvrd	:	TON;
     	tOvrd	:	TIME := T#10s;
+    	rtOK	:	R_TRIG;
+    	tonDelOK : TON;
+    	xOPN_OK : BOOL;
+    	tDelOK	:	TIME := T#60S;
+
     	(*outputs*)
     	q_xPRESS_OK AT%Q*: BOOL;
     	q_xOPN_SW AT%Q*:BOOL;
@@ -7319,6 +7414,16 @@ FB_VFS_Interface
     END_IF
     //Override timer
     tonOvrd(IN:=q_xOverrideOpen, PT:=tOvrd);
+    tonDelOK(IN:=xOPN_OK, PT:=tDelOK);
+    rtOK(CLK:=tonDelOK.Q);
+    IF rtOK.Q AND q_xOverrideOpen THEN 
+    	q_xOverrideOpen :=FALSE;
+    	//if (i_xOpnLS) AND (i_xOverrideMode) THEN i_xOPN_SW := TRUE; END_IF //for seamless transition   
+        //Log
+        fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
+    END_IF
+    (*OPN OK evaluation bit *)
+    xOPN_OK := (i_xVAC_FAULT_OK) AND (NOT i_xTrigger OR (q_xVetoValveClosed AND NOT q_xVetoValveOpenDO)) ;
     (* Soft IO Mapping*)
     IO();
     (*Logger*)
@@ -9870,7 +9975,7 @@ FB_VRC_NO_FFO
     bptm(fbArbiter:=fbArbiter,
          i_TransitionAssertionID:=i_nTransitionRootID+2,
          i_stTransitionAssertion:=PMPS_GVL.cst0RateBeam,
-         i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xCLS_SW),
+         i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT(NOT iq_stValve.pv_xCLS_SW),
          i_stRequestedAssertion:=,
          i_xMoving:=bMoving,
          i_xDoneMoving:= bDone,
