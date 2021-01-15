@@ -1,18 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
-  <POU Name="FB_MKS500" Id="{4da1e942-f359-4f6e-ab12-d5a0031e68e6}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500. If connected to Beckhoff EP boxes.
-Set the EP bit to TRUE, this is necessary for the MKS500-to-EP box interface beacuse the EP
-boxes do not natively support the 5v IO signals on the MKS500 gauge.*)
+  <POU Name="FB_CCM501" Id="{a694e345-1167-47e5-8470-6cec1a701b87}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function is for the Cold Cathode CCM 501 fro instrutech (hornet). *)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
 
-FUNCTION_BLOCK FB_MKS500 EXTENDS FB_GaugeBase
+FUNCTION_BLOCK FB_CCM501 EXTENDS FB_GaugeBase
 VAR_IN_OUT
 		
 END_VAR
 VAR_INPUT
 	PG	:	ST_VG;
-	bEP : BOOL :=FALSE; // Set to True if This Gauge is connected to EP BOX and not EL Terminals
 END_VAR
 VAR_OUTPUT
 {attribute 'pytmc' := '
@@ -36,12 +33,11 @@ END_VAR
 
 VAR CONSTANT
 	// Ranges has to match the configurator software
-	pBase : REAL :=1.0E-10;//default curve base pressure is 1E-10. Confusing since can't actually read that low using analog out.
-	vBase : REAL := 1;
-	vDisconnected : REAL:= 0.5;
-	vSlope : REAL := 1.0; 
+	vBase : REAL := 1.25;
+	vDisconnected : REAL:= 1.8;
+	vTorr : REAL := 12.875; 
 	vGaugeOff: REAL := 9.8;
-	vNoDischarge: REAL := 9.3;
+	//vNoDischarge: REAL := 9.3;
 	MinPressure: REAL := 1E-10;
 	cDefaultPressure : REAL := 0;
 	rDeadband : REAL :=0.3;
@@ -56,12 +52,9 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 IF rV < vDisconnected THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
-ELSIF rV >= vDisconnected AND rV < (vNoDischarge -rDeadband)  THEN
+ELSIF rV >= vDisconnected AND rV < (vGaugeOff -rDeadband)  THEN
 	IG.eState := Valid;
-	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-ELSIF rV >= (vNoDischarge -rDeadband) AND rV <(vGaugeOff -rDeadband)   THEN
-	IG.eState := Starting;
-	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV*vBase)- vTorr)));
 ELSIF rV >= (vGaugeOff -rDeadband) THEN
 	IG.eState := Off;
 	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
@@ -72,19 +65,7 @@ ELSE
 	IG.rPRESS := cDefaultPressure;
 END_IF
 
-(* Set Guage State based on the inputs HV ON and Discharge current*)
-If (NOT bEP) THEN
-	IF IG.i_xHV_ON AND NOT IG.i_xDisc_Active THEN
-		IG.eState := Starting;
-		IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-	ELSIF IG.i_xHV_ON AND IG.i_xDisc_Active THEN
-		IG.eState := Valid;
-		IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-	ELSIF NOT IG.i_xHV_ON AND NOT IG.i_xDisc_Active THEN
-		IG.eState := Off;
-		IG.rPRESS := cDefaultPressure;
-	END_IF
-END_IF
+
 
 (* Ion Gauge Protection Functions *)
 (* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
@@ -123,7 +104,7 @@ ACT_Logger();
 IO();
 ]]></ST>
     </Implementation>
-    <Action Name="ACT_Logger" Id="{b6ae699a-8cbc-41c3-94fc-93d1d486cd97}">
+    <Action Name="ACT_Logger" Id="{99961f85-7dce-4ed0-bee5-af963152edee}">
       <Implementation>
         <ST><![CDATA[// ILK logger
 IF (IG.xLog) THEN
@@ -164,7 +145,7 @@ END_IF
 ]]></ST>
       </Implementation>
     </Action>
-    <Action Name="IO" Id="{8ad71ac6-f961-40c8-a3be-ad3367f81f67}">
+    <Action Name="IO" Id="{d8491859-09d0-4a11-84b1-64e10f403b2b}">
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
 IG.i_iPRESS_R:=	i_iPRESS_R; 
@@ -176,7 +157,7 @@ q_xHV_DIS := IG.q_xHV_DIS;
 IG.sPath := sPath;]]></ST>
       </Implementation>
     </Action>
-    <Method Name="M_HVE" Id="{5c5dd30f-1cf9-426d-9ab9-5103df771146}">
+    <Method Name="M_HVE" Id="{5c60ca96-2d6b-4374-b0f5-03f29913a437}">
       <Declaration><![CDATA[METHOD M_HVE : BOOL
 VAR_INPUT
 		enable:bool; // set to true to enable, false to disable;
@@ -187,7 +168,7 @@ END_VAR
 this^.IG.xHV_SW:= enable;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_SetBits" Id="{9316bb83-f8e3-4030-bdca-94efd01af2a5}">
+    <Method Name="M_SetBits" Id="{72c14520-2c59-468a-859d-9b3fd8e0ae82}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
 	TermBits : UINT; // The terminal's maximum value in bits

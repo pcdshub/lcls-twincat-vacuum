@@ -17,7 +17,6 @@
     <Company>SLAC - LCLS</Company>
     <Released>false</Released>
     <Title>LCLS Vacuum</Title>
-    <ProjectVersion>0.0.0</ProjectVersion>
     <DefaultNamespace>LCLS_Vacuum</DefaultNamespace>
     <LibraryCategories>
       <LibraryCategory>
@@ -27,9 +26,10 @@
       </LibraryCategory>
     </LibraryCategories>
     <SelectedLibraryCategories>
-      <Id xmlns="">{a5724f56-da3f-40b6-8a5e-63302d98c4cc}</Id>
+      <Id>{a5724f56-da3f-40b6-8a5e-63302d98c4cc}</Id>
     </SelectedLibraryCategories>
     <Author>LCLS ECS-Platforms</Author>
+    <ProjectVersion>0.0.0</ProjectVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\Gauges\E_PressureState.TcDUT">
@@ -172,6 +172,12 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_GaugeBase.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_CVM201.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_CCM501.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS909.TcPOU">

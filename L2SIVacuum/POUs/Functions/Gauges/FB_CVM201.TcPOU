@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_CVM201" Id="{547a9998-8d74-4c2c-9ae8-75868225bd61}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
+ it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
+(* For CVM 201  convectron SuperBee*)
+{attribute 'no_check'}
+FUNCTION_BLOCK FB_CVM201 EXTENDS FB_GaugeBase
+VAR_IN_OUT
+
+END_VAR
+VAR_INPUT
+END_VAR
+
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	PG : ST_VG;
+END_VAR
+VAR
+	V : REAL;
+	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+	Vlowest: REAL := 10;
+	(*IO*)
+	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR
+
+VAR CONSTANT
+	MinPressure: REAL := 1E-4;
+	rDeadband : REAL :=0.05;
+	rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
+	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
+	rDisconnectedBoundary	:	REAL := 0.3;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
+ it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
+(* For MKS 275 mini-convectron *)
+
+//Default setpoint 50 mT
+IF PG.rVAC_SP = 0 THEN
+	PG.rVAC_SP := 5E-2;
+END_IF
+
+(* Real-value calculation *)
+If (iTermBits=0) THEN iTermBits := 32767;END_IF
+V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;	
+
+Vlowest := MIN(V, Vlowest);
+
+IF V > rDisconnectedBoundary AND V < rValidLoBoundary  THEN
+	PG.rPRESS := MinPressure;
+	PG.eState := ValidLo;
+	
+ELSIF V >= rValidLoBoundary AND V < rValidLoBoundary +rDeadband  THEN
+	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+	PG.eState := ValidLo;
+	
+ELSIF V >= rValidLoBoundary AND V < 2.842 THEN
+	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+	PG.eState := Valid;
+
+ELSIF V >= 2.842 AND V < 4.945 THEN
+	PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
+	PG.eState := Valid;
+
+ELSIF V >= 4.945 AND V < rValidHiBoundary THEN
+	PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
+	PG.eState := ValidHi;
+
+ELSIF V <= rDisconnectedBoundary THEN
+	PG.eState := GaugeDisconnected; //Most likely not connected
+	PG.rPRESS := -1;
+
+ELSE
+	PG.eState := OoR; //Larger voltage, probably out of range?
+	PG.rPRESS := -1;
+END_IF
+
+(* Protection Functions *)
+(* If the PG pressure is greater than the IG.PRO_SP then the gauge is disabled *)
+(* If the PG pressure is less than the IG.PRO_SP then the gauge is enabled *)
+(* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+
+(* Pressure OK check *)
+PG.xPRESS_OK := (PG.rPRESS >= MinPressure);
+
+(* Setpoint evaluation *)
+PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS<=PG.rVAC_SP);
+
+(*Logger*)
+ACT_Logger();
+
+(*Soft IO Mapping *)
+IO();
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_Logger" Id="{7969d63c-632d-445e-9c13-1e5912f29995}">
+      <Implementation>
+        <ST><![CDATA[
+//STATE Logger  
+if (PG.xLog) THEN
+	IF ePrevState <> PG.eState THEN
+	  CASE PG.eState OF
+		ValidHi:
+			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+		ValidLo:
+			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+		Valid:
+			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+  		GaugeDisconnected:
+			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+		PressInvalid:
+			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+		OoR:
+			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+		Starting:
+			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := PG.eState;  
+  END_IF 
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="IO" Id="{78063e3d-3f22-4cc2-aefb-02dd34d50d68}">
+      <Implementation>
+        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;
+PG.sPath := sPath;]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_SetBits" Id="{fdefaff1-6d61-42b8-bd10-ed9063b6a787}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
