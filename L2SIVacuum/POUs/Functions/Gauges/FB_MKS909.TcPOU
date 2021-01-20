@@ -42,7 +42,7 @@ IF PG.rVAC_SP = 0 THEN
 END_IF
 // check no div by zero
 If (iTermBits=0) THEN iTermBits := 30518;END_IF
-rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
+rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (* Pressure OK check *)
 // Gauge state
