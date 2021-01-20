@@ -153,7 +153,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#fb-9xx">FB_9XX</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-ads">FB_ADS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-ads-watchdog">FB_ADS_WATCHDOG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ccm501">FB_CCM501</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-cmr362">FB_CMR362</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-cvm201">FB_CVM201</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-ebaradrypump">FB_EbaraDryPump</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-ebaraeva">FB_EbaraEVA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-gauge-interface">FB_Gauge_Interface</a></li>
@@ -2657,6 +2659,159 @@ END_FUNCTION
 </pre></div>
 </div>
 </div>
+<div class="section" id="fb-ccm501">
+<h2>FB_CCM501<a class="headerlink" href="#fb-ccm501" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Cold</span> <span class="n">Cathode</span> <span class="n">CCM</span> <span class="mi">501</span> <span class="n">fro</span> <span class="n">instrutech</span> <span class="p">(</span><span class="n">hornet</span><span class="p">)</span><span class="o">.</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span><span class="n">This</span> <span class="n">function</span> <span class="n">provides</span> <span class="n">ILK</span> <span class="ow">and</span> <span class="n">Set</span> <span class="n">Point</span> <span class="n">Protection</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Cold</span> <span class="n">Cathode</span><span class="o">*</span><span class="p">)</span>
+
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_CCM501</span> <span class="n">EXTENDS</span> <span class="n">FB_GaugeBase</span>
+<span class="n">VAR_IN_OUT</span>
+
+<span class="n">END_VAR</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">PG</span>      <span class="p">:</span>       <span class="n">ST_VG</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">IG</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">rV</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
+    <span class="n">GaugeTurnOnTmr</span> <span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
+    <span class="n">iTermBits</span><span class="p">:</span> <span class="n">UINT</span> <span class="o">:=</span> <span class="mi">32767</span> <span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">terminal</span><span class="s1">&#39;s maximum value in bits</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">IOs</span> <span class="n">to</span> <span class="n">be</span> <span class="n">linked</span><span class="o">*</span><span class="p">)</span>
+    <span class="o">///</span> <span class="n">Controls</span> <span class="ow">and</span> <span class="n">I</span><span class="o">/</span><span class="n">Os</span>
+    <span class="n">i_iPRESS_R</span> <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span><span class="n">INT</span><span class="p">;</span> <span class="o">//</span> <span class="nb">input</span> <span class="n">Pressure</span> <span class="o">//</span> <span class="n">Link</span> <span class="n">to</span> <span class="n">analog</span> <span class="n">Input</span>
+    <span class="n">q_xHV_DIS</span> <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Enable</span> <span class="n">High</span> <span class="n">Voltage</span> <span class="n">when</span> <span class="kc">True</span> <span class="o">//</span> <span class="s1">&#39;TcLinkTo&#39;</span> <span class="p">(</span><span class="n">EP2624</span><span class="p">)</span> <span class="o">^</span><span class="n">Output</span>
+    <span class="o">//</span> <span class="n">only</span> <span class="k">for</span> <span class="n">EL</span> <span class="ow">and</span> <span class="n">ES</span> <span class="n">terminal</span>
+    <span class="n">i_xHV_ON</span> <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span>  <span class="kc">True</span> <span class="n">when</span> <span class="n">High</span> <span class="n">Voltage</span> <span class="ow">is</span> <span class="n">on</span>  <span class="o">//</span> <span class="s1">&#39;TcLinkTo&#39;</span> <span class="p">(</span><span class="n">EL1124</span><span class="p">)</span> <span class="o">^</span><span class="n">Input</span>
+    <span class="n">i_xDisc_Active</span> <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span><span class="o">//</span> <span class="n">Discharge</span> <span class="n">Current</span> <span class="n">Active</span> <span class="o">//</span> <span class="s1">&#39;TcLinkTo&#39;</span> <span class="p">(</span><span class="n">EL1124</span><span class="p">)</span> <span class="o">^</span><span class="n">Input</span>
+
+<span class="n">END_VAR</span>
+
+<span class="n">VAR</span> <span class="n">CONSTANT</span>
+    <span class="o">//</span> <span class="n">Ranges</span> <span class="n">has</span> <span class="n">to</span> <span class="n">match</span> <span class="n">the</span> <span class="n">configurator</span> <span class="n">software</span>
+    <span class="n">vBase</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1.25</span><span class="p">;</span>
+    <span class="n">vDisconnected</span> <span class="p">:</span> <span class="n">REAL</span><span class="o">:=</span> <span class="mf">1.8</span><span class="p">;</span>
+    <span class="n">vTorr</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">12.875</span><span class="p">;</span>
+    <span class="n">vGaugeOff</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">9.8</span><span class="p">;</span>
+    <span class="o">//</span><span class="n">vNoDischarge</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">9.3</span><span class="p">;</span>
+    <span class="n">MinPressure</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E-10</span><span class="p">;</span>
+    <span class="n">cDefaultPressure</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">rDeadband</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span><span class="mf">0.3</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="p">(</span><span class="o">*</span> <span class="mi">500</span> <span class="n">Logarithmic</span> <span class="n">Output</span> <span class="n">Conversion</span><span class="p">,</span> <span class="n">factory</span> <span class="n">default</span> <span class="n">configuration</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">If</span> <span class="p">(</span><span class="n">iTermBits</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">iTermBits</span> <span class="o">:=</span> <span class="mi">32767</span><span class="p">;</span><span class="n">END_IF</span>
+<span class="n">rV</span> <span class="o">:=</span> <span class="mi">10</span><span class="o">*</span><span class="n">INT_TO_REAL</span><span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">i_iPRESS_R</span><span class="p">)</span><span class="o">/</span><span class="n">iTermBits</span><span class="p">;</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Set</span> <span class="n">Guage</span> <span class="n">State</span> <span class="n">based</span> <span class="n">on</span> <span class="n">the</span> <span class="n">Analog</span> <span class="n">voltage</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">rV</span> <span class="o">&lt;</span> <span class="n">vDisconnected</span> <span class="n">THEN</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">GaugeDisconnected</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">cDefaultPressure</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="n">vDisconnected</span> <span class="n">AND</span> <span class="n">rV</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">vGaugeOff</span> <span class="o">-</span><span class="n">rDeadband</span><span class="p">)</span>  <span class="n">THEN</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">Valid</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,((</span><span class="n">rV</span><span class="o">*</span><span class="n">vBase</span><span class="p">)</span><span class="o">-</span> <span class="n">vTorr</span><span class="p">)));</span>
+<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">vGaugeOff</span> <span class="o">-</span><span class="n">rDeadband</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">Off</span><span class="p">;</span>
+    <span class="o">//</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,((</span><span class="n">rV</span><span class="o">-</span><span class="n">vBase</span><span class="p">)</span><span class="o">/</span><span class="n">vSlope</span><span class="o">+</span><span class="n">LOG</span><span class="p">(</span><span class="n">pBase</span><span class="p">))));</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">cDefaultPressure</span><span class="p">;</span>
+<span class="n">ELSE</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">OoR</span><span class="p">;</span>
+    <span class="o">//</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,((</span><span class="n">rV</span><span class="o">-</span><span class="n">vBase</span><span class="p">)</span><span class="o">/</span><span class="n">vSlope</span><span class="o">+</span><span class="n">LOG</span><span class="p">(</span><span class="n">pBase</span><span class="p">))));</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">cDefaultPressure</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Ion</span> <span class="n">Gauge</span> <span class="n">Protection</span> <span class="n">Functions</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">If</span> <span class="n">the</span> <span class="n">PG</span> <span class="n">pressure</span> <span class="ow">is</span> <span class="n">greater</span> <span class="n">than</span> <span class="n">the</span> <span class="n">VG</span><span class="o">.</span><span class="n">PRO_SP</span> <span class="n">then</span> <span class="n">the</span> <span class="n">gauge</span> <span class="ow">is</span> <span class="n">disabled</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">If</span> <span class="n">the</span> <span class="n">PG</span> <span class="n">pressure</span> <span class="ow">is</span> <span class="n">less</span> <span class="n">than</span> <span class="n">the</span> <span class="n">VG</span><span class="o">.</span><span class="n">PRO_SP</span> <span class="n">then</span> <span class="n">the</span> <span class="n">gauge</span> <span class="ow">is</span> <span class="n">enabled</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">FB</span> <span class="n">also</span> <span class="n">implements</span> <span class="n">some</span> <span class="n">hysteresis</span> <span class="n">so</span> <span class="n">the</span> <span class="n">gauge</span> <span class="n">doesn</span><span class="s1">&#39;t have rapid power cycling while near the turn on boundary *)</span>
+
+
+<span class="n">IF</span> <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="n">AND</span> <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">THEN</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">xILKOk</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="n">THEN</span>
+    <span class="n">IF</span> <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">+</span> <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span><span class="p">)</span>  <span class="n">OR</span> <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">+</span> <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">END_IF</span>
+<span class="n">ELSE</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">xILKOk</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Pressure</span> <span class="n">gauge</span> <span class="n">OK</span> <span class="n">checks</span> <span class="o">*</span><span class="p">)</span>
+
+<span class="n">GaugeTurnOnTmr</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span><span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span><span class="p">,</span> <span class="n">PT</span><span class="o">:=</span><span class="n">T</span><span class="c1">#10S, Q=&gt;IG.xTurnOnTime);</span>
+
+
+<span class="o">//</span><span class="n">Backwards</span> <span class="n">compatibility</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">Valid</span><span class="p">)</span> <span class="n">OR</span> <span class="n">IG</span><span class="o">.</span><span class="n">xBAKEOUT</span><span class="p">;</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Setpoint</span> <span class="n">evaluation</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">xAT_VAC</span> <span class="o">:=</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">AND</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;</span> <span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span><span class="p">))</span> <span class="n">OR</span> <span class="n">IG</span><span class="o">.</span><span class="n">xBAKEOUT</span> <span class="n">AND</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">Valid</span><span class="p">)</span> <span class="p">;</span>
+
+<span class="n">ACT_Logger</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Soft</span> <span class="n">IO</span> <span class="n">Linking</span><span class="o">*</span><span class="p">)</span>
+<span class="o">//</span> <span class="n">check</span> <span class="n">ethercat</span> <span class="n">Diagnostics</span>
+<span class="n">IO</span><span class="p">();</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="o">//</span> <span class="n">ILK</span> <span class="n">logger</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">xLog</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">IF</span> <span class="n">NOT</span> <span class="n">IG</span><span class="o">.</span><span class="n">xILKOk</span> <span class="n">AND</span> <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="n">THEN</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Lost external interlock while gauge was on.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+    <span class="n">END_IF</span>
+
+
+    <span class="o">//</span> <span class="n">Log</span> <span class="n">Action</span>
+    <span class="n">tAction</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span>   <span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span><span class="p">);</span>
+    <span class="n">IF</span> <span class="n">tAction</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Ion gauge commanded to switch on&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span> <span class="n">END_IF</span>
+
+
+
+    <span class="o">//</span><span class="n">STATE</span> <span class="n">Logger</span>
+    <span class="n">tState</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span>  <span class="n">ePrevState</span> <span class="o">&lt;&gt;</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span><span class="p">);</span>
+    <span class="n">IF</span> <span class="n">ePrevState</span> <span class="o">&lt;&gt;</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="n">THEN</span>
+              <span class="n">CASE</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="n">OF</span>
+                    <span class="n">ValidHi</span><span class="p">:</span>
+                            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure valid high.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+                    <span class="n">ValidLo</span><span class="p">:</span>
+                            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure valid low.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+                    <span class="n">Valid</span><span class="p">:</span>
+                            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure valid.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+                    <span class="n">GaugeDisconnected</span><span class="p">:</span>
+                            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge Disconnected.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+                    <span class="n">PressInvalid</span><span class="p">:</span>
+                            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure invalid.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+                    <span class="n">OoR</span><span class="p">:</span>
+                            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure out of range.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+                    <span class="n">Starting</span><span class="p">:</span>
+                            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge starting.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+              <span class="n">END_CASE</span>
+              <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
+      <span class="n">END_IF</span>
+<span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">IO</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">soft</span> <span class="n">link</span> <span class="n">inputs</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">i_iPRESS_R</span><span class="o">:=</span>     <span class="n">i_iPRESS_R</span><span class="p">;</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">i_xHV_ON</span><span class="o">:=</span> <span class="n">i_xHV_ON</span><span class="p">;</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">i_xDisc_Active</span><span class="o">:=</span><span class="n">i_xDisc_Active</span><span class="p">;</span>
+<span class="p">(</span><span class="o">*</span><span class="n">soft</span> <span class="n">link</span> <span class="n">outputs</span><span class="o">*</span><span class="p">)</span>
+<span class="n">q_xHV_DIS</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span><span class="p">;</span>
+
+<span class="n">IG</span><span class="o">.</span><span class="n">sPath</span> <span class="o">:=</span> <span class="n">sPath</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="fb-cmr362">
 <h2>FB_CMR362<a class="headerlink" href="#fb-cmr362" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* For Pfeiffer CMR 362 *)
@@ -2713,6 +2868,133 @@ ACT_IO();
 END_FUNCTION_BLOCK
 ACTION ACT_IO:
 PG.i_iPRESS_R :=i_iPRESS_R;
+END_ACTION
+</pre></div>
+</div>
+</div>
+<div class="section" id="fb-cvm201">
+<h2>FB_CVM201<a class="headerlink" href="#fb-cvm201" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* This function block is used to provide protection and automatic turn on of ion gauges,
+ it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
+(* For CVM 201  convectron SuperBee*)
+{attribute &#39;no_check&#39;}
+FUNCTION_BLOCK FB_CVM201 EXTENDS FB_GaugeBase
+VAR_IN_OUT
+
+END_VAR
+VAR_INPUT
+END_VAR
+
+VAR_OUTPUT
+    {attribute &#39;pytmc&#39; := &#39;
+    pv:
+    &#39;}
+    PG : ST_VG;
+END_VAR
+VAR
+    V : REAL;
+    iTermBits: UINT := 32767 ; // The terminal&#39;s maximum value in bits
+    Vlowest: REAL := 10;
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+END_VAR
+
+VAR CONSTANT
+    MinPressure: REAL := 1E-4;
+    rDeadband : REAL :=0.05;
+    rValidLoBoundary        :       REAL := 0.375; //  0.375V as per manual page 27
+    rValidHiBoundary        :       REAL := 5.659;// 5.534; // manual page 27
+    rDisconnectedBoundary   :       REAL := 0.3;
+END_VAR
+(* This function block is used to provide protection and automatic turn on of ion gauges,
+ it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
+(* For MKS 275 mini-convectron *)
+
+//Default setpoint 50 mT
+IF PG.rVAC_SP = 0 THEN
+    PG.rVAC_SP := 5E-2;
+END_IF
+
+(* Real-value calculation *)
+If (iTermBits=0) THEN iTermBits := 32767;END_IF
+V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
+
+Vlowest := MIN(V, Vlowest);
+
+IF V &gt; rDisconnectedBoundary AND V &lt; rValidLoBoundary  THEN
+    PG.rPRESS := MinPressure;
+    PG.eState := ValidLo;
+
+ELSIF V &gt;= rValidLoBoundary AND V &lt; rValidLoBoundary +rDeadband  THEN
+    PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+    PG.eState := ValidLo;
+
+ELSIF V &gt;= rValidLoBoundary AND V &lt; 2.842 THEN
+    PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+    PG.eState := Valid;
+
+ELSIF V &gt;= 2.842 AND V &lt; 4.945 THEN
+    PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
+    PG.eState := Valid;
+
+ELSIF V &gt;= 4.945 AND V &lt; rValidHiBoundary THEN
+    PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
+    PG.eState := ValidHi;
+
+ELSIF V &lt;= rDisconnectedBoundary THEN
+    PG.eState := GaugeDisconnected; //Most likely not connected
+    PG.rPRESS := -1;
+
+ELSE
+    PG.eState := OoR; //Larger voltage, probably out of range?
+    PG.rPRESS := -1;
+END_IF
+
+(* Protection Functions *)
+(* If the PG pressure is greater than the IG.PRO_SP then the gauge is disabled *)
+(* If the PG pressure is less than the IG.PRO_SP then the gauge is enabled *)
+(* This FB also implements some hysteresis so the gauge doesn&#39;t have rapid power cycling while near the turn on boundary *)
+
+(* Pressure OK check *)
+PG.xPRESS_OK := (PG.rPRESS &gt;= MinPressure);
+
+(* Setpoint evaluation *)
+PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS&lt;=PG.rVAC_SP);
+
+(*Logger*)
+ACT_Logger();
+
+(*Soft IO Mapping *)
+IO();
+
+END_FUNCTION_BLOCK
+ACTION ACT_Logger:
+//STATE Logger
+if (PG.xLog) THEN
+    IF ePrevState &lt;&gt; PG.eState THEN
+      CASE PG.eState OF
+            ValidHi:
+                    fbLogger(sMsg:=&#39;Gauge pressure valid high.&#39;, eSevr:=TcEventSeverity.Info);
+            ValidLo:
+                    fbLogger(sMsg:=&#39;Gauge pressure valid low.&#39;, eSevr:=TcEventSeverity.Info);
+            Valid:
+                    fbLogger(sMsg:=&#39;Gauge pressure valid.&#39;, eSevr:=TcEventSeverity.Info);
+            GaugeDisconnected:
+                    fbLogger(sMsg:=&#39;Gauge Disconnected.&#39;, eSevr:=TcEventSeverity.Critical);
+            PressInvalid:
+                    fbLogger(sMsg:=&#39;Gauge pressure invalid.&#39;, eSevr:=TcEventSeverity.Warning);
+            OoR:
+                    fbLogger(sMsg:=&#39;Gauge pressure out of range.&#39;, eSevr:=TcEventSeverity.Warning);
+            Starting:
+                    fbLogger(sMsg:=&#39;Gauge starting.&#39;, eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := PG.eState;
+  END_IF
+END_IF
+END_ACTION
+ACTION IO:
+PG.i_iPRESS_R :=i_iPRESS_R;
+PG.sPath := sPath;
 END_ACTION
 </pre></div>
 </div>
@@ -4102,7 +4384,7 @@ END_ACTION
 <span class="n">Set</span> <span class="n">the</span> <span class="n">EP</span> <span class="n">bit</span> <span class="n">to</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">necessary</span> <span class="k">for</span> <span class="n">the</span> <span class="n">MKS500</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">EP</span> <span class="n">box</span> <span class="n">interface</span> <span class="n">beacuse</span> <span class="n">the</span> <span class="n">EP</span>
 <span class="n">boxes</span> <span class="n">do</span> <span class="ow">not</span> <span class="n">natively</span> <span class="n">support</span> <span class="n">the</span> <span class="mi">5</span><span class="n">v</span> <span class="n">IO</span> <span class="n">signals</span> <span class="n">on</span> <span class="n">the</span> <span class="n">MKS500</span> <span class="n">gauge</span><span class="o">.*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span><span class="n">This</span> <span class="n">function</span> <span class="n">provides</span> <span class="n">ILK</span> <span class="ow">and</span> <span class="n">Set</span> <span class="n">Point</span> <span class="n">Protection</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Cold</span> <span class="n">Cathode</span><span class="o">*</span><span class="p">)</span>
-<span class="p">(</span><span class="o">*</span> <span class="mi">500</span> <span class="n">Logarithmic</span> <span class="n">Output</span> <span class="n">Conversion</span><span class="p">,</span> <span class="n">factory</span> <span class="n">default</span> <span class="n">configuration</span> <span class="o">*</span><span class="p">)</span>
+
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_MKS500</span> <span class="n">EXTENDS</span> <span class="n">FB_GaugeBase</span>
 <span class="n">VAR_IN_OUT</span>
 
@@ -4521,7 +4803,7 @@ IF PG.rVAC_SP = 0 THEN
 END_IF
 // check no div by zero
 If (iTermBits=0) THEN iTermBits := 30518;END_IF
-rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
+rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (* Pressure OK check *)
 // Gauge state

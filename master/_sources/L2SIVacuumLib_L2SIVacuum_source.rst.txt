@@ -2465,6 +2465,161 @@ FB_ADS_WATCHDOG
     END_FUNCTION_BLOCK
 
 
+FB_CCM501
+^^^^^^^^^
+
+::
+
+    (* This function is for the Cold Cathode CCM 501 fro instrutech (hornet). *)
+    (*This function provides ILK and Set Point Protection for the Cold Cathode*)
+
+    FUNCTION_BLOCK FB_CCM501 EXTENDS FB_GaugeBase
+    VAR_IN_OUT
+    		
+    END_VAR
+    VAR_INPUT
+    	PG	:	ST_VG;
+    END_VAR
+    VAR_OUTPUT
+    {attribute 'pytmc' := '
+        pv: 
+    	'}
+    	IG : ST_VG;
+    END_VAR
+    VAR
+    	rV : REAL;
+    	GaugeTurnOnTmr : TON;
+    	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+    	(*IOs to be linked*)
+    	/// Controls and I/Os
+    	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
+    	q_xHV_DIS AT %Q* : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EP2624) ^Output
+    	// only for EL and ES terminal
+    	i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1124) ^Input
+    	i_xDisc_Active AT %I* : BOOL;// Discharge Current Active // 'TcLinkTo' (EL1124) ^Input
+    	
+    END_VAR
+
+    VAR CONSTANT
+    	// Ranges has to match the configurator software
+    	vBase : REAL := 1.25;
+    	vDisconnected : REAL:= 1.8;
+    	vTorr : REAL := 12.875; 
+    	vGaugeOff: REAL := 9.8;
+    	//vNoDischarge: REAL := 9.3;
+    	MinPressure: REAL := 1E-10;
+    	cDefaultPressure : REAL := 0;
+    	rDeadband : REAL :=0.3;
+    END_VAR
+    (* 500 Logarithmic Output Conversion, factory default configuration *)
+    If (iTermBits=0) THEN iTermBits := 32767;END_IF
+    rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
+
+    (* Set Guage State based on the Analog voltage*)
+    IF rV < vDisconnected THEN
+    	IG.eState := GaugeDisconnected;
+    	IG.rPRESS := cDefaultPressure;
+    ELSIF rV >= vDisconnected AND rV < (vGaugeOff -rDeadband)  THEN
+    	IG.eState := Valid;
+    	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV*vBase)- vTorr)));
+    ELSIF rV >= (vGaugeOff -rDeadband) THEN
+    	IG.eState := Off;
+    	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    	IG.rPRESS := cDefaultPressure;
+    ELSE
+    	IG.eState := OoR;
+    	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    	IG.rPRESS := cDefaultPressure;
+    END_IF
+
+
+
+    (* Ion Gauge Protection Functions *)
+    (* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
+    (* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
+    (* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+
+
+    IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
+    	IG.q_xHV_DIS := IG.xHV_SW;
+    	IG.xILKOk := TRUE;
+    ELSIF IG.q_xHV_DIS THEN
+    	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+    		IG.q_xHV_DIS := FALSE;
+    		IG.xHV_SW := FALSE;
+    	END_IF
+    ELSE
+    	IG.q_xHV_DIS := FALSE;
+    	IG.xHV_SW := FALSE;
+    	IG.xILKOk := FALSE;
+    END_IF
+
+    (* Pressure gauge OK checks *)
+
+    GaugeTurnOnTmr(IN:=IG.q_xHV_DIS, PT:=T#10S, Q=>IG.xTurnOnTime);
+
+
+    //Backwards compatibility
+    IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
+
+    (* Setpoint evaluation *)
+    IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid) ;
+
+    ACT_Logger();
+    (*Soft IO Linking*)
+    // check ethercat Diagnostics
+    IO();
+
+    END_FUNCTION_BLOCK
+    ACTION ACT_Logger:
+    // ILK logger
+    IF (IG.xLog) THEN
+    	IF NOT IG.xILKOk AND IG.q_xHV_DIS THEN
+    			fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+    	END_IF
+    	
+    	
+    	// Log Action
+    	tAction(CLK:=   IG.xHV_SW);
+    	IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+    	
+    	
+    	
+    	//STATE Logger  
+    	tState(CLK:=  ePrevState <> IG.eState);
+    	IF ePrevState <> IG.eState THEN
+    		  CASE IG.eState OF
+    			ValidHi:
+    				fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+    			ValidLo:
+    				fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+    			Valid:
+    				fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+    			GaugeDisconnected:
+    				fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+    			PressInvalid:
+    				fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+    			OoR:
+    				fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+    			Starting:
+    				fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+    		  END_CASE
+    		  ePrevState := IG.eState;  
+    	  END_IF
+    END_IF
+    END_ACTION
+    ACTION IO:
+    (*soft link inputs*)
+    IG.i_iPRESS_R:=	i_iPRESS_R; 
+    IG.i_xHV_ON:= i_xHV_ON;
+    IG.i_xDisc_Active:=i_xDisc_Active; 
+    (*soft link outputs*)
+    q_xHV_DIS := IG.q_xHV_DIS;
+
+    IG.sPath := sPath;
+    END_ACTION
+
+
 FB_CMR362
 ^^^^^^^^^
 
@@ -2524,6 +2679,135 @@ FB_CMR362
     END_FUNCTION_BLOCK
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
+    END_ACTION
+
+
+FB_CVM201
+^^^^^^^^^
+
+::
+
+    (* This function block is used to provide protection and automatic turn on of ion gauges,
+     it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
+    (* For CVM 201  convectron SuperBee*)
+    {attribute 'no_check'}
+    FUNCTION_BLOCK FB_CVM201 EXTENDS FB_GaugeBase
+    VAR_IN_OUT
+
+    END_VAR
+    VAR_INPUT
+    END_VAR
+
+    VAR_OUTPUT
+    	{attribute 'pytmc' := '
+        pv: 
+    	'}
+    	PG : ST_VG;
+    END_VAR
+    VAR
+    	V : REAL;
+    	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+    	Vlowest: REAL := 10;
+    	(*IO*)
+    	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    END_VAR
+
+    VAR CONSTANT
+    	MinPressure: REAL := 1E-4;
+    	rDeadband : REAL :=0.05;
+    	rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
+    	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
+    	rDisconnectedBoundary	:	REAL := 0.3;
+    END_VAR
+    (* This function block is used to provide protection and automatic turn on of ion gauges,
+     it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
+    (* For MKS 275 mini-convectron *)
+
+    //Default setpoint 50 mT
+    IF PG.rVAC_SP = 0 THEN
+    	PG.rVAC_SP := 5E-2;
+    END_IF
+
+    (* Real-value calculation *)
+    If (iTermBits=0) THEN iTermBits := 32767;END_IF
+    V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;	
+
+    Vlowest := MIN(V, Vlowest);
+
+    IF V > rDisconnectedBoundary AND V < rValidLoBoundary  THEN
+    	PG.rPRESS := MinPressure;
+    	PG.eState := ValidLo;
+    	
+    ELSIF V >= rValidLoBoundary AND V < rValidLoBoundary +rDeadband  THEN
+    	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+    	PG.eState := ValidLo;
+    	
+    ELSIF V >= rValidLoBoundary AND V < 2.842 THEN
+    	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+    	PG.eState := Valid;
+
+    ELSIF V >= 2.842 AND V < 4.945 THEN
+    	PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
+    	PG.eState := Valid;
+
+    ELSIF V >= 4.945 AND V < rValidHiBoundary THEN
+    	PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
+    	PG.eState := ValidHi;
+
+    ELSIF V <= rDisconnectedBoundary THEN
+    	PG.eState := GaugeDisconnected; //Most likely not connected
+    	PG.rPRESS := -1;
+
+    ELSE
+    	PG.eState := OoR; //Larger voltage, probably out of range?
+    	PG.rPRESS := -1;
+    END_IF
+
+    (* Protection Functions *)
+    (* If the PG pressure is greater than the IG.PRO_SP then the gauge is disabled *)
+    (* If the PG pressure is less than the IG.PRO_SP then the gauge is enabled *)
+    (* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+
+    (* Pressure OK check *)
+    PG.xPRESS_OK := (PG.rPRESS >= MinPressure);
+
+    (* Setpoint evaluation *)
+    PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS<=PG.rVAC_SP);
+
+    (*Logger*)
+    ACT_Logger();
+
+    (*Soft IO Mapping *)
+    IO();
+
+    END_FUNCTION_BLOCK
+    ACTION ACT_Logger:
+    //STATE Logger  
+    if (PG.xLog) THEN
+    	IF ePrevState <> PG.eState THEN
+    	  CASE PG.eState OF
+    		ValidHi:
+    			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+    		ValidLo:
+    			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+    		Valid:
+    			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+      		GaugeDisconnected:
+    			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+    		PressInvalid:
+    			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+    		OoR:
+    			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+    		Starting:
+    			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+    	  END_CASE
+    	  ePrevState := PG.eState;  
+      END_IF 
+    END_IF
+    END_ACTION
+    ACTION IO:
+    PG.i_iPRESS_R :=i_iPRESS_R;
+    PG.sPath := sPath;
     END_ACTION
 
 
@@ -3949,7 +4233,7 @@ FB_MKS500
     Set the EP bit to TRUE, this is necessary for the MKS500-to-EP box interface beacuse the EP
     boxes do not natively support the 5v IO signals on the MKS500 gauge.*)
     (*This function provides ILK and Set Point Protection for the Cold Cathode*)
-    (* 500 Logarithmic Output Conversion, factory default configuration *)
+
     FUNCTION_BLOCK FB_MKS500 EXTENDS FB_GaugeBase
     VAR_IN_OUT
     		
@@ -4374,7 +4658,7 @@ FB_MKS909
     END_IF
     // check no div by zero
     If (iTermBits=0) THEN iTermBits := 30518;END_IF
-    rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
+    rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
     (* Pressure OK check *)
     // Gauge state
