@@ -28,7 +28,8 @@ STRUCT
 	field: ONAM TRUE;
 	io: i
     '}
-	i_xLocal	:	BOOL;
+	i_xRemote	:	BOOL;
+
 	{attribute 'pytmc' := '
     pv: ALARM_OK;
 	field: ZNAM FALSE; 
