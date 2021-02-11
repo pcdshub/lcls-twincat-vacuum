@@ -41,8 +41,10 @@ rV :=MAX((10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits),0);
 PG.rPRESS := (PG.rFULL_SCALE/10)*rV;
 IF PG.rPRESS > (rMinPressure)THEN
 	PG.xPRESS_OK := TRUE;
+	PG.eState := Valid; 
 ELSE
 	PG.xPRESS_OK := FALSE;
+	PG.eState := PressInvalid; 
 END_IF
 
 (*IO soft linking*)
@@ -63,18 +65,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_GCM">
-      <LineId Id="3" Count="9" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="13" Count="5" />
-      <LineId Id="35" Count="2" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GCM.ACT_IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GCM.M_SetBits">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

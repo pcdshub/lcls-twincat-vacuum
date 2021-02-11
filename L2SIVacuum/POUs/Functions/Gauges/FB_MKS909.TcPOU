@@ -62,15 +62,15 @@ END_IF
 
 
 IF (PG.rPRESS <= IG.rPRO_SP)  AND (PG.xPRESS_OK) THEN
-		 IG.q_xHV_DIS := NOT IG.xHV_SW;
+		 IG.q_xHV_DIS := IG.xHV_SW;
 		 IG.xILKOk := TRUE;
 	ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
 		IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
-		IG.q_xHV_DIS := TRUE;
+		IG.q_xHV_DIS := FALSE;
 		IG.xHV_SW := FALSE;
 		END_IF
 	ELSE 
-		IG.q_xHV_DIS := TRUE;
+		IG.q_xHV_DIS := FALSE;
 		IG.xHV_SW := FALSE;
 		IG.xILKOk := FALSE;
  	END_IF
