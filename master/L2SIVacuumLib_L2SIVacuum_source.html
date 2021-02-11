@@ -725,7 +725,8 @@
     <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">TRUE</span><span class="p">;</span>
     <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
     <span class="s1">&#39;}</span>
-    <span class="n">i_xLocal</span>        <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">i_xRemote</span>       <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span>
+
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">ALARM_OK</span><span class="p">;</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">FALSE</span><span class="p">;</span>
@@ -2069,7 +2070,7 @@ END_TYPE
 <span class="o">//</span> <span class="n">This</span> <span class="n">function</span> <span class="n">has</span> <span class="n">been</span> <span class="n">automatically</span> <span class="n">generated</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">project</span> <span class="n">information</span><span class="o">.</span>
 <span class="n">VAR_GLOBAL</span> <span class="n">CONSTANT</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;const_non_replaced&#39;</span><span class="p">}</span>
-    <span class="n">stLibVersion_LCLS_Vacuum</span> <span class="p">:</span> <span class="n">ST_LibVersion</span> <span class="o">:=</span> <span class="p">(</span><span class="n">iMajor</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iMinor</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iBuild</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iRevision</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nFlags</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sVersion</span> <span class="o">:=</span> <span class="s1">&#39;0.0.0&#39;</span><span class="p">);</span>
+    <span class="n">stLibVersion_LCLS_Vacuum</span> <span class="p">:</span> <span class="n">ST_LibVersion</span> <span class="o">:=</span> <span class="p">(</span><span class="n">iMajor</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iMinor</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iBuild</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iRevision</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sVersion</span> <span class="o">:=</span> <span class="s1">&#39;0.0.0&#39;</span><span class="p">);</span>
 <span class="n">END_VAR</span>
 </pre></div>
 </div>
@@ -3468,8 +3469,10 @@ END_ACTION
 <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="p">(</span><span class="n">PG</span><span class="o">.</span><span class="n">rFULL_SCALE</span><span class="o">/</span><span class="mi">10</span><span class="p">)</span><span class="o">*</span><span class="n">rV</span><span class="p">;</span>
 <span class="n">IF</span> <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">rMinPressure</span><span class="p">)</span><span class="n">THEN</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">Valid</span><span class="p">;</span>
 <span class="n">ELSE</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">PressInvalid</span><span class="p">;</span>
 <span class="n">END_IF</span>
 
 <span class="p">(</span><span class="o">*</span><span class="n">IO</span> <span class="n">soft</span> <span class="n">linking</span><span class="o">*</span><span class="p">)</span>
@@ -3698,13 +3701,13 @@ END_ACTION
     <span class="n">q_xLspdDo</span>       <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
 
 <span class="p">(</span><span class="o">*</span> <span class="n">Input</span> <span class="o">*</span><span class="p">)</span>
-    <span class="n">i_xLocal</span>        <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">i_xRemote</span>       <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xAlarm</span>        <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xWarning</span>      <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xIsRun</span>        <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 <span class="o">//</span><span class="n">Kashiyama</span> <span class="n">Dry</span> <span class="n">pump</span> <span class="n">outputs</span> <span class="n">at</span> <span class="n">high</span> <span class="n">level</span> <span class="n">indicate</span> <span class="n">no</span> <span class="n">warning</span><span class="p">,</span> <span class="n">no</span> <span class="n">alarm</span> <span class="ow">and</span> <span class="n">remotely</span>
-<span class="n">q_stPump</span><span class="o">.</span><span class="n">xIlkOK</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xLocal</span> <span class="n">AND</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xWarningOK</span> <span class="n">AND</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xAlarmOK</span><span class="p">;</span>
+<span class="n">q_stPump</span><span class="o">.</span><span class="n">xIlkOK</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xRemote</span> <span class="n">AND</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xWarningOK</span> <span class="n">AND</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xAlarmOK</span><span class="p">;</span>
 
 <span class="n">IF</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">xIlkOK</span> <span class="n">THEN</span>
     <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRunDO</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">pv_xRunSW</span><span class="p">;</span>
@@ -3757,7 +3760,7 @@ END_ACTION
     <span class="n">q_xLspdDo</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xLspdDo</span><span class="p">;;</span>
 
 <span class="p">(</span><span class="o">*</span> <span class="n">Input</span> <span class="o">*</span><span class="p">)</span>
-    <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xLocal</span> <span class="o">:=</span> <span class="n">i_xLocal</span><span class="p">;</span>
+    <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xRemote</span> <span class="o">:=</span> <span class="n">i_xRemote</span><span class="p">;</span>
     <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xAlarmOK</span> <span class="o">:=</span>  <span class="n">i_xAlarm</span><span class="p">;</span>
     <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xWarningOK</span> <span class="o">:=</span>        <span class="n">i_xWarning</span><span class="p">;</span>
     <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span> <span class="o">:=</span>    <span class="n">i_xIsRun</span><span class="p">;</span>
@@ -4823,15 +4826,15 @@ END_IF
 
 
 IF (PG.rPRESS &lt;= IG.rPRO_SP)  AND (PG.xPRESS_OK) THEN
-             IG.q_xHV_DIS := NOT IG.xHV_SW;
+             IG.q_xHV_DIS := IG.xHV_SW;
              IG.xILKOk := TRUE;
     ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
             IF IG.rPRESS &gt; (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS &gt; (IG.rPRO_SP + IG.rHYS_PR) THEN
-            IG.q_xHV_DIS := TRUE;
+            IG.q_xHV_DIS := FALSE;
             IG.xHV_SW := FALSE;
             END_IF
     ELSE
-            IG.q_xHV_DIS := TRUE;
+            IG.q_xHV_DIS := FALSE;
             IG.xHV_SW := FALSE;
             IG.xILKOk := FALSE;
     END_IF
