@@ -5,8 +5,6 @@
 (* TD20 Classic Via Remote X1 Connector 9-way PLC interface*)
 (* When serial interface is implemented, call Method M_Serial_IO after fb instantiation, in order to add the serial status *)
 FUNCTION_BLOCK FB_PTM_TurboDrive EXTENDS FB_Pump
-VAR_IN_OUT
-END_VAR
 VAR_INPUT
 	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
@@ -26,7 +24,6 @@ VAR
 	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
 	i_xFaultNC AT%I*: BOOL; // Error Active when no Error is present
 	q_RunDO AT%Q*: BOOL; // Start/Stop
-
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -67,6 +64,8 @@ END_IF;
 ACT_IO();
 // Log States and triggers
 This^.ACT_Logger();
+(*Load or save the persistent variables*)
+ACT_Persistent();
 ]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{4cbb30e0-b539-45c8-81cf-4305f479bf38}">
@@ -115,6 +114,24 @@ tFault(CLK:= NOT iq_stPTM.i_xFault);
 IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
 
 ]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{a18751a8-c7b2-49db-bf38-fbf131781ece}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+	iq_stPTM.rInletPressureSP := rInletPressureSP;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+	iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+END_IF;
+
+IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+	iq_stPTM.rInletPressureSP := rInletPressureSP;
+END_IF;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_Run" Id="{ae64ab07-7d54-4df1-84b7-49ea57053e4e}">

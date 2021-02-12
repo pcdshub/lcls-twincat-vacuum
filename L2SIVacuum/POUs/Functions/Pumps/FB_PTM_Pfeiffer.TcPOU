@@ -4,9 +4,6 @@
     <Declaration><![CDATA[(* This function block does basic controls FOR the Pfeiffer Turbo pump connected to the TM700 and TC400 Controllers.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
 FUNCTION_BLOCK FB_PTM_Pfeiffer EXTENDS FB_Pump
-VAR_IN_OUT
-	
-END_VAR
 VAR_INPUT
 	i_xExtIlkOK : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
@@ -29,7 +26,6 @@ VAR
 	q_xRemote AT%Q*: BOOL;
 	q_xReset AT%Q*: BOOL;
 END_VAR
-
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Basic pump supervisory section *)
@@ -87,7 +83,8 @@ END_IF
 ACT_IO();
 // Log States and triggers
 ACT_Logger();
-]]></ST>
+(*Load or save the persistent variables*)
+ACT_Persistent();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{6d730de1-568e-46c8-bd68-32cda7221400}">
       <Implementation>
@@ -141,6 +138,24 @@ tFault(CLK:= NOT iq_stPTM.i_xFault);
 IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
 
 ]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{9967635e-ae0e-4f1d-9564-d41976a2dfe2}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+	iq_stPTM.rInletPressureSP := rInletPressureSP;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+	iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+END_IF;
+
+IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+	iq_stPTM.rInletPressureSP := rInletPressureSP;
+END_IF;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_Run" Id="{2c4aa976-1aba-482a-991c-f510aadc9928}">
