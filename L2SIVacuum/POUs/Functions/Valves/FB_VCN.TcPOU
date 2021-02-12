@@ -132,7 +132,10 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEvent
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (bRestorePersistentData) THEN
 	bRestorePersistentData	:= FALSE;
-	iq_stVCN.rUpperLimit := rUpperLimit;
+	IF (rUpperLimit <> 0) THEN
+		iq_stVCN.rUpperLimit := rUpperLimit;
+	END_IF;
+	
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (iq_stVCN.rUpperLimit = rUpperLimit) THEN

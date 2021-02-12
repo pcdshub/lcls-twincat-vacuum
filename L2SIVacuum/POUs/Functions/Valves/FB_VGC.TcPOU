@@ -465,16 +465,20 @@ IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSe
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
 	SUPER^.bRestorePersistentData	:= FALSE;
-	iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
-	iq_stValve.rAT_VAC_HYS := rAT_VAC_HYS;
+	IF (rAT_VAC_SP <> 0) THEN
+		iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
+	END_IF;
+	IF (rAT_VAC_HYS <> 0) THEN
+			iq_stValve.rAT_VAC_HYS := rAT_VAC_HYS;
+	END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (iq_stValve.rAT_VAC_SP = rAT_VAC_SP) THEN
-	iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
+	rAT_VAC_SP :=iq_stValve.rAT_VAC_SP;
 END_IF;
 
 IF NOT (iq_stValve.rAT_VAC_HYS = rAT_VAC_HYS) THEN
-	iq_stValve.rAT_VAC_HYS := rAT_VAC_HYS;
+	rAT_VAC_HYS:= iq_stValve.rAT_VAC_HYS;
 END_IF;]]></ST>
       </Implementation>
     </Action>

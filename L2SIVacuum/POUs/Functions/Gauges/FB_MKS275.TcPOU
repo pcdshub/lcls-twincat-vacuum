@@ -135,11 +135,13 @@ END_IF
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
 	SUPER^.bRestorePersistentData	:= FALSE;
-	PG.rVAC_SP := rVAC_SP;
+	IF (rPRO_SP <> 0) THEN
+		PG.rPRO_SP := rPRO_SP;
+	END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (PG.rVAC_SP = rVAC_SP) THEN
-	PG.rVAC_SP := rVAC_SP;
+	rVAC_SP:= PG.rVAC_SP;
 END_IF;
 ]]></ST>
       </Implementation>
