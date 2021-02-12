@@ -13,6 +13,9 @@ VAR
     tErrorPresent : R_TRIG;
     tAction : R_TRIG; // Primary action of this device (OPN_DO, etc.)
     tOverrideActivated : R_TRIG;
+	// For Persistent Data
+	bRestorePersistentData	:	BOOL:=TRUE;
+	//fbWritePersistentData           : WritePersistentData;
 END_VAR
 ]]></Declaration>
     <Implementation>

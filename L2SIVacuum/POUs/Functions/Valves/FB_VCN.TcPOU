@@ -14,10 +14,6 @@ VAR_OUTPUT
 	'}
 	iq_stVCN	:	ST_VCN; //Needle valve structure
 END_VAR
-VAR_IN_OUT
-	
-END_VAR
-
 VAR CONSTANT
 	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual, A Voltage of 9V it is completely Open
 	rCloseVoltage	:	REAL := 0.4;// a voltage <0.5 V the valve is closed	
@@ -33,9 +29,10 @@ VAR
 	// 
 	(*IO*)
 	q_iRawPosition AT%Q* :INT;
-
 END_VAR
-]]></Declaration>
+VAR PERSISTENT
+    rUpperLimit	:	REAL;
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Needle valve control FB
 A. Wallace 2016-7-21
@@ -56,6 +53,7 @@ Valve position/flow linearization
 
 Note: Raw position calc is based on 0.5 to 9V span, 32767 bits
 *)
+
 
 iq_stVCN.rUpperLimit :=  LIMIT(0, iq_stVCN.rUpperLimit, 100);
 
@@ -85,6 +83,9 @@ iq_stvcn.q_iRawPosition := REAL_TO_INT( 32767/10 * rReqVoltage);
 
 (*SOft IO Mapping*)
 ACT_IO();
+
+(*Load or save the persistent variables*)
+ACT_Persistent();
 ]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{897ec2aa-1321-4251-b360-05c31f40b449}">
@@ -124,6 +125,22 @@ IF ePrevState <> iq_stVCN.eValveControl THEN
 tAction(CLK:= (iq_stVCN.eValveControl = OpenValve) );
 IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEventSeverity.Info); END_IF
 ]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{d12819a7-3f5a-4ad6-9299-03ebd62d9161}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (bRestorePersistentData) THEN
+	bRestorePersistentData	:= FALSE;
+	iq_stVCN.rUpperLimit := rUpperLimit;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stVCN.rUpperLimit = rUpperLimit) THEN
+	rUpperLimit := iq_stVCN.rUpperLimit;
+	//fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
+ELSE
+     // fbWritePersistentData( START:=FALSE);
+END_IF;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_SetThrottle" Id="{6aa2c134-f3ab-4cc1-9ed9-8718a4b7a174}">

@@ -108,8 +108,13 @@ VAR
     
     // For logging
     eVGCPrevState : E_VGC;
-   
-	
+END_VAR
+
+VAR PERSISTENT
+    rAT_VAC_SP	:	REAL;
+	rAT_VAC_HYS	:	REAL;
+	rAT_VAC_SP_DS : REAL;
+	rAT_VAC_HYS_DS : REAL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Vacuum gate valve
@@ -468,6 +473,34 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.
 tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
 IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 ]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{0b6984ff-6b83-4797-9e47-522a158de763}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
+	iq_stValve.rAT_VAC_HYS := rAT_VAC_HYS;
+	iq_stValve.rAT_VAC_SP_DS := rAT_VAC_SP;
+	iq_stValve.rAT_VAC_HYS_DS := rAT_VAC_HYS_DS;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stValve.rAT_VAC_SP = rAT_VAC_SP) THEN
+	iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
+END_IF;
+
+IF NOT (iq_stValve.rAT_VAC_HYS = rAT_VAC_HYS) THEN
+	iq_stValve.rAT_VAC_HYS := rAT_VAC_HYS;
+END_IF;
+
+IF NOT (iq_stValve.rAT_VAC_SP_DS = rAT_VAC_SP_DS) THEN
+	iq_stValve.rAT_VAC_SP_DS := rAT_VAC_SP_DS;
+END_IF;
+
+IF NOT (iq_stValve.rAT_VAC_HYS = rAT_VAC_HYS) THEN
+	iq_stValve.rAT_VAC_HYS_DS := rAT_VAC_HYS_DS;
+END_IF;]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_PMPS" Id="{5c08bd00-5984-4263-96d5-fbec8ab927a4}">
