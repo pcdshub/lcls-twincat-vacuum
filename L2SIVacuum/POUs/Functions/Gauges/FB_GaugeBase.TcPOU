@@ -3,11 +3,6 @@
   <POU Name="FB_GaugeBase" Id="{7a1f28cc-0783-4ebe-9457-6569085eece6}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'} 
 FUNCTION_BLOCK FB_GaugeBase
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-	
-END_VAR
 VAR
 	//Logging 
     fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
@@ -19,6 +14,13 @@ VAR
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
 	sPath: STRING;
+	// For Persistent Data
+	bRestorePersistentData	:	BOOL:=TRUE;
+END_VAR
+VAR PERSISTENT
+    rVAC_SP	:	REAL;
+	rPRO_SP	:	REAL;
+	rHYS_PR: REAL;
 END_VAR
 ]]></Declaration>
     <Implementation>

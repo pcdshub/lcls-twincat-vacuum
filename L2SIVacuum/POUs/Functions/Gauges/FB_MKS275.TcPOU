@@ -32,6 +32,8 @@ VAR CONSTANT
 	rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
 	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
 	rDisconnectedBoundary	:	REAL := 0.3;
+	(*Default set point 50 mT*)
+	rDefaultVAC_SP: REAL := 5E-2;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
@@ -40,7 +42,7 @@ END_VAR]]></Declaration>
 
 //Default setpoint 50 mT
 IF PG.rVAC_SP = 0 THEN
-	PG.rVAC_SP := 5E-2;
+	PG.rVAC_SP := rDefaultVAC_SP;
 END_IF
 
 (* Real-value calculation *)
@@ -94,7 +96,9 @@ ACT_Logger();
 
 (*Soft IO Mapping *)
 IO();
-]]></ST>
+
+(*Load or save the persistent variables*)
+ACT_Persistent();]]></ST>
     </Implementation>
     <Action Name="ACT_Logger" Id="{22ad07a8-3027-4a73-9587-1659b4a4301d}">
       <Implementation>
@@ -126,6 +130,20 @@ END_IF
 ]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_Persistent" Id="{ded6ce50-ad6d-4908-b548-f731cf92e1e3}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	PG.rVAC_SP := rVAC_SP;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (PG.rVAC_SP = rVAC_SP) THEN
+	PG.rVAC_SP := rVAC_SP;
+END_IF;
+]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="IO" Id="{fa1d0754-87c0-473a-9c19-51013692b513}">
       <Implementation>
         <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;
@@ -142,27 +160,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS275">
-      <LineId Id="3" Count="17" />
-      <LineId Id="97" Count="0" />
-      <LineId Id="94" Count="2" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="22" Count="36" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS275.ACT_Logger">
-      <LineId Id="2" Count="1" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="28" Count="18" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="23" Count="1" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS275.IO">
-      <LineId Id="1" Count="1" />
-    </LineIds>
-    <LineIds Name="FB_MKS275.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

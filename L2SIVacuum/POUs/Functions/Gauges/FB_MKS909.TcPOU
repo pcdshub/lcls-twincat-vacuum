@@ -85,8 +85,11 @@ IG.xAT_VAC := IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP);
 ACT_IO();
 
 (*Logger*)
+THIS^.ACT_Logger();
 
-THIS^.ACT_Logger();]]></ST>
+(*Load or save the persistent variables*)
+ACT_Persistent();
+]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{89c7028d-3190-45b7-aaec-73bdcb00e265}">
       <Implementation>

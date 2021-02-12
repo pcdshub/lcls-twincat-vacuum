@@ -147,6 +147,29 @@ END_IF
 ]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_Persistent" Id="{a148d691-1c4c-4a64-a492-b637c1da42d7}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	IG.rVAC_SP := rVAC_SP;
+	IG.rPRO_SP := rPRO_SP;
+	IG.rHYS_PR := rHYS_PR;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (IG.rVAC_SP = rVAC_SP) THEN
+	IG.rVAC_SP := rVAC_SP;
+END_IF;
+
+IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+	IG.rPRO_SP := rPRO_SP;
+END_IF;
+
+IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+	IG.rHYS_PR := rHYS_PR;
+END_IF;]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="IO" Id="{745bf75f-6d68-4d34-a177-a78f14818649}">
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
@@ -178,30 +201,5 @@ END_VAR
 this^.IG.xHV_SW:= (enable);]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS422">
-      <LineId Id="3" Count="71" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS422.ACT_Logger">
-      <LineId Id="2" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="3" Count="30" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="34" Count="1" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS422.IO">
-      <LineId Id="2" Count="3" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="6" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS422.M_AutoOn">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS422.M_HVE">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

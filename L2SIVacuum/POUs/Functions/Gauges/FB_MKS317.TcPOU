@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.2">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS317" Id="{8a56f7a2-f285-4648-be2d-40acd79b269f}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Pirani MKS 317 connected to a 937A/B *)
 (* This function block is used to provide protection and automatic turn on of ion gauges,
@@ -82,7 +82,9 @@ ACT_Logger();
 
 (*soft io*)
 IO();
-]]></ST>
+
+(*Load or save the persistent variables*)
+ACT_Persistent();]]></ST>
     </Implementation>
     <Action Name="ACT_Logger" Id="{36824c19-597f-41a7-a3ab-8efea737236d}">
       <Implementation>
@@ -113,6 +115,20 @@ IF (PG.xLog) THEN
 ]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_Persistent" Id="{384f9bab-d860-46a4-9e13-39222b05f975}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	PG.rVAC_SP := rVAC_SP;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (PG.rVAC_SP = rVAC_SP) THEN
+	PG.rVAC_SP := rVAC_SP;
+END_IF;
+]]></ST>
+      </Implementation>
+    </Action>
     <Action Name="IO" Id="{267ed2b0-2e00-403e-b259-b7dc82fa629f}">
       <Implementation>
         <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;
@@ -120,20 +136,5 @@ IF (PG.xLog) THEN
 PG.sPath := sPath;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_MKS317">
-      <LineId Id="3" Count="45" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS317.ACT_Logger">
-      <LineId Id="2" Count="1" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="4" Count="20" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS317.IO">
-      <LineId Id="1" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
