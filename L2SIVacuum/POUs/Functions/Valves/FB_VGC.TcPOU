@@ -111,7 +111,7 @@ END_VAR
 
 VAR PERSISTENT
     rAT_VAC_SP	:	REAL;
-	rAT_VAC_HYS	:	REAL;
+	rHYST_PERC	:	REAL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Vacuum gate valve
@@ -468,8 +468,8 @@ IF (SUPER^.bRestorePersistentData) THEN
 	IF (rAT_VAC_SP <> 0) THEN
 		iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
 	END_IF;
-	IF (rAT_VAC_HYS <> 0) THEN
-			iq_stValve.rAT_VAC_HYS := rAT_VAC_HYS;
+	IF (rHYST_PERC <> 0) THEN
+			iq_stValve.rHYST_PERC := rHYST_PERC;
 	END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
@@ -477,8 +477,8 @@ IF NOT (iq_stValve.rAT_VAC_SP = rAT_VAC_SP) THEN
 	rAT_VAC_SP :=iq_stValve.rAT_VAC_SP;
 END_IF;
 
-IF NOT (iq_stValve.rAT_VAC_HYS = rAT_VAC_HYS) THEN
-	rAT_VAC_HYS:= iq_stValve.rAT_VAC_HYS;
+IF NOT (iq_stValve.rHYST_PERC = rHYST_PERC) THEN
+	rHYST_PERC:= iq_stValve.rHYST_PERC;
 END_IF;]]></ST>
       </Implementation>
     </Action>
