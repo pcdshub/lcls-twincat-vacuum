@@ -370,6 +370,8 @@ ACT_IO();
 // Log States and triggers
 ACT_Logger();
 
+(*Load or save the persistent variables*)
+ACT_Persistent();
 
 
 (*FAST FAULT*)
