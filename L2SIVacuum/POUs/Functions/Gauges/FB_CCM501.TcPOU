@@ -102,6 +102,8 @@ ACT_Logger();
 (*Soft IO Linking*)
 // check ethercat Diagnostics
 IO();
+(*Load or save the persistent variables*)
+ACT_Persistent();
 ]]></ST>
     </Implementation>
     <Action Name="ACT_Logger" Id="{99961f85-7dce-4ed0-bee5-af963152edee}">
@@ -143,6 +145,35 @@ IF (IG.xLog) THEN
 END_IF  
 
 ]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{d61b101a-8e7b-490f-9c85-1ba602630ca3}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	IF ( rVAC_SP <> 0) THEN
+		IG.rVAC_SP := rVAC_SP;
+	END_IF;
+	IF ( rPRO_SP <> 0) THEN
+		IG.rPRO_SP := rPRO_SP;
+	END_IF;
+	IF ( rHYS_PR <> 0) THEN
+		IG.rHYS_PR := rHYS_PR;
+	END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+	rVAC_SP := IG.rVAC_SP;
+END_IF;
+
+IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+	rPRO_SP:= IG.rPRO_SP;
+END_IF;
+
+IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+	rHYS_PR:= IG.rHYS_PR;
+END_IF;]]></ST>
       </Implementation>
     </Action>
     <Action Name="IO" Id="{d8491859-09d0-4a11-84b1-64e10f403b2b}">

@@ -126,6 +126,8 @@ iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressure
 ACT_IO();
 // Log States and triggers
 ACT_Logger();
+(*Load or save the persistent variables*)
+ACT_Persistent();
 ]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{3ede8d23-8566-4337-9266-6da353ee69b7}">
@@ -203,6 +205,28 @@ tFault(CLK:= iq_stPTM.i_xNCFault);
 IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
 
 ]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{9361809c-489e-4d45-ba85-2b0f0842b58a}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	IF (rBackingPressureSP <> 0) THEN
+		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+	END_IF;
+	IF (rInletPressureSP <> 0) THEN
+		iq_stPTM.rInletPressureSP := rInletPressureSP;
+	END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+END_IF;
+
+IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+	rInletPressureSP := iq_stPTM.rInletPressureSP;
+END_IF;]]></ST>
       </Implementation>
     </Action>
     <Method Name="BackingPressureSetPoint" Id="{6ea1b85b-ed19-4997-8749-4c558b12344a}">

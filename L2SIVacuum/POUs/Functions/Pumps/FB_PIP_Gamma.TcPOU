@@ -16,14 +16,12 @@ VAR_OUTPUT
 	stPump	:	ST_PIP; //Gamma Ion pump structure
 	q_IG	:	ST_VG; //When ion pump is used as a measuring device for interlocking gate valves
 END_VAR
-VAR_IN_OUT
-END_VAR
 VAR
  rPRESS : REAL;
  
  rV : REAL;
  timer:TON; 
- rHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
+
  (* IO Controls *)
  q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when TRUE
  i_iPRESS  AT %I*: INT;  //
@@ -46,13 +44,20 @@ MinPressure : REAL:= 1E-11; // Minimum readback pressure, pump must register pre
 	{attribute 'noinit'}
 	sPath: STRING;
 END_VAR
+VAR CONSTANT
+	 rDefaultHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
+END_VAR
+VAR PERSISTENT
+	rHVEna_SP : REAL;
+END_VAR
+
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Does Gamma Ion pump HV interlock. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
 
 (*Ensures the set point is not higher than 1.0E-4*)
-IF (stPump.rHVEna_SP > rHVEna_SP) THEN
-	stPump.rHVEna_SP := rHVEna_SP;
+IF (stPump.rHVEna_SP > rDefaultHVEna_SP) THEN
+	stPump.rHVEna_SP := rDefaultHVEna_SP;
 END_IF
 
 (* Interlock *)
@@ -116,7 +121,9 @@ ACT_SetGauge();
 IO();
 ACT_IlkOverride();
 // Log States and triggers
-ACT_Logger();]]></ST>
+ACT_Logger();
+(*Load or save the persistent variables*)
+ACT_Persistent();]]></ST>
     </Implementation>
     <Action Name="ACT_IlkOverride" Id="{bcee683f-3211-4a69-9559-1cb72724e991}">
       <Implementation>
@@ -179,6 +186,22 @@ IF tOverrideActivated.Q THEN fbLogger(sMsg:='Pump override mode activated', eSev
 tFault(CLK:=  NOT tPumpStartTimeout.Q);
 IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); END_IF
 
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{7aa78ade-aa19-4b96-ba64-eae2fa793f3b}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	IF (rHVEna_SP <> 0) THEN
+		stPump.rHVEna_SP := rHVEna_SP;
+	END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (stPump.rHVEna_SP = rHVEna_SP) THEN
+	rHVEna_SP := stPump.rHVEna_SP;
+END_IF;
 ]]></ST>
       </Implementation>
     </Action>
@@ -247,47 +270,5 @@ END_VAR
 this^.stPump.xHVEna_SW := run;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PIP_Gamma">
-      <LineId Id="3" Count="13" />
-      <LineId Id="150" Count="0" />
-      <LineId Id="17" Count="9" />
-      <LineId Id="109" Count="0" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="27" Count="40" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma.ACT_IlkOverride">
-      <LineId Id="2" Count="17" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma.ACT_Logger">
-      <LineId Id="2" Count="26" />
-      <LineId Id="35" Count="2" />
-      <LineId Id="29" Count="5" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma.ACT_SetGauge">
-      <LineId Id="2" Count="21" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma.IO">
-      <LineId Id="2" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="3" Count="3" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="10" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma.M_AutoOn">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma.M_Run">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -24,7 +24,7 @@ VAR
 	rMinPressure	:	REAL := 1E-10; //Torr
 	timer:TON;
 	(*Default set point 50 mT*)
-	rVAC_SP: REAL := 9E-3; // as per manual
+	rDefaultVAC_SP: REAL := 9E-3; // as per manual
 	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
 	(*IO*)
 	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
@@ -38,7 +38,7 @@ END_VAR
 
 //Default setpoint 50 mT
 IF PG.rVAC_SP = 0 THEN
-	PG.rVAC_SP := rVAC_SP;
+	PG.rVAC_SP := rDefaultVAC_SP;
 END_IF
 // check no div by zero
 If (iTermBits=0) THEN iTermBits := 30518;END_IF
@@ -83,10 +83,15 @@ IG.xAT_VAC := IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP);
 
 (*Soft IO Mapping*)
 ACT_IO();
+(*Load or save the persistent variables*)
+ACT_Persistent();
 
 (*Logger*)
+THIS^.ACT_Logger();
 
-THIS^.ACT_Logger();]]></ST>
+(*Load or save the persistent variables*)
+ACT_Persistent();
+]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{89c7028d-3190-45b7-aaec-73bdcb00e265}">
       <Implementation>
@@ -132,6 +137,35 @@ IF ePrevState <> IG.eState THEN
   
 
 ]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{ba42c9e0-fb4b-4426-98a9-0712e0f03714}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	IF ( rVAC_SP <> 0) THEN
+		IG.rVAC_SP := rVAC_SP;
+	END_IF;
+	IF ( rPRO_SP <> 0) THEN
+		IG.rPRO_SP := rPRO_SP;
+	END_IF;
+	IF ( rHYS_PR <> 0) THEN
+		IG.rHYS_PR := rHYS_PR;
+	END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+	rVAC_SP := IG.rVAC_SP;
+END_IF;
+
+IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+	rPRO_SP:= IG.rPRO_SP;
+END_IF;
+
+IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+	rHYS_PR:= IG.rHYS_PR;
+END_IF;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_AutoOn" Id="{6fde0073-91f6-4cb9-bbee-4ff5715804d3}">
