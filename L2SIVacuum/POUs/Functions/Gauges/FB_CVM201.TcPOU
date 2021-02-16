@@ -32,6 +32,8 @@ VAR CONSTANT
 	rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
 	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
 	rDisconnectedBoundary	:	REAL := 0.3;
+	(*Default set point 50 mT*)
+	rDefaultVAC_SP: REAL := 5E-2;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
@@ -94,7 +96,9 @@ ACT_Logger();
 
 (*Soft IO Mapping *)
 IO();
-]]></ST>
+
+(*Load or save the persistent variables*)
+ACT_Persistent();]]></ST>
     </Implementation>
     <Action Name="ACT_Logger" Id="{7969d63c-632d-445e-9c13-1e5912f29995}">
       <Implementation>
@@ -123,6 +127,22 @@ if (PG.xLog) THEN
 END_IF
 
 
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{78621b25-16e7-4ab1-a07c-31e6e9a8387d}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	IF (rPRO_SP <> 0) THEN
+		PG.rPRO_SP := rPRO_SP;
+	END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (PG.rVAC_SP = rVAC_SP) THEN
+	rVAC_SP:= PG.rVAC_SP;
+END_IF;
 ]]></ST>
       </Implementation>
     </Action>

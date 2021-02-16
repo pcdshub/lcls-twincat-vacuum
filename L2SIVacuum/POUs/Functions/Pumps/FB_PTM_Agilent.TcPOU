@@ -222,6 +222,8 @@ ACT_Logger();
 (*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
 iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
 ACT_Interlock();
+(*Load or save the persistent variables*)
+ACT_Persistent();
 ]]></ST>
     </Implementation>
     <Action Name="ACT_Interlock" Id="{0061bc54-6d3d-42f4-b4c3-04fe9be5aabf}">
@@ -263,6 +265,28 @@ tFault(CLK:= iq_stPTM.i_xFault OR iq_stPtm.xPumpFaultLock);
 IF tFault.Q THEN fbLogger(sMsg:=iq_stPtm.sError, eSevr:=TcEventSeverity.Critical); END_IF
 
 ]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{4f422f16-1e3c-400f-835a-f83407cab1a3}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	IF (rBackingPressureSP <> 0) THEN
+		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+	END_IF;
+	IF (rInletPressureSP <> 0) THEN
+		iq_stPTM.rInletPressureSP := rInletPressureSP;
+	END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+END_IF;
+
+IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+	rInletPressureSP := iq_stPTM.rInletPressureSP;
+END_IF;]]></ST>
       </Implementation>
     </Action>
     <Method Name="BackingPressureSetPoint" Id="{21dc29bb-1bb2-48c6-a7d3-4f43435484d9}">
@@ -385,47 +409,5 @@ END_VAR
         <ST><![CDATA[M_TurboIsOn := (This^.iq_stPtm.eState =  E_PumpState.pumpSTARTING ) OR (This^.iq_stPtm.eState =  E_PumpState.pumpRUNNING );]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Agilent">
-      <LineId Id="3" Count="159" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.ACT_Interlock">
-      <LineId Id="2" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.ACT_Logger">
-      <LineId Id="2" Count="29" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.BackingPressureSetPoint">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.ErrorMessage">
-      <LineId Id="3" Count="15" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.IO">
-      <LineId Id="2" Count="16" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.M_Run">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.M_SetCurrentScale">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.M_SetMaxSpeed">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.M_SetPowerScale">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Agilent.M_TurboIsOn">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

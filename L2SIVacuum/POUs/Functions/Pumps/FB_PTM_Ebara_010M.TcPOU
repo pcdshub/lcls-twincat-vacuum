@@ -132,7 +132,9 @@ END_IF
 (*soft IO mapping*)
 ACT_IO();
 // Log States and triggers
-ACT_Logger();]]></ST>
+ACT_Logger();
+(*Load or save the persistent variables*)
+ACT_Persistent();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{75fa05c8-b87a-4b36-93fe-dc680536a088}">
       <Implementation>
@@ -208,6 +210,28 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
 ]]></ST>
       </Implementation>
     </Action>
+    <Action Name="ACT_Persistent" Id="{8259ae37-6925-46e5-b258-6ca391b67270}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	IF (rBackingPressureSP <> 0) THEN
+		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+	END_IF;
+	IF (rInletPressureSP <> 0) THEN
+		iq_stPTM.rInletPressureSP := rInletPressureSP;
+	END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+END_IF;
+
+IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+	rInletPressureSP := iq_stPTM.rInletPressureSP;
+END_IF;]]></ST>
+      </Implementation>
+    </Action>
     <Method Name="BackingPressureSetPoint" Id="{24462767-c0c7-4963-b34e-5cf4d25fc552}">
       <Declaration><![CDATA[METHOD PUBLIC BackingPressureSetPoint : REAL
 VAR_INPUT
@@ -230,24 +254,5 @@ END_VAR
 this^.iq_stPtm.xRunSW := run;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Ebara_010M">
-      <LineId Id="3" Count="83" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_010M.ACT_IO">
-      <LineId Id="2" Count="28" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_010M.ACT_Logger">
-      <LineId Id="2" Count="34" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_010M.BackingPressureSetPoint">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara_010M.M_Run">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
