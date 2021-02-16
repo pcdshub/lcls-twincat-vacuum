@@ -244,6 +244,9 @@
     <Compile Include="POUs\Functions\Pumps\FB_PIP_Gamma.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\FB_PIP_SIP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_PTM_Agilent.TcPOU">
       <SubType>Code</SubType>
     </Compile>
