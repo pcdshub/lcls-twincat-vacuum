@@ -2330,18 +2330,23 @@ FB_9XX
     	rMaxPressure	:	REAL := 760; //Torr
     	rMinPressure	:	REAL := 1E-5; //Torr
     	rVMin : REAL:= 0.9;
-    	(*Default set point 50 mT*)
-    	rVAC_SP: REAL := 5E-2;
+
     	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
     	(*IO*)
     	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
     END_VAR
+
+    VAR CONSTANT
+    	(*Default set point 50 mT*)
+    	rDefaultVAC_SP: REAL := 5E-2;
+    END_VAR
     (* Standard MKS 9XX series conversion *)
     (* works for 972 and 925 *)
 
-    //Default setpoint 50 mT
+
+    //Default setpoint 
     IF PG.rVAC_SP = 0 THEN
-    	PG.rVAC_SP := rVAC_SP;
+    	PG.rVAC_SP := rDefaultVAC_SP;
     END_IF
     // check no div by zero
     If (iTermBits=0) THEN iTermBits := 30518;END_IF
@@ -2570,6 +2575,8 @@ FB_CCM501
     (*Soft IO Linking*)
     // check ethercat Diagnostics
     IO();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_Logger:
@@ -2608,6 +2615,33 @@ FB_CCM501
     		  ePrevState := IG.eState;  
     	  END_IF
     END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF ( rVAC_SP <> 0) THEN
+    		IG.rVAC_SP := rVAC_SP;
+    	END_IF;
+    	IF ( rPRO_SP <> 0) THEN
+    		IG.rPRO_SP := rPRO_SP;
+    	END_IF;
+    	IF ( rHYS_PR <> 0) THEN
+    		IG.rHYS_PR := rHYS_PR;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+    	rVAC_SP := IG.rVAC_SP;
+    END_IF;
+
+    IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+    	rPRO_SP:= IG.rPRO_SP;
+    END_IF;
+
+    IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+    	rHYS_PR:= IG.rHYS_PR;
+    END_IF;
     END_ACTION
     ACTION IO:
     (*soft link inputs*)
@@ -2719,6 +2753,8 @@ FB_CVM201
     	rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
     	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
     	rDisconnectedBoundary	:	REAL := 0.3;
+    	(*Default set point 50 mT*)
+    	rDefaultVAC_SP: REAL := 5E-2;
     END_VAR
     (* This function block is used to provide protection and automatic turn on of ion gauges,
      it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
@@ -2781,6 +2817,9 @@ FB_CVM201
     (*Soft IO Mapping *)
     IO();
 
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
+
     END_FUNCTION_BLOCK
     ACTION ACT_Logger:
     //STATE Logger  
@@ -2805,6 +2844,19 @@ FB_CVM201
     	  ePrevState := PG.eState;  
       END_IF 
     END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rPRO_SP <> 0) THEN
+    		PG.rPRO_SP := rPRO_SP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (PG.rVAC_SP = rVAC_SP) THEN
+    	rVAC_SP:= PG.rVAC_SP;
+    END_IF;
     END_ACTION
     ACTION IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
@@ -3103,11 +3155,6 @@ FB_GaugeBase
 
     {attribute 'reflection'} 
     FUNCTION_BLOCK FB_GaugeBase
-    VAR_INPUT
-    END_VAR
-    VAR_OUTPUT
-    	
-    END_VAR
     VAR
     	//Logging 
         fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
@@ -3119,6 +3166,13 @@ FB_GaugeBase
     	{attribute 'instance-path'}
     	{attribute 'noinit'}
     	sPath: STRING;
+    	// For Persistent Data
+    	bRestorePersistentData	:	BOOL:=TRUE;
+    END_VAR
+    VAR PERSISTENT
+        rVAC_SP	:	REAL;
+    	rPRO_SP	:	REAL;
+    	rHYS_PR: REAL;
     END_VAR
 
 
@@ -3699,6 +3753,8 @@ FB_MKS275
     	rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
     	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
     	rDisconnectedBoundary	:	REAL := 0.3;
+    	(*Default set point 50 mT*)
+    	rDefaultVAC_SP: REAL := 5E-2;
     END_VAR
     (* This function block is used to provide protection and automatic turn on of ion gauges,
      it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
@@ -3706,7 +3762,7 @@ FB_MKS275
 
     //Default setpoint 50 mT
     IF PG.rVAC_SP = 0 THEN
-    	PG.rVAC_SP := 5E-2;
+    	PG.rVAC_SP := rDefaultVAC_SP;
     END_IF
 
     (* Real-value calculation *)
@@ -3761,6 +3817,9 @@ FB_MKS275
     (*Soft IO Mapping *)
     IO();
 
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
+
     END_FUNCTION_BLOCK
     ACTION ACT_Logger:
     //STATE Logger  
@@ -3785,6 +3844,19 @@ FB_MKS275
     	  ePrevState := PG.eState;  
       END_IF 
     END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rPRO_SP <> 0) THEN
+    		PG.rPRO_SP := rPRO_SP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (PG.rVAC_SP = rVAC_SP) THEN
+    	rVAC_SP:= PG.rVAC_SP;
+    END_IF;
     END_ACTION
     ACTION IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
@@ -3877,6 +3949,9 @@ FB_MKS317
     (*soft io*)
     IO();
 
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
+
     END_FUNCTION_BLOCK
     ACTION ACT_Logger:
     //STATE Logger  
@@ -3901,6 +3976,19 @@ FB_MKS317
     		  ePrevState := PG.eState;  
     	  END_IF
      END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rPRO_SP <> 0) THEN
+    		PG.rPRO_SP := rPRO_SP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (PG.rVAC_SP = rVAC_SP) THEN
+    	rVAC_SP:= PG.rVAC_SP;
+    END_IF;
     END_ACTION
     ACTION IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
@@ -4176,7 +4264,8 @@ FB_MKS422
     (*Soft IO Linking*)
     // check ethercat Diagnostics
     IO();
-
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
     timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
 
     END_FUNCTION_BLOCK
@@ -4215,6 +4304,33 @@ FB_MKS422
     		  ePrevState := IG.eState;  
     	  END_IF
     END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF ( rVAC_SP <> 0) THEN
+    		IG.rVAC_SP := rVAC_SP;
+    	END_IF;
+    	IF ( rPRO_SP <> 0) THEN
+    		IG.rPRO_SP := rPRO_SP;
+    	END_IF;
+    	IF ( rHYS_PR <> 0) THEN
+    		IG.rHYS_PR := rHYS_PR;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+    	rVAC_SP := IG.rVAC_SP;
+    END_IF;
+
+    IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+    	rPRO_SP:= IG.rPRO_SP;
+    END_IF;
+
+    IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+    	rHYS_PR:= IG.rHYS_PR;
+    END_IF;
     END_ACTION
     ACTION IO:
     (*soft link inputs*)
@@ -4350,6 +4466,8 @@ FB_MKS500
     (*Soft IO Linking*)
     // check ethercat Diagnostics
     IO();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_Logger:
@@ -4388,6 +4506,33 @@ FB_MKS500
     		  ePrevState := IG.eState;  
     	  END_IF
     END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF ( rVAC_SP <> 0) THEN
+    		IG.rVAC_SP := rVAC_SP;
+    	END_IF;
+    	IF ( rPRO_SP <> 0) THEN
+    		IG.rPRO_SP := rPRO_SP;
+    	END_IF;
+    	IF ( rHYS_PR <> 0) THEN
+    		IG.rHYS_PR := rHYS_PR;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+    	rVAC_SP := IG.rVAC_SP;
+    END_IF;
+
+    IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+    	rPRO_SP:= IG.rPRO_SP;
+    END_IF;
+
+    IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+    	rHYS_PR:= IG.rHYS_PR;
+    END_IF;
     END_ACTION
     ACTION IO:
     (*soft link inputs*)
@@ -4645,7 +4790,7 @@ FB_MKS909
     	rMinPressure	:	REAL := 1E-10; //Torr
     	timer:TON;
     	(*Default set point 50 mT*)
-    	rVAC_SP: REAL := 9E-3; // as per manual
+    	rDefaultVAC_SP: REAL := 9E-3; // as per manual
     	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
     	(*IO*)
     	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
@@ -4657,7 +4802,7 @@ FB_MKS909
 
     //Default setpoint 50 mT
     IF PG.rVAC_SP = 0 THEN
-    	PG.rVAC_SP := rVAC_SP;
+    	PG.rVAC_SP := rDefaultVAC_SP;
     END_IF
     // check no div by zero
     If (iTermBits=0) THEN iTermBits := 30518;END_IF
@@ -4702,10 +4847,14 @@ FB_MKS909
 
     (*Soft IO Mapping*)
     ACT_IO();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     (*Logger*)
-
     THIS^.ACT_Logger();
+
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_IO:
@@ -4746,6 +4895,33 @@ FB_MKS909
     	  END_CASE
     	  ePrevState := IG.eState;  
       END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF ( rVAC_SP <> 0) THEN
+    		IG.rVAC_SP := rVAC_SP;
+    	END_IF;
+    	IF ( rPRO_SP <> 0) THEN
+    		IG.rPRO_SP := rPRO_SP;
+    	END_IF;
+    	IF ( rHYS_PR <> 0) THEN
+    		IG.rHYS_PR := rHYS_PR;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+    	rVAC_SP := IG.rVAC_SP;
+    END_IF;
+
+    IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+    	rPRO_SP:= IG.rPRO_SP;
+    END_IF;
+
+    IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+    	rHYS_PR:= IG.rHYS_PR;
+    END_IF;
     END_ACTION
 
 
@@ -4946,14 +5122,12 @@ FB_PIP_Gamma
     	stPump	:	ST_PIP; //Gamma Ion pump structure
     	q_IG	:	ST_VG; //When ion pump is used as a measuring device for interlocking gate valves
     END_VAR
-    VAR_IN_OUT
-    END_VAR
     VAR
      rPRESS : REAL;
      
      rV : REAL;
      timer:TON; 
-     rHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
+
      (* IO Controls *)
      q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when TRUE
      i_iPRESS  AT %I*: INT;  //
@@ -4976,11 +5150,17 @@ FB_PIP_Gamma
     	{attribute 'noinit'}
     	sPath: STRING;
     END_VAR
+    VAR CONSTANT
+    	 rDefaultHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
+    END_VAR
+    VAR PERSISTENT
+    	rHVEna_SP : REAL;
+    END_VAR
     (* Does Gamma Ion pump HV interlock. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
 
     (*Ensures the set point is not higher than 1.0E-4*)
-    IF (stPump.rHVEna_SP > rHVEna_SP) THEN
-    	stPump.rHVEna_SP := rHVEna_SP;
+    IF (stPump.rHVEna_SP > rDefaultHVEna_SP) THEN
+    	stPump.rHVEna_SP := rDefaultHVEna_SP;
     END_IF
 
     (* Interlock *)
@@ -5045,6 +5225,8 @@ FB_PIP_Gamma
     ACT_IlkOverride();
     // Log States and triggers
     ACT_Logger();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_IlkOverride:
@@ -5103,6 +5285,19 @@ FB_PIP_Gamma
     // Log FAULT
     tFault(CLK:=  NOT tPumpStartTimeout.Q);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rHVEna_SP <> 0) THEN
+    		stPump.rHVEna_SP := rHVEna_SP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (stPump.rHVEna_SP = rHVEna_SP) THEN
+    	rHVEna_SP := stPump.rHVEna_SP;
+    END_IF;
     END_ACTION
     ACTION ACT_SetGauge:
     (*MG*)
@@ -5541,6 +5736,8 @@ FB_PTM_Agilent
     (*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
     iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
     ACT_Interlock();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_Interlock:
@@ -5576,6 +5773,26 @@ FB_PTM_Agilent
     // Log FAULT
     tFault(CLK:= iq_stPTM.i_xFault OR iq_stPtm.xPumpFaultLock);
     IF tFault.Q THEN fbLogger(sMsg:=iq_stPtm.sError, eSevr:=TcEventSeverity.Critical); END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rBackingPressureSP <> 0) THEN
+    		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    	END_IF;
+    	IF (rInletPressureSP <> 0) THEN
+    		iq_stPTM.rInletPressureSP := rInletPressureSP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+    	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+    END_IF;
+
+    IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+    	rInletPressureSP := iq_stPTM.rInletPressureSP;
+    END_IF;
     END_ACTION
     ACTION IO:
     (*inputs*)
@@ -5734,6 +5951,8 @@ FB_PTM_Ebara_010M
     ACT_IO();
     // Log States and triggers
     ACT_Logger();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_IO:
@@ -5793,6 +6012,26 @@ FB_PTM_Ebara_010M
     // Log FAULT
     tFault(CLK:= iq_stPTM.i_xNCFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rBackingPressureSP <> 0) THEN
+    		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    	END_IF;
+    	IF (rInletPressureSP <> 0) THEN
+    		iq_stPTM.rInletPressureSP := rInletPressureSP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+    	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+    END_IF;
+
+    IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+    	rInletPressureSP := iq_stPTM.rInletPressureSP;
+    END_IF;
     END_ACTION
 
 
@@ -5925,6 +6164,8 @@ FB_PTM_Ebara_011M
     ACT_IO();
     // Log States and triggers
     ACT_Logger();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_IO:
@@ -5997,6 +6238,26 @@ FB_PTM_Ebara_011M
     // Log FAULT
     tFault(CLK:= iq_stPTM.i_xNCFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rBackingPressureSP <> 0) THEN
+    		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    	END_IF;
+    	IF (rInletPressureSP <> 0) THEN
+    		iq_stPTM.rInletPressureSP := rInletPressureSP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+    	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+    END_IF;
+
+    IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+    	rInletPressureSP := iq_stPTM.rInletPressureSP;
+    END_IF;
     END_ACTION
 
 
@@ -6075,6 +6336,8 @@ FB_PTM_MagDriveDigital
     ACT_IO();
     // Log States and triggers
     ACT_Logger();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_IO:
@@ -6123,6 +6386,26 @@ FB_PTM_MagDriveDigital
     tFault(CLK:= NOT iq_stPTM.i_xFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rBackingPressureSP <> 0) THEN
+    		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    	END_IF;
+    	IF (rInletPressureSP <> 0) THEN
+    		iq_stPTM.rInletPressureSP := rInletPressureSP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+    	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+    END_IF;
+
+    IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+    	rInletPressureSP := iq_stPTM.rInletPressureSP;
+    END_IF;
+    END_ACTION
 
 
 FB_PTM_Pfeiffer
@@ -6133,9 +6416,6 @@ FB_PTM_Pfeiffer
     (* This function block does basic controls FOR the Pfeiffer Turbo pump connected to the TM700 and TC400 Controllers.
      Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
     FUNCTION_BLOCK FB_PTM_Pfeiffer EXTENDS FB_Pump
-    VAR_IN_OUT
-    	
-    END_VAR
     VAR_INPUT
     	i_xExtIlkOK : BOOL; // Connect to external interlock logic, TRUE if not used.
     END_VAR
@@ -6213,6 +6493,8 @@ FB_PTM_Pfeiffer
     ACT_IO();
     // Log States and triggers
     ACT_Logger();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_IO:
@@ -6261,6 +6543,26 @@ FB_PTM_Pfeiffer
     tFault(CLK:= NOT iq_stPTM.i_xFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rBackingPressureSP <> 0) THEN
+    		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    	END_IF;
+    	IF (rInletPressureSP <> 0) THEN
+    		iq_stPTM.rInletPressureSP := rInletPressureSP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+    	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+    END_IF;
+
+    IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+    	rInletPressureSP := iq_stPTM.rInletPressureSP;
+    END_IF;
+    END_ACTION
 
 
 FB_PTM_Test
@@ -6304,8 +6606,6 @@ FB_PTM_TurboDrive
     (* TD20 Classic Via Remote X1 Connector 9-way PLC interface*)
     (* When serial interface is implemented, call Method M_Serial_IO after fb instantiation, in order to add the serial status *)
     FUNCTION_BLOCK FB_PTM_TurboDrive EXTENDS FB_Pump
-    VAR_IN_OUT
-    END_VAR
     VAR_INPUT
     	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
     END_VAR
@@ -6325,7 +6625,6 @@ FB_PTM_TurboDrive
     	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
     	i_xFaultNC AT%I*: BOOL; // Error Active when no Error is present
     	q_RunDO AT%Q*: BOOL; // Start/Stop
-
     END_VAR
     (* Basic Turbo Control *)
     (* This Function block provides basic turbo control for Leybold Turbo Drive 300, Turbo Drive 400 *)
@@ -6364,6 +6663,8 @@ FB_PTM_TurboDrive
     ACT_IO();
     // Log States and triggers
     This^.ACT_Logger();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_IO:
@@ -6408,6 +6709,26 @@ FB_PTM_TurboDrive
     tFault(CLK:= NOT iq_stPTM.i_xFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rBackingPressureSP <> 0) THEN
+    		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    	END_IF;
+    	IF (rInletPressureSP <> 0) THEN
+    		iq_stPTM.rInletPressureSP := rInletPressureSP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+    	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+    END_IF;
+
+    IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+    	rInletPressureSP := iq_stPTM.rInletPressureSP;
+    END_IF;
+    END_ACTION
 
 
 FB_PTM_TwisTorr
@@ -6420,7 +6741,6 @@ FB_PTM_TwisTorr
     FUNCTION_BLOCK FB_PTM_TwisTorr EXTENDS FB_Pump
     VAR_INPUT
     	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
-    	
     END_VAR
     VAR_OUTPUT
     	{attribute 'pytmc' := ' pv: '}
@@ -6431,9 +6751,7 @@ FB_PTM_TwisTorr
     	(*IO*)
     	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
     	i_xFault AT%I*: BOOL; // Error // this open collector output signal is ON when a system fault condition is detected
-
     	q_RunDO AT%Q*: BOOL; // Start/Stop
-
     END_VAR
     (* Interlock Sum *)
     iq_stPtm.xExtRunOk:= i_xExtILKOk;
@@ -6462,8 +6780,10 @@ FB_PTM_TwisTorr
 
     (*I/O soft mapping*)
     ACT_IO();
-    // Log States and triggers
+    (*Log States and triggers*)
     ACT_Logger();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_IO:
@@ -6506,6 +6826,26 @@ FB_PTM_TwisTorr
     tFault(CLK:= NOT iq_stPTM.i_xFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rBackingPressureSP <> 0) THEN
+    		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    	END_IF;
+    	IF (rInletPressureSP <> 0) THEN
+    		iq_stPTM.rInletPressureSP := rInletPressureSP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+    	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+    END_IF;
+
+    IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+    	rInletPressureSP := iq_stPTM.rInletPressureSP;
+    END_IF;
+    END_ACTION
 
 
 FB_Pump
@@ -6514,19 +6854,20 @@ FB_Pump
 ::
 
     FUNCTION_BLOCK FB_Pump
-    VAR_INPUT
-    END_VAR
-    VAR_OUTPUT
-    END_VAR
     VAR
-    	
-     // For logging
+    	// For logging
         fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
         ePrevState : E_PumpState;
         tErrorPresent : R_TRIG;
         tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)	
     	tFault : F_TRIG;
     	tILK: TON;
+    	// For Persistent Data
+    	bRestorePersistentData	:	BOOL:=TRUE;
+    END_VAR
+    VAR PERSISTENT
+        rBackingPressureSP	:	REAL;
+    	rInletPressureSP	:	REAL;
     END_VAR
 
 
@@ -7090,6 +7431,9 @@ FB_Valve
         tErrorPresent : R_TRIG;
         tAction : R_TRIG; // Primary action of this device (OPN_DO, etc.)
         tOverrideActivated : R_TRIG;
+    	// For Persistent Data
+    	bRestorePersistentData	:	BOOL:=TRUE;
+    	//fbWritePersistentData           : WritePersistentData;
     END_VAR
 
 
@@ -7275,10 +7619,6 @@ FB_VCN
     	'}
     	iq_stVCN	:	ST_VCN; //Needle valve structure
     END_VAR
-    VAR_IN_OUT
-    	
-    END_VAR
-
     VAR CONSTANT
     	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual, A Voltage of 9V it is completely Open
     	rCloseVoltage	:	REAL := 0.4;// a voltage <0.5 V the valve is closed	
@@ -7294,7 +7634,9 @@ FB_VCN
     	// 
     	(*IO*)
     	q_iRawPosition AT%Q* :INT;
-
+    END_VAR
+    VAR PERSISTENT
+        rUpperLimit	:	REAL;
     END_VAR
     (* Needle valve control FB
     A. Wallace 2016-7-21
@@ -7315,6 +7657,7 @@ FB_VCN
 
     Note: Raw position calc is based on 0.5 to 9V span, 32767 bits
     *)
+
 
     iq_stVCN.rUpperLimit :=  LIMIT(0, iq_stVCN.rUpperLimit, 100);
 
@@ -7344,6 +7687,9 @@ FB_VCN
 
     (*SOft IO Mapping*)
     ACT_IO();
+
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     END_FUNCTION_BLOCK
     ACTION ACT_IO:
@@ -7379,6 +7725,23 @@ FB_VCN
     // Log valve open
     tAction(CLK:= (iq_stVCN.eValveControl = OpenValve) );
     IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEventSeverity.Info); END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (bRestorePersistentData) THEN
+    	bRestorePersistentData	:= FALSE;
+    	IF (rUpperLimit <> 0) THEN
+    		iq_stVCN.rUpperLimit := rUpperLimit;
+    	END_IF;
+    	
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (iq_stVCN.rUpperLimit = rUpperLimit) THEN
+    	rUpperLimit := iq_stVCN.rUpperLimit;
+    	//fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
+    ELSE
+         // fbWritePersistentData( START:=FALSE);
+    END_IF;
     END_ACTION
 
 
@@ -7902,8 +8265,11 @@ FB_VGC
         
         // For logging
         eVGCPrevState : E_VGC;
-       
-    	
+    END_VAR
+
+    VAR PERSISTENT
+        rAT_VAC_SP	:	REAL;
+    	rHYST_PERC	:	REAL;
     END_VAR
     (* Vacuum gate valve
     A. Wallace
@@ -8161,6 +8527,8 @@ FB_VGC
     // Log States and triggers
     ACT_Logger();
 
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
 
     (*FAST FAULT*)
@@ -8238,6 +8606,26 @@ FB_VGC
     // Log override mode enabled
     tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rAT_VAC_SP <> 0) THEN
+    		iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
+    	END_IF;
+    	IF (rHYST_PERC <> 0) THEN
+    			iq_stValve.rHYST_PERC := rHYST_PERC;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (iq_stValve.rAT_VAC_SP = rAT_VAC_SP) THEN
+    	rAT_VAC_SP :=iq_stValve.rAT_VAC_SP;
+    END_IF;
+
+    IF NOT (iq_stValve.rHYST_PERC = rHYST_PERC) THEN
+    	rHYST_PERC:= iq_stValve.rHYST_PERC;
+    END_IF;
     END_ACTION
     ACTION ACT_PMPS:
     bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);
@@ -8390,8 +8778,12 @@ FB_VGC_2S
         
         // For logging
         eVGCPrevState : E_VGC;
-       
-    	
+    END_VAR
+
+    VAR PERSISTENT
+        rAT_VAC_SP	:	REAL;
+    	rHYST_PERC	:	REAL;
+    	rAT_VAC_SP_DS : REAL;
     END_VAR
     (* Vacuum gate valve
     A. Wallace
@@ -8663,7 +9055,8 @@ FB_VGC_2S
     // Log States and triggers
     ACT_Logger();
 
-
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
 
     (*FAST FAULT*)
     FFO(i_xOK := xMPS_OK,
@@ -8740,6 +9133,33 @@ FB_VGC_2S
     // Log override mode enabled
     tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rAT_VAC_SP <> 0) THEN
+    		iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
+    	END_IF;
+    	IF (rHYST_PERC <> 0) THEN
+    			iq_stValve.rHYST_PERC := rHYST_PERC;
+    	END_IF;
+    	IF (rAT_VAC_SP_DS <> 0) THEN
+    		iq_stValve.rAT_VAC_SP_DS := rAT_VAC_SP_DS;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (iq_stValve.rAT_VAC_SP = rAT_VAC_SP) THEN
+    	rAT_VAC_SP := iq_stValve.rAT_VAC_SP;
+    END_IF;
+
+    IF NOT (iq_stValve.rAT_VAC_HYS = rHYST_PERC) THEN
+    	rHYST_PERC := iq_stValve.rAT_VAC_HYS;
+    END_IF;
+
+    IF NOT (iq_stValve.rAT_VAC_SP_DS = rAT_VAC_SP_DS) THEN
+    	rAT_VAC_SP_DS := iq_stValve.rAT_VAC_SP_DS;
+    END_IF;
     END_ACTION
     ACTION ACT_PMPS:
     bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);

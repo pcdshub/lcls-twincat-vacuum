@@ -2527,18 +2527,23 @@ END_FUNCTION
     <span class="n">rMaxPressure</span>    <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">760</span><span class="p">;</span> <span class="o">//</span><span class="n">Torr</span>
     <span class="n">rMinPressure</span>    <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E-5</span><span class="p">;</span> <span class="o">//</span><span class="n">Torr</span>
     <span class="n">rVMin</span> <span class="p">:</span> <span class="n">REAL</span><span class="o">:=</span> <span class="mf">0.9</span><span class="p">;</span>
-    <span class="p">(</span><span class="o">*</span><span class="n">Default</span> <span class="nb">set</span> <span class="n">point</span> <span class="mi">50</span> <span class="n">mT</span><span class="o">*</span><span class="p">)</span>
-    <span class="n">rVAC_SP</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">5E-2</span><span class="p">;</span>
+
     <span class="n">iTermBits</span><span class="p">:</span> <span class="n">UINT</span> <span class="o">:=</span> <span class="mi">30518</span> <span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">terminal</span><span class="s1">&#39;s maximum value in bits default el3174 as per vacuum architecture</span>
     <span class="p">(</span><span class="o">*</span><span class="n">IO</span><span class="o">*</span><span class="p">)</span>
     <span class="n">i_iPRESS_R</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span><span class="n">INT</span><span class="p">;</span> <span class="o">//</span> <span class="nb">input</span> <span class="n">Pressure</span> <span class="o">//</span> <span class="n">Link</span> <span class="n">to</span> <span class="n">analog</span> <span class="n">Input</span>
 <span class="n">END_VAR</span>
+
+<span class="n">VAR</span> <span class="n">CONSTANT</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">Default</span> <span class="nb">set</span> <span class="n">point</span> <span class="mi">50</span> <span class="n">mT</span><span class="o">*</span><span class="p">)</span>
+    <span class="n">rDefaultVAC_SP</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">5E-2</span><span class="p">;</span>
+<span class="n">END_VAR</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Standard</span> <span class="n">MKS</span> <span class="mi">9</span><span class="n">XX</span> <span class="n">series</span> <span class="n">conversion</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">works</span> <span class="k">for</span> <span class="mi">972</span> <span class="ow">and</span> <span class="mi">925</span> <span class="o">*</span><span class="p">)</span>
 
-<span class="o">//</span><span class="n">Default</span> <span class="n">setpoint</span> <span class="mi">50</span> <span class="n">mT</span>
+
+<span class="o">//</span><span class="n">Default</span> <span class="n">setpoint</span>
 <span class="n">IF</span> <span class="n">PG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">THEN</span>
-    <span class="n">PG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">:=</span> <span class="n">rVAC_SP</span><span class="p">;</span>
+    <span class="n">PG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">:=</span> <span class="n">rDefaultVAC_SP</span><span class="p">;</span>
 <span class="n">END_IF</span>
 <span class="o">//</span> <span class="n">check</span> <span class="n">no</span> <span class="n">div</span> <span class="n">by</span> <span class="n">zero</span>
 <span class="n">If</span> <span class="p">(</span><span class="n">iTermBits</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">iTermBits</span> <span class="o">:=</span> <span class="mi">30518</span><span class="p">;</span><span class="n">END_IF</span>
@@ -2761,6 +2766,8 @@ END_FUNCTION
 <span class="p">(</span><span class="o">*</span><span class="n">Soft</span> <span class="n">IO</span> <span class="n">Linking</span><span class="o">*</span><span class="p">)</span>
 <span class="o">//</span> <span class="n">check</span> <span class="n">ethercat</span> <span class="n">Diagnostics</span>
 <span class="n">IO</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
 <span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
@@ -2799,6 +2806,33 @@ END_FUNCTION
               <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
       <span class="n">END_IF</span>
 <span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rVAC_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">:=</span> <span class="n">rVAC_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rPRO_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">:=</span> <span class="n">rPRO_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rHYS_PR</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span> <span class="o">:=</span> <span class="n">rHYS_PR</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">=</span> <span class="n">rVAC_SP</span><span class="p">)</span>  <span class="n">THEN</span>
+    <span class="n">rVAC_SP</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">=</span> <span class="n">rPRO_SP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rPRO_SP</span><span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span> <span class="o">=</span> <span class="n">rHYS_PR</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rHYS_PR</span><span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 <span class="n">ACTION</span> <span class="n">IO</span><span class="p">:</span>
 <span class="p">(</span><span class="o">*</span><span class="n">soft</span> <span class="n">link</span> <span class="n">inputs</span><span class="o">*</span><span class="p">)</span>
@@ -2906,6 +2940,8 @@ VAR CONSTANT
     rValidLoBoundary        :       REAL := 0.375; //  0.375V as per manual page 27
     rValidHiBoundary        :       REAL := 5.659;// 5.534; // manual page 27
     rDisconnectedBoundary   :       REAL := 0.3;
+    (*Default set point 50 mT*)
+    rDefaultVAC_SP: REAL := 5E-2;
 END_VAR
 (* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
@@ -2968,6 +3004,9 @@ ACT_Logger();
 (*Soft IO Mapping *)
 IO();
 
+(*Load or save the persistent variables*)
+ACT_Persistent();
+
 END_FUNCTION_BLOCK
 ACTION ACT_Logger:
 //STATE Logger
@@ -2992,6 +3031,19 @@ if (PG.xLog) THEN
       ePrevState := PG.eState;
   END_IF
 END_IF
+END_ACTION
+ACTION ACT_Persistent:
+(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+    SUPER^.bRestorePersistentData   := FALSE;
+    IF (rPRO_SP &lt;&gt; 0) THEN
+            PG.rPRO_SP := rPRO_SP;
+    END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (PG.rVAC_SP = rVAC_SP) THEN
+    rVAC_SP:= PG.rVAC_SP;
+END_IF;
 END_ACTION
 ACTION IO:
 PG.i_iPRESS_R :=i_iPRESS_R;
@@ -3282,11 +3334,6 @@ END_ACTION
 <h2>FB_GaugeBase<a class="headerlink" href="#fb-gaugebase" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;reflection&#39;</span><span class="p">}</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_GaugeBase</span>
-<span class="n">VAR_INPUT</span>
-<span class="n">END_VAR</span>
-<span class="n">VAR_OUTPUT</span>
-
-<span class="n">END_VAR</span>
 <span class="n">VAR</span>
     <span class="o">//</span><span class="n">Logging</span>
     <span class="n">fbLogger</span> <span class="p">:</span> <span class="n">FB_LogMessage</span> <span class="o">:=</span> <span class="p">(</span><span class="n">eSubsystem</span><span class="o">:=</span><span class="n">E_SubSystem</span><span class="o">.</span><span class="n">VACUUM</span><span class="p">);</span>
@@ -3298,6 +3345,13 @@ END_ACTION
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;instance-path&#39;</span><span class="p">}</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;noinit&#39;</span><span class="p">}</span>
     <span class="n">sPath</span><span class="p">:</span> <span class="n">STRING</span><span class="p">;</span>
+    <span class="o">//</span> <span class="n">For</span> <span class="n">Persistent</span> <span class="n">Data</span>
+    <span class="n">bRestorePersistentData</span>  <span class="p">:</span>       <span class="n">BOOL</span><span class="o">:=</span><span class="n">TRUE</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span> <span class="n">PERSISTENT</span>
+    <span class="n">rVAC_SP</span> <span class="p">:</span>       <span class="n">REAL</span><span class="p">;</span>
+    <span class="n">rPRO_SP</span> <span class="p">:</span>       <span class="n">REAL</span><span class="p">;</span>
+    <span class="n">rHYS_PR</span><span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 
 
@@ -3860,6 +3914,8 @@ VAR CONSTANT
     rValidLoBoundary        :       REAL := 0.375; //  0.375V as per manual page 27
     rValidHiBoundary        :       REAL := 5.659;// 5.534; // manual page 27
     rDisconnectedBoundary   :       REAL := 0.3;
+    (*Default set point 50 mT*)
+    rDefaultVAC_SP: REAL := 5E-2;
 END_VAR
 (* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
@@ -3867,7 +3923,7 @@ END_VAR
 
 //Default setpoint 50 mT
 IF PG.rVAC_SP = 0 THEN
-    PG.rVAC_SP := 5E-2;
+    PG.rVAC_SP := rDefaultVAC_SP;
 END_IF
 
 (* Real-value calculation *)
@@ -3922,6 +3978,9 @@ ACT_Logger();
 (*Soft IO Mapping *)
 IO();
 
+(*Load or save the persistent variables*)
+ACT_Persistent();
+
 END_FUNCTION_BLOCK
 ACTION ACT_Logger:
 //STATE Logger
@@ -3946,6 +4005,19 @@ if (PG.xLog) THEN
       ePrevState := PG.eState;
   END_IF
 END_IF
+END_ACTION
+ACTION ACT_Persistent:
+(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+    SUPER^.bRestorePersistentData   := FALSE;
+    IF (rPRO_SP &lt;&gt; 0) THEN
+            PG.rPRO_SP := rPRO_SP;
+    END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (PG.rVAC_SP = rVAC_SP) THEN
+    rVAC_SP:= PG.rVAC_SP;
+END_IF;
 END_ACTION
 ACTION IO:
 PG.i_iPRESS_R :=i_iPRESS_R;
@@ -4036,6 +4108,9 @@ END_ACTION
 <span class="p">(</span><span class="o">*</span><span class="n">soft</span> <span class="n">io</span><span class="o">*</span><span class="p">)</span>
 <span class="n">IO</span><span class="p">();</span>
 
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
+
 <span class="n">END_FUNCTION_BLOCK</span>
 <span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
 <span class="o">//</span><span class="n">STATE</span> <span class="n">Logger</span>
@@ -4060,6 +4135,19 @@ END_ACTION
               <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">PG</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
       <span class="n">END_IF</span>
  <span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rPRO_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">PG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">:=</span> <span class="n">rPRO_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">PG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">=</span> <span class="n">rVAC_SP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rVAC_SP</span><span class="o">:=</span> <span class="n">PG</span><span class="o">.</span><span class="n">rVAC_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 <span class="n">ACTION</span> <span class="n">IO</span><span class="p">:</span>
 <span class="n">PG</span><span class="o">.</span><span class="n">i_iPRESS_R</span> <span class="o">:=</span><span class="n">i_iPRESS_R</span><span class="p">;</span>
@@ -4329,7 +4417,8 @@ END_ACTION
 <span class="p">(</span><span class="o">*</span><span class="n">Soft</span> <span class="n">IO</span> <span class="n">Linking</span><span class="o">*</span><span class="p">)</span>
 <span class="o">//</span> <span class="n">check</span> <span class="n">ethercat</span> <span class="n">Diagnostics</span>
 <span class="n">IO</span><span class="p">();</span>
-
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
 <span class="n">timer</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">NOT</span> <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span><span class="p">,</span> <span class="n">PT</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#2s);</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
@@ -4368,6 +4457,33 @@ END_ACTION
               <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
       <span class="n">END_IF</span>
 <span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rVAC_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">:=</span> <span class="n">rVAC_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rPRO_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">:=</span> <span class="n">rPRO_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rHYS_PR</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span> <span class="o">:=</span> <span class="n">rHYS_PR</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">=</span> <span class="n">rVAC_SP</span><span class="p">)</span>  <span class="n">THEN</span>
+    <span class="n">rVAC_SP</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">=</span> <span class="n">rPRO_SP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rPRO_SP</span><span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span> <span class="o">=</span> <span class="n">rHYS_PR</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rHYS_PR</span><span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 <span class="n">ACTION</span> <span class="n">IO</span><span class="p">:</span>
 <span class="p">(</span><span class="o">*</span><span class="n">soft</span> <span class="n">link</span> <span class="n">inputs</span><span class="o">*</span><span class="p">)</span>
@@ -4501,6 +4617,8 @@ END_ACTION
 <span class="p">(</span><span class="o">*</span><span class="n">Soft</span> <span class="n">IO</span> <span class="n">Linking</span><span class="o">*</span><span class="p">)</span>
 <span class="o">//</span> <span class="n">check</span> <span class="n">ethercat</span> <span class="n">Diagnostics</span>
 <span class="n">IO</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
 <span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
@@ -4539,6 +4657,33 @@ END_ACTION
               <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
       <span class="n">END_IF</span>
 <span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rVAC_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">:=</span> <span class="n">rVAC_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rPRO_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">:=</span> <span class="n">rPRO_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rHYS_PR</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span> <span class="o">:=</span> <span class="n">rHYS_PR</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">=</span> <span class="n">rVAC_SP</span><span class="p">)</span>  <span class="n">THEN</span>
+    <span class="n">rVAC_SP</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">=</span> <span class="n">rPRO_SP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rPRO_SP</span><span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span> <span class="o">=</span> <span class="n">rHYS_PR</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rHYS_PR</span><span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 <span class="n">ACTION</span> <span class="n">IO</span><span class="p">:</span>
 <span class="p">(</span><span class="o">*</span><span class="n">soft</span> <span class="n">link</span> <span class="n">inputs</span><span class="o">*</span><span class="p">)</span>
@@ -4790,7 +4935,7 @@ VAR
     rMinPressure    :       REAL := 1E-10; //Torr
     timer:TON;
     (*Default set point 50 mT*)
-    rVAC_SP: REAL := 9E-3; // as per manual
+    rDefaultVAC_SP: REAL := 9E-3; // as per manual
     iTermBits: UINT := 30518 ; // The terminal&#39;s maximum value in bits default el3174 as per vacuum architecture
     (*IO*)
     i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
@@ -4802,7 +4947,7 @@ END_VAR
 
 //Default setpoint 50 mT
 IF PG.rVAC_SP = 0 THEN
-    PG.rVAC_SP := rVAC_SP;
+    PG.rVAC_SP := rDefaultVAC_SP;
 END_IF
 // check no div by zero
 If (iTermBits=0) THEN iTermBits := 30518;END_IF
@@ -4847,10 +4992,14 @@ IG.xAT_VAC := IG.xPRESS_OK AND (IG.rPRESS &lt; IG.rVAC_SP);
 
 (*Soft IO Mapping*)
 ACT_IO();
+(*Load or save the persistent variables*)
+ACT_Persistent();
 
 (*Logger*)
-
 THIS^.ACT_Logger();
+
+(*Load or save the persistent variables*)
+ACT_Persistent();
 
 END_FUNCTION_BLOCK
 ACTION ACT_IO:
@@ -4891,6 +5040,33 @@ IF ePrevState &lt;&gt; IG.eState THEN
       END_CASE
       ePrevState := IG.eState;
   END_IF
+END_ACTION
+ACTION ACT_Persistent:
+(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+    SUPER^.bRestorePersistentData   := FALSE;
+    IF ( rVAC_SP &lt;&gt; 0) THEN
+            IG.rVAC_SP := rVAC_SP;
+    END_IF;
+    IF ( rPRO_SP &lt;&gt; 0) THEN
+            IG.rPRO_SP := rPRO_SP;
+    END_IF;
+    IF ( rHYS_PR &lt;&gt; 0) THEN
+            IG.rHYS_PR := rHYS_PR;
+    END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+    rVAC_SP := IG.rVAC_SP;
+END_IF;
+
+IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+    rPRO_SP:= IG.rPRO_SP;
+END_IF;
+
+IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+    rHYS_PR:= IG.rHYS_PR;
+END_IF;
 END_ACTION
 </pre></div>
 </div>
@@ -5085,14 +5261,12 @@ END_ACTION
     <span class="n">stPump</span>  <span class="p">:</span>       <span class="n">ST_PIP</span><span class="p">;</span> <span class="o">//</span><span class="n">Gamma</span> <span class="n">Ion</span> <span class="n">pump</span> <span class="n">structure</span>
     <span class="n">q_IG</span>    <span class="p">:</span>       <span class="n">ST_VG</span><span class="p">;</span> <span class="o">//</span><span class="n">When</span> <span class="n">ion</span> <span class="n">pump</span> <span class="ow">is</span> <span class="n">used</span> <span class="k">as</span> <span class="n">a</span> <span class="n">measuring</span> <span class="n">device</span> <span class="k">for</span> <span class="n">interlocking</span> <span class="n">gate</span> <span class="n">valves</span>
 <span class="n">END_VAR</span>
-<span class="n">VAR_IN_OUT</span>
-<span class="n">END_VAR</span>
 <span class="n">VAR</span>
  <span class="n">rPRESS</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
 
  <span class="n">rV</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
  <span class="n">timer</span><span class="p">:</span><span class="n">TON</span><span class="p">;</span>
- <span class="n">rHVEna_SP</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span><span class="mf">1E-4</span><span class="p">;</span> <span class="o">//</span> <span class="n">Default</span> <span class="n">protection</span> <span class="n">setpoint</span> <span class="k">as</span> <span class="n">per</span> <span class="n">the</span> <span class="n">gamma</span> <span class="n">QPCe</span> <span class="n">manual</span>
+
  <span class="p">(</span><span class="o">*</span> <span class="n">IO</span> <span class="n">Controls</span> <span class="o">*</span><span class="p">)</span>
  <span class="n">q_xHVEna_DO</span> <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>  <span class="o">//</span> <span class="n">Enable</span> <span class="n">High</span> <span class="n">Voltage</span> <span class="n">when</span> <span class="n">TRUE</span>
  <span class="n">i_iPRESS</span>  <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">INT</span><span class="p">;</span>  <span class="o">//</span>
@@ -5115,11 +5289,17 @@ END_ACTION
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;noinit&#39;</span><span class="p">}</span>
     <span class="n">sPath</span><span class="p">:</span> <span class="n">STRING</span><span class="p">;</span>
 <span class="n">END_VAR</span>
+<span class="n">VAR</span> <span class="n">CONSTANT</span>
+     <span class="n">rDefaultHVEna_SP</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span><span class="mf">1E-4</span><span class="p">;</span> <span class="o">//</span> <span class="n">Default</span> <span class="n">protection</span> <span class="n">setpoint</span> <span class="k">as</span> <span class="n">per</span> <span class="n">the</span> <span class="n">gamma</span> <span class="n">QPCe</span> <span class="n">manual</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span> <span class="n">PERSISTENT</span>
+    <span class="n">rHVEna_SP</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Does</span> <span class="n">Gamma</span> <span class="n">Ion</span> <span class="n">pump</span> <span class="n">HV</span> <span class="n">interlock</span><span class="o">.</span> <span class="n">Enable</span> <span class="n">HV</span> <span class="n">only</span> <span class="n">when</span> <span class="n">interlock</span> <span class="n">gauge</span> <span class="n">press</span> <span class="ow">is</span> <span class="n">less</span> <span class="n">than</span> <span class="mf">1.0E-4</span> <span class="n">Torr</span> <span class="o">*</span><span class="p">)</span>
 
 <span class="p">(</span><span class="o">*</span><span class="n">Ensures</span> <span class="n">the</span> <span class="nb">set</span> <span class="n">point</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">higher</span> <span class="n">than</span> <span class="mf">1.0E-4</span><span class="o">*</span><span class="p">)</span>
-<span class="n">IF</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">&gt;</span> <span class="n">rHVEna_SP</span><span class="p">)</span> <span class="n">THEN</span>
-    <span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">:=</span> <span class="n">rHVEna_SP</span><span class="p">;</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">&gt;</span> <span class="n">rDefaultHVEna_SP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">:=</span> <span class="n">rDefaultHVEna_SP</span><span class="p">;</span>
 <span class="n">END_IF</span>
 
 <span class="p">(</span><span class="o">*</span> <span class="n">Interlock</span> <span class="o">*</span><span class="p">)</span>
@@ -5184,6 +5364,8 @@ END_ACTION
 <span class="n">ACT_IlkOverride</span><span class="p">();</span>
 <span class="o">//</span> <span class="n">Log</span> <span class="n">States</span> <span class="ow">and</span> <span class="n">triggers</span>
 <span class="n">ACT_Logger</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
 <span class="n">ACTION</span> <span class="n">ACT_IlkOverride</span><span class="p">:</span>
@@ -5242,6 +5424,19 @@ END_ACTION
 <span class="o">//</span> <span class="n">Log</span> <span class="n">FAULT</span>
 <span class="n">tFault</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span>  <span class="n">NOT</span> <span class="n">tPumpStartTimeout</span><span class="o">.</span><span class="n">Q</span><span class="p">);</span>
 <span class="n">IF</span> <span class="n">tFault</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump Fault&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rHVEna_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">:=</span> <span class="n">rHVEna_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">=</span> <span class="n">rHVEna_SP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rHVEna_SP</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 <span class="n">ACTION</span> <span class="n">ACT_SetGauge</span><span class="p">:</span>
 <span class="p">(</span><span class="o">*</span><span class="n">MG</span><span class="o">*</span><span class="p">)</span>
@@ -5670,6 +5865,8 @@ ACT_Logger();
 (*Validate Backing Pressure set point doesn&#39;t exceed the Maximum backingPressure*)
 iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressureSP,i_rMaxBackingPressure);
 ACT_Interlock();
+(*Load or save the persistent variables*)
+ACT_Persistent();
 
 END_FUNCTION_BLOCK
 ACTION ACT_Interlock:
@@ -5705,6 +5902,26 @@ IF tAction.Q THEN fbLogger(sMsg:=&#39;Pump commanded to start&#39;, eSevr:=TcEve
 // Log FAULT
 tFault(CLK:= iq_stPTM.i_xFault OR iq_stPtm.xPumpFaultLock);
 IF tFault.Q THEN fbLogger(sMsg:=iq_stPtm.sError, eSevr:=TcEventSeverity.Critical); END_IF
+END_ACTION
+ACTION ACT_Persistent:
+(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+    SUPER^.bRestorePersistentData   := FALSE;
+    IF (rBackingPressureSP &lt;&gt; 0) THEN
+            iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    END_IF;
+    IF (rInletPressureSP &lt;&gt; 0) THEN
+            iq_stPTM.rInletPressureSP := rInletPressureSP;
+    END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+    rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+END_IF;
+
+IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+    rInletPressureSP := iq_stPTM.rInletPressureSP;
+END_IF;
 END_ACTION
 ACTION IO:
 (*inputs*)
@@ -5861,6 +6078,8 @@ END_ACTION
 <span class="n">ACT_IO</span><span class="p">();</span>
 <span class="o">//</span> <span class="n">Log</span> <span class="n">States</span> <span class="ow">and</span> <span class="n">triggers</span>
 <span class="n">ACT_Logger</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
 <span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
@@ -5920,6 +6139,26 @@ END_ACTION
 <span class="o">//</span> <span class="n">Log</span> <span class="n">FAULT</span>
 <span class="n">tFault</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">i_xNCFault</span><span class="p">);</span>
 <span class="n">IF</span> <span class="n">tFault</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump Lost Alarm OK bit&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rBackingPressureSP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span> <span class="o">:=</span> <span class="n">rBackingPressureSP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rInletPressureSP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span> <span class="o">:=</span> <span class="n">rInletPressureSP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span> <span class="o">=</span> <span class="n">rBackingPressureSP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rBackingPressureSP</span><span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span> <span class="o">=</span> <span class="n">rInletPressureSP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rInletPressureSP</span> <span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 </pre></div>
 </div>
@@ -6050,6 +6289,8 @@ iq_stPtm.rBackingPressureSP := BackingPressureSetPoint(iq_stPtm.rBackingPressure
 ACT_IO();
 // Log States and triggers
 ACT_Logger();
+(*Load or save the persistent variables*)
+ACT_Persistent();
 
 END_FUNCTION_BLOCK
 ACTION ACT_IO:
@@ -6122,6 +6363,26 @@ IF tAction.Q THEN fbLogger(sMsg:=&#39;Pump commanded to start&#39;, eSevr:=TcEve
 // Log FAULT
 tFault(CLK:= iq_stPTM.i_xNCFault);
 IF tFault.Q THEN fbLogger(sMsg:=&#39;Pump Lost Alarm OK bit&#39;, eSevr:=TcEventSeverity.Critical); END_IF
+END_ACTION
+ACTION ACT_Persistent:
+(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+    SUPER^.bRestorePersistentData   := FALSE;
+    IF (rBackingPressureSP &lt;&gt; 0) THEN
+            iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    END_IF;
+    IF (rInletPressureSP &lt;&gt; 0) THEN
+            iq_stPTM.rInletPressureSP := rInletPressureSP;
+    END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
+    rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+END_IF;
+
+IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
+    rInletPressureSP := iq_stPTM.rInletPressureSP;
+END_IF;
 END_ACTION
 </pre></div>
 </div>
@@ -6198,6 +6459,8 @@ END_ACTION
 <span class="n">ACT_IO</span><span class="p">();</span>
 <span class="o">//</span> <span class="n">Log</span> <span class="n">States</span> <span class="ow">and</span> <span class="n">triggers</span>
 <span class="n">ACT_Logger</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
 <span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
@@ -6246,6 +6509,26 @@ END_ACTION
 <span class="n">tFault</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">NOT</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">i_xFault</span><span class="p">);</span>
 <span class="n">IF</span> <span class="n">tFault</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump Lost Alarm OK bit&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span>
 <span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rBackingPressureSP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span> <span class="o">:=</span> <span class="n">rBackingPressureSP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rInletPressureSP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span> <span class="o">:=</span> <span class="n">rInletPressureSP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span> <span class="o">=</span> <span class="n">rBackingPressureSP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rBackingPressureSP</span><span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span> <span class="o">=</span> <span class="n">rInletPressureSP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rInletPressureSP</span> <span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
 </pre></div>
 </div>
 </div>
@@ -6254,9 +6537,6 @@ END_ACTION
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="n">FOR</span> <span class="n">the</span> <span class="n">Pfeiffer</span> <span class="n">Turbo</span> <span class="n">pump</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">the</span> <span class="n">TM700</span> <span class="ow">and</span> <span class="n">TC400</span> <span class="n">Controllers</span><span class="o">.</span>
  <span class="n">Turns</span> <span class="n">off</span> <span class="n">pump</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">event</span> <span class="n">of</span> <span class="n">errors</span><span class="o">/</span> <span class="n">warnings</span><span class="o">.</span> <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PTM_Pfeiffer</span> <span class="n">EXTENDS</span> <span class="n">FB_Pump</span>
-<span class="n">VAR_IN_OUT</span>
-
-<span class="n">END_VAR</span>
 <span class="n">VAR_INPUT</span>
     <span class="n">i_xExtIlkOK</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Connect</span> <span class="n">to</span> <span class="n">external</span> <span class="n">interlock</span> <span class="n">logic</span><span class="p">,</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">used</span><span class="o">.</span>
 <span class="n">END_VAR</span>
@@ -6334,6 +6614,8 @@ END_ACTION
 <span class="n">ACT_IO</span><span class="p">();</span>
 <span class="o">//</span> <span class="n">Log</span> <span class="n">States</span> <span class="ow">and</span> <span class="n">triggers</span>
 <span class="n">ACT_Logger</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
 <span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
@@ -6382,6 +6664,26 @@ END_ACTION
 <span class="n">tFault</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">NOT</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">i_xFault</span><span class="p">);</span>
 <span class="n">IF</span> <span class="n">tFault</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump Lost Alarm OK bit&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span>
 <span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rBackingPressureSP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span> <span class="o">:=</span> <span class="n">rBackingPressureSP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rInletPressureSP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span> <span class="o">:=</span> <span class="n">rInletPressureSP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span> <span class="o">=</span> <span class="n">rBackingPressureSP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rBackingPressureSP</span><span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span> <span class="o">=</span> <span class="n">rInletPressureSP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rInletPressureSP</span> <span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
 </pre></div>
 </div>
 </div>
@@ -6421,8 +6723,6 @@ END_ACTION
 <span class="p">(</span><span class="o">*</span> <span class="n">TD20</span> <span class="n">Classic</span> <span class="n">Via</span> <span class="n">Remote</span> <span class="n">X1</span> <span class="n">Connector</span> <span class="mi">9</span><span class="o">-</span><span class="n">way</span> <span class="n">PLC</span> <span class="n">interface</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">When</span> <span class="n">serial</span> <span class="n">interface</span> <span class="ow">is</span> <span class="n">implemented</span><span class="p">,</span> <span class="n">call</span> <span class="n">Method</span> <span class="n">M_Serial_IO</span> <span class="n">after</span> <span class="n">fb</span> <span class="n">instantiation</span><span class="p">,</span> <span class="ow">in</span> <span class="n">order</span> <span class="n">to</span> <span class="n">add</span> <span class="n">the</span> <span class="n">serial</span> <span class="n">status</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PTM_TurboDrive</span> <span class="n">EXTENDS</span> <span class="n">FB_Pump</span>
-<span class="n">VAR_IN_OUT</span>
-<span class="n">END_VAR</span>
 <span class="n">VAR_INPUT</span>
     <span class="n">i_xExtILKOk</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Connect</span> <span class="n">to</span> <span class="n">external</span> <span class="n">interlock</span> <span class="n">logic</span><span class="p">,</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">used</span><span class="o">.</span>
 <span class="n">END_VAR</span>
@@ -6442,7 +6742,6 @@ END_ACTION
     <span class="n">i_xAtSpd</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Normaml</span> <span class="n">operation</span> <span class="n">when</span> <span class="n">true</span>
     <span class="n">i_xFaultNC</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Error</span> <span class="n">Active</span> <span class="n">when</span> <span class="n">no</span> <span class="n">Error</span> <span class="ow">is</span> <span class="n">present</span>
     <span class="n">q_RunDO</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Start</span><span class="o">/</span><span class="n">Stop</span>
-
 <span class="n">END_VAR</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Basic</span> <span class="n">Turbo</span> <span class="n">Control</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">block</span> <span class="n">provides</span> <span class="n">basic</span> <span class="n">turbo</span> <span class="n">control</span> <span class="k">for</span> <span class="n">Leybold</span> <span class="n">Turbo</span> <span class="n">Drive</span> <span class="mi">300</span><span class="p">,</span> <span class="n">Turbo</span> <span class="n">Drive</span> <span class="mi">400</span> <span class="o">*</span><span class="p">)</span>
@@ -6481,6 +6780,8 @@ END_ACTION
 <span class="n">ACT_IO</span><span class="p">();</span>
 <span class="o">//</span> <span class="n">Log</span> <span class="n">States</span> <span class="ow">and</span> <span class="n">triggers</span>
 <span class="n">This</span><span class="o">^.</span><span class="n">ACT_Logger</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
 <span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
@@ -6525,6 +6826,26 @@ END_ACTION
 <span class="n">tFault</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">NOT</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">i_xFault</span><span class="p">);</span>
 <span class="n">IF</span> <span class="n">tFault</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump Lost Alarm OK bit&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span>
 <span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rBackingPressureSP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span> <span class="o">:=</span> <span class="n">rBackingPressureSP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rInletPressureSP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span> <span class="o">:=</span> <span class="n">rInletPressureSP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span> <span class="o">=</span> <span class="n">rBackingPressureSP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rBackingPressureSP</span><span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span> <span class="o">=</span> <span class="n">rInletPressureSP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rInletPressureSP</span> <span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
 </pre></div>
 </div>
 </div>
@@ -6535,7 +6856,6 @@ END_ACTION
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PTM_TwisTorr</span> <span class="n">EXTENDS</span> <span class="n">FB_Pump</span>
 <span class="n">VAR_INPUT</span>
     <span class="n">i_xExtILKOk</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Connect</span> <span class="n">to</span> <span class="n">external</span> <span class="n">interlock</span> <span class="n">logic</span><span class="p">,</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">used</span><span class="o">.</span>
-
 <span class="n">END_VAR</span>
 <span class="n">VAR_OUTPUT</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39; pv: &#39;</span><span class="p">}</span>
@@ -6546,9 +6866,7 @@ END_ACTION
     <span class="p">(</span><span class="o">*</span><span class="n">IO</span><span class="o">*</span><span class="p">)</span>
     <span class="n">i_xAtSpd</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Normaml</span> <span class="n">operation</span> <span class="n">when</span> <span class="n">true</span>
     <span class="n">i_xFault</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Error</span> <span class="o">//</span> <span class="n">this</span> <span class="nb">open</span> <span class="n">collector</span> <span class="n">output</span> <span class="n">signal</span> <span class="ow">is</span> <span class="n">ON</span> <span class="n">when</span> <span class="n">a</span> <span class="n">system</span> <span class="n">fault</span> <span class="n">condition</span> <span class="ow">is</span> <span class="n">detected</span>
-
     <span class="n">q_RunDO</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Start</span><span class="o">/</span><span class="n">Stop</span>
-
 <span class="n">END_VAR</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Interlock</span> <span class="n">Sum</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">iq_stPtm</span><span class="o">.</span><span class="n">xExtRunOk</span><span class="o">:=</span> <span class="n">i_xExtILKOk</span><span class="p">;</span>
@@ -6577,8 +6895,10 @@ END_ACTION
 
 <span class="p">(</span><span class="o">*</span><span class="n">I</span><span class="o">/</span><span class="n">O</span> <span class="n">soft</span> <span class="n">mapping</span><span class="o">*</span><span class="p">)</span>
 <span class="n">ACT_IO</span><span class="p">();</span>
-<span class="o">//</span> <span class="n">Log</span> <span class="n">States</span> <span class="ow">and</span> <span class="n">triggers</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Log</span> <span class="n">States</span> <span class="ow">and</span> <span class="n">triggers</span><span class="o">*</span><span class="p">)</span>
 <span class="n">ACT_Logger</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
 <span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
@@ -6621,25 +6941,46 @@ END_ACTION
 <span class="n">tFault</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">NOT</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">i_xFault</span><span class="p">);</span>
 <span class="n">IF</span> <span class="n">tFault</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump Lost Alarm OK bit&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span>
 <span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rBackingPressureSP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span> <span class="o">:=</span> <span class="n">rBackingPressureSP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rInletPressureSP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span> <span class="o">:=</span> <span class="n">rInletPressureSP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span> <span class="o">=</span> <span class="n">rBackingPressureSP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rBackingPressureSP</span><span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rBackingPressureSP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span> <span class="o">=</span> <span class="n">rInletPressureSP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rInletPressureSP</span> <span class="o">:=</span> <span class="n">iq_stPTM</span><span class="o">.</span><span class="n">rInletPressureSP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="fb-pump">
 <h2>FB_Pump<a class="headerlink" href="#fb-pump" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_Pump</span>
-<span class="n">VAR_INPUT</span>
-<span class="n">END_VAR</span>
-<span class="n">VAR_OUTPUT</span>
-<span class="n">END_VAR</span>
 <span class="n">VAR</span>
-
- <span class="o">//</span> <span class="n">For</span> <span class="n">logging</span>
+    <span class="o">//</span> <span class="n">For</span> <span class="n">logging</span>
     <span class="n">fbLogger</span> <span class="p">:</span> <span class="n">FB_LogMessage</span> <span class="o">:=</span> <span class="p">(</span><span class="n">eSubsystem</span><span class="o">:=</span><span class="n">E_SubSystem</span><span class="o">.</span><span class="n">VACUUM</span><span class="p">);</span>
     <span class="n">ePrevState</span> <span class="p">:</span> <span class="n">E_PumpState</span><span class="p">;</span>
     <span class="n">tErrorPresent</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span>
     <span class="n">tAction</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span> <span class="o">//</span> <span class="n">Primary</span> <span class="n">action</span> <span class="n">of</span> <span class="n">this</span> <span class="n">device</span> <span class="p">(</span><span class="n">OPN_DO</span><span class="p">,</span> <span class="n">PUMP_RUN</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span><span class="p">)</span>
     <span class="n">tFault</span> <span class="p">:</span> <span class="n">F_TRIG</span><span class="p">;</span>
     <span class="n">tILK</span><span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
+    <span class="o">//</span> <span class="n">For</span> <span class="n">Persistent</span> <span class="n">Data</span>
+    <span class="n">bRestorePersistentData</span>  <span class="p">:</span>       <span class="n">BOOL</span><span class="o">:=</span><span class="n">TRUE</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span> <span class="n">PERSISTENT</span>
+    <span class="n">rBackingPressureSP</span>      <span class="p">:</span>       <span class="n">REAL</span><span class="p">;</span>
+    <span class="n">rInletPressureSP</span>        <span class="p">:</span>       <span class="n">REAL</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 
 
@@ -7183,6 +7524,9 @@ END_ACTION
     <span class="n">tErrorPresent</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span>
     <span class="n">tAction</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span> <span class="o">//</span> <span class="n">Primary</span> <span class="n">action</span> <span class="n">of</span> <span class="n">this</span> <span class="n">device</span> <span class="p">(</span><span class="n">OPN_DO</span><span class="p">,</span> <span class="n">etc</span><span class="o">.</span><span class="p">)</span>
     <span class="n">tOverrideActivated</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span>
+    <span class="o">//</span> <span class="n">For</span> <span class="n">Persistent</span> <span class="n">Data</span>
+    <span class="n">bRestorePersistentData</span>  <span class="p">:</span>       <span class="n">BOOL</span><span class="o">:=</span><span class="n">TRUE</span><span class="p">;</span>
+    <span class="o">//</span><span class="n">fbWritePersistentData</span>           <span class="p">:</span> <span class="n">WritePersistentData</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 
 
@@ -7360,10 +7704,6 @@ END_ACTION
     <span class="s1">&#39;}</span>
     <span class="n">iq_stVCN</span>        <span class="p">:</span>       <span class="n">ST_VCN</span><span class="p">;</span> <span class="o">//</span><span class="n">Needle</span> <span class="n">valve</span> <span class="n">structure</span>
 <span class="n">END_VAR</span>
-<span class="n">VAR_IN_OUT</span>
-
-<span class="n">END_VAR</span>
-
 <span class="n">VAR</span> <span class="n">CONSTANT</span>
     <span class="n">rOpenVoltage</span>    <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">9.1</span><span class="p">;</span> <span class="o">//</span> <span class="n">From</span> <span class="n">the</span> <span class="n">EVR</span> <span class="mi">116</span> <span class="n">manual</span><span class="p">,</span> <span class="n">A</span> <span class="n">Voltage</span> <span class="n">of</span> <span class="mi">9</span><span class="n">V</span> <span class="n">it</span> <span class="ow">is</span> <span class="n">completely</span> <span class="n">Open</span>
     <span class="n">rCloseVoltage</span>   <span class="p">:</span>       <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">0.4</span><span class="p">;</span><span class="o">//</span> <span class="n">a</span> <span class="n">voltage</span> <span class="o">&lt;</span><span class="mf">0.5</span> <span class="n">V</span> <span class="n">the</span> <span class="n">valve</span> <span class="ow">is</span> <span class="n">closed</span>
@@ -7379,7 +7719,9 @@ END_ACTION
     <span class="o">//</span>
     <span class="p">(</span><span class="o">*</span><span class="n">IO</span><span class="o">*</span><span class="p">)</span>
     <span class="n">q_iRawPosition</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span><span class="n">INT</span><span class="p">;</span>
-
+<span class="n">END_VAR</span>
+<span class="n">VAR</span> <span class="n">PERSISTENT</span>
+    <span class="n">rUpperLimit</span>     <span class="p">:</span>       <span class="n">REAL</span><span class="p">;</span>
 <span class="n">END_VAR</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Needle</span> <span class="n">valve</span> <span class="n">control</span> <span class="n">FB</span>
 <span class="n">A</span><span class="o">.</span> <span class="n">Wallace</span> <span class="mi">2016</span><span class="o">-</span><span class="mi">7</span><span class="o">-</span><span class="mi">21</span>
@@ -7400,6 +7742,7 @@ END_ACTION
 
 <span class="n">Note</span><span class="p">:</span> <span class="n">Raw</span> <span class="n">position</span> <span class="n">calc</span> <span class="ow">is</span> <span class="n">based</span> <span class="n">on</span> <span class="mf">0.5</span> <span class="n">to</span> <span class="mi">9</span><span class="n">V</span> <span class="n">span</span><span class="p">,</span> <span class="mi">32767</span> <span class="n">bits</span>
 <span class="o">*</span><span class="p">)</span>
+
 
 <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rUpperLimit</span> <span class="o">:=</span>  <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rUpperLimit</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
 
@@ -7429,6 +7772,9 @@ END_ACTION
 
 <span class="p">(</span><span class="o">*</span><span class="n">SOft</span> <span class="n">IO</span> <span class="n">Mapping</span><span class="o">*</span><span class="p">)</span>
 <span class="n">ACT_IO</span><span class="p">();</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
 <span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
@@ -7464,6 +7810,23 @@ END_ACTION
 <span class="o">//</span> <span class="n">Log</span> <span class="n">valve</span> <span class="nb">open</span>
 <span class="n">tAction</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="p">(</span><span class="n">iq_stVCN</span><span class="o">.</span><span class="n">eValveControl</span> <span class="o">=</span> <span class="n">OpenValve</span><span class="p">)</span> <span class="p">);</span>
 <span class="n">IF</span> <span class="n">tAction</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve commanded to fully open&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span> <span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">bRestorePersistentData</span>  <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rUpperLimit</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rUpperLimit</span> <span class="o">:=</span> <span class="n">rUpperLimit</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rUpperLimit</span> <span class="o">=</span> <span class="n">rUpperLimit</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rUpperLimit</span> <span class="o">:=</span> <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rUpperLimit</span><span class="p">;</span>
+    <span class="o">//</span><span class="n">fbWritePersistentData</span><span class="p">(</span><span class="n">NETID</span><span class="o">:=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">PORT</span><span class="o">:=</span><span class="mi">851</span><span class="p">,</span> <span class="n">START</span><span class="o">:=</span><span class="n">TRUE</span><span class="p">,</span> <span class="n">TMOUT</span><span class="o">:=</span><span class="n">T</span><span class="c1">#1s );</span>
+<span class="n">ELSE</span>
+     <span class="o">//</span> <span class="n">fbWritePersistentData</span><span class="p">(</span> <span class="n">START</span><span class="o">:=</span><span class="n">FALSE</span><span class="p">);</span>
+<span class="n">END_IF</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 </pre></div>
 </div>
@@ -7981,8 +8344,11 @@ VAR
 
     // For logging
     eVGCPrevState : E_VGC;
+END_VAR
 
-
+VAR PERSISTENT
+    rAT_VAC_SP      :       REAL;
+    rHYST_PERC      :       REAL;
 END_VAR
 (* Vacuum gate valve
 A. Wallace
@@ -8240,6 +8606,8 @@ ACT_IO();
 // Log States and triggers
 ACT_Logger();
 
+(*Load or save the persistent variables*)
+ACT_Persistent();
 
 
 (*FAST FAULT*)
@@ -8317,6 +8685,26 @@ IF tAction.Q THEN fbLogger(sMsg:=&#39;Valve commanded open&#39;, eSevr:=TcEventS
 // Log override mode enabled
 tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
 IF tOverrideActivated.Q THEN fbLogger(sMsg:=&#39;Valve override mode activated&#39;, eSevr:=TcEventSeverity.Warning); END_IF
+END_ACTION
+ACTION ACT_Persistent:
+(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+    SUPER^.bRestorePersistentData   := FALSE;
+    IF (rAT_VAC_SP &lt;&gt; 0) THEN
+            iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
+    END_IF;
+    IF (rHYST_PERC &lt;&gt; 0) THEN
+                    iq_stValve.rHYST_PERC := rHYST_PERC;
+    END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stValve.rAT_VAC_SP = rAT_VAC_SP) THEN
+    rAT_VAC_SP :=iq_stValve.rAT_VAC_SP;
+END_IF;
+
+IF NOT (iq_stValve.rHYST_PERC = rHYST_PERC) THEN
+    rHYST_PERC:= iq_stValve.rHYST_PERC;
+END_IF;
 END_ACTION
 ACTION ACT_PMPS:
 bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);
@@ -8467,8 +8855,12 @@ VAR
 
     // For logging
     eVGCPrevState : E_VGC;
+END_VAR
 
-
+VAR PERSISTENT
+    rAT_VAC_SP      :       REAL;
+    rHYST_PERC      :       REAL;
+    rAT_VAC_SP_DS : REAL;
 END_VAR
 (* Vacuum gate valve
 A. Wallace
@@ -8740,7 +9132,8 @@ ACT_IO();
 // Log States and triggers
 ACT_Logger();
 
-
+(*Load or save the persistent variables*)
+ACT_Persistent();
 
 (*FAST FAULT*)
 FFO(i_xOK := xMPS_OK,
@@ -8817,6 +9210,33 @@ IF tAction.Q THEN fbLogger(sMsg:=&#39;Valve commanded open&#39;, eSevr:=TcEventS
 // Log override mode enabled
 tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
 IF tOverrideActivated.Q THEN fbLogger(sMsg:=&#39;Valve override mode activated&#39;, eSevr:=TcEventSeverity.Warning); END_IF
+END_ACTION
+ACTION ACT_Persistent:
+(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+    SUPER^.bRestorePersistentData   := FALSE;
+    IF (rAT_VAC_SP &lt;&gt; 0) THEN
+            iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
+    END_IF;
+    IF (rHYST_PERC &lt;&gt; 0) THEN
+                    iq_stValve.rHYST_PERC := rHYST_PERC;
+    END_IF;
+    IF (rAT_VAC_SP_DS &lt;&gt; 0) THEN
+            iq_stValve.rAT_VAC_SP_DS := rAT_VAC_SP_DS;
+    END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stValve.rAT_VAC_SP = rAT_VAC_SP) THEN
+    rAT_VAC_SP := iq_stValve.rAT_VAC_SP;
+END_IF;
+
+IF NOT (iq_stValve.rAT_VAC_HYS = rHYST_PERC) THEN
+    rHYST_PERC := iq_stValve.rAT_VAC_HYS;
+END_IF;
+
+IF NOT (iq_stValve.rAT_VAC_SP_DS = rAT_VAC_SP_DS) THEN
+    rAT_VAC_SP_DS := iq_stValve.rAT_VAC_SP_DS;
+END_IF;
 END_ACTION
 ACTION ACT_PMPS:
 bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);
