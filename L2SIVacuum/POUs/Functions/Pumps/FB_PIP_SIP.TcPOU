@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_PIP_SIP" Id="{474c5979-cc75-4ff6-9f68-7f6209db67bf}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block does basic controls FOR the ION pump connected to a SAES SIP controller.
+ Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
+{attribute 'reflection'} 
+FUNCTION_BLOCK FB_PIP_SIP Extends FB_Pump
+VAR_INPUT
+	i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock
+    i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum interlock logic*) 
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	stPump	:	ST_PIP; //Gamma Ion pump structure
+	q_IG	:	ST_VG; //When ion pump is used as a measuring device for interlocking gate valves
+END_VAR
+VAR
+ rPRESS : REAL;
+ iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+ rV : REAL;
+ timer:TON; 
+
+ (* IO Controls *)
+ q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when TRUE
+ i_iPRESS  AT %I*: INT;  //
+ i_xIP_ON  AT %I* : BOOL; 
+ i_xError  AT %I* : BOOL;
+ 
+// For logging
+tTimeOutAction : F_TRIG;
+tOverrideActivated : R_TRIG;
+
+tPumpStartTimeout : TON := (PT:=T#10s); // Timeout pump start if pressure < 1E-11 for more than 10s.
+MinPressure : REAL:= 1E-11; // Minimum readback pressure, pump must register pressure above this to be considered running
+ 
+//Overrides
+	tonOvrd	:	TON;
+	tonDelOK : TON;
+	rtOK	:	R_TRIG;
+	tOvrd	:	TIME := T#10s;
+	
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	sPath: STRING;
+END_VAR
+VAR CONSTANT
+	 rDefaultHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
+END_VAR
+VAR PERSISTENT
+	rHVEna_SP : REAL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Does Gamma Ion pump HV interlock. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
+
+(*Ensures the set point is not higher than 1.0E-4*)
+IF (stPump.rHVEna_SP > rDefaultHVEna_SP) THEN
+	stPump.rHVEna_SP := rDefaultHVEna_SP;
+END_IF
+
+(* Interlock *)
+//stPump.xHV_ExtIlk  := i_stGauge.xPRESS_OK AND (i_stGauge.rPRESS <= stPump.rHVEna_SP);//AND NOT tPumpStartTimeout.Q); //ADP
+
+(* Enable HV *)
+IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
+	IF (stPump.xAutoOn) AND NOT (stPump.q_xHVEna_DO) THEN  stPump.q_xHVEna_DO := TRUE;
+	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));  
+	END_IF
+	stPump.xILKOk:= TRUE;
+ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN 
+	IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
+		stPump.q_xHVEna_DO := FALSE;
+		stPump.xHVEna_SW := FALSE;
+		stPump.xILKOk := FALSE;
+	ELSE
+		stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode)); 
+	END_IF
+ELSIF (tonOvrd.Q AND i_xOverrideMode) THEN
+	stPump.q_xHVEna_DO := TRUE;
+ELSE
+	stPump.q_xHVEna_DO  := FALSE;
+	stPump.xHVEna_SW := FALSE;
+	stPump.xILKOk := FALSE;
+END_IF
+
+
+//stPump.q_xHVEna_DO := stPump.xHVEna_SW AND stPump.xHV_ExtIlk;
+//stPump.xHVEna_SW := stPump.q_xHVEna_DO;
+
+timer(IN:= NOT stPump.q_xHVEna_DO, PT:= T#1s);
+
+// TAW Experimental ion pump timeout
+tPumpStartTimeout(IN:=(NOT stPump.i_xHV_DI AND stPump.q_xHVEna_DO));
+tTimeOutAction(CLK:=tPumpStartTimeout.Q);
+IF tTimeOutAction.Q THEN  fbLogger(sMsg:='Pump time out.', eSevr:=TcEventSeverity.Critical); END_IF
+
+
+
+(*Pump STATE*)
+IF tPumpStartTimeout.Q OR i_xError  THEN //Pump timeout
+	stPump.eState := pumpFAULT;
+ELSIF stPump.q_xHVEna_DO AND NOT stPump.i_xHV_DI THEN
+	stPump.eState := pumpSTARTING;
+ELSIF NOT stPump.q_xHVEna_DO AND NOT stPump.i_xHV_DI THEN
+	stPump.eState := pumpSTOPPED;
+ELSIF stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
+	stPump.eState := pumpRUNNING;
+ELSIF NOT stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
+	stPump.eState := pumpSTOPPING;
+ELSE 
+	stPump.eState := pumpFAULT;
+END_IF
+
+
+
+(*Update output gauge values*)
+ACT_SetGauge();
+(*Soft IO Mapping*)
+IO();
+ACT_IlkOverride();
+// Log States and triggers
+ACT_Logger();
+(*Load or save the persistent variables*)
+ACT_Persistent();]]></ST>
+    </Implementation>
+    <Action Name="ACT_IlkOverride" Id="{e7687821-df6d-42f8-9e24-aac04a8ab5be}">
+      <Implementation>
+        <ST><![CDATA[(* Override logic *)
+(* Goal: give ability to override, but do so in a way that people won't forget it.
+Solution: Override only after ten seconds of override, protect against blips,
+when the Pump permission goes true for more than ten seconds consistently, remove override
+*)
+
+tonDelOK(IN:=stPump.xILKOk, PT:=T#10S);
+rtOK(CLK:=tonDelOK.Q);
+IF rtOK.Q AND stPump.pv_xOvrdStart THEN 
+	stPump.pv_xOvrdStart :=FALSE; 
+	if (stPump.eState = pumpRUNNING) AND (i_xOverrideMode) THEN stPump.xHVEna_SW:= TRUE; END_IF
+    //Log
+    fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
+END_IF
+// Release the Force DO bit when the system override is false
+IF NOT(i_xOverrideMode) THEN stPump.pv_xOvrdStart :=FALSE; END_IF
+//Override timer
+tonOvrd(IN:= stPump.pv_xOvrdStart, PT:=tOvrd);
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Logger" Id="{06cfdcf7-8080-472b-9282-8d2f42b7b30d}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+
+IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTARTING)) AND NOT tonOvrd.Q THEN 
+	fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); 
+END_IF
+
+//STATE Logger  
+IF ePrevState <> stPump.eState THEN
+	  CASE stPump.eState OF
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+  		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpSTARTING:
+			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+		pumpSTOPPING:
+			fbLogger(sMsg:='Pump stopping.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := stPump.eState;  
+  END_IF
+
+  
+  // Log Action
+tAction(CLK:=  stPump.q_xHVEna_DO);
+IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+// Log override mode enabled
+tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
+IF tOverrideActivated.Q THEN fbLogger(sMsg:='Pump override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
+
+
+// Log FAULT
+tFault(CLK:=  NOT tPumpStartTimeout.Q);
+IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); END_IF
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{d722795e-e1c2-4cc1-966a-a19a66003d20}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData	:= FALSE;
+	IF (rHVEna_SP <> 0) THEN
+		stPump.rHVEna_SP := rHVEna_SP;
+	END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (stPump.rHVEna_SP = rHVEna_SP) THEN
+	rHVEna_SP := stPump.rHVEna_SP;
+END_IF;
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_SetGauge" Id="{9973370c-c1f7-4155-b11d-f3dc23cba152}">
+      <Implementation>
+        <ST><![CDATA[(*MG*)
+(* convert the analog input into readable pressure*)
+(* use logarithmic Pressure calculation, Output= Normal and Offset = 0*)
+If (iTermBits=0) THEN iTermBits := 32767;END_IF
+rV := 10*INT_TO_REAL(i_iPress)/iTermBits;
+//Manual Page 29
+	//rPRESS := LREAL_TO_REAL(EXPT(10,(rV-stPump.iOffset)));
+	rPRESS := LREAL_TO_REAL(LOG(rV-stPump.iOffset));
+IF (stPump.q_xHVEna_DO) THEN
+	q_IG.rPRESS := rPRESS;
+	stPump.rPRESS := rPRESS;
+END_IF
+
+
+IF (stPump.i_xHV_DI) AND (q_IG.rPRESS < q_IG.rVAC_SP) THEN //ADP// AND (q_IG.rPRESS<>0) AND stPump.q_xHVEna_DO) THEN 
+	q_IG.xPRESS_OK := TRUE;
+	ELSE
+	q_IG.xPRESS_OK := FALSE;
+END_IF
+
+q_IG.sPath := This^.stPump.sPath;
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="IO" Id="{3a4a1d4a-f60a-48a4-af8c-976f2bbdfa37}">
+      <Implementation>
+        <ST><![CDATA[stPump.sIlkDeviceName := This^.i_stGauge.sPath;
+stPump.xError := i_xError;// (stPump.eState = pumpFAULT);
+stPump.xOverrideMode := i_xOverrideMode; 
+(*inputs*)
+stPump.i_iPRESS:=	i_iPRESS;  
+stPump.i_xHV_DI:=	i_xIP_ON;
+(*output*)
+q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function
+
+ This^.stPump.sPath:= sPath;]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_AutoOn" Id="{b7f7f1fa-36af-4cc4-9877-bfa2a43bd5a7}">
+      <Declaration><![CDATA[METHOD M_AutoOn : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.stPump.xAutoOn:= TRUE; // Pump is set to auto start when the pressure is low enough]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Run" Id="{e7fa16e5-3620-4208-a615-d5e6cc059d7b}">
+      <Declaration><![CDATA[
+METHOD PUBLIC M_Run : BOOL
+VAR_INPUT
+	run:bool; // set to true to run, false to stop;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+this^.stPump.xHVEna_SW := run;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

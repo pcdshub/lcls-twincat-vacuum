@@ -244,6 +244,9 @@
     <Compile Include="POUs\Functions\Pumps\FB_PIP_Gamma.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\FB_PIP_SIP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_PTM_Agilent.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -501,6 +504,12 @@
     <PlaceholderReference Include="TcUnit">
       <DefaultResolution>TcUnit, * (www.tcunit.org)</DefaultResolution>
       <Namespace>TcUnit</Namespace>
+      <Parameters>
+        <Parameter xmlns="">
+          <Key>MAXNUMBEROFTESTSUITES</Key>
+          <Value>500</Value>
+        </Parameter>
+      </Parameters>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
@@ -508,10 +517,10 @@
       <Resolution>LCLS General, * (SLAC)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="LCLSVacuumSerialDriverLib">
-      <Resolution>LCLSVacuumSerialDriverLib, 0.0.0 (SLAC - LCLS)</Resolution>
+      <Resolution>LCLSVacuumSerialDriverLib, * (SLAC - LCLS)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="PMPS">
-      <Resolution>PMPS, 0.12.0 (SLAC - LCLS)</Resolution>
+      <Resolution>PMPS, * (SLAC - LCLS)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="SysFile">
       <Resolution>SysFile, * (System)</Resolution>
