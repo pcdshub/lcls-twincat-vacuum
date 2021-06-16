@@ -214,8 +214,16 @@ END_IF;
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
 rV := 10*INT_TO_REAL(i_iPress)/iTermBits;
 //Manual Page 29
-	//rPRESS := LREAL_TO_REAL(EXPT(10,(rV-stPump.iOffset)));
-	rPRESS := LREAL_TO_REAL(LOG(rV-stPump.iOffset));
+IF (rV >= 2.5) THEN
+	rPRESS := LREAL_TO_REAL((0.000000001*EXP(1.8421*rV))/65);
+	ELSE
+	rPRESS := LREAL_TO_REAL((0.0000000008*EXP(1.9315*rV))/65);
+END_IF
+// Min. measured pressure
+IF (rPRESS < 1E-11) AND NOT (rPRESS = 0)  THEN
+	rPRESS := 1E-11;
+END_IF
+
 IF (stPump.q_xHVEna_DO) THEN
 	q_IG.rPRESS := rPRESS;
 	stPump.rPRESS := rPRESS;
