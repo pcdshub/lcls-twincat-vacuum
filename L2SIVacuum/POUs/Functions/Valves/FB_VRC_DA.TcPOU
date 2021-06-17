@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_VRC_DA" Id="{2e9f69bd-e3b1-4c33-97d1-1886ac2c3ed4}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for dual acting valves. EPs is implemented so that there is interlock Open and Interlock close,
+This function block is interloked by an input . This is so developers can interface with custom
+interlocking logic outside this function block.*)
+(* Note Interlock Logic is External *)
+{attribute 'no_check'}
+FUNCTION_BLOCK FB_VRC_DA EXTENDS FB_Valve
+VAR_IN_OUT
+	
+END_VAR
+VAR_INPUT
+	i_OPN_OK : BOOL; //Connect to EPS Interlock logic condition, Set to True if the valve is not interlocked
+	i_CLS_OK : BOOL; //Connect to EPS Interlock logic condition, Set to True if the valve is not interlocked
+    ibCntrlHold:BOOL; (* Control Signal must retain its value, False in case of pulse control*)
+    
+	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv:
+	'}
+	iq_stValve : ST_VRC_NO;
+END_VAR
+VAR
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	sPath: STRING;
+	xFirstPass	:	BOOL;
+	fbFSInit		:	R_TRIG;
+	tonOvrd	:	TON;
+	tonDelOK : TON;
+	rtOK	:	R_TRIG;
+	tOvrd	:	TIME := T#10s;
+	(* Timeouts*)
+	tTimeOutDuration: TIME:= T#30S;
+	tOPNtimeout: TON;
+	tCLStimeout:TON;
+	(*Limit switch latch timer*)
+    tLimitSwitchLatchDuration: TIME:=T#1S;
+    tOPNLimitSwitch:TON;
+    tCLSLimitSwitch:TON;
+	tAction2 : R_TRIG;
+	(*IO*)
+	i_xOpnLS	AT%I*: BOOL;
+	i_xClsLS	AT%I*: BOOL;
+	q_xOPN_DO	AT%Q*: BOOL;
+	q_xCLS_DO	AT%Q*: BOOL;
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* On first PLC pass, put valve into vented state, which implies a closed valve *)
+fbFSInit( CLK := TRUE, Q => xFirstPass);
+IF xFirstPass THEN
+	iq_stValve.eVGC_State := Vented;
+	iq_stValve.pv_xOPN_SW := FALSE;
+	iq_stValve.pv_xCLS_SW := FALSE;
+	ePrevState := INVALID; 
+END_IF
+
+
+///Check valve position
+IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
+	iq_stValve.eState:=INVALID;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=OPEN;
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=CLOSED;
+ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=MOVING;
+ELSE
+	iq_stValve.eState:=INVALID;
+END_IF
+
+
+
+(* Can't have both open and close True at the same time. Reset both*)
+If (iq_stValve.pv_xOPN_SW) AND (iq_stValve.pv_xCLS_SW) THEN
+    iq_stValve.pv_xOPN_SW := FALSE;
+    iq_stValve.pv_xCLS_SW := FALSE;
+END_IF
+
+(* Override logic *)
+(* Goal: give ability to override, but do so in a way that people won't forget it.
+Solution: Override only after ten seconds of override, protect against blips,
+when the valve permission goes true for more than ten seconds consistently, remove override
+*)
+
+
+// Release the Force Open bit when the system override is false
+IF NOT(i_xOverrideMode) THEN  
+	iq_stValve.pv_xOvrdOpn :=FALSE;
+	iq_stValve.pv_xOvrdCls := FALSE;
+END_IF
+//Override timer
+tonOvrd(IN:=(iq_stValve.pv_xOvrdOpn OR iq_stValve.pv_xOvrdCls), PT:=tOvrd);
+
+(* Here's where the valve Actuates *)
+(*Evaluate EPS interlocks and the override*)
+iq_stValve.q_xCLS_DO  := (i_CLS_OK AND iq_stValve.pv_xCLS_SW AND NOT iq_stValve.pv_xOPN_SW) OR (tonOvrd.Q AND iq_stValve.pv_xOvrdCls AND i_xOverrideMode);
+iq_stValve.q_xOPN_DO  := (i_OPN_OK AND iq_stValve.pv_xOPN_SW AND NOT iq_stValve.pv_xCLS_SW) OR (tonOvrd.Q AND iq_stValve.pv_xOvrdOpn AND i_xOverrideMode) ;
+
+
+(*Reset the Control signal when command has been executed and give time to ensure the actuator is fully seated in either direction*)
+(* for pulse control*)
+IF (NOT ibCntrlHold) THEN
+   IF (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xOpnLS AND tOPNLimitSwitch.Q ) THEN iq_stValve.pv_xOPN_SW := FALSE; END_IF
+   IF (iq_stValve.pv_xCLS_SW AND iq_stValve.i_xClsLS AND tCLSLimitSwitch.Q ) THEN iq_stValve.pv_xCLS_SW := FALSE; END_IF
+END_IF
+
+///Check valve moving position timout
+IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
+	iq_stValve.bErrorPresent := TRUE;
+	iq_stValve.sErrorMessage := ' Close Timeout';
+ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
+	iq_stValve.bErrorPresent := TRUE; 
+	iq_stValve.sErrorMessage := ' Open Timeout';
+END_IF
+IF (iq_stValve.eState=INVALID) THEN
+	iq_stValve.bErrorPresent := TRUE; 
+	iq_stValve.sErrorMessage := CONCAT(sPath,' Invalid Valve Position');
+END_IF
+
+(*Timers*)
+tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
+tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
+tCLSLimitSwitch(IN:= iq_stValve.i_xClsLS, PT := tLimitSwitchLatchDuration);
+tOPNLimitSwitch(IN:= iq_stValve.i_xOpnLS, PT := tLimitSwitchLatchDuration);
+
+(*Soft IO Mapping*)
+ACT_IO();
+
+// Log States and triggers
+ACT_Logger();
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{95c54287-9a93-4278-9699-10101f5fa5f2}">
+      <Implementation>
+        <ST><![CDATA[(*inputs*)
+iq_stValve.i_xOpnLS := 	i_xOpnLS;
+iq_stValve.i_xClsLS:=	i_xClsLS;
+iq_stValve.xOverrideMode := i_xOverrideMode;
+iq_stValve.xCLS_OK := i_CLS_OK;
+iq_stValve.xOPN_OK := i_OPN_OK;
+(*outputs*)
+q_xOPN_DO:= iq_stValve.q_xOPN_DO;
+q_xCLS_DO:= iq_stValve.q_xCLS_DO;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Logger" Id="{a5a570ae-3b72-42d7-8590-52686a707754}">
+      <Implementation>
+        <ST><![CDATA[
+//STATE Logger  
+
+IF ePrevState <> iq_stValve.eState THEN
+	  CASE iq_stValve.eState OF
+		INVALID:
+			fbLogger(sMsg:='Valve invalid position.', eSevr:=TcEventSeverity.Critical);
+  		MOVING:
+			fbLogger(sMsg:='Valve moving', eSevr:=TcEventSeverity.Warning);
+		OPEN:
+			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+		CLOSED:
+			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stValve.eState;  
+  END_IF
+  
+
+
+// Log valve timeouts
+tErrorPresent(CLK:=iq_stValve.bErrorPresent);
+IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
+
+// Log valve open
+tAction(CLK:= iq_stValve.q_xOPN_DO);
+IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
+
+tAction2(CLK:= iq_stValve.q_xCLS_DO);
+IF tAction.Q THEN fbLogger(sMsg:='Valve commanded closed', eSevr:=TcEventSeverity.Info); END_IF
+
+// Log override mode enabled
+tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
+IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_IsClosed" Id="{814a753d-7455-49c8-ae15-0935e5b62b3a}">
+      <Declaration><![CDATA[METHOD PUBLIC M_IsClosed : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsOpen" Id="{7d1fcaec-c1d3-4376-b374-8a306bf6969c}">
+      <Declaration><![CDATA[METHOD PUBLIC M_IsOpen : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Set_CLS_SW" Id="{9fa35c80-43fd-40d8-b4de-881b063234f9}">
+      <Declaration><![CDATA[METHOD M_Set_CLS_SW : BOOL
+VAR_INPUT
+	value:BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := NOT (value);
+This^.iq_stValve.pv_xCLS_SW := value;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Set_OPN_SW" Id="{6aa682d8-41b0-49af-9852-38eb944329c7}">
+      <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+METHOD PUBLIC M_Set_OPN_SW : BOOL
+VAR_INPUT
+	value:BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;
+This^.iq_stValve.pv_xCLS_SW := NOT (value);]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

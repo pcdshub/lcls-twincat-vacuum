@@ -68,7 +68,6 @@ VAR
 	tBPTMtimeout:TON;
 	bptm: BeamParameterTransitionManager;  
 	FFO    :    FB_FastFault :=(
-        i_DevName := 'VGC',
         i_Desc := 'Fault occurs when the valve is not in open state',
         i_TypeCode := 16#1010);
 	//g_FastFaultOutput1	:	FB_HardwareFFOutput;	
@@ -393,6 +392,7 @@ ACT_Persistent();
 FFO(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
 	i_xAutoReset :=TRUE,
+	i_DevName := i_sDevName,
     io_fbFFHWO := io_fbFFHWO);
 
 

@@ -317,6 +317,10 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VRC_DA.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VRC_EBD.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
