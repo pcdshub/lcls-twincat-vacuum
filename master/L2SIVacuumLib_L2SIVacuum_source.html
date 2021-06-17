@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -182,6 +185,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#fb-pip-gamma">FB_PIP_Gamma</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-pip-interface-in">FB_PIP_Interface_In</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-pip-interface-out">FB_PIP_Interface_Out</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-pip-sip">FB_PIP_SIP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-pip-test">FB_PIP_Test</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-pressurestate">FB_PressureState</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-ptm-agilent">FB_PTM_Agilent</a></li>
@@ -215,6 +219,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#fb-vgc-ebd">FB_VGC_EBD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-vgc-test">FB_VGC_Test</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-vrc">FB_VRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vrc-da">FB_VRC_DA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-vrc-ebd">FB_VRC_EBD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-vrc-no">FB_VRC_NO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-vrc-no-ffo">FB_VRC_NO_FFO</a></li>
@@ -3374,7 +3379,7 @@ END_ACTION
 <span class="n">END_VAR</span>
 <span class="n">VAR</span>
     <span class="n">fbPLCInputCoilsRx</span>       <span class="p">:</span>       <span class="n">FB_MBReadInputs</span><span class="p">;</span><span class="o">//</span> <span class="p">(</span><span class="n">Modbus</span> <span class="n">function</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">i_PLC_nBits</span>     <span class="p">:</span>       <span class="n">ARRAY</span> <span class="p">[</span><span class="mf">1.</span><span class="o">.</span><span class="mi">4</span><span class="p">]</span> <span class="n">OF</span> <span class="n">BYTE</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span>     <span class="p">:</span>       <span class="n">ARRAY</span> <span class="p">[</span><span class="mf">1..4</span><span class="p">]</span> <span class="n">OF</span> <span class="n">BYTE</span><span class="p">;</span>
     <span class="n">ftReset</span> <span class="p">:</span> <span class="n">F_TRIG</span><span class="p">;</span>
     <span class="n">tonRetry</span> <span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
     <span class="n">ErrCount</span><span class="p">:</span><span class="n">INT</span> <span class="o">:=</span><span class="mi">0</span><span class="p">;</span>
@@ -3420,22 +3425,22 @@ END_ACTION
 <span class="n">fbPLCInputCoilsRx</span><span class="p">(</span><span class="n">sIPAddr</span><span class="o">:=</span><span class="n">IP</span><span class="p">,</span> <span class="n">nTCPPort</span><span class="o">:=</span><span class="mi">502</span><span class="p">,</span> <span class="n">nQuantity</span><span class="o">:=</span><span class="mi">32</span><span class="p">,</span> <span class="n">nMBAddr</span><span class="o">:=</span><span class="n">nMBAddr</span><span class="p">,</span> <span class="n">cbLength</span><span class="o">:=</span><span class="n">SIZEOF</span><span class="p">(</span><span class="n">i_PLC_nBits</span><span class="p">),</span>  <span class="n">pDestAddr</span><span class="o">:=</span><span class="n">ADR</span><span class="p">(</span><span class="n">i_PLC_nBits</span><span class="p">),</span> <span class="n">tTimeout</span><span class="o">:=</span><span class="n">tTimeout</span><span class="p">);</span>
 <span class="o">//</span><span class="k">if</span> <span class="n">there</span><span class="s1">&#39;s a modbus error, set all incoming bits to zero</span>
 <span class="n">IF</span> <span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">bError</span> <span class="n">THEN</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">0</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">1</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">2</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">3</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">4</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">5</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">6</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="mi">7</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">0</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">1</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">2</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">3</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">4</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">5</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">6</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="mi">7</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="mf">.0</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="mf">.1</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="mf">.2</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="mf">.3</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="mf">.4</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="mf">.5</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="mf">.6</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="mf">.7</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="mf">.0</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="mf">.1</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="mf">.2</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="mf">.3</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="mf">.4</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="mf">.5</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="mf">.6</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">i_PLC_nBits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="mf">.7</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">VG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
     <span class="n">xNoPLCResponse</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
 <span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">ftReset</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">fbPLCInputCoilsRx</span><span class="o">.</span><span class="n">cbRead</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="n">THEN</span>
@@ -5538,6 +5543,247 @@ END_ACTION
 <span class="n">i_xPRESS_OK</span><span class="o">:=</span><span class="n">VG</span><span class="o">.</span><span class="n">xPRESS_OK</span><span class="p">;</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fb-pip-sip">
+<h2>FB_PIP_SIP<a class="headerlink" href="#fb-pip-sip" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="n">FOR</span> <span class="n">the</span> <span class="n">ION</span> <span class="n">pump</span> <span class="n">connected</span> <span class="n">to</span> <span class="n">a</span> <span class="n">SAES</span> <span class="n">SIP</span> <span class="n">controller</span><span class="o">.</span>
+ <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.</span> <span class="n">Enable</span> <span class="n">HV</span> <span class="n">only</span> <span class="n">when</span> <span class="n">interlock</span> <span class="n">gauge</span> <span class="n">press</span> <span class="ow">is</span> <span class="n">less</span> <span class="n">than</span> <span class="mf">1.0E-4</span> <span class="n">Torr</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;reflection&#39;</span><span class="p">}</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_PIP_SIP</span> <span class="n">Extends</span> <span class="n">FB_Pump</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">i_stGauge</span>       <span class="p">:</span>       <span class="n">ST_VG</span><span class="p">;</span> <span class="o">//</span><span class="n">Ion</span> <span class="ow">or</span> <span class="n">Pirani</span> <span class="n">gauge</span> <span class="k">for</span> <span class="n">pump</span> <span class="n">interlock</span>
+    <span class="n">i_xOverrideMode</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">To</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="k">global</span> <span class="n">override</span> <span class="n">bit</span><span class="o">.</span> <span class="n">This</span> <span class="n">Overrides</span> <span class="n">Vacuum</span> <span class="n">interlock</span> <span class="n">logic</span><span class="o">*</span><span class="p">)</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">stPump</span>  <span class="p">:</span>       <span class="n">ST_PIP</span><span class="p">;</span> <span class="o">//</span><span class="n">Gamma</span> <span class="n">Ion</span> <span class="n">pump</span> <span class="n">structure</span>
+    <span class="n">q_IG</span>    <span class="p">:</span>       <span class="n">ST_VG</span><span class="p">;</span> <span class="o">//</span><span class="n">When</span> <span class="n">ion</span> <span class="n">pump</span> <span class="ow">is</span> <span class="n">used</span> <span class="k">as</span> <span class="n">a</span> <span class="n">measuring</span> <span class="n">device</span> <span class="k">for</span> <span class="n">interlocking</span> <span class="n">gate</span> <span class="n">valves</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+ <span class="n">rPRESS</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
+ <span class="n">iTermBits</span><span class="p">:</span> <span class="n">UINT</span> <span class="o">:=</span> <span class="mi">32767</span> <span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">terminal</span><span class="s1">&#39;s maximum value in bits</span>
+ <span class="n">rV</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
+ <span class="n">timer</span><span class="p">:</span><span class="n">TON</span><span class="p">;</span>
+
+ <span class="p">(</span><span class="o">*</span> <span class="n">IO</span> <span class="n">Controls</span> <span class="o">*</span><span class="p">)</span>
+ <span class="n">q_xHVEna_DO</span> <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>  <span class="o">//</span> <span class="n">Enable</span> <span class="n">High</span> <span class="n">Voltage</span> <span class="n">when</span> <span class="n">TRUE</span>
+ <span class="n">i_iPRESS</span>  <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">INT</span><span class="p">;</span>  <span class="o">//</span>
+ <span class="n">i_xIP_ON</span>  <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+ <span class="n">i_xError</span>  <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+
+<span class="o">//</span> <span class="n">For</span> <span class="n">logging</span>
+<span class="n">tTimeOutAction</span> <span class="p">:</span> <span class="n">F_TRIG</span><span class="p">;</span>
+<span class="n">tOverrideActivated</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span>
+
+<span class="n">tPumpStartTimeout</span> <span class="p">:</span> <span class="n">TON</span> <span class="o">:=</span> <span class="p">(</span><span class="n">PT</span><span class="o">:=</span><span class="n">T</span><span class="c1">#10s); // Timeout pump start if pressure &lt; 1E-11 for more than 10s.</span>
+<span class="n">MinPressure</span> <span class="p">:</span> <span class="n">REAL</span><span class="o">:=</span> <span class="mf">1E-11</span><span class="p">;</span> <span class="o">//</span> <span class="n">Minimum</span> <span class="n">readback</span> <span class="n">pressure</span><span class="p">,</span> <span class="n">pump</span> <span class="n">must</span> <span class="n">register</span> <span class="n">pressure</span> <span class="n">above</span> <span class="n">this</span> <span class="n">to</span> <span class="n">be</span> <span class="n">considered</span> <span class="n">running</span>
+
+<span class="o">//</span><span class="n">Overrides</span>
+    <span class="n">tonOvrd</span> <span class="p">:</span>       <span class="n">TON</span><span class="p">;</span>
+    <span class="n">tonDelOK</span> <span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
+    <span class="n">rtOK</span>    <span class="p">:</span>       <span class="n">R_TRIG</span><span class="p">;</span>
+    <span class="n">tOvrd</span>   <span class="p">:</span>       <span class="n">TIME</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#10s;</span>
+
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;instance-path&#39;</span><span class="p">}</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;noinit&#39;</span><span class="p">}</span>
+    <span class="n">sPath</span><span class="p">:</span> <span class="n">STRING</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span> <span class="n">CONSTANT</span>
+     <span class="n">rDefaultHVEna_SP</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span><span class="mf">1E-4</span><span class="p">;</span> <span class="o">//</span> <span class="n">Default</span> <span class="n">protection</span> <span class="n">setpoint</span> <span class="k">as</span> <span class="n">per</span> <span class="n">the</span> <span class="n">gamma</span> <span class="n">QPCe</span> <span class="n">manual</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span> <span class="n">PERSISTENT</span>
+    <span class="n">rHVEna_SP</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Does</span> <span class="n">Gamma</span> <span class="n">Ion</span> <span class="n">pump</span> <span class="n">HV</span> <span class="n">interlock</span><span class="o">.</span> <span class="n">Enable</span> <span class="n">HV</span> <span class="n">only</span> <span class="n">when</span> <span class="n">interlock</span> <span class="n">gauge</span> <span class="n">press</span> <span class="ow">is</span> <span class="n">less</span> <span class="n">than</span> <span class="mf">1.0E-4</span> <span class="n">Torr</span> <span class="o">*</span><span class="p">)</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Ensures</span> <span class="n">the</span> <span class="nb">set</span> <span class="n">point</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">higher</span> <span class="n">than</span> <span class="mf">1.0E-4</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">&gt;</span> <span class="n">rDefaultHVEna_SP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">:=</span> <span class="n">rDefaultHVEna_SP</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Interlock</span> <span class="o">*</span><span class="p">)</span>
+<span class="o">//</span><span class="n">stPump</span><span class="o">.</span><span class="n">xHV_ExtIlk</span>  <span class="o">:=</span> <span class="n">i_stGauge</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">AND</span> <span class="p">(</span><span class="n">i_stGauge</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span><span class="p">);</span><span class="o">//</span><span class="n">AND</span> <span class="n">NOT</span> <span class="n">tPumpStartTimeout</span><span class="o">.</span><span class="n">Q</span><span class="p">);</span> <span class="o">//</span><span class="n">ADP</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Enable</span> <span class="n">HV</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">i_stGauge</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="n">AND</span> <span class="n">i_stGauge</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">THEN</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">xAutoOn</span><span class="p">)</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span><span class="p">)</span> <span class="n">THEN</span>  <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">ELSE</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span> <span class="n">OR</span> <span class="p">((</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">));</span>
+    <span class="n">END_IF</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">xILKOk</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="p">(</span><span class="o">*</span><span class="n">AND</span> <span class="n">timer</span><span class="o">.</span><span class="n">Q</span><span class="o">*</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">IF</span> <span class="n">q_IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">+</span> <span class="n">stPump</span><span class="o">.</span><span class="n">rHYS_PR</span><span class="p">)</span> <span class="n">THEN</span> <span class="o">//</span> <span class="n">Ion</span> <span class="n">pumps</span> <span class="n">when</span> <span class="n">running</span> <span class="n">switches</span> <span class="n">off</span> <span class="n">based</span> <span class="n">on</span> <span class="n">their</span> <span class="n">own</span> <span class="n">pressure</span> <span class="n">readings</span>
+            <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+            <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+            <span class="n">stPump</span><span class="o">.</span><span class="n">xILKOk</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">ELSE</span>
+            <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span> <span class="n">OR</span> <span class="p">((</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">));</span>
+    <span class="n">END_IF</span>
+<span class="n">ELSIF</span> <span class="p">(</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">ELSE</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span>  <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">xILKOk</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+
+<span class="o">//</span><span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span> <span class="n">AND</span> <span class="n">stPump</span><span class="o">.</span><span class="n">xHV_ExtIlk</span><span class="p">;</span>
+<span class="o">//</span><span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span><span class="p">;</span>
+
+<span class="n">timer</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">NOT</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span><span class="p">,</span> <span class="n">PT</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#1s);</span>
+
+<span class="o">//</span> <span class="n">TAW</span> <span class="n">Experimental</span> <span class="n">ion</span> <span class="n">pump</span> <span class="n">timeout</span>
+<span class="n">tPumpStartTimeout</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span><span class="p">(</span><span class="n">NOT</span> <span class="n">stPump</span><span class="o">.</span><span class="n">i_xHV_DI</span> <span class="n">AND</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span><span class="p">));</span>
+<span class="n">tTimeOutAction</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span><span class="n">tPumpStartTimeout</span><span class="o">.</span><span class="n">Q</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">tTimeOutAction</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>  <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump time out.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span>
+
+
+
+<span class="p">(</span><span class="o">*</span><span class="n">Pump</span> <span class="n">STATE</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">tPumpStartTimeout</span><span class="o">.</span><span class="n">Q</span> <span class="n">OR</span> <span class="n">i_xError</span>  <span class="n">THEN</span> <span class="o">//</span><span class="n">Pump</span> <span class="n">timeout</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpFAULT</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">stPump</span><span class="o">.</span><span class="n">i_xHV_DI</span> <span class="n">THEN</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpSTARTING</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">stPump</span><span class="o">.</span><span class="n">i_xHV_DI</span> <span class="n">THEN</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpSTOPPED</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="n">AND</span> <span class="n">stPump</span><span class="o">.</span><span class="n">i_xHV_DI</span> <span class="n">THEN</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpRUNNING</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span> <span class="n">AND</span> <span class="n">stPump</span><span class="o">.</span><span class="n">i_xHV_DI</span> <span class="n">THEN</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpSTOPPING</span><span class="p">;</span>
+<span class="n">ELSE</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpFAULT</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+
+
+<span class="p">(</span><span class="o">*</span><span class="n">Update</span> <span class="n">output</span> <span class="n">gauge</span> <span class="n">values</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_SetGauge</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Soft</span> <span class="n">IO</span> <span class="n">Mapping</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IO</span><span class="p">();</span>
+<span class="n">ACT_IlkOverride</span><span class="p">();</span>
+<span class="o">//</span> <span class="n">Log</span> <span class="n">States</span> <span class="ow">and</span> <span class="n">triggers</span>
+<span class="n">ACT_Logger</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+<span class="n">ACTION</span> <span class="n">ACT_IlkOverride</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Override</span> <span class="n">logic</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Goal</span><span class="p">:</span> <span class="n">give</span> <span class="n">ability</span> <span class="n">to</span> <span class="n">override</span><span class="p">,</span> <span class="n">but</span> <span class="n">do</span> <span class="n">so</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">way</span> <span class="n">that</span> <span class="n">people</span> <span class="n">won</span><span class="s1">&#39;t forget it.</span>
+<span class="n">Solution</span><span class="p">:</span> <span class="n">Override</span> <span class="n">only</span> <span class="n">after</span> <span class="n">ten</span> <span class="n">seconds</span> <span class="n">of</span> <span class="n">override</span><span class="p">,</span> <span class="n">protect</span> <span class="n">against</span> <span class="n">blips</span><span class="p">,</span>
+<span class="n">when</span> <span class="n">the</span> <span class="n">Pump</span> <span class="n">permission</span> <span class="n">goes</span> <span class="n">true</span> <span class="k">for</span> <span class="n">more</span> <span class="n">than</span> <span class="n">ten</span> <span class="n">seconds</span> <span class="n">consistently</span><span class="p">,</span> <span class="n">remove</span> <span class="n">override</span>
+<span class="o">*</span><span class="p">)</span>
+
+<span class="n">tonDelOK</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span><span class="n">stPump</span><span class="o">.</span><span class="n">xILKOk</span><span class="p">,</span> <span class="n">PT</span><span class="o">:=</span><span class="n">T</span><span class="c1">#10S);</span>
+<span class="n">rtOK</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span><span class="n">tonDelOK</span><span class="o">.</span><span class="n">Q</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">rtOK</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">stPump</span><span class="o">.</span><span class="n">pv_xOvrdStart</span> <span class="n">THEN</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">pv_xOvrdStart</span> <span class="o">:=</span><span class="n">FALSE</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">pumpRUNNING</span><span class="p">)</span> <span class="n">AND</span> <span class="p">(</span><span class="n">i_xOverrideMode</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">stPump</span><span class="o">.</span><span class="n">xHVEna_SW</span><span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span> <span class="n">END_IF</span>
+    <span class="o">//</span><span class="n">Log</span>
+    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Override expired&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+<span class="n">END_IF</span>
+<span class="o">//</span> <span class="n">Release</span> <span class="n">the</span> <span class="n">Force</span> <span class="n">DO</span> <span class="n">bit</span> <span class="n">when</span> <span class="n">the</span> <span class="n">system</span> <span class="n">override</span> <span class="ow">is</span> <span class="n">false</span>
+<span class="n">IF</span> <span class="n">NOT</span><span class="p">(</span><span class="n">i_xOverrideMode</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">stPump</span><span class="o">.</span><span class="n">pv_xOvrdStart</span> <span class="o">:=</span><span class="n">FALSE</span><span class="p">;</span> <span class="n">END_IF</span>
+<span class="o">//</span><span class="n">Override</span> <span class="n">timer</span>
+<span class="n">tonOvrd</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">pv_xOvrdStart</span><span class="p">,</span> <span class="n">PT</span><span class="o">:=</span><span class="n">tOvrd</span><span class="p">);</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="o">//</span> <span class="n">ILK</span> <span class="n">logger</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">xILKOk</span><span class="p">)</span> <span class="n">AND</span> <span class="p">((</span><span class="n">ePrevState</span> <span class="o">=</span> <span class="n">pumpRUNNING</span><span class="p">)</span> <span class="n">OR</span> <span class="p">(</span><span class="n">ePrevState</span> <span class="o">=</span> <span class="n">pumpSTARTING</span><span class="p">))</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump turned off due to loss of interlock.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+<span class="n">END_IF</span>
+
+<span class="o">//</span><span class="n">STATE</span> <span class="n">Logger</span>
+<span class="n">IF</span> <span class="n">ePrevState</span> <span class="o">&lt;&gt;</span> <span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="n">THEN</span>
+      <span class="n">CASE</span> <span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="n">OF</span>
+            <span class="n">pumpFAULT</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump Fault.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+            <span class="n">pumpSTOPPED</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump stopped.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+            <span class="n">pumpSTARTING</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump starting.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">pumpRUNNING</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump running.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">pumpSTOPPING</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump stopping.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+      <span class="n">END_CASE</span>
+      <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
+  <span class="n">END_IF</span>
+
+
+  <span class="o">//</span> <span class="n">Log</span> <span class="n">Action</span>
+<span class="n">tAction</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span>  <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">tAction</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump commanded to start&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span> <span class="n">END_IF</span>
+<span class="o">//</span> <span class="n">Log</span> <span class="n">override</span> <span class="n">mode</span> <span class="n">enabled</span>
+<span class="n">tOverrideActivated</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="p">(</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">));</span>
+<span class="n">IF</span> <span class="n">tOverrideActivated</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump override mode activated&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span> <span class="n">END_IF</span>
+
+
+<span class="o">//</span> <span class="n">Log</span> <span class="n">FAULT</span>
+<span class="n">tFault</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span>  <span class="n">NOT</span> <span class="n">tPumpStartTimeout</span><span class="o">.</span><span class="n">Q</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">tFault</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Pump Fault&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rHVEna_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">:=</span> <span class="n">rHVEna_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span> <span class="o">=</span> <span class="n">rHVEna_SP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rHVEna_SP</span> <span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">rHVEna_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_SetGauge</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">MG</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">convert</span> <span class="n">the</span> <span class="n">analog</span> <span class="nb">input</span> <span class="n">into</span> <span class="n">readable</span> <span class="n">pressure</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">use</span> <span class="n">logarithmic</span> <span class="n">Pressure</span> <span class="n">calculation</span><span class="p">,</span> <span class="n">Output</span><span class="o">=</span> <span class="n">Normal</span> <span class="ow">and</span> <span class="n">Offset</span> <span class="o">=</span> <span class="mi">0</span><span class="o">*</span><span class="p">)</span>
+<span class="n">If</span> <span class="p">(</span><span class="n">iTermBits</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">iTermBits</span> <span class="o">:=</span> <span class="mi">32767</span><span class="p">;</span><span class="n">END_IF</span>
+<span class="n">rV</span> <span class="o">:=</span> <span class="mi">10</span><span class="o">*</span><span class="n">INT_TO_REAL</span><span class="p">(</span><span class="n">i_iPress</span><span class="p">)</span><span class="o">/</span><span class="n">iTermBits</span><span class="p">;</span>
+<span class="o">//</span><span class="n">Manual</span> <span class="n">Page</span> <span class="mi">29</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">rV</span> <span class="o">&gt;=</span> <span class="mf">2.5</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">((</span><span class="mf">0.000000001</span><span class="o">*</span><span class="n">EXP</span><span class="p">(</span><span class="mf">1.8421</span><span class="o">*</span><span class="n">rV</span><span class="p">))</span><span class="o">/</span><span class="mi">65</span><span class="p">);</span>
+    <span class="n">ELSE</span>
+    <span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">((</span><span class="mf">0.0000000008</span><span class="o">*</span><span class="n">EXP</span><span class="p">(</span><span class="mf">1.9315</span><span class="o">*</span><span class="n">rV</span><span class="p">))</span><span class="o">/</span><span class="mi">65</span><span class="p">);</span>
+<span class="n">END_IF</span>
+<span class="o">//</span> <span class="n">Min</span><span class="o">.</span> <span class="n">measured</span> <span class="n">pressure</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">rPRESS</span> <span class="o">&lt;</span> <span class="mf">1E-11</span><span class="p">)</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">rPRESS</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>  <span class="n">THEN</span>
+    <span class="n">rPRESS</span> <span class="o">:=</span> <span class="mf">1E-11</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="n">IF</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">q_IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">rPRESS</span><span class="p">;</span>
+    <span class="n">stPump</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">rPRESS</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+
+<span class="n">IF</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">i_xHV_DI</span><span class="p">)</span> <span class="n">AND</span> <span class="p">(</span><span class="n">q_IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;</span> <span class="n">q_IG</span><span class="o">.</span><span class="n">rVAC_SP</span><span class="p">)</span> <span class="n">THEN</span> <span class="o">//</span><span class="n">ADP</span><span class="o">//</span> <span class="n">AND</span> <span class="p">(</span><span class="n">q_IG</span><span class="o">.</span><span class="n">rPRESS</span><span class="o">&lt;&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="n">AND</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">q_IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">ELSE</span>
+    <span class="n">q_IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="n">q_IG</span><span class="o">.</span><span class="n">sPath</span> <span class="o">:=</span> <span class="n">This</span><span class="o">^.</span><span class="n">stPump</span><span class="o">.</span><span class="n">sPath</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">IO</span><span class="p">:</span>
+<span class="n">stPump</span><span class="o">.</span><span class="n">sIlkDeviceName</span> <span class="o">:=</span> <span class="n">This</span><span class="o">^.</span><span class="n">i_stGauge</span><span class="o">.</span><span class="n">sPath</span><span class="p">;</span>
+<span class="n">stPump</span><span class="o">.</span><span class="n">xError</span> <span class="o">:=</span> <span class="n">i_xError</span><span class="p">;</span><span class="o">//</span> <span class="p">(</span><span class="n">stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">pumpFAULT</span><span class="p">);</span>
+<span class="n">stPump</span><span class="o">.</span><span class="n">xOverrideMode</span> <span class="o">:=</span> <span class="n">i_xOverrideMode</span><span class="p">;</span>
+<span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="o">*</span><span class="p">)</span>
+<span class="n">stPump</span><span class="o">.</span><span class="n">i_iPRESS</span><span class="o">:=</span>   <span class="n">i_iPRESS</span><span class="p">;</span>
+<span class="n">stPump</span><span class="o">.</span><span class="n">i_xHV_DI</span><span class="o">:=</span>   <span class="n">i_xIP_ON</span><span class="p">;</span>
+<span class="p">(</span><span class="o">*</span><span class="n">output</span><span class="o">*</span><span class="p">)</span>
+<span class="n">q_xHVEna_DO</span><span class="o">:=</span>  <span class="n">stPump</span><span class="o">.</span><span class="n">q_xHVEna_DO</span><span class="p">;</span> <span class="o">//</span><span class="n">According</span> <span class="n">to</span> <span class="n">Manual</span> <span class="n">pin</span> <span class="n">should</span> <span class="n">be</span> <span class="n">grounded</span> <span class="n">to</span> <span class="n">activate</span> <span class="n">function</span>
+
+ <span class="n">This</span><span class="o">^.</span><span class="n">stPump</span><span class="o">.</span><span class="n">sPath</span><span class="o">:=</span> <span class="n">sPath</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
 </pre></div>
 </div>
 </div>
@@ -7696,7 +7942,7 @@ END_ACTION
 <span class="n">VAR_INPUT</span>
     <span class="n">i_xExtIlkOK</span>     <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span><span class="n">External</span> <span class="n">Interlock</span><span class="p">,</span> <span class="n">SET</span> <span class="n">to</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">used</span>
     <span class="n">i_ReqPos</span>        <span class="p">:</span>       <span class="n">REAL</span><span class="p">;</span> <span class="o">//</span><span class="n">Requested</span> <span class="n">position</span>
-
+    <span class="n">i_xPurge</span>        <span class="p">:</span> <span class="n">BOOL</span><span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span><span class="o">//</span> <span class="n">When</span> <span class="n">purge</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="n">ignored</span><span class="p">,</span> <span class="n">has</span> <span class="n">to</span> <span class="n">be</span> <span class="nb">set</span> <span class="n">evey</span> <span class="n">cycle</span><span class="o">.</span>
 <span class="n">END_VAR</span>
 <span class="n">VAR_OUTPUT</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
@@ -7757,7 +8003,11 @@ END_ACTION
     <span class="n">ELSIF</span> <span class="p">(</span><span class="n">iq_stVCN</span><span class="o">.</span><span class="n">eValveControl</span> <span class="o">=</span> <span class="n">ManualControl</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="n">AND</span> <span class="p">(</span><span class="n">iq_stVCN</span><span class="o">.</span><span class="n">xOPN_SW</span><span class="p">)</span><span class="o">*</span><span class="p">)</span> <span class="n">THEN</span>
             <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rReqPosition</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rReqPosition</span><span class="p">,</span> <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rUpperLimit</span><span class="p">);</span>
     <span class="n">ELSIF</span> <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">eValveControl</span> <span class="o">=</span> <span class="n">PressureControl</span> <span class="n">THEN</span>
-            <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rReqPosition</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_ReqPos</span><span class="p">,</span> <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rUpperLimit</span><span class="p">);</span>
+            <span class="n">IF</span> <span class="p">(</span><span class="n">i_xPurge</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rReqPosition</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_ReqPos</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+            <span class="n">i_xPurge</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+            <span class="n">ELSE</span> <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rReqPosition</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_ReqPos</span><span class="p">,</span> <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rUpperLimit</span><span class="p">);</span>
+            <span class="n">END_IF</span>
     <span class="n">END_IF</span>
 <span class="n">ELSE</span>
     <span class="n">iq_stVCN</span><span class="o">.</span><span class="n">rReqPosition</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
@@ -8304,7 +8554,6 @@ VAR
     tBPTMtimeout:TON;
     bptm: BeamParameterTransitionManager;
     FFO    :    FB_FastFault :=(
-        i_DevName := &#39;VGC&#39;,
         i_Desc := &#39;Fault occurs when the valve is not in open state&#39;,
         i_TypeCode := 16#1010);
     //g_FastFaultOutput1    :       FB_HardwareFFOutput;
@@ -8614,6 +8863,7 @@ ACT_Persistent();
 FFO(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
     i_xAutoReset :=TRUE,
+    i_DevName := i_sDevName,
     io_fbFFHWO := io_fbFFHWO);
 
 END_FUNCTION_BLOCK
@@ -8714,6 +8964,7 @@ If (i_xIsAperture ) OR (iq_stValve.pv_xOPN_SW )THEN
 ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cst0RateBeam;
 END_IF
 bptm(fbArbiter:=fbArbiter,
+    i_sDeviceName:=i_sDevName,
      i_TransitionAssertionID:=i_nTransitionRootID+2,
      i_stTransitionAssertion:=PMPS_GVL.cst0RateBeam,
      i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xOPN_SW),
@@ -8815,7 +9066,6 @@ VAR
     tBPTMtimeout:TON;
     bptm: BeamParameterTransitionManager;
     FFO    :    FB_FastFault :=(
-        i_DevName := &#39;VGC&#39;,
         i_Desc := &#39;Fault occurs when the valve is not in open state&#39;,
         i_TypeCode := 16#1010);
     //g_FastFaultOutput1    :       FB_HardwareFFOutput;
@@ -9139,6 +9389,7 @@ ACT_Persistent();
 FFO(i_xOK := xMPS_OK,
     i_xReset := i_xReset,
     i_xAutoReset :=TRUE,
+    i_DevName := i_sDevName,
     io_fbFFHWO := io_fbFFHWO);
 
 END_FUNCTION_BLOCK
@@ -9246,6 +9497,7 @@ If (i_xIsAperture ) OR (iq_stValve.pv_xOPN_SW )THEN
 ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cst0RateBeam;
 END_IF
 bptm(fbArbiter:=fbArbiter,
+     i_sDeviceName:=i_sDevName,
      i_TransitionAssertionID:=i_nTransitionRootID+2,
      i_stTransitionAssertion:=PMPS_GVL.cst0RateBeam,
      i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xOPN_SW),
@@ -10266,6 +10518,189 @@ END_ACTION
 <span class="o">//</span> <span class="n">Log</span> <span class="n">valve</span> <span class="nb">open</span>
 <span class="n">tAction</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span><span class="p">);</span>
 <span class="n">IF</span> <span class="n">tAction</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve commanded open&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span> <span class="n">END_IF</span>
+
+<span class="o">//</span> <span class="n">Log</span> <span class="n">override</span> <span class="n">mode</span> <span class="n">enabled</span>
+<span class="n">tOverrideActivated</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="p">(</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">));</span>
+<span class="n">IF</span> <span class="n">tOverrideActivated</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve override mode activated&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span> <span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fb-vrc-da">
+<h2>FB_VRC_DA<a class="headerlink" href="#fb-vrc-da" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">Function</span> <span class="n">Block</span> <span class="n">Implements</span> <span class="n">Basic</span> <span class="n">Functionality</span> <span class="k">for</span> <span class="n">dual</span> <span class="n">acting</span> <span class="n">valves</span><span class="o">.</span> <span class="n">EPs</span> <span class="ow">is</span> <span class="n">implemented</span> <span class="n">so</span> <span class="n">that</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">interlock</span> <span class="n">Open</span> <span class="ow">and</span> <span class="n">Interlock</span> <span class="n">close</span><span class="p">,</span>
+<span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">interloked</span> <span class="n">by</span> <span class="n">an</span> <span class="nb">input</span> <span class="o">.</span> <span class="n">This</span> <span class="ow">is</span> <span class="n">so</span> <span class="n">developers</span> <span class="n">can</span> <span class="n">interface</span> <span class="k">with</span> <span class="n">custom</span>
+<span class="n">interlocking</span> <span class="n">logic</span> <span class="n">outside</span> <span class="n">this</span> <span class="n">function</span> <span class="n">block</span><span class="o">.*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Note</span> <span class="n">Interlock</span> <span class="n">Logic</span> <span class="ow">is</span> <span class="n">External</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;no_check&#39;</span><span class="p">}</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_VRC_DA</span> <span class="n">EXTENDS</span> <span class="n">FB_Valve</span>
+<span class="n">VAR_IN_OUT</span>
+
+<span class="n">END_VAR</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">i_OPN_OK</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span><span class="n">Connect</span> <span class="n">to</span> <span class="n">EPS</span> <span class="n">Interlock</span> <span class="n">logic</span> <span class="n">condition</span><span class="p">,</span> <span class="n">Set</span> <span class="n">to</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">the</span> <span class="n">valve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">interlocked</span>
+    <span class="n">i_CLS_OK</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span><span class="n">Connect</span> <span class="n">to</span> <span class="n">EPS</span> <span class="n">Interlock</span> <span class="n">logic</span> <span class="n">condition</span><span class="p">,</span> <span class="n">Set</span> <span class="n">to</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">the</span> <span class="n">valve</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">interlocked</span>
+    <span class="n">ibCntrlHold</span><span class="p">:</span><span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span> <span class="n">Control</span> <span class="n">Signal</span> <span class="n">must</span> <span class="n">retain</span> <span class="n">its</span> <span class="n">value</span><span class="p">,</span> <span class="kc">False</span> <span class="ow">in</span> <span class="n">case</span> <span class="n">of</span> <span class="n">pulse</span> <span class="n">control</span><span class="o">*</span><span class="p">)</span>
+
+    <span class="n">i_xOverrideMode</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">To</span> <span class="n">be</span> <span class="n">linked</span> <span class="n">to</span> <span class="k">global</span> <span class="n">override</span> <span class="n">bit</span><span class="o">.</span> <span class="n">This</span> <span class="n">Overrides</span> <span class="n">Vacuum</span> <span class="n">logic</span> <span class="n">only</span><span class="p">,</span> <span class="n">EPS</span><span class="p">,</span> <span class="n">MPS</span> <span class="ow">and</span> <span class="n">PMPS</span> <span class="n">are</span> <span class="n">still</span> <span class="n">enforces</span><span class="o">*</span><span class="p">)</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">iq_stValve</span> <span class="p">:</span> <span class="n">ST_VRC_NO</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;instance-path&#39;</span><span class="p">}</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;noinit&#39;</span><span class="p">}</span>
+    <span class="n">sPath</span><span class="p">:</span> <span class="n">STRING</span><span class="p">;</span>
+    <span class="n">xFirstPass</span>      <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">fbFSInit</span>                <span class="p">:</span>       <span class="n">R_TRIG</span><span class="p">;</span>
+    <span class="n">tonOvrd</span> <span class="p">:</span>       <span class="n">TON</span><span class="p">;</span>
+    <span class="n">tonDelOK</span> <span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
+    <span class="n">rtOK</span>    <span class="p">:</span>       <span class="n">R_TRIG</span><span class="p">;</span>
+    <span class="n">tOvrd</span>   <span class="p">:</span>       <span class="n">TIME</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#10s;</span>
+    <span class="p">(</span><span class="o">*</span> <span class="n">Timeouts</span><span class="o">*</span><span class="p">)</span>
+    <span class="n">tTimeOutDuration</span><span class="p">:</span> <span class="n">TIME</span><span class="o">:=</span> <span class="n">T</span><span class="c1">#30S;</span>
+    <span class="n">tOPNtimeout</span><span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
+    <span class="n">tCLStimeout</span><span class="p">:</span><span class="n">TON</span><span class="p">;</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">Limit</span> <span class="n">switch</span> <span class="n">latch</span> <span class="n">timer</span><span class="o">*</span><span class="p">)</span>
+    <span class="n">tLimitSwitchLatchDuration</span><span class="p">:</span> <span class="n">TIME</span><span class="o">:=</span><span class="n">T</span><span class="c1">#1S;</span>
+    <span class="n">tOPNLimitSwitch</span><span class="p">:</span><span class="n">TON</span><span class="p">;</span>
+    <span class="n">tCLSLimitSwitch</span><span class="p">:</span><span class="n">TON</span><span class="p">;</span>
+    <span class="n">tAction2</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">IO</span><span class="o">*</span><span class="p">)</span>
+    <span class="n">i_xOpnLS</span>        <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">i_xClsLS</span>        <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">q_xOPN_DO</span>       <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">q_xCLS_DO</span>       <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+
+<span class="n">END_VAR</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">put</span> <span class="n">valve</span> <span class="n">into</span> <span class="n">vented</span> <span class="n">state</span><span class="p">,</span> <span class="n">which</span> <span class="n">implies</span> <span class="n">a</span> <span class="n">closed</span> <span class="n">valve</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">fbFSInit</span><span class="p">(</span> <span class="n">CLK</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">Q</span> <span class="o">=&gt;</span> <span class="n">xFirstPass</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">xFirstPass</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eVGC_State</span> <span class="o">:=</span> <span class="n">Vented</span><span class="p">;</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOPN_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xCLS_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">INVALID</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+
+<span class="o">///</span><span class="n">Check</span> <span class="n">valve</span> <span class="n">position</span>
+<span class="n">IF</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span>  <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">:=</span><span class="n">INVALID</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">:=</span><span class="n">OPEN</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">:=</span><span class="n">CLOSED</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">:=</span><span class="n">MOVING</span><span class="p">;</span>
+<span class="n">ELSE</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">:=</span><span class="n">INVALID</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Can</span><span class="s1">&#39;t have both open and close True at the same time. Reset both*)</span>
+<span class="n">If</span> <span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOPN_SW</span><span class="p">)</span> <span class="n">AND</span> <span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xCLS_SW</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOPN_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xCLS_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Override</span> <span class="n">logic</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Goal</span><span class="p">:</span> <span class="n">give</span> <span class="n">ability</span> <span class="n">to</span> <span class="n">override</span><span class="p">,</span> <span class="n">but</span> <span class="n">do</span> <span class="n">so</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">way</span> <span class="n">that</span> <span class="n">people</span> <span class="n">won</span><span class="s1">&#39;t forget it.</span>
+<span class="n">Solution</span><span class="p">:</span> <span class="n">Override</span> <span class="n">only</span> <span class="n">after</span> <span class="n">ten</span> <span class="n">seconds</span> <span class="n">of</span> <span class="n">override</span><span class="p">,</span> <span class="n">protect</span> <span class="n">against</span> <span class="n">blips</span><span class="p">,</span>
+<span class="n">when</span> <span class="n">the</span> <span class="n">valve</span> <span class="n">permission</span> <span class="n">goes</span> <span class="n">true</span> <span class="k">for</span> <span class="n">more</span> <span class="n">than</span> <span class="n">ten</span> <span class="n">seconds</span> <span class="n">consistently</span><span class="p">,</span> <span class="n">remove</span> <span class="n">override</span>
+<span class="o">*</span><span class="p">)</span>
+
+
+<span class="o">//</span> <span class="n">Release</span> <span class="n">the</span> <span class="n">Force</span> <span class="n">Open</span> <span class="n">bit</span> <span class="n">when</span> <span class="n">the</span> <span class="n">system</span> <span class="n">override</span> <span class="ow">is</span> <span class="n">false</span>
+<span class="n">IF</span> <span class="n">NOT</span><span class="p">(</span><span class="n">i_xOverrideMode</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOvrdOpn</span> <span class="o">:=</span><span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOvrdCls</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="o">//</span><span class="n">Override</span> <span class="n">timer</span>
+<span class="n">tonOvrd</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span><span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOvrdOpn</span> <span class="n">OR</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOvrdCls</span><span class="p">),</span> <span class="n">PT</span><span class="o">:=</span><span class="n">tOvrd</span><span class="p">);</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Here</span><span class="s1">&#39;s where the valve Actuates *)</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Evaluate</span> <span class="n">EPS</span> <span class="n">interlocks</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">override</span><span class="o">*</span><span class="p">)</span>
+<span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xCLS_DO</span>  <span class="o">:=</span> <span class="p">(</span><span class="n">i_CLS_OK</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xCLS_SW</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOPN_SW</span><span class="p">)</span> <span class="n">OR</span> <span class="p">(</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOvrdCls</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">);</span>
+<span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span>  <span class="o">:=</span> <span class="p">(</span><span class="n">i_OPN_OK</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOPN_SW</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xCLS_SW</span><span class="p">)</span> <span class="n">OR</span> <span class="p">(</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOvrdOpn</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">)</span> <span class="p">;</span>
+
+
+<span class="p">(</span><span class="o">*</span><span class="n">Reset</span> <span class="n">the</span> <span class="n">Control</span> <span class="n">signal</span> <span class="n">when</span> <span class="n">command</span> <span class="n">has</span> <span class="n">been</span> <span class="n">executed</span> <span class="ow">and</span> <span class="n">give</span> <span class="n">time</span> <span class="n">to</span> <span class="n">ensure</span> <span class="n">the</span> <span class="n">actuator</span> <span class="ow">is</span> <span class="n">fully</span> <span class="n">seated</span> <span class="ow">in</span> <span class="n">either</span> <span class="n">direction</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="k">for</span> <span class="n">pulse</span> <span class="n">control</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">NOT</span> <span class="n">ibCntrlHold</span><span class="p">)</span> <span class="n">THEN</span>
+   <span class="n">IF</span> <span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOPN_SW</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">AND</span> <span class="n">tOPNLimitSwitch</span><span class="o">.</span><span class="n">Q</span> <span class="p">)</span> <span class="n">THEN</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOPN_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span> <span class="n">END_IF</span>
+   <span class="n">IF</span> <span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xCLS_SW</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">tCLSLimitSwitch</span><span class="o">.</span><span class="n">Q</span> <span class="p">)</span> <span class="n">THEN</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xCLS_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span> <span class="n">END_IF</span>
+<span class="n">END_IF</span>
+
+<span class="o">///</span><span class="n">Check</span> <span class="n">valve</span> <span class="n">moving</span> <span class="n">position</span> <span class="n">timout</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">tCLStimeout</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">bErrorPresent</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">sErrorMessage</span> <span class="o">:=</span> <span class="s1">&#39; Close Timeout&#39;</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">AND</span> <span class="n">tOPNtimeout</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">bErrorPresent</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">sErrorMessage</span> <span class="o">:=</span> <span class="s1">&#39; Open Timeout&#39;</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">=</span><span class="n">INVALID</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">bErrorPresent</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">sErrorMessage</span> <span class="o">:=</span> <span class="n">CONCAT</span><span class="p">(</span><span class="n">sPath</span><span class="p">,</span><span class="s1">&#39; Invalid Valve Position&#39;</span><span class="p">);</span>
+<span class="n">END_IF</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Timers</span><span class="o">*</span><span class="p">)</span>
+<span class="n">tOPNtimeout</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tTimeOutDuration</span> <span class="p">);</span>
+<span class="n">tCLStimeout</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tTimeOutDuration</span><span class="p">);</span>
+<span class="n">tCLSLimitSwitch</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tLimitSwitchLatchDuration</span><span class="p">);</span>
+<span class="n">tOPNLimitSwitch</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tLimitSwitchLatchDuration</span><span class="p">);</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Soft</span> <span class="n">IO</span> <span class="n">Mapping</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_IO</span><span class="p">();</span>
+
+<span class="o">//</span> <span class="n">Log</span> <span class="n">States</span> <span class="ow">and</span> <span class="n">triggers</span>
+<span class="n">ACT_Logger</span><span class="p">();</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+<span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="o">*</span><span class="p">)</span>
+<span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="o">:=</span>      <span class="n">i_xOpnLS</span><span class="p">;</span>
+<span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span><span class="o">:=</span>       <span class="n">i_xClsLS</span><span class="p">;</span>
+<span class="n">iq_stValve</span><span class="o">.</span><span class="n">xOverrideMode</span> <span class="o">:=</span> <span class="n">i_xOverrideMode</span><span class="p">;</span>
+<span class="n">iq_stValve</span><span class="o">.</span><span class="n">xCLS_OK</span> <span class="o">:=</span> <span class="n">i_CLS_OK</span><span class="p">;</span>
+<span class="n">iq_stValve</span><span class="o">.</span><span class="n">xOPN_OK</span> <span class="o">:=</span> <span class="n">i_OPN_OK</span><span class="p">;</span>
+<span class="p">(</span><span class="o">*</span><span class="n">outputs</span><span class="o">*</span><span class="p">)</span>
+<span class="n">q_xOPN_DO</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span><span class="p">;</span>
+<span class="n">q_xCLS_DO</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xCLS_DO</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="o">//</span><span class="n">STATE</span> <span class="n">Logger</span>
+
+<span class="n">IF</span> <span class="n">ePrevState</span> <span class="o">&lt;&gt;</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span> <span class="n">THEN</span>
+      <span class="n">CASE</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span> <span class="n">OF</span>
+            <span class="n">INVALID</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve invalid position.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+            <span class="n">MOVING</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve moving&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+            <span class="n">OPEN</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve Open.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">CLOSED</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve closed.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+      <span class="n">END_CASE</span>
+      <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
+  <span class="n">END_IF</span>
+
+
+
+<span class="o">//</span> <span class="n">Log</span> <span class="n">valve</span> <span class="n">timeouts</span>
+<span class="n">tErrorPresent</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">bErrorPresent</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">tErrorPresent</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">sErrorMessage</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span> <span class="n">END_IF</span>
+
+<span class="o">//</span> <span class="n">Log</span> <span class="n">valve</span> <span class="nb">open</span>
+<span class="n">tAction</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">tAction</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve commanded open&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span> <span class="n">END_IF</span>
+
+<span class="n">tAction2</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xCLS_DO</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">tAction</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve commanded closed&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span> <span class="n">END_IF</span>
 
 <span class="o">//</span> <span class="n">Log</span> <span class="n">override</span> <span class="n">mode</span> <span class="n">enabled</span>
 <span class="n">tOverrideActivated</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="p">(</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">));</span>

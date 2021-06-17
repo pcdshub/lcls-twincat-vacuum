@@ -5405,6 +5405,249 @@ FB_PIP_Interface_Out
     END_FUNCTION_BLOCK
 
 
+FB_PIP_SIP
+^^^^^^^^^^
+
+::
+
+    (* This function block does basic controls FOR the ION pump connected to a SAES SIP controller.
+     Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
+    {attribute 'reflection'} 
+    FUNCTION_BLOCK FB_PIP_SIP Extends FB_Pump
+    VAR_INPUT
+    	i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock
+        i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum interlock logic*) 
+    END_VAR
+    VAR_OUTPUT
+    	{attribute 'pytmc' := '
+        pv: 
+    	'}
+    	stPump	:	ST_PIP; //Gamma Ion pump structure
+    	q_IG	:	ST_VG; //When ion pump is used as a measuring device for interlocking gate valves
+    END_VAR
+    VAR
+     rPRESS : REAL;
+     iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+     rV : REAL;
+     timer:TON; 
+
+     (* IO Controls *)
+     q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when TRUE
+     i_iPRESS  AT %I*: INT;  //
+     i_xIP_ON  AT %I* : BOOL; 
+     i_xError  AT %I* : BOOL;
+     
+    // For logging
+    tTimeOutAction : F_TRIG;
+    tOverrideActivated : R_TRIG;
+
+    tPumpStartTimeout : TON := (PT:=T#10s); // Timeout pump start if pressure < 1E-11 for more than 10s.
+    MinPressure : REAL:= 1E-11; // Minimum readback pressure, pump must register pressure above this to be considered running
+     
+    //Overrides
+    	tonOvrd	:	TON;
+    	tonDelOK : TON;
+    	rtOK	:	R_TRIG;
+    	tOvrd	:	TIME := T#10s;
+    	
+    	{attribute 'instance-path'}
+    	{attribute 'noinit'}
+    	sPath: STRING;
+    END_VAR
+    VAR CONSTANT
+    	 rDefaultHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
+    END_VAR
+    VAR PERSISTENT
+    	rHVEna_SP : REAL;
+    END_VAR
+    (* Does Gamma Ion pump HV interlock. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
+
+    (*Ensures the set point is not higher than 1.0E-4*)
+    IF (stPump.rHVEna_SP > rDefaultHVEna_SP) THEN
+    	stPump.rHVEna_SP := rDefaultHVEna_SP;
+    END_IF
+
+    (* Interlock *)
+    //stPump.xHV_ExtIlk  := i_stGauge.xPRESS_OK AND (i_stGauge.rPRESS <= stPump.rHVEna_SP);//AND NOT tPumpStartTimeout.Q); //ADP
+
+    (* Enable HV *)
+    IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
+    	IF (stPump.xAutoOn) AND NOT (stPump.q_xHVEna_DO) THEN  stPump.q_xHVEna_DO := TRUE;
+    	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));  
+    	END_IF
+    	stPump.xILKOk:= TRUE;
+    ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN 
+    	IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
+    		stPump.q_xHVEna_DO := FALSE;
+    		stPump.xHVEna_SW := FALSE;
+    		stPump.xILKOk := FALSE;
+    	ELSE
+    		stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode)); 
+    	END_IF
+    ELSIF (tonOvrd.Q AND i_xOverrideMode) THEN
+    	stPump.q_xHVEna_DO := TRUE;
+    ELSE
+    	stPump.q_xHVEna_DO  := FALSE;
+    	stPump.xHVEna_SW := FALSE;
+    	stPump.xILKOk := FALSE;
+    END_IF
+
+
+    //stPump.q_xHVEna_DO := stPump.xHVEna_SW AND stPump.xHV_ExtIlk;
+    //stPump.xHVEna_SW := stPump.q_xHVEna_DO;
+
+    timer(IN:= NOT stPump.q_xHVEna_DO, PT:= T#1s);
+
+    // TAW Experimental ion pump timeout
+    tPumpStartTimeout(IN:=(NOT stPump.i_xHV_DI AND stPump.q_xHVEna_DO));
+    tTimeOutAction(CLK:=tPumpStartTimeout.Q);
+    IF tTimeOutAction.Q THEN  fbLogger(sMsg:='Pump time out.', eSevr:=TcEventSeverity.Critical); END_IF
+
+
+
+    (*Pump STATE*)
+    IF tPumpStartTimeout.Q OR i_xError  THEN //Pump timeout
+    	stPump.eState := pumpFAULT;
+    ELSIF stPump.q_xHVEna_DO AND NOT stPump.i_xHV_DI THEN
+    	stPump.eState := pumpSTARTING;
+    ELSIF NOT stPump.q_xHVEna_DO AND NOT stPump.i_xHV_DI THEN
+    	stPump.eState := pumpSTOPPED;
+    ELSIF stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
+    	stPump.eState := pumpRUNNING;
+    ELSIF NOT stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
+    	stPump.eState := pumpSTOPPING;
+    ELSE 
+    	stPump.eState := pumpFAULT;
+    END_IF
+
+
+
+    (*Update output gauge values*)
+    ACT_SetGauge();
+    (*Soft IO Mapping*)
+    IO();
+    ACT_IlkOverride();
+    // Log States and triggers
+    ACT_Logger();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
+
+    END_FUNCTION_BLOCK
+    ACTION ACT_IlkOverride:
+    (* Override logic *)
+    (* Goal: give ability to override, but do so in a way that people won't forget it.
+    Solution: Override only after ten seconds of override, protect against blips,
+    when the Pump permission goes true for more than ten seconds consistently, remove override
+    *)
+
+    tonDelOK(IN:=stPump.xILKOk, PT:=T#10S);
+    rtOK(CLK:=tonDelOK.Q);
+    IF rtOK.Q AND stPump.pv_xOvrdStart THEN 
+    	stPump.pv_xOvrdStart :=FALSE; 
+    	if (stPump.eState = pumpRUNNING) AND (i_xOverrideMode) THEN stPump.xHVEna_SW:= TRUE; END_IF
+        //Log
+        fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
+    END_IF
+    // Release the Force DO bit when the system override is false
+    IF NOT(i_xOverrideMode) THEN stPump.pv_xOvrdStart :=FALSE; END_IF
+    //Override timer
+    tonOvrd(IN:= stPump.pv_xOvrdStart, PT:=tOvrd);
+    END_ACTION
+    ACTION ACT_Logger:
+    // ILK logger
+
+    IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTARTING)) AND NOT tonOvrd.Q THEN 
+    	fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); 
+    END_IF
+
+    //STATE Logger  
+    IF ePrevState <> stPump.eState THEN
+    	  CASE stPump.eState OF
+    		pumpFAULT:
+    			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+      		pumpSTOPPED:
+    			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+    		pumpSTARTING:
+    			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+    		pumpRUNNING:
+    			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+    		pumpSTOPPING:
+    			fbLogger(sMsg:='Pump stopping.', eSevr:=TcEventSeverity.Info);
+    	  END_CASE
+    	  ePrevState := stPump.eState;  
+      END_IF
+
+      
+      // Log Action
+    tAction(CLK:=  stPump.q_xHVEna_DO);
+    IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
+    // Log override mode enabled
+    tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
+    IF tOverrideActivated.Q THEN fbLogger(sMsg:='Pump override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
+
+
+    // Log FAULT
+    tFault(CLK:=  NOT tPumpStartTimeout.Q);
+    IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); END_IF
+    END_ACTION
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData	:= FALSE;
+    	IF (rHVEna_SP <> 0) THEN
+    		stPump.rHVEna_SP := rHVEna_SP;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (stPump.rHVEna_SP = rHVEna_SP) THEN
+    	rHVEna_SP := stPump.rHVEna_SP;
+    END_IF;
+    END_ACTION
+    ACTION ACT_SetGauge:
+    (*MG*)
+    (* convert the analog input into readable pressure*)
+    (* use logarithmic Pressure calculation, Output= Normal and Offset = 0*)
+    If (iTermBits=0) THEN iTermBits := 32767;END_IF
+    rV := 10*INT_TO_REAL(i_iPress)/iTermBits;
+    //Manual Page 29
+    IF (rV >= 2.5) THEN
+    	rPRESS := LREAL_TO_REAL((0.000000001*EXP(1.8421*rV))/65);
+    	ELSE
+    	rPRESS := LREAL_TO_REAL((0.0000000008*EXP(1.9315*rV))/65);
+    END_IF
+    // Min. measured pressure
+    IF (rPRESS < 1E-11) AND NOT (rPRESS = 0)  THEN
+    	rPRESS := 1E-11;
+    END_IF
+
+    IF (stPump.q_xHVEna_DO) THEN
+    	q_IG.rPRESS := rPRESS;
+    	stPump.rPRESS := rPRESS;
+    END_IF
+
+
+    IF (stPump.i_xHV_DI) AND (q_IG.rPRESS < q_IG.rVAC_SP) THEN //ADP// AND (q_IG.rPRESS<>0) AND stPump.q_xHVEna_DO) THEN 
+    	q_IG.xPRESS_OK := TRUE;
+    	ELSE
+    	q_IG.xPRESS_OK := FALSE;
+    END_IF
+
+    q_IG.sPath := This^.stPump.sPath;
+    END_ACTION
+    ACTION IO:
+    stPump.sIlkDeviceName := This^.i_stGauge.sPath;
+    stPump.xError := i_xError;// (stPump.eState = pumpFAULT);
+    stPump.xOverrideMode := i_xOverrideMode; 
+    (*inputs*)
+    stPump.i_iPRESS:=	i_iPRESS;  
+    stPump.i_xHV_DI:=	i_xIP_ON;
+    (*output*)
+    q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function
+
+     This^.stPump.sPath:= sPath;
+    END_ACTION
+
+
 FB_PIP_Test
 ^^^^^^^^^^^
 
@@ -7611,7 +7854,7 @@ FB_VCN
     VAR_INPUT
     	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
     	i_ReqPos	:	REAL; //Requested position
-
+    	i_xPurge	: BOOL:= FALSE;// When purge is set the maximum threshold is ignored, has to be set evey cycle.
     END_VAR
     VAR_OUTPUT
     	{attribute 'pytmc' := '
@@ -7672,7 +7915,11 @@ FB_VCN
     	ELSIF (iq_stVCN.eValveControl = ManualControl) (*AND (iq_stVCN.xOPN_SW)*) THEN
     		iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
     	ELSIF iq_stVCN.eValveControl = PressureControl THEN
-    		iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, iq_stVCN.rUpperLimit); 
+    		IF (i_xPurge) THEN
+    		iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, 100); 
+    		i_xPurge := FALSE;
+    		ELSE iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, iq_stVCN.rUpperLimit); 
+    		END_IF
     	END_IF
     ELSE
     	iq_stVCN.rReqPosition := 0;
@@ -8225,7 +8472,6 @@ FB_VGC
     	tBPTMtimeout:TON;
     	bptm: BeamParameterTransitionManager;  
     	FFO    :    FB_FastFault :=(
-            i_DevName := 'VGC',
             i_Desc := 'Fault occurs when the valve is not in open state',
             i_TypeCode := 16#1010);
     	//g_FastFaultOutput1	:	FB_HardwareFFOutput;	
@@ -8535,6 +8781,7 @@ FB_VGC
     FFO(i_xOK := xMPS_OK,
         i_xReset := i_xReset,
     	i_xAutoReset :=TRUE,
+    	i_DevName := i_sDevName,
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK
@@ -8635,6 +8882,7 @@ FB_VGC
     ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cst0RateBeam;
     END_IF
     bptm(fbArbiter:=fbArbiter,
+    	i_sDeviceName:=i_sDevName,
          i_TransitionAssertionID:=i_nTransitionRootID+2,
          i_stTransitionAssertion:=PMPS_GVL.cst0RateBeam,
          i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xOPN_SW),
@@ -8738,7 +8986,6 @@ FB_VGC_2S
     	tBPTMtimeout:TON;
     	bptm: BeamParameterTransitionManager;  
     	FFO    :    FB_FastFault :=(
-            i_DevName := 'VGC',
             i_Desc := 'Fault occurs when the valve is not in open state',
             i_TypeCode := 16#1010);
     	//g_FastFaultOutput1	:	FB_HardwareFFOutput;	
@@ -9062,6 +9309,7 @@ FB_VGC_2S
     FFO(i_xOK := xMPS_OK,
         i_xReset := i_xReset,
     	i_xAutoReset :=TRUE,
+    	i_DevName := i_sDevName,
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK
@@ -9169,6 +9417,7 @@ FB_VGC_2S
     ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cst0RateBeam;
     END_IF
     bptm(fbArbiter:=fbArbiter,
+    	 i_sDeviceName:=i_sDevName,
          i_TransitionAssertionID:=i_nTransitionRootID+2,
          i_stTransitionAssertion:=PMPS_GVL.cst0RateBeam,
          i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xOPN_SW),
@@ -10197,6 +10446,191 @@ FB_VRC
     // Log valve open
     tAction(CLK:= iq_stValve.q_xOPN_DO);
     IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
+
+    // Log override mode enabled
+    tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
+    IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
+    END_ACTION
+
+
+FB_VRC_DA
+^^^^^^^^^
+
+::
+
+    (* This Function Block Implements Basic Functionality for dual acting valves. EPs is implemented so that there is interlock Open and Interlock close,
+    This function block is interloked by an input . This is so developers can interface with custom
+    interlocking logic outside this function block.*)
+    (* Note Interlock Logic is External *)
+    {attribute 'no_check'}
+    FUNCTION_BLOCK FB_VRC_DA EXTENDS FB_Valve
+    VAR_IN_OUT
+    	
+    END_VAR
+    VAR_INPUT
+    	i_OPN_OK : BOOL; //Connect to EPS Interlock logic condition, Set to True if the valve is not interlocked
+    	i_CLS_OK : BOOL; //Connect to EPS Interlock logic condition, Set to True if the valve is not interlocked
+        ibCntrlHold:BOOL; (* Control Signal must retain its value, False in case of pulse control*)
+        
+    	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+    END_VAR
+    VAR_OUTPUT
+    	{attribute 'pytmc' := '
+        pv:
+    	'}
+    	iq_stValve : ST_VRC_NO;
+    END_VAR
+    VAR
+    	{attribute 'instance-path'}
+    	{attribute 'noinit'}
+    	sPath: STRING;
+    	xFirstPass	:	BOOL;
+    	fbFSInit		:	R_TRIG;
+    	tonOvrd	:	TON;
+    	tonDelOK : TON;
+    	rtOK	:	R_TRIG;
+    	tOvrd	:	TIME := T#10s;
+    	(* Timeouts*)
+    	tTimeOutDuration: TIME:= T#30S;
+    	tOPNtimeout: TON;
+    	tCLStimeout:TON;
+    	(*Limit switch latch timer*)
+        tLimitSwitchLatchDuration: TIME:=T#1S;
+        tOPNLimitSwitch:TON;
+        tCLSLimitSwitch:TON;
+    	tAction2 : R_TRIG;
+    	(*IO*)
+    	i_xOpnLS	AT%I*: BOOL;
+    	i_xClsLS	AT%I*: BOOL;
+    	q_xOPN_DO	AT%Q*: BOOL;
+    	q_xCLS_DO	AT%Q*: BOOL;
+
+    END_VAR
+    (* On first PLC pass, put valve into vented state, which implies a closed valve *)
+    fbFSInit( CLK := TRUE, Q => xFirstPass);
+    IF xFirstPass THEN
+    	iq_stValve.eVGC_State := Vented;
+    	iq_stValve.pv_xOPN_SW := FALSE;
+    	iq_stValve.pv_xCLS_SW := FALSE;
+    	ePrevState := INVALID; 
+    END_IF
+
+
+    ///Check valve position
+    IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
+    	iq_stValve.eState:=INVALID;
+    ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
+    	iq_stValve.eState:=OPEN;
+    ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+    	iq_stValve.eState:=CLOSED;
+    ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+    	iq_stValve.eState:=MOVING;
+    ELSE
+    	iq_stValve.eState:=INVALID;
+    END_IF
+
+
+
+    (* Can't have both open and close True at the same time. Reset both*)
+    If (iq_stValve.pv_xOPN_SW) AND (iq_stValve.pv_xCLS_SW) THEN
+        iq_stValve.pv_xOPN_SW := FALSE;
+        iq_stValve.pv_xCLS_SW := FALSE;
+    END_IF
+
+    (* Override logic *)
+    (* Goal: give ability to override, but do so in a way that people won't forget it.
+    Solution: Override only after ten seconds of override, protect against blips,
+    when the valve permission goes true for more than ten seconds consistently, remove override
+    *)
+
+
+    // Release the Force Open bit when the system override is false
+    IF NOT(i_xOverrideMode) THEN  
+    	iq_stValve.pv_xOvrdOpn :=FALSE;
+    	iq_stValve.pv_xOvrdCls := FALSE;
+    END_IF
+    //Override timer
+    tonOvrd(IN:=(iq_stValve.pv_xOvrdOpn OR iq_stValve.pv_xOvrdCls), PT:=tOvrd);
+
+    (* Here's where the valve Actuates *)
+    (*Evaluate EPS interlocks and the override*)
+    iq_stValve.q_xCLS_DO  := (i_CLS_OK AND iq_stValve.pv_xCLS_SW AND NOT iq_stValve.pv_xOPN_SW) OR (tonOvrd.Q AND iq_stValve.pv_xOvrdCls AND i_xOverrideMode);
+    iq_stValve.q_xOPN_DO  := (i_OPN_OK AND iq_stValve.pv_xOPN_SW AND NOT iq_stValve.pv_xCLS_SW) OR (tonOvrd.Q AND iq_stValve.pv_xOvrdOpn AND i_xOverrideMode) ;
+
+
+    (*Reset the Control signal when command has been executed and give time to ensure the actuator is fully seated in either direction*)
+    (* for pulse control*)
+    IF (NOT ibCntrlHold) THEN
+       IF (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xOpnLS AND tOPNLimitSwitch.Q ) THEN iq_stValve.pv_xOPN_SW := FALSE; END_IF
+       IF (iq_stValve.pv_xCLS_SW AND iq_stValve.i_xClsLS AND tCLSLimitSwitch.Q ) THEN iq_stValve.pv_xCLS_SW := FALSE; END_IF
+    END_IF
+
+    ///Check valve moving position timout
+    IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
+    	iq_stValve.bErrorPresent := TRUE;
+    	iq_stValve.sErrorMessage := ' Close Timeout';
+    ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
+    	iq_stValve.bErrorPresent := TRUE; 
+    	iq_stValve.sErrorMessage := ' Open Timeout';
+    END_IF
+    IF (iq_stValve.eState=INVALID) THEN
+    	iq_stValve.bErrorPresent := TRUE; 
+    	iq_stValve.sErrorMessage := CONCAT(sPath,' Invalid Valve Position');
+    END_IF
+
+    (*Timers*)
+    tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
+    tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
+    tCLSLimitSwitch(IN:= iq_stValve.i_xClsLS, PT := tLimitSwitchLatchDuration);
+    tOPNLimitSwitch(IN:= iq_stValve.i_xOpnLS, PT := tLimitSwitchLatchDuration);
+
+    (*Soft IO Mapping*)
+    ACT_IO();
+
+    // Log States and triggers
+    ACT_Logger();
+
+    END_FUNCTION_BLOCK
+    ACTION ACT_IO:
+    (*inputs*)
+    iq_stValve.i_xOpnLS := 	i_xOpnLS;
+    iq_stValve.i_xClsLS:=	i_xClsLS;
+    iq_stValve.xOverrideMode := i_xOverrideMode;
+    iq_stValve.xCLS_OK := i_CLS_OK;
+    iq_stValve.xOPN_OK := i_OPN_OK;
+    (*outputs*)
+    q_xOPN_DO:= iq_stValve.q_xOPN_DO;
+    q_xCLS_DO:= iq_stValve.q_xCLS_DO;
+    END_ACTION
+    ACTION ACT_Logger:
+    //STATE Logger  
+
+    IF ePrevState <> iq_stValve.eState THEN
+    	  CASE iq_stValve.eState OF
+    		INVALID:
+    			fbLogger(sMsg:='Valve invalid position.', eSevr:=TcEventSeverity.Critical);
+      		MOVING:
+    			fbLogger(sMsg:='Valve moving', eSevr:=TcEventSeverity.Warning);
+    		OPEN:
+    			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+    		CLOSED:
+    			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+    	  END_CASE
+    	  ePrevState := iq_stValve.eState;  
+      END_IF
+      
+
+
+    // Log valve timeouts
+    tErrorPresent(CLK:=iq_stValve.bErrorPresent);
+    IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
+
+    // Log valve open
+    tAction(CLK:= iq_stValve.q_xOPN_DO);
+    IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
+
+    tAction2(CLK:= iq_stValve.q_xCLS_DO);
+    IF tAction.Q THEN fbLogger(sMsg:='Valve commanded closed', eSevr:=TcEventSeverity.Info); END_IF
 
     // Log override mode enabled
     tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));

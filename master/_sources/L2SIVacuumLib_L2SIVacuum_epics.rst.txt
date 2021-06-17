@@ -2016,7 +2016,7 @@ LCLS_Vacuum_Serial.LCLS_Vacuum.ST_VG
         | io: output
 
 
-      
+     
 PMPS.FB_Arbiter
 ^^^^^^^^^^^^^^^
 
@@ -2028,15 +2028,15 @@ PMPS.FB_Arbiter
       - Type
       - Description
       - Pragma
-    * - $(PREFIX):ActiveInArbitration_RBV
-      - bi
-      - True if this arbiter
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:001:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:001:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2059,13 +2059,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:001:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:001:Rate_RBV
       - longin
       - Assertion Pool
@@ -2073,16 +2066,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:001:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:001:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2092,9 +2081,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:001:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:002:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:002:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2117,13 +2118,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:002:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:002:Rate_RBV
       - longin
       - Assertion Pool
@@ -2131,16 +2125,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:002:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:002:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2150,9 +2140,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:002:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:003:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:003:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2175,13 +2177,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:003:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:003:Rate_RBV
       - longin
       - Assertion Pool
@@ -2189,16 +2184,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:003:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:003:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2208,9 +2199,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:003:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:004:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:004:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2233,13 +2236,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:004:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:004:Rate_RBV
       - longin
       - Assertion Pool
@@ -2247,16 +2243,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:004:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:004:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2266,9 +2258,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:004:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:005:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:005:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2291,13 +2295,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:005:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:005:Rate_RBV
       - longin
       - Assertion Pool
@@ -2305,16 +2302,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:005:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:005:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2324,9 +2317,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:005:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:006:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:006:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2349,13 +2354,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:006:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:006:Rate_RBV
       - longin
       - Assertion Pool
@@ -2363,16 +2361,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:006:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:006:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2382,9 +2376,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:006:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:007:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:007:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2407,13 +2413,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:007:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:007:Rate_RBV
       - longin
       - Assertion Pool
@@ -2421,16 +2420,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:007:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:007:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2440,9 +2435,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:007:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:008:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:008:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2465,13 +2472,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:008:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:008:Rate_RBV
       - longin
       - Assertion Pool
@@ -2479,16 +2479,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:008:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:008:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2498,9 +2494,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:008:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:009:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:009:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2523,13 +2531,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:009:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:009:Rate_RBV
       - longin
       - Assertion Pool
@@ -2537,16 +2538,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:009:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:009:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2556,9 +2553,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:009:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:010:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:010:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2581,13 +2590,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:010:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:010:Rate_RBV
       - longin
       - Assertion Pool
@@ -2595,16 +2597,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:010:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:010:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2614,9 +2612,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:010:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:011:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:011:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2639,13 +2649,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:011:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:011:Rate_RBV
       - longin
       - Assertion Pool
@@ -2653,16 +2656,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:011:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:011:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2672,9 +2671,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:011:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:012:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:012:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2697,13 +2708,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:012:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:012:Rate_RBV
       - longin
       - Assertion Pool
@@ -2711,16 +2715,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:012:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:012:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2730,9 +2730,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:012:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:013:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:013:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2755,13 +2767,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:013:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:013:Rate_RBV
       - longin
       - Assertion Pool
@@ -2769,16 +2774,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:013:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:013:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2788,9 +2789,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:013:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:014:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:014:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2813,13 +2826,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:014:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:014:Rate_RBV
       - longin
       - Assertion Pool
@@ -2827,16 +2833,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:014:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:014:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2846,9 +2848,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:014:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:015:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:015:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2871,13 +2885,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:015:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:015:Rate_RBV
       - longin
       - Assertion Pool
@@ -2885,16 +2892,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:015:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:015:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2904,9 +2907,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:015:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:016:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:016:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2929,13 +2944,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:016:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:016:Rate_RBV
       - longin
       - Assertion Pool
@@ -2943,16 +2951,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:016:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:016:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -2962,9 +2966,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:016:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:017:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:017:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -2987,13 +3003,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:017:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:017:Rate_RBV
       - longin
       - Assertion Pool
@@ -3001,16 +3010,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:017:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:017:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3020,9 +3025,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:017:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:018:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:018:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -3045,13 +3062,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:018:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:018:Rate_RBV
       - longin
       - Assertion Pool
@@ -3059,16 +3069,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:018:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:018:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3078,9 +3084,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:018:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:019:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:019:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -3103,13 +3121,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:019:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:019:Rate_RBV
       - longin
       - Assertion Pool
@@ -3117,16 +3128,12 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:019:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:019:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3136,9 +3143,21 @@ PMPS.FB_Arbiter
       - | io: input
 
 
+    * - $(PREFIX):AP:Entry:019:Veto_RBV
+      - waveform
+      - Assertion Pool
+      - | io: input
+
+
     * - $(PREFIX):AP:Entry:020:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:020:Device_RBV
+      - waveform
+      - Assertion Pool
       - | io: input
 
 
@@ -3161,13 +3180,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:020:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):AP:Entry:020:Rate_RBV
       - longin
       - Assertion Pool
@@ -3175,21 +3187,23 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):AP:Entry:020:ST_RBV
-      - waveform
-      - Assertion Pool
-      - | io: input
-
-
     * - $(PREFIX):AP:Entry:020:Transmission_RBV
-      - longin
+      - ai
       - Assertion Pool
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
     * - $(PREFIX):AP:Entry:020:Valid_RBV
       - bi
+      - Assertion Pool
+      - | io: input
+
+
+    * - $(PREFIX):AP:Entry:020:Veto_RBV
+      - waveform
       - Assertion Pool
       - | io: input
 
@@ -3213,13 +3227,6 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):ArbitratedBP:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):ArbitratedBP:Rate_RBV
       - longin
       - Arbitrated BP
@@ -3227,21 +3234,23 @@ PMPS.FB_Arbiter
         | io: input
 
 
-    * - $(PREFIX):ArbitratedBP:ST_RBV
-      - waveform
-      - Arbitrated BP
-      - | io: input
-
-
     * - $(PREFIX):ArbitratedBP:Transmission_RBV
-      - longin
+      - ai
       - Arbitrated BP
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
     * - $(PREFIX):ArbitratedBP:Valid_RBV
       - bi
+      - Arbitrated BP
+      - | io: input
+
+
+    * - $(PREFIX):ArbitratedBP:Veto_RBV
+      - waveform
       - Arbitrated BP
       - | io: input
 
@@ -3270,6 +3279,12 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:001:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[1].sDevName
+      - | io: input
+
+
     * - $(PREFIX):Entry:001:ID_RBV
       - longin
       - $(SYMBOL).epicsDataPool[1].nId
@@ -3289,13 +3304,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:001:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:001:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[1].nRate
@@ -3303,16 +3311,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:001:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[1].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:001:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[1].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3322,9 +3326,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:001:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[1].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:002:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:002:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[2].sDevName
       - | io: input
 
 
@@ -3347,13 +3363,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:002:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:002:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[2].nRate
@@ -3361,16 +3370,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:002:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[2].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:002:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[2].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3380,9 +3385,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:002:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[2].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:003:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:003:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[3].sDevName
       - | io: input
 
 
@@ -3405,13 +3422,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:003:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:003:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[3].nRate
@@ -3419,16 +3429,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:003:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[3].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:003:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[3].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3438,9 +3444,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:003:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[3].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:004:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:004:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[4].sDevName
       - | io: input
 
 
@@ -3463,13 +3481,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:004:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:004:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[4].nRate
@@ -3477,16 +3488,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:004:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[4].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:004:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[4].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3496,9 +3503,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:004:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[4].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:005:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:005:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[5].sDevName
       - | io: input
 
 
@@ -3521,13 +3540,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:005:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:005:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[5].nRate
@@ -3535,16 +3547,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:005:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[5].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:005:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[5].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3554,9 +3562,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:005:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[5].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:006:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:006:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[6].sDevName
       - | io: input
 
 
@@ -3579,13 +3599,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:006:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:006:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[6].nRate
@@ -3593,16 +3606,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:006:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[6].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:006:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[6].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3612,9 +3621,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:006:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[6].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:007:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:007:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[7].sDevName
       - | io: input
 
 
@@ -3637,13 +3658,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:007:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:007:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[7].nRate
@@ -3651,16 +3665,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:007:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[7].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:007:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[7].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3670,9 +3680,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:007:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[7].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:008:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:008:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[8].sDevName
       - | io: input
 
 
@@ -3695,13 +3717,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:008:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:008:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[8].nRate
@@ -3709,16 +3724,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:008:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[8].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:008:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[8].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3728,9 +3739,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:008:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[8].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:009:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:009:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[9].sDevName
       - | io: input
 
 
@@ -3753,13 +3776,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:009:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:009:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[9].nRate
@@ -3767,16 +3783,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:009:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[9].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:009:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[9].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3786,9 +3798,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:009:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[9].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:010:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:010:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[10].sDevName
       - | io: input
 
 
@@ -3811,13 +3835,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:010:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:010:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[10].nRate
@@ -3825,16 +3842,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:010:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[10].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:010:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[10].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3844,9 +3857,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:010:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[10].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:011:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:011:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[11].sDevName
       - | io: input
 
 
@@ -3869,13 +3894,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:011:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:011:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[11].nRate
@@ -3883,16 +3901,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:011:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[11].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:011:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[11].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3902,9 +3916,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:011:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[11].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:012:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:012:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[12].sDevName
       - | io: input
 
 
@@ -3927,13 +3953,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:012:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:012:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[12].nRate
@@ -3941,16 +3960,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:012:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[12].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:012:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[12].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -3960,9 +3975,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:012:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[12].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:013:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:013:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[13].sDevName
       - | io: input
 
 
@@ -3985,13 +4012,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:013:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:013:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[13].nRate
@@ -3999,16 +4019,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:013:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[13].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:013:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[13].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -4018,9 +4034,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:013:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[13].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:014:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:014:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[14].sDevName
       - | io: input
 
 
@@ -4043,13 +4071,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:014:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:014:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[14].nRate
@@ -4057,16 +4078,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:014:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[14].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:014:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[14].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -4076,9 +4093,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:014:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[14].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:015:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:015:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[15].sDevName
       - | io: input
 
 
@@ -4101,13 +4130,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:015:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:015:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[15].nRate
@@ -4115,16 +4137,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:015:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[15].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:015:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[15].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -4134,9 +4152,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:015:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[15].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:016:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:016:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[16].sDevName
       - | io: input
 
 
@@ -4159,13 +4189,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:016:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:016:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[16].nRate
@@ -4173,16 +4196,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:016:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[16].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:016:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[16].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -4192,9 +4211,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:016:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[16].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:017:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:017:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[17].sDevName
       - | io: input
 
 
@@ -4217,13 +4248,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:017:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:017:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[17].nRate
@@ -4231,16 +4255,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:017:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[17].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:017:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[17].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -4250,9 +4270,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:017:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[17].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:018:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:018:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[18].sDevName
       - | io: input
 
 
@@ -4275,13 +4307,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:018:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:018:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[18].nRate
@@ -4289,16 +4314,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:018:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[18].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:018:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[18].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -4308,9 +4329,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:018:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[18].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:019:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:019:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[19].sDevName
       - | io: input
 
 
@@ -4333,13 +4366,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:019:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:019:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[19].nRate
@@ -4347,16 +4373,12 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:019:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[19].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:019:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[19].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
@@ -4366,9 +4388,21 @@ PMPS.FB_BeamParamAssertionPool
       - | io: input
 
 
+    * - $(PREFIX):Entry:019:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[19].aVetoDevices
+      - | io: input
+
+
     * - $(PREFIX):Entry:020:Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Entry:020:Device_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[20].sDevName
       - | io: input
 
 
@@ -4391,13 +4425,6 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:020:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Entry:020:Rate_RBV
       - longin
       - $(SYMBOL).epicsDataPool[20].nRate
@@ -4405,22 +4432,24 @@ PMPS.FB_BeamParamAssertionPool
         | io: input
 
 
-    * - $(PREFIX):Entry:020:ST_RBV
-      - waveform
-      - $(SYMBOL).epicsDataPool[20].aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Entry:020:Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).epicsDataPool[20].nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
     * - $(PREFIX):Entry:020:Valid_RBV
       - bi
       - $(SYMBOL).epicsDataPool[20].xValid
+      - | io: input
+
+
+    * - $(PREFIX):Entry:020:Veto_RBV
+      - waveform
+      - $(SYMBOL).epicsDataPool[20].aVetoDevices
       - | io: input
 
 
@@ -4562,10 +4591,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:001:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[1].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:001:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[1].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:001:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[1].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:001:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[1].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:001:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[1].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:001:Reset
@@ -4676,10 +4729,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:002:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[2].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:002:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[2].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:002:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[2].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:002:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[2].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:002:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[2].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:002:Reset
@@ -4790,10 +4867,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:003:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[3].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:003:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[3].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:003:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[3].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:003:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[3].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:003:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[3].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:003:Reset
@@ -4904,10 +5005,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:004:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[4].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:004:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[4].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:004:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[4].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:004:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[4].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:004:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[4].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:004:Reset
@@ -5018,10 +5143,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:005:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[5].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:005:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[5].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:005:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[5].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:005:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[5].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:005:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[5].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:005:Reset
@@ -5132,10 +5281,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:006:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[6].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:006:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[6].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:006:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[6].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:006:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[6].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:006:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[6].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:006:Reset
@@ -5246,10 +5419,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:007:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[7].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:007:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[7].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:007:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[7].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:007:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[7].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:007:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[7].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:007:Reset
@@ -5360,10 +5557,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:008:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[8].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:008:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[8].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:008:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[8].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:008:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[8].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:008:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[8].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:008:Reset
@@ -5474,10 +5695,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:009:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[9].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:009:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[9].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:009:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[9].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:009:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[9].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:009:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[9].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:009:Reset
@@ -5588,10 +5833,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:010:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[10].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:010:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[10].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:010:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[10].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:010:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[10].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:010:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[10].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:010:Reset
@@ -5702,10 +5971,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:011:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[11].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:011:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[11].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:011:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[11].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:011:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[11].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:011:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[11].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:011:Reset
@@ -5816,10 +6109,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:012:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[12].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:012:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[12].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:012:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[12].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:012:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[12].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:012:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[12].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:012:Reset
@@ -5930,10 +6247,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:013:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[13].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:013:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[13].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:013:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[13].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:013:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[13].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:013:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[13].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:013:Reset
@@ -6044,10 +6385,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:014:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[14].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:014:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[14].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:014:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[14].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:014:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[14].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:014:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[14].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:014:Reset
@@ -6158,10 +6523,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:015:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[15].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:015:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[15].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:015:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[15].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:015:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[15].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:015:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[15].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:015:Reset
@@ -6272,10 +6661,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:016:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[16].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:016:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[16].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:016:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[16].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:016:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[16].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:016:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[16].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:016:Reset
@@ -6386,10 +6799,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:017:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[17].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:017:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[17].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:017:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[17].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:017:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[17].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:017:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[17].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:017:Reset
@@ -6500,10 +6937,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:018:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[18].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:018:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[18].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:018:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[18].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:018:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[18].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:018:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[18].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:018:Reset
@@ -6614,10 +7075,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:019:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[19].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:019:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[19].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:019:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[19].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:019:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[19].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:019:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[19].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:019:Reset
@@ -6728,10 +7213,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:020:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[20].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:020:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[20].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:020:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[20].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:020:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[20].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:020:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[20].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:020:Reset
@@ -6842,10 +7351,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:021:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[21].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:021:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[21].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:021:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[21].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:021:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[21].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:021:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[21].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:021:Reset
@@ -6956,10 +7489,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:022:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[22].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:022:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[22].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:022:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[22].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:022:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[22].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:022:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[22].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:022:Reset
@@ -7070,10 +7627,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:023:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[23].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:023:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[23].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:023:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[23].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:023:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[23].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:023:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[23].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:023:Reset
@@ -7184,10 +7765,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:024:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[24].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:024:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[24].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:024:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[24].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:024:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[24].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:024:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[24].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:024:Reset
@@ -7298,10 +7903,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:025:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[25].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:025:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[25].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:025:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[25].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:025:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[25].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:025:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[25].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:025:Reset
@@ -7412,10 +8041,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:026:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[26].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:026:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[26].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:026:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[26].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:026:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[26].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:026:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[26].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:026:Reset
@@ -7526,10 +8179,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:027:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[27].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:027:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[27].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:027:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[27].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:027:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[27].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:027:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[27].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:027:Reset
@@ -7640,10 +8317,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:028:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[28].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:028:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[28].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:028:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[28].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:028:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[28].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:028:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[28].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:028:Reset
@@ -7754,10 +8455,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:029:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[29].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:029:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[29].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:029:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[29].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:029:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[29].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:029:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[29].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:029:Reset
@@ -7868,10 +8593,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:030:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[30].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:030:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[30].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:030:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[30].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:030:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[30].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:030:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[30].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:030:Reset
@@ -7982,10 +8731,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:031:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[31].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:031:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[31].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:031:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[31].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:031:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[31].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:031:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[31].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:031:Reset
@@ -8096,10 +8869,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:032:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[32].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:032:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[32].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:032:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[32].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:032:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[32].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:032:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[32].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:032:Reset
@@ -8210,10 +9007,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:033:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[33].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:033:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[33].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:033:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[33].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:033:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[33].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:033:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[33].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:033:Reset
@@ -8324,10 +9145,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:034:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[34].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:034:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[34].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:034:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[34].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:034:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[34].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:034:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[34].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:034:Reset
@@ -8438,10 +9283,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:035:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[35].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:035:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[35].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:035:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[35].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:035:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[35].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:035:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[35].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:035:Reset
@@ -8552,10 +9421,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:036:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[36].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:036:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[36].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:036:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[36].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:036:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[36].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:036:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[36].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:036:Reset
@@ -8666,10 +9559,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:037:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[37].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:037:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[37].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:037:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[37].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:037:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[37].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:037:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[37].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:037:Reset
@@ -8780,10 +9697,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:038:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[38].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:038:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[38].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:038:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[38].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:038:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[38].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:038:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[38].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:038:Reset
@@ -8894,10 +9835,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:039:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[39].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:039:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[39].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:039:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[39].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:039:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[39].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:039:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[39].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:039:Reset
@@ -9008,10 +9973,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:040:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[40].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:040:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[40].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:040:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[40].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:040:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[40].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:040:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[40].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:040:Reset
@@ -9122,10 +10111,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:041:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[41].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:041:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[41].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:041:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[41].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:041:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[41].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:041:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[41].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:041:Reset
@@ -9236,10 +10249,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:042:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[42].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:042:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[42].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:042:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[42].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:042:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[42].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:042:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[42].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:042:Reset
@@ -9350,10 +10387,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:043:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[43].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:043:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[43].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:043:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[43].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:043:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[43].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:043:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[43].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:043:Reset
@@ -9464,10 +10525,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:044:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[44].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:044:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[44].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:044:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[44].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:044:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[44].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:044:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[44].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:044:Reset
@@ -9578,10 +10663,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:045:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[45].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:045:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[45].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:045:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[45].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:045:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[45].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:045:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[45].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:045:Reset
@@ -9692,10 +10801,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:046:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[46].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:046:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[46].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:046:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[46].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:046:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[46].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:046:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[46].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:046:Reset
@@ -9806,10 +10939,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:047:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[47].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:047:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[47].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:047:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[47].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:047:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[47].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:047:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[47].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:047:Reset
@@ -9920,10 +11077,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:048:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[48].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:048:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[48].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:048:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[48].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:048:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[48].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:048:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[48].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:048:Reset
@@ -10034,10 +11215,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:049:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[49].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:049:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[49].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:049:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[49].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:049:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[49].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:049:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[49].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:049:Reset
@@ -10148,10 +11353,34 @@ PMPS.FB_HardwareFFOutput
       - | io: input
 
 
+    * - $(PREFIX):FF:050:Ovrd:Expiration
+      - longout
+      - $(SYMBOL).astFF[50].Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):FF:050:Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).astFF[50].Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):FF:050:Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).astFF[50].Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):FF:050:Ovrd:StartDT
+      - longout
+      - $(SYMBOL).astFF[50].Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):FF:050:Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).astFF[50].Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):FF:050:Reset
@@ -10209,13 +11438,6 @@ PMPS.ST_BeamParams
         | io: input
 
 
-    * - $(PREFIX):PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Rate_RBV
       - longin
       - $(SYMBOL).nRate
@@ -10223,22 +11445,24 @@ PMPS.ST_BeamParams
         | io: input
 
 
-    * - $(PREFIX):ST_RBV
-      - waveform
-      - $(SYMBOL).aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
     * - $(PREFIX):Valid_RBV
       - bi
       - $(SYMBOL).xValid
+      - | io: input
+
+
+    * - $(PREFIX):Veto_RBV
+      - waveform
+      - $(SYMBOL).aVetoDevices
       - | io: input
 
 
@@ -10257,6 +11481,12 @@ PMPS.ST_BP_ArbInternal
     * - $(PREFIX):Cohort_RBV
       - longin
       - Cohort inc on each arb cycle
+      - | io: input
+
+
+    * - $(PREFIX):Device_RBV
+      - waveform
+      - $(SYMBOL).sDevName
       - | io: input
 
 
@@ -10279,13 +11509,6 @@ PMPS.ST_BP_ArbInternal
         | io: input
 
 
-    * - $(PREFIX):PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX):Rate_RBV
       - longin
       - $(SYMBOL).nRate
@@ -10293,22 +11516,24 @@ PMPS.ST_BP_ArbInternal
         | io: input
 
 
-    * - $(PREFIX):ST_RBV
-      - waveform
-      - $(SYMBOL).aStoppers
-      - | io: input
-
-
     * - $(PREFIX):Transmission_RBV
-      - longin
+      - ai
       - $(SYMBOL).nTran
-      - | field: EGU %
+      - | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
     * - $(PREFIX):Valid_RBV
       - bi
       - $(SYMBOL).xValid
+      - | io: input
+
+
+    * - $(PREFIX):Veto_RBV
+      - waveform
+      - $(SYMBOL).aVetoDevices
       - | io: input
 
 
@@ -10420,10 +11645,34 @@ PMPS.ST_FF
       - | io: input
 
 
+    * - $(PREFIX):Ovrd:Expiration
+      - longout
+      - $(SYMBOL).Ovrd.Expiration
+      - | io: output
+
+
+    * - $(PREFIX):Ovrd:Expiration_RBV
+      - longin
+      - $(SYMBOL).Ovrd.Expiration
+      - | io: output
+
+
     * - $(PREFIX):Ovrd:RemainingTime_RBV
       - longin
       - $(SYMBOL).Ovrd.RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):Ovrd:StartDT
+      - longout
+      - $(SYMBOL).Ovrd.StartDT
+      - | io: output
+
+
+    * - $(PREFIX):Ovrd:StartDT_RBV
+      - longin
+      - $(SYMBOL).Ovrd.StartDT
+      - | io: output
 
 
     * - $(PREFIX):Reset
@@ -10546,10 +11795,34 @@ PMPS.ST_FFOverride
       - | io: input
 
 
+    * - $(PREFIX):Expiration
+      - longout
+      - $(SYMBOL).Expiration
+      - | io: output
+
+
+    * - $(PREFIX):Expiration_RBV
+      - longin
+      - $(SYMBOL).Expiration
+      - | io: output
+
+
     * - $(PREFIX):RemainingTime_RBV
       - longin
       - $(SYMBOL).RemainingTime
       - | io: input
+
+
+    * - $(PREFIX):StartDT
+      - longout
+      - $(SYMBOL).StartDT
+      - | io: output
+
+
+    * - $(PREFIX):StartDT_RBV
+      - longin
+      - $(SYMBOL).StartDT
+      - | io: output
 
 
  
@@ -12179,7 +13452,7 @@ ST_VRC
         | io: input
 
 
-                                                     
+                                                                             
 Database Records
 ----------------
 
@@ -12206,14 +13479,6 @@ Database Records
         | io: input
 
 
-    * - $(PREFIX)0RateBeamCnst:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | archive: 1s monitor
-        | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX)0RateBeamCnst:Rate_RBV
       - longin
       - 0-rate beam constant
@@ -12222,23 +13487,25 @@ Database Records
         | io: input
 
 
-    * - $(PREFIX)0RateBeamCnst:ST_RBV
-      - waveform
-      - 0-rate beam constant
-      - | archive: 1s monitor
-        | io: input
-
-
     * - $(PREFIX)0RateBeamCnst:Transmission_RBV
-      - longin
+      - ai
       - 0-rate beam constant
       - | archive: 1s monitor
-        | field: EGU %
+        | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
     * - $(PREFIX)0RateBeamCnst:Valid_RBV
       - bi
+      - 0-rate beam constant
+      - | archive: 1s monitor
+        | io: input
+
+
+    * - $(PREFIX)0RateBeamCnst:Veto_RBV
+      - waveform
       - 0-rate beam constant
       - | archive: 1s monitor
         | io: input
@@ -12265,14 +13532,6 @@ Database Records
         | io: input
 
 
-    * - $(PREFIX)CurrentBP:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | archive: 1s monitor
-        | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX)CurrentBP:Rate_RBV
       - longin
       - PMPS_GVL.stCurrentBeamParameters.nRate
@@ -12281,24 +13540,26 @@ Database Records
         | io: input
 
 
-    * - $(PREFIX)CurrentBP:ST_RBV
-      - waveform
-      - PMPS_GVL.stCurrentBeamParameters.aStoppers
-      - | archive: 1s monitor
-        | io: input
-
-
     * - $(PREFIX)CurrentBP:Transmission_RBV
-      - longin
+      - ai
       - PMPS_GVL.stCurrentBeamParameters.nTran
       - | archive: 1s monitor
-        | field: EGU %
+        | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
     * - $(PREFIX)CurrentBP:Valid_RBV
       - bi
       - PMPS_GVL.stCurrentBeamParameters.xValid
+      - | archive: 1s monitor
+        | io: input
+
+
+    * - $(PREFIX)CurrentBP:Veto_RBV
+      - waveform
+      - PMPS_GVL.stCurrentBeamParameters.aVetoDevices
       - | archive: 1s monitor
         | io: input
 
@@ -12334,14 +13595,6 @@ Database Records
         | io: input
 
 
-    * - $(PREFIX)FullBeamCnst:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | archive: 1s monitor
-        | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX)FullBeamCnst:Rate_RBV
       - longin
       - Full beam constant
@@ -12350,23 +13603,25 @@ Database Records
         | io: input
 
 
-    * - $(PREFIX)FullBeamCnst:ST_RBV
-      - waveform
-      - Full beam constant
-      - | archive: 1s monitor
-        | io: input
-
-
     * - $(PREFIX)FullBeamCnst:Transmission_RBV
-      - longin
+      - ai
       - Full beam constant
       - | archive: 1s monitor
-        | field: EGU %
+        | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
     * - $(PREFIX)FullBeamCnst:Valid_RBV
       - bi
+      - Full beam constant
+      - | archive: 1s monitor
+        | io: input
+
+
+    * - $(PREFIX)FullBeamCnst:Veto_RBV
+      - waveform
       - Full beam constant
       - | archive: 1s monitor
         | io: input
@@ -12439,14 +13694,6 @@ Database Records
         | io: input
 
 
-    * - $(PREFIX)RequestedBP:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | archive: 1s monitor
-        | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX)RequestedBP:Rate_RBV
       - longin
       - PMPS_GVL.stRequestedBeamParameters.nRate
@@ -12455,24 +13702,26 @@ Database Records
         | io: input
 
 
-    * - $(PREFIX)RequestedBP:ST_RBV
-      - waveform
-      - PMPS_GVL.stRequestedBeamParameters.aStoppers
-      - | archive: 1s monitor
-        | io: input
-
-
     * - $(PREFIX)RequestedBP:Transmission_RBV
-      - longin
+      - ai
       - PMPS_GVL.stRequestedBeamParameters.nTran
       - | archive: 1s monitor
-        | field: EGU %
+        | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
     * - $(PREFIX)RequestedBP:Valid_RBV
       - bi
       - PMPS_GVL.stRequestedBeamParameters.xValid
+      - | archive: 1s monitor
+        | io: input
+
+
+    * - $(PREFIX)RequestedBP:Veto_RBV
+      - waveform
+      - PMPS_GVL.stRequestedBeamParameters.aVetoDevices
       - | archive: 1s monitor
         | io: input
 
@@ -12492,14 +13741,6 @@ Database Records
         | io: input
 
 
-    * - $(PREFIX)SafeBeamCnst:PulseEnergy_RBV
-      - ai
-      - This beam parameter is non-op for now.
-      - | archive: 1s monitor
-        | field: EGU mJ
-        | io: input
-
-
     * - $(PREFIX)SafeBeamCnst:Rate_RBV
       - longin
       - Safe beam constant
@@ -12508,23 +13749,25 @@ Database Records
         | io: input
 
 
-    * - $(PREFIX)SafeBeamCnst:ST_RBV
-      - waveform
-      - Safe beam constant
-      - | archive: 1s monitor
-        | io: input
-
-
     * - $(PREFIX)SafeBeamCnst:Transmission_RBV
-      - longin
+      - ai
       - Safe beam constant
       - | archive: 1s monitor
-        | field: EGU %
+        | field: HOPR 1
+        | field: LOPR 0
+        | field: PREC 2
         | io: input
 
 
     * - $(PREFIX)SafeBeamCnst:Valid_RBV
       - bi
+      - Safe beam constant
+      - | archive: 1s monitor
+        | io: input
+
+
+    * - $(PREFIX)SafeBeamCnst:Veto_RBV
+      - waveform
       - Safe beam constant
       - | archive: 1s monitor
         | io: input

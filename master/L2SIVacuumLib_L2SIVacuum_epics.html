@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -2758,17 +2761,17 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>$(PREFIX):ActiveInArbitration_RBV</p></td>
-<td><p>bi</p></td>
-<td><p>True if this arbiter</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:001:Cohort_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:001:Cohort_RBV</p></td>
-<td><p>longin</p></td>
-<td><p>Cohort inc on each arb cycle</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:001:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2799,16 +2802,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:001:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:001:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:001:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -2817,19 +2811,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:001:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:001:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -2842,9 +2830,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:002:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:001:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:002:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:002:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2875,16 +2879,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:002:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:002:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:002:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -2893,19 +2888,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:002:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:002:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -2918,9 +2907,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:003:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:002:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:003:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:003:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -2951,16 +2956,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:003:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:003:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:003:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -2969,19 +2965,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:003:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:003:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -2994,9 +2984,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:004:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:003:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:004:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:004:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3027,16 +3033,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:004:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:004:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:004:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3045,19 +3042,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:004:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:004:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3070,9 +3061,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:005:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:004:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:005:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:005:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3103,16 +3110,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:005:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:005:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:005:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3121,19 +3119,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:005:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:005:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3146,9 +3138,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:006:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:005:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:006:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:006:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3179,16 +3187,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:006:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:006:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:006:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3197,19 +3196,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:006:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:006:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3222,9 +3215,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:007:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:006:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:007:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:007:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3255,16 +3264,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:007:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:007:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:007:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3273,19 +3273,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:007:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:007:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3298,9 +3292,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:008:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:007:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:008:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:008:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3331,16 +3341,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:008:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:008:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:008:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3349,19 +3350,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:008:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:008:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3374,9 +3369,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:009:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:008:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:009:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:009:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3407,16 +3418,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:009:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:009:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:009:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3425,19 +3427,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:009:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:009:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3450,9 +3446,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:010:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:009:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:010:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:010:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3483,16 +3495,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:010:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:010:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:010:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3501,19 +3504,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:010:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:010:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3526,9 +3523,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:011:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:010:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:011:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:011:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3559,16 +3572,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:011:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:011:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:011:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3577,19 +3581,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:011:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:011:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3602,9 +3600,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:012:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:011:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:012:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:012:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3635,16 +3649,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:012:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:012:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:012:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3653,19 +3658,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:012:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:012:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3678,9 +3677,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:013:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:012:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:013:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:013:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3711,16 +3726,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:013:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:013:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:013:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3729,19 +3735,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:013:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:013:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3754,9 +3754,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:014:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:013:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:014:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:014:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3787,16 +3803,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:014:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:014:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:014:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3805,19 +3812,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:014:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:014:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3830,9 +3831,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:015:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:014:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:015:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:015:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3863,16 +3880,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:015:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:015:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:015:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3881,19 +3889,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:015:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:015:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3906,9 +3908,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:016:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:015:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:016:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:016:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -3939,16 +3957,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:016:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:016:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:016:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -3957,19 +3966,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:016:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:016:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -3982,9 +3985,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:017:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:016:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:017:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:017:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4015,16 +4034,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:017:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:017:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:017:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -4033,19 +4043,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:017:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:017:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4058,9 +4062,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:018:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:017:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:018:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:018:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4091,16 +4111,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:018:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:018:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:018:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -4109,19 +4120,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:018:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:018:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4134,9 +4139,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:019:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:018:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:019:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:019:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4167,16 +4188,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:019:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:019:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:019:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -4185,19 +4197,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:019:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX):AP:Entry:019:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4210,9 +4216,25 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:020:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:019:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:020:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:020:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4243,16 +4265,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:020:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:020:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):AP:Entry:020:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
@@ -4261,19 +4274,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):AP:Entry:020:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Assertion Pool</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):AP:Entry:020:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Assertion Pool</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4286,7 +4293,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):ArbiterID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):AP:Entry:020:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Assertion Pool</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):ArbiterID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Arbiter ID for elev. req.</p></td>
 <td><div class="line-block">
@@ -4294,7 +4309,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ArbitratedBP:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):ArbitratedBP:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
@@ -4302,20 +4317,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):ArbitratedBP:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):ArbitratedBP:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Arbitrated BP</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):ArbitratedBP:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4329,25 +4335,27 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ArbitratedBP:ST_RBV</p></td>
-<td><p>waveform</p></td>
+<tr class="row-even"><td><p>$(PREFIX):ArbitratedBP:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>Arbitrated BP</p></td>
 <td><div class="line-block">
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):ArbitratedBP:Transmission_RBV</p></td>
-<td><p>longin</p></td>
-<td><p>Arbitrated BP</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU %</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):ArbitratedBP:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):ArbitratedBP:Valid_RBV</p></td>
 <td><p>bi</p></td>
+<td><p>Arbitrated BP</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):ArbitratedBP:Veto_RBV</p></td>
+<td><p>waveform</p></td>
 <td><p>Arbitrated BP</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
@@ -4390,7 +4398,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:001:ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:001:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[1].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:001:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[1].nId</p></td>
 <td><div class="line-block">
@@ -4398,7 +4414,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:001:Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:001:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[1].LiveInTable</p></td>
 <td><div class="line-block">
@@ -4406,20 +4422,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:001:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:001:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[1].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:001:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4433,26 +4440,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:001:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[1].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:001:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:001:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[1].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:001:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:001:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[1].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:001:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[1].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4466,7 +4475,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:002:ID_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:002:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[2].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:002:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[2].nId</p></td>
 <td><div class="line-block">
@@ -4474,7 +4491,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:002:Live_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:002:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[2].LiveInTable</p></td>
 <td><div class="line-block">
@@ -4482,20 +4499,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:002:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:002:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[2].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:002:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4509,26 +4517,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:002:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[2].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:002:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:002:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[2].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:002:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:002:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[2].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:002:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[2].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4542,7 +4552,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:003:ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:003:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[3].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:003:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[3].nId</p></td>
 <td><div class="line-block">
@@ -4550,7 +4568,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:003:Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:003:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[3].LiveInTable</p></td>
 <td><div class="line-block">
@@ -4558,20 +4576,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:003:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:003:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[3].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:003:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4585,26 +4594,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:003:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[3].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:003:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:003:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[3].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:003:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:003:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[3].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:003:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[3].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4618,7 +4629,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:004:ID_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:004:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[4].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:004:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[4].nId</p></td>
 <td><div class="line-block">
@@ -4626,7 +4645,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:004:Live_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:004:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[4].LiveInTable</p></td>
 <td><div class="line-block">
@@ -4634,20 +4653,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:004:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:004:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[4].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:004:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4661,26 +4671,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:004:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[4].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:004:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:004:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[4].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:004:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:004:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[4].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:004:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[4].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4694,7 +4706,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:005:ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:005:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[5].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:005:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[5].nId</p></td>
 <td><div class="line-block">
@@ -4702,7 +4722,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:005:Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:005:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[5].LiveInTable</p></td>
 <td><div class="line-block">
@@ -4710,20 +4730,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:005:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:005:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[5].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:005:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4737,26 +4748,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:005:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[5].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:005:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:005:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[5].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:005:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:005:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[5].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:005:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[5].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4770,7 +4783,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:006:ID_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:006:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[6].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:006:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[6].nId</p></td>
 <td><div class="line-block">
@@ -4778,7 +4799,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:006:Live_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:006:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[6].LiveInTable</p></td>
 <td><div class="line-block">
@@ -4786,20 +4807,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:006:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:006:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[6].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:006:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4813,26 +4825,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:006:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[6].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:006:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:006:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[6].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:006:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:006:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[6].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:006:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[6].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4846,7 +4860,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:007:ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:007:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[7].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:007:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[7].nId</p></td>
 <td><div class="line-block">
@@ -4854,7 +4876,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:007:Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:007:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[7].LiveInTable</p></td>
 <td><div class="line-block">
@@ -4862,20 +4884,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:007:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:007:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[7].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:007:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4889,26 +4902,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:007:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[7].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:007:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:007:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[7].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:007:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:007:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[7].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:007:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[7].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4922,7 +4937,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:008:ID_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:008:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[8].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:008:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[8].nId</p></td>
 <td><div class="line-block">
@@ -4930,7 +4953,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:008:Live_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:008:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[8].LiveInTable</p></td>
 <td><div class="line-block">
@@ -4938,20 +4961,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:008:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:008:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[8].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:008:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -4965,26 +4979,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:008:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[8].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:008:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:008:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[8].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:008:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:008:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[8].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:008:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[8].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -4998,7 +5014,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:009:ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:009:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[9].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:009:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[9].nId</p></td>
 <td><div class="line-block">
@@ -5006,7 +5030,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:009:Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:009:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[9].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5014,20 +5038,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:009:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:009:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[9].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:009:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5041,26 +5056,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:009:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[9].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:009:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:009:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[9].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:009:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:009:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[9].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:009:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[9].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5074,7 +5091,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:010:ID_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:010:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[10].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:010:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[10].nId</p></td>
 <td><div class="line-block">
@@ -5082,7 +5107,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:010:Live_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:010:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[10].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5090,20 +5115,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:010:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:010:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[10].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:010:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5117,26 +5133,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:010:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[10].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:010:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:010:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[10].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:010:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:010:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[10].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:010:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[10].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5150,7 +5168,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:011:ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:011:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[11].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:011:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[11].nId</p></td>
 <td><div class="line-block">
@@ -5158,7 +5184,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:011:Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:011:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[11].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5166,20 +5192,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:011:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:011:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[11].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:011:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5193,26 +5210,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:011:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[11].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:011:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:011:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[11].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:011:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:011:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[11].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:011:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[11].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5226,7 +5245,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:012:ID_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:012:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[12].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:012:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[12].nId</p></td>
 <td><div class="line-block">
@@ -5234,7 +5261,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:012:Live_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:012:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[12].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5242,20 +5269,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:012:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:012:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[12].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:012:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5269,26 +5287,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:012:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[12].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:012:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:012:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[12].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:012:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:012:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[12].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:012:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[12].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5302,7 +5322,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:013:ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:013:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[13].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:013:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[13].nId</p></td>
 <td><div class="line-block">
@@ -5310,7 +5338,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:013:Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:013:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[13].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5318,20 +5346,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:013:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:013:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[13].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:013:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5345,26 +5364,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:013:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[13].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:013:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:013:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[13].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:013:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:013:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[13].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:013:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[13].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5378,7 +5399,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:014:ID_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:014:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[14].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:014:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[14].nId</p></td>
 <td><div class="line-block">
@@ -5386,7 +5415,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:014:Live_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:014:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[14].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5394,20 +5423,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:014:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:014:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[14].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:014:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5421,26 +5441,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:014:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[14].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:014:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:014:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[14].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:014:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:014:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[14].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:014:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[14].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5454,7 +5476,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:015:ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:015:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[15].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:015:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[15].nId</p></td>
 <td><div class="line-block">
@@ -5462,7 +5492,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:015:Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:015:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[15].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5470,20 +5500,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:015:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:015:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[15].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:015:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5497,26 +5518,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:015:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[15].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:015:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:015:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[15].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:015:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:015:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[15].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:015:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[15].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5530,7 +5553,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:016:ID_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:016:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[16].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:016:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[16].nId</p></td>
 <td><div class="line-block">
@@ -5538,7 +5569,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:016:Live_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:016:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[16].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5546,20 +5577,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:016:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:016:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[16].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:016:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5573,26 +5595,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:016:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[16].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:016:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:016:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[16].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:016:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:016:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[16].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:016:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[16].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5606,7 +5630,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:017:ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:017:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[17].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:017:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[17].nId</p></td>
 <td><div class="line-block">
@@ -5614,7 +5646,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:017:Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:017:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[17].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5622,20 +5654,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:017:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:017:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[17].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:017:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5649,26 +5672,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:017:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[17].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:017:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:017:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[17].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:017:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:017:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[17].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:017:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[17].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5682,7 +5707,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:018:ID_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:018:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[18].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:018:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[18].nId</p></td>
 <td><div class="line-block">
@@ -5690,7 +5723,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:018:Live_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:018:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[18].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5698,20 +5731,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:018:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:018:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[18].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:018:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5725,26 +5749,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:018:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[18].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:018:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:018:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[18].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:018:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:018:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[18].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:018:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[18].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5758,7 +5784,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:019:ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:019:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[19].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:019:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[19].nId</p></td>
 <td><div class="line-block">
@@ -5766,7 +5800,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:019:Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:019:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[19].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5774,20 +5808,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:019:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:019:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[19].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:019:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5801,26 +5826,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:019:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[19].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:019:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:019:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[19].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:019:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:019:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[19].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Entry:019:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[19].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -5834,7 +5861,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:020:ID_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:020:Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[20].sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:020:ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[20].nId</p></td>
 <td><div class="line-block">
@@ -5842,7 +5877,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:020:Live_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:020:Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[20].LiveInTable</p></td>
 <td><div class="line-block">
@@ -5850,20 +5885,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:020:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:020:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).epicsDataPool[20].neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:020:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -5877,26 +5903,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:020:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).epicsDataPool[20].aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):Entry:020:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:020:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).epicsDataPool[20].nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):Entry:020:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Entry:020:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).epicsDataPool[20].xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Entry:020:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).epicsDataPool[20].aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -6090,11 +6118,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:001:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[1].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:001:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[1].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:001:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[1].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:001:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[1].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:001:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[1].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -6242,11 +6302,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:002:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[2].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:002:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[2].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:002:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[2].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:002:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[2].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:002:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[2].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -6394,11 +6486,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:003:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[3].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:003:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[3].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:003:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[3].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:003:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[3].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:003:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[3].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -6546,11 +6670,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:004:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[4].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:004:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[4].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:004:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[4].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:004:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[4].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:004:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[4].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -6698,11 +6854,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:005:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[5].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:005:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[5].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:005:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[5].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:005:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[5].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:005:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[5].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -6850,11 +7038,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:006:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[6].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:006:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[6].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:006:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[6].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:006:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[6].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:006:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[6].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -7002,11 +7222,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:007:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[7].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:007:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[7].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:007:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[7].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:007:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[7].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:007:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[7].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -7154,11 +7406,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:008:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[8].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:008:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[8].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:008:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[8].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:008:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[8].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:008:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[8].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -7306,11 +7590,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:009:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[9].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:009:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[9].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:009:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[9].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:009:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[9].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:009:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[9].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -7458,11 +7774,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:010:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[10].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:010:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[10].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:010:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[10].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:010:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[10].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:010:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[10].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -7610,11 +7958,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:011:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[11].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:011:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[11].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:011:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[11].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:011:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[11].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:011:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[11].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -7762,11 +8142,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:012:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[12].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:012:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[12].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:012:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[12].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:012:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[12].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:012:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[12].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -7914,11 +8326,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:013:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[13].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:013:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[13].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:013:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[13].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:013:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[13].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:013:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[13].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -8066,11 +8510,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:014:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[14].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:014:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[14].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:014:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[14].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:014:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[14].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:014:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[14].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -8218,11 +8694,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:015:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[15].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:015:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[15].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:015:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[15].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:015:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[15].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:015:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[15].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -8370,11 +8878,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:016:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[16].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:016:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[16].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:016:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[16].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:016:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[16].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:016:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[16].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -8522,11 +9062,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:017:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[17].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:017:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[17].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:017:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[17].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:017:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[17].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:017:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[17].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -8674,11 +9246,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:018:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[18].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:018:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[18].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:018:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[18].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:018:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[18].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:018:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[18].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -8826,11 +9430,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:019:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[19].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:019:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[19].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:019:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[19].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:019:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[19].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:019:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[19].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -8978,11 +9614,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:020:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[20].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:020:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[20].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:020:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[20].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:020:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[20].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:020:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[20].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -9130,11 +9798,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:021:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[21].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:021:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[21].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:021:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[21].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:021:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[21].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:021:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[21].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -9282,11 +9982,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:022:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[22].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:022:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[22].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:022:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[22].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:022:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[22].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:022:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[22].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -9434,11 +10166,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:023:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[23].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:023:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[23].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:023:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[23].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:023:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[23].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:023:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[23].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -9586,11 +10350,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:024:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[24].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:024:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[24].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:024:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[24].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:024:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[24].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:024:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[24].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -9738,11 +10534,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:025:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[25].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:025:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[25].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:025:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[25].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:025:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[25].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:025:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[25].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -9890,11 +10718,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:026:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[26].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:026:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[26].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:026:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[26].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:026:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[26].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:026:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[26].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -10042,11 +10902,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:027:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[27].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:027:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[27].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:027:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[27].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:027:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[27].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:027:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[27].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -10194,11 +11086,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:028:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[28].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:028:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[28].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:028:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[28].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:028:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[28].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:028:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[28].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -10346,11 +11270,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:029:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[29].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:029:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[29].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:029:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[29].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:029:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[29].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:029:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[29].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -10498,11 +11454,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:030:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[30].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:030:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[30].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:030:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[30].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:030:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[30].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:030:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[30].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -10650,11 +11638,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:031:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[31].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:031:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[31].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:031:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[31].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:031:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[31].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:031:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[31].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -10802,11 +11822,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:032:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[32].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:032:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[32].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:032:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[32].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:032:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[32].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:032:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[32].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -10954,11 +12006,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:033:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[33].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:033:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[33].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:033:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[33].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:033:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[33].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:033:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[33].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -11106,11 +12190,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:034:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[34].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:034:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[34].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:034:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[34].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:034:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[34].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:034:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[34].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -11258,11 +12374,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:035:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[35].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:035:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[35].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:035:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[35].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:035:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[35].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:035:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[35].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -11410,11 +12558,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:036:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[36].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:036:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[36].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:036:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[36].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:036:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[36].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:036:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[36].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -11562,11 +12742,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:037:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[37].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:037:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[37].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:037:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[37].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:037:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[37].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:037:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[37].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -11714,11 +12926,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:038:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[38].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:038:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[38].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:038:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[38].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:038:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[38].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:038:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[38].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -11866,11 +13110,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:039:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[39].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:039:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[39].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:039:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[39].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:039:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[39].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:039:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[39].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -12018,11 +13294,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:040:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[40].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:040:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[40].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:040:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[40].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:040:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[40].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:040:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[40].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -12170,11 +13478,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:041:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[41].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:041:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[41].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:041:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[41].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:041:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[41].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:041:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[41].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -12322,11 +13662,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:042:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[42].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:042:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[42].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:042:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[42].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:042:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[42].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:042:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[42].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -12474,11 +13846,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:043:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[43].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:043:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[43].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:043:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[43].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:043:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[43].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:043:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[43].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -12626,11 +14030,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:044:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[44].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:044:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[44].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:044:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[44].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:044:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[44].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:044:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[44].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -12778,11 +14214,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:045:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[45].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:045:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[45].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:045:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[45].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:045:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[45].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:045:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[45].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -12930,11 +14398,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:046:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[46].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:046:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[46].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:046:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[46].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:046:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[46].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:046:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[46].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -13082,11 +14582,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:047:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[47].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:047:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[47].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:047:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[47].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:047:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[47].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:047:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[47].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -13234,11 +14766,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:048:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[48].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:048:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[48].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:048:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[48].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:048:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[48].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:048:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[48].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -13386,11 +14950,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:049:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[49].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:049:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[49].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-odd"><td><p>$(PREFIX):FF:049:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[49].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:049:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[49].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:049:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[49].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -13538,11 +15134,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:050:Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[50].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:050:Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[50].Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):FF:050:Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).astFF[50].Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):FF:050:Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).astFF[50].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):FF:050:Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).astFF[50].Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -13623,16 +15251,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).nRate</p></td>
 <td><div class="line-block">
@@ -13641,19 +15260,13 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX):Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -13661,6 +15274,14 @@
 <tr class="row-even"><td><p>$(PREFIX):Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -13694,7 +15315,15 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):ID_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Device_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).sDevName</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):ID_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).nId</p></td>
 <td><div class="line-block">
@@ -13702,7 +15331,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Live_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Live_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).LiveInTable</p></td>
 <td><div class="line-block">
@@ -13710,20 +15339,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).neVRange</p></td>
 <td><div class="line-block">
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX):PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -13737,26 +15357,28 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>$(SYMBOL).aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX):Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>$(SYMBOL).nTran</p></td>
 <td><div class="line-block">
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xValid</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>$(SYMBOL).aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
 </div>
@@ -13910,11 +15532,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):Ovrd:Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Ovrd:Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).Ovrd.Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):Ovrd:RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).Ovrd.RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Ovrd:StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Ovrd:StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).Ovrd.StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -14086,11 +15740,43 @@
 </div>
 </td>
 </tr>
+<tr class="row-even"><td><p>$(PREFIX):Expiration</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Expiration_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).Expiration</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
 <tr class="row-even"><td><p>$(PREFIX):RemainingTime_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).RemainingTime</p></td>
 <td><div class="line-block">
 <div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):StartDT</p></td>
+<td><p>longout</p></td>
+<td><p>$(SYMBOL).StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):StartDT_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).StartDT</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
 </div>
 </td>
 </tr>
@@ -16203,17 +17889,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)0RateBeamCnst:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX)0RateBeamCnst:Rate_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)0RateBeamCnst:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>0-rate beam constant</p></td>
 <td><div class="line-block">
@@ -16223,21 +17899,14 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)0RateBeamCnst:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>0-rate beam constant</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX)0RateBeamCnst:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>0-rate beam constant</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -16251,7 +17920,16 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)AccumulatedFastFaults_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)0RateBeamCnst:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>0-rate beam constant</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX)AccumulatedFastFaults_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>PMPS_GVL.AccumulatedFF</p></td>
 <td><div class="line-block">
@@ -16259,7 +17937,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)CurrentBP:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)CurrentBP:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
@@ -16268,22 +17946,12 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)CurrentBP:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)CurrentBP:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>PMPS_GVL.stCurrentBeamParameters.neVRange</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)CurrentBP:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -16298,28 +17966,30 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)CurrentBP:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>PMPS_GVL.stCurrentBeamParameters.aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX)CurrentBP:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX)CurrentBP:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>PMPS_GVL.stCurrentBeamParameters.nTran</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)CurrentBP:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)CurrentBP:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>PMPS_GVL.stCurrentBeamParameters.xValid</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX)CurrentBP:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>PMPS_GVL.stCurrentBeamParameters.aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">io: input</div>
@@ -16365,17 +18035,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)FullBeamCnst:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)FullBeamCnst:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)FullBeamCnst:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Full beam constant</p></td>
 <td><div class="line-block">
@@ -16385,21 +18045,14 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)FullBeamCnst:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Full beam constant</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX)FullBeamCnst:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Full beam constant</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -16413,7 +18066,16 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)K:eVRangeCnst_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)FullBeamCnst:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Full beam constant</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)K:eVRangeCnst_RBV</p></td>
 <td><p>waveform</p></td>
 <td><p>eV Range constants</p></td>
 <td><div class="line-block">
@@ -16423,7 +18085,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)L:eVRangeCnst_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)L:eVRangeCnst_RBV</p></td>
 <td><p>waveform</p></td>
 <td><p>eV Range constants</p></td>
 <td><div class="line-block">
@@ -16433,7 +18095,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:GlobalLogTrickleTrip_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:GlobalLogTrickleTrip_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>Tripped by overall log count</p></td>
 <td><div class="line-block">
@@ -16441,7 +18103,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:LogHost</p></td>
+<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:LogHost</p></td>
 <td><p>waveform</p></td>
 <td><p>The log host IP address</p></td>
 <td><div class="line-block">
@@ -16449,7 +18111,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:LogHost_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:LogHost_RBV</p></td>
 <td><p>waveform</p></td>
 <td><p>The log host IP address</p></td>
 <td><div class="line-block">
@@ -16457,7 +18119,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:LogMessageCount_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:LogMessageCount_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Total log messages on the last cycle</p></td>
 <td><div class="line-block">
@@ -16465,7 +18127,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:LogPort</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:LogPort</p></td>
 <td><p>longout</p></td>
 <td><p>The log host UDP port</p></td>
 <td><div class="line-block">
@@ -16473,7 +18135,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:LogPort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:LogPort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>The log host UDP port</p></td>
 <td><div class="line-block">
@@ -16481,7 +18143,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)RequestedBP:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)RequestedBP:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
@@ -16490,22 +18152,12 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)RequestedBP:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)RequestedBP:PhotonEnergyRanges_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>PMPS_GVL.stRequestedBeamParameters.neVRange</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)RequestedBP:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU mJ</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -16520,28 +18172,30 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)RequestedBP:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>PMPS_GVL.stRequestedBeamParameters.aStoppers</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX)RequestedBP:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<tr class="row-even"><td><p>$(PREFIX)RequestedBP:Transmission_RBV</p></td>
+<td><p>ai</p></td>
 <td><p>PMPS_GVL.stRequestedBeamParameters.nTran</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)RequestedBP:Valid_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)RequestedBP:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>PMPS_GVL.stRequestedBeamParameters.xValid</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX)RequestedBP:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>PMPS_GVL.stRequestedBeamParameters.aVetoDevices</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">io: input</div>
@@ -16567,17 +18221,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)SafeBeamCnst:PulseEnergy_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>This beam parameter is non-op for now.</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU mJ</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)SafeBeamCnst:Rate_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)SafeBeamCnst:Rate_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Safe beam constant</p></td>
 <td><div class="line-block">
@@ -16587,21 +18231,14 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)SafeBeamCnst:ST_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Safe beam constant</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-even"><td><p>$(PREFIX)SafeBeamCnst:Transmission_RBV</p></td>
-<td><p>longin</p></td>
+<td><p>ai</p></td>
 <td><p>Safe beam constant</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU %</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -16615,7 +18252,16 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)SuccessfulPreemptions_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)SafeBeamCnst:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>Safe beam constant</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)SuccessfulPreemptions_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>PMPS_GVL.SuccessfulPreemption</p></td>
 <td><div class="line-block">
