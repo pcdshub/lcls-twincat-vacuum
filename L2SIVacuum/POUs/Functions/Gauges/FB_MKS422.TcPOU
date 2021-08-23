@@ -30,7 +30,9 @@ VAR CONSTANT
 	MinPressure: REAL := 1E-10;
 	cDefaultPressure : REAL := 0;
 END_VAR
-]]></Declaration>
+VAR PERSISTENT
+	bWasOn : BOOL;
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* 937B Logarithmic Output Conversion *)
 (* 5-20-2016, Alex Wallace and Scott Stubbs *)
@@ -174,6 +176,10 @@ END_IF;
 
 IF NOT (IG.rHYS_PR = rHYS_PR) THEN
 	rHYS_PR:= IG.rHYS_PR;
+END_IF;
+
+IF (ePrevState <> IG.eState) THEN
+	bWasOn := (IG.eState = pumpRUNNING);
 END_IF;]]></ST>
       </Implementation>
     </Action>
@@ -206,6 +212,16 @@ END_VAR
       <Implementation>
         <ST><![CDATA[
 this^.IG.xHV_SW:= (enable);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Recover" Id="{f7632036-f2b2-4576-8bf2-bdbe030b2783}">
+      <Declaration><![CDATA[METHOD M_Recover : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.M_HVE(This^.bWasOn);
+M_Recover := bWasOn;]]></ST>
       </Implementation>
     </Method>
   </POU>

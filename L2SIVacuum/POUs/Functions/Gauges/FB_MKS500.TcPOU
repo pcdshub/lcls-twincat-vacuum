@@ -46,6 +46,10 @@ VAR CONSTANT
 	cDefaultPressure : REAL := 0;
 	rDeadband : REAL :=0.3;
 END_VAR
+VAR PERSISTENT
+	bWasOn : BOOL;
+END_VAR
+
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* 500 Logarithmic Output Conversion, factory default configuration *)
@@ -192,6 +196,9 @@ END_IF;
 
 IF NOT (IG.rHYS_PR = rHYS_PR) THEN
 	rHYS_PR:= IG.rHYS_PR;
+END_IF;
+IF (ePrevState <> IG.eState) THEN
+	bWasOn := (IG.eState = pumpRUNNING);
 END_IF;]]></ST>
       </Implementation>
     </Action>
@@ -216,6 +223,16 @@ END_VAR
       <Implementation>
         <ST><![CDATA[
 this^.IG.xHV_SW:= enable;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Recover" Id="{85a6a232-db83-4051-b21c-4614d4685f78}">
+      <Declaration><![CDATA[METHOD M_Recover : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.M_HVE(This^.bWasOn);
+M_Recover := bWasOn;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_SetBits" Id="{9316bb83-f8e3-4030-bdca-94efd01af2a5}">
