@@ -33,7 +33,7 @@ tOverrideActivated : R_TRIG;
 
 tPumpStartTimeout : TON := (PT:=T#10s); // Timeout pump start if pressure < 1E-11 for more than 10s.
 MinPressure : REAL:= 1E-11; // Minimum readback pressure, pump must register pressure above this to be considered running
- 
+stateTimer:TON;
 //Overrides
 	tonOvrd	:	TON;
 	tonDelOK : TON;
@@ -49,6 +49,7 @@ VAR CONSTANT
 END_VAR
 VAR PERSISTENT
 	rHVEna_SP : REAL;
+	bWasOn : BOOL;
 END_VAR
 
 ]]></Declaration>
@@ -170,7 +171,8 @@ IF ePrevState <> stPump.eState THEN
 		pumpSTOPPING:
 			fbLogger(sMsg:='Pump stopping.', eSevr:=TcEventSeverity.Info);
 	  END_CASE
-	  ePrevState := stPump.eState;  
+	  ePrevState := stPump.eState; 
+	  stateTimer.IN := TRUE; 
   END_IF
 
   
@@ -202,7 +204,11 @@ END_IF
 IF NOT (stPump.rHVEna_SP = rHVEna_SP) THEN
 	rHVEna_SP := stPump.rHVEna_SP;
 END_IF;
-]]></ST>
+stateTimer(PT:=T#10S);
+IF (stateTimer.Q) THEN
+	bWasOn := (stPump.eState = pumpRUNNING);
+	stateTimer.IN := FALSE;
+END_IF;]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_SetGauge" Id="{7f72f23c-b05a-4919-b11f-c886c11a10b4}">
@@ -256,6 +262,17 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[this^.stPump.xAutoOn:= TRUE; // Pump is set to auto start when the pressure is low enough]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Recover" Id="{5e0c1637-4a6b-4d76-9605-1e098409d938}">
+      <Declaration><![CDATA[METHOD M_Recover : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.M_Run(This^.bWasOn);
+M_Recover := bWasOn;
+IF (bWasOn) THEN fbLogger(sMsg:='Auto Recovery Initiated.', eSevr:=TcEventSeverity.Info); END_IF;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_Run" Id="{55fab705-c400-4b7f-9779-42233f752de0}">

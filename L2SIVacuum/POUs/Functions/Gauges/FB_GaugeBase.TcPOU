@@ -16,6 +16,7 @@ VAR
 	sPath: STRING;
 	// For Persistent Data
 	bRestorePersistentData	:	BOOL:=TRUE;
+	stateTimer:TON;
 END_VAR
 VAR PERSISTENT
     rVAC_SP	:	REAL;
