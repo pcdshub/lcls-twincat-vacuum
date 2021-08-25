@@ -164,6 +164,7 @@ IF (IG.xLog) THEN
 				fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
 		  END_CASE
 		  ePrevState := IG.eState;  
+		  stateTimer.IN := TRUE;
 	  END_IF
 END_IF  
 
@@ -197,8 +198,10 @@ END_IF;
 IF NOT (IG.rHYS_PR = rHYS_PR) THEN
 	rHYS_PR:= IG.rHYS_PR;
 END_IF;
+stateTimer(PT:=T#10S);
 IF (ePrevState <> IG.eState) THEN
-	bWasOn := (IG.eState = pumpRUNNING);
+	bWasOn := (IG.eState >=Valid );
+	stateTimer.IN := FALSE;
 END_IF;]]></ST>
       </Implementation>
     </Action>
@@ -232,7 +235,8 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[This^.M_HVE(This^.bWasOn);
-M_Recover := bWasOn;]]></ST>
+M_Recover := bWasOn;
+IF (bWasOn) THEN fbLogger(sMsg:='Auto Recovery Initiated.', eSevr:=TcEventSeverity.Info); END_IF;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_SetBits" Id="{9316bb83-f8e3-4030-bdca-94efd01af2a5}">
