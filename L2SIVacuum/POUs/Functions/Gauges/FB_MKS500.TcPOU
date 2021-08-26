@@ -60,10 +60,10 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 IF rV < vDisconnected THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
-ELSIF rV >= vDisconnected AND rV < (vNoDischarge -rDeadband)  THEN
+ELSIF rV >= vDisconnected AND rV < (vNoDischarge -rDeadband)  AND (IG.xHV_SW) THEN
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-ELSIF rV >= (vNoDischarge -rDeadband) AND rV <(vGaugeOff -rDeadband)   THEN
+ELSIF rV >= (vNoDischarge -rDeadband) AND rV <(vGaugeOff -rDeadband) AND (IG.xHV_SW)  THEN
 	IG.eState := Starting;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 ELSIF rV >= (vGaugeOff -rDeadband) THEN
@@ -71,7 +71,7 @@ ELSIF rV >= (vGaugeOff -rDeadband) THEN
 	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 	IG.rPRESS := cDefaultPressure;
 ELSE
-	IG.eState := OoR;
+	IG.eState := PressInvalid;
 	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 	IG.rPRESS := cDefaultPressure;
 END_IF
@@ -199,7 +199,7 @@ IF NOT (IG.rHYS_PR = rHYS_PR) THEN
 	rHYS_PR:= IG.rHYS_PR;
 END_IF;
 stateTimer(PT:=T#10S);
-IF (ePrevState <> IG.eState) THEN
+IF (stateTimer.Q) THEN
 	bWasOn := (IG.eState >=Valid );
 	stateTimer.IN := FALSE;
 END_IF;]]></ST>

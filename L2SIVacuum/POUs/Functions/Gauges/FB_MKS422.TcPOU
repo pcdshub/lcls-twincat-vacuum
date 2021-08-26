@@ -54,11 +54,11 @@ END_IF
 	
 
 (* Pressure gauge State checks *)
-IF (rV <=9.6 ) AND (rV>=0.6) THEN
+IF (rV <=9.6 ) AND (rV>=0.6) AND (IG.xHV_SW) THEN
 	IG.eState := Valid; // normal
-ELSIF rV >= 0.18 AND rV <= 0.22 THEN 
+ELSIF rV >= 0.18 AND rV <= 0.22 AND (IG.xHV_SW) THEN 
 	IG.eState := ValidLo; //LO
-ELSIF rV > 9.6 AND rV<= 9.9 THEN
+ELSIF rV > 9.6 AND rV<= 9.9 AND (IG.xHV_SW) THEN
 	IG.eState := ValidHi; //HIGH
 ELSIF rV < 0.18 THEN // 
 	IG.eState := GaugeDisconnected; //not on
@@ -180,7 +180,7 @@ IF NOT (IG.rHYS_PR = rHYS_PR) THEN
 	rHYS_PR:= IG.rHYS_PR;
 END_IF;
 stateTimer(PT:=T#10S);
-IF (ePrevState <> IG.eState) THEN
+IF (stateTimer.Q) THEN
 	bWasOn := (IG.eState >=Valid );
 	stateTimer.IN := FALSE;
 END_IF;]]></ST>
