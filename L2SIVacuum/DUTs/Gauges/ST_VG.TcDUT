@@ -31,10 +31,10 @@ STRUCT
 	xPRESS_OK: BOOL;
 	{attribute 'pytmc' := '
     pv: STATE;
-	field: ZRST PressInvalid;
+	field: ZRST Off;
 	field: ONST GaugeDisconnected;
 	field: TWST OoR;
-	field: THST Off;
+	field: THST PressInvalid;
 	field: FRST Starting;
 	field: FVST Valid;
 	field: SXST ValidHi;

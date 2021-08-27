@@ -23,6 +23,7 @@ END_VAR
 VAR
 	rV : REAL;
 	GaugeTurnOnTmr : TON;
+	tStartupTimer:TON;
 	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
 	(*IOs to be linked*)
 	/// Controls and I/Os
@@ -31,7 +32,7 @@ VAR
 	// only for EL and ES terminal
 	i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1124) ^Input
 	i_xDisc_Active AT %I* : BOOL;// Discharge Current Active // 'TcLinkTo' (EL1124) ^Input
-	
+	binit:BOOL:=TRUE;
 END_VAR
 
 VAR CONSTANT
@@ -52,12 +53,22 @@ END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* 500 Logarithmic Output Conversion, factory default configuration *)
+      <ST><![CDATA[(*Startup time*)
+IF (bInit) THEN
+	tStartupTimer.IN:=TRUE;
+	bInit :=FALSE;
+END_IF
+tStartupTimer(PT:=T#3S);
+
+(* 500 Logarithmic Output Conversion, factory default configuration *)
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (* Set Guage State based on the Analog voltage*)
-IF rV < vDisconnected THEN
+IF  NOT (tStartupTimer.Q) THEN // Give time for the gauge controller to start
+	IG.eState := Off;
+	IG.rPRESS := cDefaultPressure;
+ELSIF rV < vDisconnected THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
 ELSIF rV >= vDisconnected AND rV < (vNoDischarge -rDeadband)  AND (IG.xHV_SW) THEN

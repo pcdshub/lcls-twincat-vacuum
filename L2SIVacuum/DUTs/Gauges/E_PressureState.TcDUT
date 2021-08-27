@@ -4,11 +4,11 @@
     <Declaration><![CDATA[TYPE E_PressureState :
 (
 	// Invalid states
-	PressInvalid,//	 //gc_GaugeValidState - 1,
+	Off,//	 //gc_GaugeValidState - 1,
 	GaugeDisconnected, //gc_GaugeValidState -2,
 	OoR, //gc_GaugeValidState -6,
 	// Ion gauges
-	Off, //gc_GaugeValidState - 3,
+	PressInvalid, //gc_GaugeValidState - 3,
 	Starting, //gc_GaugeValidState - 4
 	
 	//Valid States (Positive)
