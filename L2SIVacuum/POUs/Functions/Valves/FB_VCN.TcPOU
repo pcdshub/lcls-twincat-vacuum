@@ -70,7 +70,6 @@ IF iq_stVCN.xIlkOK THEN
 	ELSIF iq_stVCN.eValveControl = PressureControl THEN
 		IF (i_xPurge) THEN
 		iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, 100); 
-		i_xPurge := FALSE;
 		ELSE iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, iq_stVCN.rUpperLimit); 
 		END_IF
 	END_IF
