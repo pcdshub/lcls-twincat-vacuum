@@ -17,6 +17,9 @@ VAR
 	// For Persistent Data
 	bRestorePersistentData	:	BOOL:=TRUE;
 	stateTimer:TON;
+	fbGetCurTaskIdx  : GETCURTASKINDEX;
+	fbWritePersistentData           : WritePersistentData;
+	tRecover: TON;
 END_VAR
 VAR PERSISTENT
     rVAC_SP	:	REAL;

@@ -13,6 +13,7 @@ END_VAR
 VAR_INPUT
 	PG	:	ST_VG;
 	bEP : BOOL :=FALSE; // Set to True if This Gauge is connected to EP BOX and not EL Terminals
+	tRecoverDelay:TIME:=T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
 END_VAR
 VAR_OUTPUT
 {attribute 'pytmc' := '
@@ -49,6 +50,8 @@ VAR CONSTANT
 END_VAR
 VAR PERSISTENT
 	bWasOn : BOOL;
+	bAutoRecover:BOOL;
+	bAutoRecoverWrite:BOOL;
 END_VAR
 
 ]]></Declaration>
@@ -138,7 +141,8 @@ ACT_Logger();
 IO();
 (*Load or save the persistent variables*)
 ACT_Persistent();
-]]></ST>
+(*Run Auto Recovery*)
+ACT_Recover();]]></ST>
     </Implementation>
     <Action Name="ACT_Logger" Id="{b6ae699a-8cbc-41c3-94fc-93d1d486cd97}">
       <Implementation>
@@ -196,6 +200,9 @@ IF (SUPER^.bRestorePersistentData) THEN
 	IF ( rHYS_PR <> 0) THEN
 		IG.rHYS_PR := rHYS_PR;
 	END_IF;
+	IF ( bAutoRecoverWrite) THEN
+		IG.xAutoOn := bAutoRecover;
+	END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
@@ -209,11 +216,29 @@ END_IF;
 IF NOT (IG.rHYS_PR = rHYS_PR) THEN
 	rHYS_PR:= IG.rHYS_PR;
 END_IF;
+
+IF NOT(bAutoRecoverWrite) OR NOT (bAutoRecover = IG.xAutoOn) THEN
+	bAutoRecover := IG.xAutoOn;
+	bAutoRecoverWrite := TRUE;
+END_IF;
 stateTimer(PT:=T#10S);
 IF (stateTimer.Q) THEN
 	bWasOn := (IG.eState >=Valid );
 	stateTimer.IN := FALSE;
+	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
 END_IF;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Recover" Id="{ac0dd076-6f0a-4fff-a772-7158a547a40b}">
+      <Implementation>
+        <ST><![CDATA[fbGetCurTaskIdx();
+IF (_TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+	tRecover.IN := TRUE;
+END_IF
+tRecover(IN:= , PT:=tRecoverDelay);
+IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
+	This^.M_Recover();
+END_IF]]></ST>
       </Implementation>
     </Action>
     <Action Name="IO" Id="{8ad71ac6-f961-40c8-a3be-ad3367f81f67}">

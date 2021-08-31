@@ -50,7 +50,13 @@ STRUCT
 	field: ONAM ON;
     '}
 	xHV_SW: BOOL; // High Voltage Switch from epics
-	
+	{attribute 'pytmc' := '
+    pv: Auto_On;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
+	io:i;
+    '}
+	xAutoOn : BOOL;
 	/// Controls and I/Os
 	{attribute 'pytmc' := '
     pv: PRESS_AI;
