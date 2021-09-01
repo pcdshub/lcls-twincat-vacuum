@@ -100,7 +100,7 @@ END_IF
 
  
 (* Pressure gauge OK checks *)
-IG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6);
+IG.xPRESS_OK := (rV <=vMax ) AND (rV>=vMin);
 
 
 (* Setpoint evaluation *)
