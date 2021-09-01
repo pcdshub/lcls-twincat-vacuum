@@ -27,10 +27,11 @@ VAR
 	q_xHV_DIS AT %Q* : BOOL := True; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
 END_VAR
 VAR CONSTANT
-	MinPressure: REAL := 1E-10;
+	MinPressure: REAL := 1E-11;
 	vDisconnected : REAL:= 0.18;
 	vMaxValid : REAL:=9.6;
 	vMax : REAL:=9.9;
+	vValidLo:REAL :=0.22;
 	vMin : REAL:=0.6;
 	cDefaultPressure : REAL := 0;
 END_VAR
@@ -61,7 +62,7 @@ END_IF
 (* Pressure gauge State checks *)
 IF (rV <= vMaxValid ) AND (rV>=vMin) AND (IG.xHV_SW) THEN
 	IG.eState := Valid; // normal
-ELSIF rV >= vDisconnected AND rV <= 0.22 AND (IG.xHV_SW) THEN 
+ELSIF rV >= vDisconnected AND rV <= vValidLo AND (IG.xHV_SW) THEN 
 	IG.eState := ValidLo; //LO
 ELSIF rV > vMaxValid AND rV<= vMax AND (IG.xHV_SW) THEN
 	IG.eState := ValidHi; //HIGH
@@ -71,8 +72,8 @@ ELSIF rV < vDisconnected THEN //
 ELSIF NOT (IG.xHV_SW) THEN
 	IG.eState := Off; //not on
 	IG.rPRESS :=cDefaultPressure;
-ELSE
-	IG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+ELSIF IG.rPRESS < MinPressure THEN
+	IG.eState := PressInvalid; // 
 	IG.rPRESS :=cDefaultPressure;
 END_IF
 

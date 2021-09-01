@@ -84,7 +84,7 @@ ELSIF rV >= (vGaugeOff -rDeadband) THEN
 	IG.eState := Off;
 	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 	IG.rPRESS := cDefaultPressure;
-ELSE
+ELSIF IG.rPRESS < MinPressure THEN
 	IG.eState := PressInvalid;
 	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 	IG.rPRESS := cDefaultPressure;
