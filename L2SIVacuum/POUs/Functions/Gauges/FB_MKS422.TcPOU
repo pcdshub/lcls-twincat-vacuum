@@ -28,6 +28,10 @@ VAR
 END_VAR
 VAR CONSTANT
 	MinPressure: REAL := 1E-10;
+	vDisconnected : REAL:= 0.18;
+	vMaxValid : REAL:=9.6;
+	vMax : REAL:=9.9;
+	vMin : REAL:=0.6;
 	cDefaultPressure : REAL := 0;
 END_VAR
 VAR PERSISTENT
@@ -55,17 +59,17 @@ END_IF
 	
 
 (* Pressure gauge State checks *)
-IF (rV <=9.6 ) AND (rV>=0.6) AND (IG.xHV_SW) THEN
+IF (rV <= vMaxValid ) AND (rV>=vMin) AND (IG.xHV_SW) THEN
 	IG.eState := Valid; // normal
-ELSIF rV >= 0.18 AND rV <= 0.22 AND (IG.xHV_SW) THEN 
+ELSIF rV >= vDisconnected AND rV <= 0.22 AND (IG.xHV_SW) THEN 
 	IG.eState := ValidLo; //LO
-ELSIF rV > 9.6 AND rV<= 9.9 AND (IG.xHV_SW) THEN
+ELSIF rV > vMaxValid AND rV<= vMax AND (IG.xHV_SW) THEN
 	IG.eState := ValidHi; //HIGH
-ELSIF rV < 0.18 THEN // 
-	IG.eState := GaugeDisconnected; //not on
+ELSIF rV < vDisconnected THEN // 
+	IG.eState := GaugeDisconnected; //other fault - gauge disconnected, controller powering up etc
 	IG.rPRESS :=cDefaultPressure;
 ELSIF NOT (IG.xHV_SW) THEN
-	IG.eState := Off; //other fault - could be no gauge, controller powering up etc
+	IG.eState := Off; //not on
 	IG.rPRESS :=cDefaultPressure;
 ELSE
 	IG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
