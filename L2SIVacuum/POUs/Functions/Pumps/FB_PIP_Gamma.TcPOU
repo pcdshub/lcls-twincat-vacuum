@@ -228,12 +228,13 @@ END_IF;]]></ST>
     <Action Name="ACT_Recover" Id="{db71f277-6b1a-4048-ba14-ee322ccfb42c}">
       <Implementation>
         <ST><![CDATA[fbGetCurTaskIdx();
-IF (_TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
 	tRecover.IN := TRUE;
 END_IF
 tRecover(IN:= , PT:=tRecoverDelay);
 IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
 	This^.M_Recover();
+	tRecover.IN := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -278,7 +279,8 @@ stPump.i_xHV_DI:=	i_xSP_DI;
 (*output*)
 q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function
 
- This^.stPump.sPath:= sPath;]]></ST>
+ This^.stPump.sPath:= sPath;
+ stPump.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_AutoOn" Id="{28cd0a93-5190-4d36-9dd8-bf794bc89b09}">

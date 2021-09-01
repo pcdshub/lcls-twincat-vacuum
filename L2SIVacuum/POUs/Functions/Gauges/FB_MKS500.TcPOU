@@ -232,12 +232,13 @@ END_IF;]]></ST>
     <Action Name="ACT_Recover" Id="{ac0dd076-6f0a-4fff-a772-7158a547a40b}">
       <Implementation>
         <ST><![CDATA[fbGetCurTaskIdx();
-IF (_TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
 	tRecover.IN := TRUE;
 END_IF
 tRecover(IN:= , PT:=tRecoverDelay);
 IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
 	This^.M_Recover();
+	tRecover.IN := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -250,7 +251,8 @@ IG.i_xDisc_Active:=i_xDisc_Active;
 (*soft link outputs*)
 q_xHV_DIS := IG.q_xHV_DIS;
 
-IG.sPath := sPath;]]></ST>
+IG.sPath := sPath;
+IG.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_HVE" Id="{5c5dd30f-1cf9-426d-9ab9-5103df771146}">

@@ -54,9 +54,14 @@ STRUCT
     pv: Auto_On;
 	field: ZNAM FALSE; 
 	field: ONAM TRUE;
+	io:io;
+    '}
+	xAutoOn : BOOL := TRUE;
+	{attribute 'pytmc' := '
+    pv: AutoOn_timer;
 	io:i;
     '}
-	xAutoOn : BOOL;
+	iAutoOnTimer : INT;
 	/// Controls and I/Os
 	{attribute 'pytmc' := '
     pv: PRESS_AI;

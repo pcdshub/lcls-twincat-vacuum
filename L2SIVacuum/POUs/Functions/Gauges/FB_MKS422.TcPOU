@@ -203,12 +203,13 @@ END_IF;]]></ST>
     <Action Name="ACT_Recover" Id="{3e6e3bcf-7780-45ff-9848-62b6d7bc4a60}">
       <Implementation>
         <ST><![CDATA[fbGetCurTaskIdx();
-IF (_TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
 	tRecover.IN := TRUE;
 END_IF
 tRecover(IN:= , PT:=tRecoverDelay);
 IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
 	This^.M_Recover();
+	tRecover.IN := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -220,7 +221,9 @@ IG.i_iPRESS_R:=	i_iPRESS_R;
 (*soft link outputs*)
 q_xHV_DIS := IG.q_xHV_DIS;
 
-IG.sPath := sPath;]]></ST>
+IG.sPath := sPath;
+IG.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);
+]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_AutoOn" Id="{06245f08-bb9d-49ef-bd4d-3fe48276b865}">
