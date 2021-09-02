@@ -10,6 +10,7 @@ END_VAR
 VAR_INPUT
 		PG	:	ST_VG; // Pirani Gauge Structure used to Interlock the Cold Cathode
 		b937A :BOOL:=FALSE; // True if this gauge is connected to MKS937A controller, False if connected to MKS937B controller
+		tRecoverDelay:TIME:=T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -19,20 +20,25 @@ VAR_OUTPUT
 END_VAR
 VAR
 	rV	:	REAL;
-	
 	timer:TON;
 	(*IOs to be linked*)
 	/// Controls and I/Os
 	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
 	q_xHV_DIS AT %Q* : BOOL := True; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
-	stPump: INT;
 END_VAR
 VAR CONSTANT
-	MinPressure: REAL := 1E-10;
+	MinPressure: REAL := 1E-11;
+	vDisconnected : REAL:= 0.18;
+	vMaxValid : REAL:=9.6;
+	vMax : REAL:=9.9;
+	vValidLo:REAL :=0.22;
+	vMin : REAL:=0.6;
 	cDefaultPressure : REAL := 0;
 END_VAR
 VAR PERSISTENT
 	bWasOn : BOOL;
+	bAutoRecover:BOOL;
+	bAutoRecoverWrite:BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* 937B Logarithmic Output Conversion *)
@@ -54,17 +60,20 @@ END_IF
 	
 
 (* Pressure gauge State checks *)
-IF (rV <=9.6 ) AND (rV>=0.6) THEN
+IF (rV <= vMaxValid ) AND (rV>=vMin) AND (IG.xHV_SW) THEN
 	IG.eState := Valid; // normal
-ELSIF rV >= 0.18 AND rV <= 0.22 THEN 
+ELSIF rV >= vDisconnected AND rV <= vValidLo AND (IG.xHV_SW) THEN 
 	IG.eState := ValidLo; //LO
-ELSIF rV > 9.6 AND rV<= 9.9 THEN
+ELSIF rV > vMaxValid AND rV<= vMax AND (IG.xHV_SW) THEN
 	IG.eState := ValidHi; //HIGH
-ELSIF rV < 0.18 THEN // 
-	IG.eState := GaugeDisconnected; //not on
+ELSIF rV < vDisconnected THEN // 
+	IG.eState := GaugeDisconnected; //other fault - gauge disconnected, controller powering up etc
 	IG.rPRESS :=cDefaultPressure;
-ELSE
-	IG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+ELSIF NOT (IG.xHV_SW) THEN
+	IG.eState := Off; //not on
+	IG.rPRESS :=cDefaultPressure;
+ELSIF IG.rPRESS < MinPressure THEN
+	IG.eState := PressInvalid; // 
 	IG.rPRESS :=cDefaultPressure;
 END_IF
 
@@ -92,7 +101,7 @@ END_IF
 
  
 (* Pressure gauge OK checks *)
-IG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6);
+IG.xPRESS_OK := (rV <=vMax ) AND (rV>=vMin);
 
 
 (* Setpoint evaluation *)
@@ -107,7 +116,8 @@ IO();
 (*Load or save the persistent variables*)
 ACT_Persistent();
 timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
-
+(*Run Auto Recovery*)
+ACT_Recover();
 ]]></ST>
     </Implementation>
     <Action Name="ACT_Logger" Id="{81455e48-69be-44cd-8f73-e6a424a8f2a9}">
@@ -166,6 +176,9 @@ IF (SUPER^.bRestorePersistentData) THEN
 	IF ( rHYS_PR <> 0) THEN
 		IG.rHYS_PR := rHYS_PR;
 	END_IF;
+	IF ( bAutoRecoverWrite) THEN
+		IG.xAutoOn := bAutoRecover;
+	END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
@@ -179,11 +192,30 @@ END_IF;
 IF NOT (IG.rHYS_PR = rHYS_PR) THEN
 	rHYS_PR:= IG.rHYS_PR;
 END_IF;
+
+IF NOT(bAutoRecoverWrite) OR NOT (IG.xAutoOn = bAutoRecover) THEN
+	bAutoRecover := IG.xAutoOn;
+	bAutoRecoverWrite := TRUE;
+END_IF;
 stateTimer(PT:=T#10S);
-IF (ePrevState <> IG.eState) THEN
+IF (stateTimer.Q) THEN
 	bWasOn := (IG.eState >=Valid );
 	stateTimer.IN := FALSE;
+	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
 END_IF;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Recover" Id="{3e6e3bcf-7780-45ff-9848-62b6d7bc4a60}">
+      <Implementation>
+        <ST><![CDATA[fbGetCurTaskIdx();
+IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+	tRecover.IN := TRUE;
+END_IF
+tRecover(IN:= , PT:=tRecoverDelay);
+IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
+	This^.M_Recover();
+	tRecover.IN := FALSE;
+END_IF]]></ST>
       </Implementation>
     </Action>
     <Action Name="IO" Id="{745bf75f-6d68-4d34-a177-a78f14818649}">
@@ -194,7 +226,9 @@ IG.i_iPRESS_R:=	i_iPRESS_R;
 (*soft link outputs*)
 q_xHV_DIS := IG.q_xHV_DIS;
 
-IG.sPath := sPath;]]></ST>
+IG.sPath := sPath;
+IG.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);
+]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_AutoOn" Id="{06245f08-bb9d-49ef-bd4d-3fe48276b865}">

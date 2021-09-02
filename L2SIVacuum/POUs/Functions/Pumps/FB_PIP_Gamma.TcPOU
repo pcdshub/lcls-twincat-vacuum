@@ -8,6 +8,7 @@ FUNCTION_BLOCK FB_PIP_Gamma Extends FB_Pump
 VAR_INPUT
 	i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock
     i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum interlock logic*) 
+	tRecoverDelay:TIME:=T#900S; (*Delay Time after the first cycle to start the device. Default is 900S*)
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -43,6 +44,9 @@ stateTimer:TON;
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
 	sPath: STRING;
+	fbGetCurTaskIdx  : GETCURTASKINDEX;
+	fbWritePersistentData           : WritePersistentData;
+	tRecover: TON;
 END_VAR
 VAR CONSTANT
 	 rDefaultHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
@@ -50,6 +54,8 @@ END_VAR
 VAR PERSISTENT
 	rHVEna_SP : REAL;
 	bWasOn : BOOL;
+	bAutoRecover:BOOL;
+	bAutoRecoverWrite:BOOL;
 END_VAR
 
 ]]></Declaration>
@@ -66,9 +72,7 @@ END_IF
 
 (* Enable HV *)
 IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
-	IF (stPump.xAutoOn) AND NOT (stPump.q_xHVEna_DO) THEN  stPump.q_xHVEna_DO := TRUE;
-	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));  
-	END_IF
+	stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));  
 	stPump.xILKOk:= TRUE;
 ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN 
 	IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
@@ -124,7 +128,9 @@ ACT_IlkOverride();
 // Log States and triggers
 ACT_Logger();
 (*Load or save the persistent variables*)
-ACT_Persistent();]]></ST>
+ACT_Persistent();
+(*Run Auto Recovery*)
+ACT_Recover();]]></ST>
     </Implementation>
     <Action Name="ACT_IlkOverride" Id="{bcee683f-3211-4a69-9559-1cb72724e991}">
       <Implementation>
@@ -199,16 +205,37 @@ IF (SUPER^.bRestorePersistentData) THEN
 	IF (rHVEna_SP <> 0) THEN
 		stPump.rHVEna_SP := rHVEna_SP;
 	END_IF;
+	IF ( bAutoRecoverWrite) THEN
+		stPump.xAutoOn := bAutoRecover;
+	END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (stPump.rHVEna_SP = rHVEna_SP) THEN
 	rHVEna_SP := stPump.rHVEna_SP;
 END_IF;
+IF NOT(bAutoRecoverWrite) OR NOT (stPump.xAutoOn = bAutoRecover) THEN
+	bAutoRecover := stPump.xAutoOn;
+	bAutoRecoverWrite := TRUE;
+END_IF;
 stateTimer(PT:=T#10S);
 IF (stateTimer.Q) THEN
 	bWasOn := (stPump.eState = pumpRUNNING);
 	stateTimer.IN := FALSE;
+	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
 END_IF;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Recover" Id="{db71f277-6b1a-4048-ba14-ee322ccfb42c}">
+      <Implementation>
+        <ST><![CDATA[fbGetCurTaskIdx();
+IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+	tRecover.IN := TRUE;
+END_IF
+tRecover(IN:= , PT:=tRecoverDelay);
+IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
+	This^.M_Recover();
+	tRecover.IN := FALSE;
+END_IF]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_SetGauge" Id="{7f72f23c-b05a-4919-b11f-c886c11a10b4}">
@@ -252,7 +279,8 @@ stPump.i_xHV_DI:=	i_xSP_DI;
 (*output*)
 q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function
 
- This^.stPump.sPath:= sPath;]]></ST>
+ This^.stPump.sPath:= sPath;
+ stPump.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_AutoOn" Id="{28cd0a93-5190-4d36-9dd8-bf794bc89b09}">

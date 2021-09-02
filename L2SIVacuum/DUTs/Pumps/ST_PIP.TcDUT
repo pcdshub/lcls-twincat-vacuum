@@ -54,10 +54,16 @@ STRUCT
     pv: Auto_On;
 	field: ZNAM FALSE; 
 	field: ONAM TRUE;
+	io:io;
+    '}
+	xAutoOn : BOOL:=TRUE;
+
+	{attribute 'pytmc' := '
+    pv: AutoOn_timer;
 	io:i;
     '}
-	xAutoOn : BOOL;
-
+	iAutoOnTimer : INT;
+	
 	{attribute 'pytmc' := '
 	pv: OVRD_ON ;
 	field: ZNAM Override OFF ;
