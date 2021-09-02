@@ -232,7 +232,35 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):DISC_ACTIVE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Auto_On</p></td>
+<td><p>bo</p></td>
+<td><p>$(SYMBOL).PG.xAutoOn</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM TRUE</div>
+<div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Auto_On_RBV</p></td>
+<td><p>bi</p></td>
+<td><p>$(SYMBOL).PG.xAutoOn</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM TRUE</div>
+<div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AutoOn_timer_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).PG.iAutoOnTimer</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):DISC_ACTIVE_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.i_xDisc_Active</p></td>
 <td><div class="line-block">
@@ -242,7 +270,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_DIS_DO_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_DIS_DO_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.q_xHV_DIS</p></td>
 <td><div class="line-block">
@@ -252,7 +280,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_ON_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_ON_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.i_xHV_ON</p></td>
 <td><div class="line-block">
@@ -260,7 +288,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_SW</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_SW</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).PG.xHV_SW</p></td>
 <td><div class="line-block">
@@ -270,7 +298,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_SW_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_SW_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.xHV_SW</p></td>
 <td><div class="line-block">
@@ -280,7 +308,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.xILKOk</p></td>
 <td><div class="line-block">
@@ -290,7 +318,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):LOGGER</p></td>
+<tr class="row-even"><td><p>$(PREFIX):LOGGER</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).PG.xLog</p></td>
 <td><div class="line-block">
@@ -300,7 +328,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):LOGGER_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):LOGGER_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.xLog</p></td>
 <td><div class="line-block">
@@ -310,7 +338,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).PG.i_iPRESS_R</p></td>
 <td><div class="line-block">
@@ -318,7 +346,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PRESS_OK_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):PRESS_OK_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.xPRESS_OK</p></td>
 <td><div class="line-block">
@@ -328,7 +356,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRESS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRESS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).PG.rPRESS</p></td>
 <td><div class="line-block">
@@ -340,7 +368,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PRO_SP</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):PRO_SP</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).PG.rPRO_SP</p></td>
 <td><div class="line-block">
@@ -353,7 +381,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRO_SP_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRO_SP_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).PG.rPRO_SP</p></td>
 <td><div class="line-block">
@@ -366,7 +394,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):SP_HYS</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):SP_HYS</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).PG.rHYS_PR</p></td>
 <td><div class="line-block">
@@ -379,7 +407,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).PG.rHYS_PR</p></td>
 <td><div class="line-block">
@@ -392,7 +420,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):STATE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):STATE_RBV</p></td>
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).PG.eState</p></td>
 <td><div class="line-block">
@@ -401,14 +429,14 @@
 <div class="line">field: ONST GaugeDisconnected</div>
 <div class="line">field: SVST ValidLo</div>
 <div class="line">field: SXST ValidHi</div>
-<div class="line">field: THST Off</div>
+<div class="line">field: THST PressInvalid</div>
 <div class="line">field: TWST OoR</div>
-<div class="line">field: ZRST PressInvalid</div>
+<div class="line">field: ZRST Off</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):VAC_SP</p></td>
+<tr class="row-even"><td><p>$(PREFIX):VAC_SP</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).PG.rVAC_SP</p></td>
 <td><div class="line-block">
@@ -421,7 +449,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):VAC_SP_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):VAC_SP_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).PG.rVAC_SP</p></td>
 <td><div class="line-block">
@@ -464,7 +492,35 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):DISC_ACTIVE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Auto_On</p></td>
+<td><p>bo</p></td>
+<td><p>$(SYMBOL).PG.xAutoOn</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM TRUE</div>
+<div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Auto_On_RBV</p></td>
+<td><p>bi</p></td>
+<td><p>$(SYMBOL).PG.xAutoOn</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM TRUE</div>
+<div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AutoOn_timer_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).PG.iAutoOnTimer</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):DISC_ACTIVE_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.i_xDisc_Active</p></td>
 <td><div class="line-block">
@@ -474,7 +530,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_DIS_DO_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_DIS_DO_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.q_xHV_DIS</p></td>
 <td><div class="line-block">
@@ -484,7 +540,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_ON_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_ON_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.i_xHV_ON</p></td>
 <td><div class="line-block">
@@ -492,7 +548,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_SW</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_SW</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).PG.xHV_SW</p></td>
 <td><div class="line-block">
@@ -502,7 +558,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_SW_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_SW_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.xHV_SW</p></td>
 <td><div class="line-block">
@@ -512,7 +568,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.xILKOk</p></td>
 <td><div class="line-block">
@@ -522,7 +578,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):LOGGER</p></td>
+<tr class="row-even"><td><p>$(PREFIX):LOGGER</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).PG.xLog</p></td>
 <td><div class="line-block">
@@ -532,7 +588,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):LOGGER_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):LOGGER_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.xLog</p></td>
 <td><div class="line-block">
@@ -542,7 +598,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).PG.i_iPRESS_R</p></td>
 <td><div class="line-block">
@@ -550,7 +606,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PRESS_OK_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):PRESS_OK_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).PG.xPRESS_OK</p></td>
 <td><div class="line-block">
@@ -560,7 +616,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRESS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRESS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).PG.rPRESS</p></td>
 <td><div class="line-block">
@@ -572,7 +628,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PRO_SP</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):PRO_SP</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).PG.rPRO_SP</p></td>
 <td><div class="line-block">
@@ -585,7 +641,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRO_SP_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRO_SP_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).PG.rPRO_SP</p></td>
 <td><div class="line-block">
@@ -598,7 +654,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):SP_HYS</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):SP_HYS</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).PG.rHYS_PR</p></td>
 <td><div class="line-block">
@@ -611,7 +667,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).PG.rHYS_PR</p></td>
 <td><div class="line-block">
@@ -624,7 +680,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):STATE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):STATE_RBV</p></td>
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).PG.eState</p></td>
 <td><div class="line-block">
@@ -633,14 +689,14 @@
 <div class="line">field: ONST GaugeDisconnected</div>
 <div class="line">field: SVST ValidLo</div>
 <div class="line">field: SXST ValidHi</div>
-<div class="line">field: THST Off</div>
+<div class="line">field: THST PressInvalid</div>
 <div class="line">field: TWST OoR</div>
-<div class="line">field: ZRST PressInvalid</div>
+<div class="line">field: ZRST Off</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):VAC_SP</p></td>
+<tr class="row-even"><td><p>$(PREFIX):VAC_SP</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).PG.rVAC_SP</p></td>
 <td><div class="line-block">
@@ -653,7 +709,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):VAC_SP_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):VAC_SP_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).PG.rVAC_SP</p></td>
 <td><div class="line-block">
@@ -696,7 +752,35 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):DISC_ACTIVE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Auto_On</p></td>
+<td><p>bo</p></td>
+<td><p>$(SYMBOL).IG.xAutoOn</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM TRUE</div>
+<div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Auto_On_RBV</p></td>
+<td><p>bi</p></td>
+<td><p>$(SYMBOL).IG.xAutoOn</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM TRUE</div>
+<div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AutoOn_timer_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).IG.iAutoOnTimer</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):DISC_ACTIVE_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).IG.i_xDisc_Active</p></td>
 <td><div class="line-block">
@@ -706,7 +790,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_DIS_DO_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_DIS_DO_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).IG.q_xHV_DIS</p></td>
 <td><div class="line-block">
@@ -716,7 +800,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_ON_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_ON_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).IG.i_xHV_ON</p></td>
 <td><div class="line-block">
@@ -724,7 +808,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_SW</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_SW</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).IG.xHV_SW</p></td>
 <td><div class="line-block">
@@ -734,7 +818,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_SW_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_SW_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).IG.xHV_SW</p></td>
 <td><div class="line-block">
@@ -744,7 +828,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).IG.xILKOk</p></td>
 <td><div class="line-block">
@@ -754,7 +838,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):LOGGER</p></td>
+<tr class="row-even"><td><p>$(PREFIX):LOGGER</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).IG.xLog</p></td>
 <td><div class="line-block">
@@ -764,7 +848,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):LOGGER_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):LOGGER_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).IG.xLog</p></td>
 <td><div class="line-block">
@@ -774,7 +858,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).IG.i_iPRESS_R</p></td>
 <td><div class="line-block">
@@ -782,7 +866,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PRESS_OK_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):PRESS_OK_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).IG.xPRESS_OK</p></td>
 <td><div class="line-block">
@@ -792,7 +876,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRESS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRESS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).IG.rPRESS</p></td>
 <td><div class="line-block">
@@ -804,7 +888,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PRO_SP</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):PRO_SP</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).IG.rPRO_SP</p></td>
 <td><div class="line-block">
@@ -817,7 +901,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRO_SP_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRO_SP_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).IG.rPRO_SP</p></td>
 <td><div class="line-block">
@@ -830,7 +914,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):SP_HYS</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):SP_HYS</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).IG.rHYS_PR</p></td>
 <td><div class="line-block">
@@ -843,7 +927,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).IG.rHYS_PR</p></td>
 <td><div class="line-block">
@@ -856,7 +940,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):STATE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):STATE_RBV</p></td>
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).IG.eState</p></td>
 <td><div class="line-block">
@@ -865,14 +949,14 @@
 <div class="line">field: ONST GaugeDisconnected</div>
 <div class="line">field: SVST ValidLo</div>
 <div class="line">field: SXST ValidHi</div>
-<div class="line">field: THST Off</div>
+<div class="line">field: THST PressInvalid</div>
 <div class="line">field: TWST OoR</div>
-<div class="line">field: ZRST PressInvalid</div>
+<div class="line">field: ZRST Off</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):VAC_SP</p></td>
+<tr class="row-even"><td><p>$(PREFIX):VAC_SP</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).IG.rVAC_SP</p></td>
 <td><div class="line-block">
@@ -885,7 +969,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):VAC_SP_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):VAC_SP_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).IG.rVAC_SP</p></td>
 <td><div class="line-block">
@@ -960,12 +1044,30 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Auto_On_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Auto_On</p></td>
+<td><p>bo</p></td>
+<td><p>$(SYMBOL).stPump.xAutoOn</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM TRUE</div>
+<div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Auto_On_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).stPump.xAutoOn</p></td>
 <td><div class="line-block">
 <div class="line">field: ONAM TRUE</div>
 <div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AutoOn_timer_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).stPump.iAutoOnTimer</p></td>
+<td><div class="line-block">
 <div class="line">io: input</div>
 </div>
 </td>
@@ -16276,12 +16378,30 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):Auto_On_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):Auto_On</p></td>
+<td><p>bo</p></td>
+<td><p>$(SYMBOL).xAutoOn</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM TRUE</div>
+<div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):Auto_On_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xAutoOn</p></td>
 <td><div class="line-block">
 <div class="line">field: ONAM TRUE</div>
 <div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):AutoOn_timer_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).iAutoOnTimer</p></td>
+<td><div class="line-block">
 <div class="line">io: input</div>
 </div>
 </td>
@@ -17035,7 +17155,35 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):DISC_ACTIVE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):Auto_On</p></td>
+<td><p>bo</p></td>
+<td><p>$(SYMBOL).xAutoOn</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM TRUE</div>
+<div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):Auto_On_RBV</p></td>
+<td><p>bi</p></td>
+<td><p>$(SYMBOL).xAutoOn</p></td>
+<td><div class="line-block">
+<div class="line">field: ONAM TRUE</div>
+<div class="line">field: ZNAM FALSE</div>
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX):AutoOn_timer_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>$(SYMBOL).iAutoOnTimer</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX):DISC_ACTIVE_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).i_xDisc_Active</p></td>
 <td><div class="line-block">
@@ -17045,7 +17193,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_DIS_DO_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_DIS_DO_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).q_xHV_DIS</p></td>
 <td><div class="line-block">
@@ -17055,7 +17203,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_ON_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_ON_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).i_xHV_ON</p></td>
 <td><div class="line-block">
@@ -17063,7 +17211,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):HV_SW</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):HV_SW</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).xHV_SW</p></td>
 <td><div class="line-block">
@@ -17073,7 +17221,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):HV_SW_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):HV_SW_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xHV_SW</p></td>
 <td><div class="line-block">
@@ -17083,7 +17231,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):ILK_OK_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xILKOk</p></td>
 <td><div class="line-block">
@@ -17093,7 +17241,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):LOGGER</p></td>
+<tr class="row-even"><td><p>$(PREFIX):LOGGER</p></td>
 <td><p>bo</p></td>
 <td><p>$(SYMBOL).xLog</p></td>
 <td><div class="line-block">
@@ -17103,7 +17251,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):LOGGER_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):LOGGER_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xLog</p></td>
 <td><div class="line-block">
@@ -17113,7 +17261,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRESS_AI_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>$(SYMBOL).i_iPRESS_R</p></td>
 <td><div class="line-block">
@@ -17121,7 +17269,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PRESS_OK_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):PRESS_OK_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>$(SYMBOL).xPRESS_OK</p></td>
 <td><div class="line-block">
@@ -17131,7 +17279,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRESS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRESS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).rPRESS</p></td>
 <td><div class="line-block">
@@ -17143,7 +17291,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):PRO_SP</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):PRO_SP</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).rPRO_SP</p></td>
 <td><div class="line-block">
@@ -17156,7 +17304,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):PRO_SP_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):PRO_SP_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).rPRO_SP</p></td>
 <td><div class="line-block">
@@ -17169,7 +17317,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):SP_HYS</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):SP_HYS</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).rHYS_PR</p></td>
 <td><div class="line-block">
@@ -17182,7 +17330,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX):SP_HYS_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).rHYS_PR</p></td>
 <td><div class="line-block">
@@ -17195,7 +17343,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):STATE_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):STATE_RBV</p></td>
 <td><p>mbbi</p></td>
 <td><p>$(SYMBOL).eState</p></td>
 <td><div class="line-block">
@@ -17204,14 +17352,14 @@
 <div class="line">field: ONST GaugeDisconnected</div>
 <div class="line">field: SVST ValidLo</div>
 <div class="line">field: SXST ValidHi</div>
-<div class="line">field: THST Off</div>
+<div class="line">field: THST PressInvalid</div>
 <div class="line">field: TWST OoR</div>
-<div class="line">field: ZRST PressInvalid</div>
+<div class="line">field: ZRST Off</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX):VAC_SP</p></td>
+<tr class="row-even"><td><p>$(PREFIX):VAC_SP</p></td>
 <td><p>ao</p></td>
 <td><p>$(SYMBOL).rVAC_SP</p></td>
 <td><div class="line-block">
@@ -17224,7 +17372,7 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX):VAC_SP_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX):VAC_SP_RBV</p></td>
 <td><p>ai</p></td>
 <td><p>$(SYMBOL).rVAC_SP</p></td>
 <td><div class="line-block">

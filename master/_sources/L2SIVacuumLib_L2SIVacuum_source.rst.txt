@@ -12,11 +12,11 @@ E_PressureState
     TYPE E_PressureState :
     (
     	// Invalid states
-    	PressInvalid,//	 //gc_GaugeValidState - 1,
+    	Off,//	 //gc_GaugeValidState - 1,
     	GaugeDisconnected, //gc_GaugeValidState -2,
     	OoR, //gc_GaugeValidState -6,
     	// Ion gauges
-    	Off, //gc_GaugeValidState - 3,
+    	PressInvalid, //gc_GaugeValidState - 3,
     	Starting, //gc_GaugeValidState - 4
     	
     	//Valid States (Positive)
@@ -749,10 +749,16 @@ ST_PIP
         pv: Auto_On;
     	field: ZNAM FALSE; 
     	field: ONAM TRUE;
+    	io:io;
+        '}
+    	xAutoOn : BOOL:=TRUE;
+
+    	{attribute 'pytmc' := '
+        pv: AutoOn_timer;
     	io:i;
         '}
-    	xAutoOn : BOOL;
-
+    	iAutoOnTimer : INT;
+    	
     	{attribute 'pytmc' := '
     	pv: OVRD_ON ;
     	field: ZNAM Override OFF ;
@@ -1470,10 +1476,10 @@ ST_VG
     	xPRESS_OK: BOOL;
     	{attribute 'pytmc' := '
         pv: STATE;
-    	field: ZRST PressInvalid;
+    	field: ZRST Off;
     	field: ONST GaugeDisconnected;
     	field: TWST OoR;
-    	field: THST Off;
+    	field: THST PressInvalid;
     	field: FRST Starting;
     	field: FVST Valid;
     	field: SXST ValidHi;
@@ -1489,7 +1495,18 @@ ST_VG
     	field: ONAM ON;
         '}
     	xHV_SW: BOOL; // High Voltage Switch from epics
-    	
+    	{attribute 'pytmc' := '
+        pv: Auto_On;
+    	field: ZNAM FALSE; 
+    	field: ONAM TRUE;
+    	io:io;
+        '}
+    	xAutoOn : BOOL := TRUE;
+    	{attribute 'pytmc' := '
+        pv: AutoOn_timer;
+    	io:i;
+        '}
+    	iAutoOnTimer : INT;
     	/// Controls and I/Os
     	{attribute 'pytmc' := '
         pv: PRESS_AI;
@@ -1926,7 +1943,7 @@ Global_Variables
     	
     	
     	 fbGetCurTaskIdx : GETCURTASKINDEX;
-    	 
+    	 TaskInfo:PlcTaskSystemInfo;
 
 
     END_VAR
@@ -3387,6 +3404,9 @@ FB_GaugeBase
     	// For Persistent Data
     	bRestorePersistentData	:	BOOL:=TRUE;
     	stateTimer:TON;
+    	fbGetCurTaskIdx  : GETCURTASKINDEX;
+    	fbWritePersistentData           : WritePersistentData;
+    	tRecover: TON;
     END_VAR
     VAR PERSISTENT
         rVAC_SP	:	REAL;
@@ -4456,6 +4476,7 @@ FB_MKS422
     VAR_INPUT
     		PG	:	ST_VG; // Pirani Gauge Structure used to Interlock the Cold Cathode
     		b937A :BOOL:=FALSE; // True if this gauge is connected to MKS937A controller, False if connected to MKS937B controller
+    		tRecoverDelay:TIME:=T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
     END_VAR
     VAR_OUTPUT
     	{attribute 'pytmc' := '
@@ -4465,20 +4486,25 @@ FB_MKS422
     END_VAR
     VAR
     	rV	:	REAL;
-    	
     	timer:TON;
     	(*IOs to be linked*)
     	/// Controls and I/Os
     	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
     	q_xHV_DIS AT %Q* : BOOL := True; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
-    	stPump: INT;
     END_VAR
     VAR CONSTANT
-    	MinPressure: REAL := 1E-10;
+    	MinPressure: REAL := 1E-11;
+    	vDisconnected : REAL:= 0.18;
+    	vMaxValid : REAL:=9.6;
+    	vMax : REAL:=9.9;
+    	vValidLo:REAL :=0.22;
+    	vMin : REAL:=0.6;
     	cDefaultPressure : REAL := 0;
     END_VAR
     VAR PERSISTENT
     	bWasOn : BOOL;
+    	bAutoRecover:BOOL;
+    	bAutoRecoverWrite:BOOL;
     END_VAR
     (* 937B Logarithmic Output Conversion *)
     (* 5-20-2016, Alex Wallace and Scott Stubbs *)
@@ -4499,17 +4525,20 @@ FB_MKS422
     	
 
     (* Pressure gauge State checks *)
-    IF (rV <=9.6 ) AND (rV>=0.6) THEN
+    IF (rV <= vMaxValid ) AND (rV>=vMin) AND (IG.xHV_SW) THEN
     	IG.eState := Valid; // normal
-    ELSIF rV >= 0.18 AND rV <= 0.22 THEN 
+    ELSIF rV >= vDisconnected AND rV <= vValidLo AND (IG.xHV_SW) THEN 
     	IG.eState := ValidLo; //LO
-    ELSIF rV > 9.6 AND rV<= 9.9 THEN
+    ELSIF rV > vMaxValid AND rV<= vMax AND (IG.xHV_SW) THEN
     	IG.eState := ValidHi; //HIGH
-    ELSIF rV < 0.18 THEN // 
-    	IG.eState := GaugeDisconnected; //not on
+    ELSIF rV < vDisconnected THEN // 
+    	IG.eState := GaugeDisconnected; //other fault - gauge disconnected, controller powering up etc
     	IG.rPRESS :=cDefaultPressure;
-    ELSE
-    	IG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+    ELSIF NOT (IG.xHV_SW) THEN
+    	IG.eState := Off; //not on
+    	IG.rPRESS :=cDefaultPressure;
+    ELSIF IG.rPRESS < MinPressure THEN
+    	IG.eState := PressInvalid; // 
     	IG.rPRESS :=cDefaultPressure;
     END_IF
 
@@ -4537,7 +4566,7 @@ FB_MKS422
 
      
     (* Pressure gauge OK checks *)
-    IG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6);
+    IG.xPRESS_OK := (rV <=vMax ) AND (rV>=vMin);
 
 
     (* Setpoint evaluation *)
@@ -4552,6 +4581,8 @@ FB_MKS422
     (*Load or save the persistent variables*)
     ACT_Persistent();
     timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
+    (*Run Auto Recovery*)
+    ACT_Recover();
 
     END_FUNCTION_BLOCK
     ACTION ACT_Logger:
@@ -4604,6 +4635,9 @@ FB_MKS422
     	IF ( rHYS_PR <> 0) THEN
     		IG.rHYS_PR := rHYS_PR;
     	END_IF;
+    	IF ( bAutoRecoverWrite) THEN
+    		IG.xAutoOn := bAutoRecover;
+    	END_IF;
     END_IF
     (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
     IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
@@ -4617,11 +4651,28 @@ FB_MKS422
     IF NOT (IG.rHYS_PR = rHYS_PR) THEN
     	rHYS_PR:= IG.rHYS_PR;
     END_IF;
+
+    IF NOT(bAutoRecoverWrite) OR NOT (IG.xAutoOn = bAutoRecover) THEN
+    	bAutoRecover := IG.xAutoOn;
+    	bAutoRecoverWrite := TRUE;
+    END_IF;
     stateTimer(PT:=T#10S);
-    IF (ePrevState <> IG.eState) THEN
+    IF (stateTimer.Q) THEN
     	bWasOn := (IG.eState >=Valid );
     	stateTimer.IN := FALSE;
+    	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
     END_IF;
+    END_ACTION
+    ACTION ACT_Recover:
+    fbGetCurTaskIdx();
+    IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+    	tRecover.IN := TRUE;
+    END_IF
+    tRecover(IN:= , PT:=tRecoverDelay);
+    IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
+    	This^.M_Recover();
+    	tRecover.IN := FALSE;
+    END_IF
     END_ACTION
     ACTION IO:
     (*soft link inputs*)
@@ -4631,6 +4682,7 @@ FB_MKS422
     q_xHV_DIS := IG.q_xHV_DIS;
 
     IG.sPath := sPath;
+    IG.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);
     END_ACTION
 
 
@@ -4656,6 +4708,7 @@ FB_MKS500
     VAR_INPUT
     	PG	:	ST_VG;
     	bEP : BOOL :=FALSE; // Set to True if This Gauge is connected to EP BOX and not EL Terminals
+    	tRecoverDelay:TIME:=T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
     END_VAR
     VAR_OUTPUT
     {attribute 'pytmc' := '
@@ -4666,6 +4719,7 @@ FB_MKS500
     VAR
     	rV : REAL;
     	GaugeTurnOnTmr : TON;
+    	tStartupTimer:TON;
     	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
     	(*IOs to be linked*)
     	/// Controls and I/Os
@@ -4674,7 +4728,7 @@ FB_MKS500
     	// only for EL and ES terminal
     	i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1124) ^Input
     	i_xDisc_Active AT %I* : BOOL;// Discharge Current Active // 'TcLinkTo' (EL1124) ^Input
-    	
+    	binit:BOOL:=TRUE;
     END_VAR
 
     VAR CONSTANT
@@ -4691,27 +4745,39 @@ FB_MKS500
     END_VAR
     VAR PERSISTENT
     	bWasOn : BOOL;
+    	bAutoRecover:BOOL;
+    	bAutoRecoverWrite:BOOL;
     END_VAR
+    (*Startup time*)
+    IF (bInit) THEN
+    	tStartupTimer.IN:=TRUE;
+    	bInit :=FALSE;
+    END_IF
+    tStartupTimer(PT:=T#3S);
+
     (* 500 Logarithmic Output Conversion, factory default configuration *)
     If (iTermBits=0) THEN iTermBits := 32767;END_IF
     rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
     (* Set Guage State based on the Analog voltage*)
-    IF rV < vDisconnected THEN
+    IF  NOT (tStartupTimer.Q) THEN // Give time for the gauge controller to start
+    	IG.eState := Off;
+    	IG.rPRESS := cDefaultPressure;
+    ELSIF rV < vDisconnected THEN
     	IG.eState := GaugeDisconnected;
     	IG.rPRESS := cDefaultPressure;
-    ELSIF rV >= vDisconnected AND rV < (vNoDischarge -rDeadband)  THEN
+    ELSIF rV >= vDisconnected AND rV < (vNoDischarge -rDeadband)  AND (IG.xHV_SW) THEN
     	IG.eState := Valid;
     	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-    ELSIF rV >= (vNoDischarge -rDeadband) AND rV <(vGaugeOff -rDeadband)   THEN
+    ELSIF rV >= (vNoDischarge -rDeadband) AND rV <(vGaugeOff -rDeadband) AND (IG.xHV_SW)  THEN
     	IG.eState := Starting;
     	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
     ELSIF rV >= (vGaugeOff -rDeadband) THEN
     	IG.eState := Off;
     	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
     	IG.rPRESS := cDefaultPressure;
-    ELSE
-    	IG.eState := OoR;
+    ELSIF IG.rPRESS < MinPressure THEN
+    	IG.eState := PressInvalid;
     	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
     	IG.rPRESS := cDefaultPressure;
     END_IF
@@ -4767,6 +4833,8 @@ FB_MKS500
     IO();
     (*Load or save the persistent variables*)
     ACT_Persistent();
+    (*Run Auto Recovery*)
+    ACT_Recover();
 
     END_FUNCTION_BLOCK
     ACTION ACT_Logger:
@@ -4820,6 +4888,9 @@ FB_MKS500
     	IF ( rHYS_PR <> 0) THEN
     		IG.rHYS_PR := rHYS_PR;
     	END_IF;
+    	IF ( bAutoRecoverWrite) THEN
+    		IG.xAutoOn := bAutoRecover;
+    	END_IF;
     END_IF
     (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
     IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
@@ -4833,11 +4904,28 @@ FB_MKS500
     IF NOT (IG.rHYS_PR = rHYS_PR) THEN
     	rHYS_PR:= IG.rHYS_PR;
     END_IF;
+
+    IF NOT(bAutoRecoverWrite) OR NOT (bAutoRecover = IG.xAutoOn) THEN
+    	bAutoRecover := IG.xAutoOn;
+    	bAutoRecoverWrite := TRUE;
+    END_IF;
     stateTimer(PT:=T#10S);
-    IF (ePrevState <> IG.eState) THEN
+    IF (stateTimer.Q) THEN
     	bWasOn := (IG.eState >=Valid );
     	stateTimer.IN := FALSE;
+    	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
     END_IF;
+    END_ACTION
+    ACTION ACT_Recover:
+    fbGetCurTaskIdx();
+    IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+    	tRecover.IN := TRUE;
+    END_IF
+    tRecover(IN:= , PT:=tRecoverDelay);
+    IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
+    	This^.M_Recover();
+    	tRecover.IN := FALSE;
+    END_IF
     END_ACTION
     ACTION IO:
     (*soft link inputs*)
@@ -4848,6 +4936,7 @@ FB_MKS500
     q_xHV_DIS := IG.q_xHV_DIS;
 
     IG.sPath := sPath;
+    IG.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);
     END_ACTION
 
 
@@ -5447,6 +5536,7 @@ FB_PIP_Gamma
     VAR_INPUT
     	i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock
         i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum interlock logic*) 
+    	tRecoverDelay:TIME:=T#900S; (*Delay Time after the first cycle to start the device. Default is 900S*)
     END_VAR
     VAR_OUTPUT
     	{attribute 'pytmc' := '
@@ -5482,6 +5572,9 @@ FB_PIP_Gamma
     	{attribute 'instance-path'}
     	{attribute 'noinit'}
     	sPath: STRING;
+    	fbGetCurTaskIdx  : GETCURTASKINDEX;
+    	fbWritePersistentData           : WritePersistentData;
+    	tRecover: TON;
     END_VAR
     VAR CONSTANT
     	 rDefaultHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
@@ -5489,6 +5582,8 @@ FB_PIP_Gamma
     VAR PERSISTENT
     	rHVEna_SP : REAL;
     	bWasOn : BOOL;
+    	bAutoRecover:BOOL;
+    	bAutoRecoverWrite:BOOL;
     END_VAR
     (* Does Gamma Ion pump HV interlock. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
 
@@ -5502,9 +5597,7 @@ FB_PIP_Gamma
 
     (* Enable HV *)
     IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
-    	IF (stPump.xAutoOn) AND NOT (stPump.q_xHVEna_DO) THEN  stPump.q_xHVEna_DO := TRUE;
-    	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));  
-    	END_IF
+    	stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));  
     	stPump.xILKOk:= TRUE;
     ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN 
     	IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
@@ -5561,6 +5654,8 @@ FB_PIP_Gamma
     ACT_Logger();
     (*Load or save the persistent variables*)
     ACT_Persistent();
+    (*Run Auto Recovery*)
+    ACT_Recover();
 
     END_FUNCTION_BLOCK
     ACTION ACT_IlkOverride:
@@ -5628,16 +5723,35 @@ FB_PIP_Gamma
     	IF (rHVEna_SP <> 0) THEN
     		stPump.rHVEna_SP := rHVEna_SP;
     	END_IF;
+    	IF ( bAutoRecoverWrite) THEN
+    		stPump.xAutoOn := bAutoRecover;
+    	END_IF;
     END_IF
     (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
     IF NOT (stPump.rHVEna_SP = rHVEna_SP) THEN
     	rHVEna_SP := stPump.rHVEna_SP;
     END_IF;
+    IF NOT(bAutoRecoverWrite) OR NOT (stPump.xAutoOn = bAutoRecover) THEN
+    	bAutoRecover := stPump.xAutoOn;
+    	bAutoRecoverWrite := TRUE;
+    END_IF;
     stateTimer(PT:=T#10S);
     IF (stateTimer.Q) THEN
     	bWasOn := (stPump.eState = pumpRUNNING);
     	stateTimer.IN := FALSE;
+    	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
     END_IF;
+    END_ACTION
+    ACTION ACT_Recover:
+    fbGetCurTaskIdx();
+    IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+    	tRecover.IN := TRUE;
+    END_IF
+    tRecover(IN:= , PT:=tRecoverDelay);
+    IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
+    	This^.M_Recover();
+    	tRecover.IN := FALSE;
+    END_IF
     END_ACTION
     ACTION ACT_SetGauge:
     (*MG*)
@@ -5676,6 +5790,7 @@ FB_PIP_Gamma
     q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function
 
      This^.stPump.sPath:= sPath;
+     stPump.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);
     END_ACTION
 
 
@@ -8395,7 +8510,6 @@ FB_VCN
     	ELSIF iq_stVCN.eValveControl = PressureControl THEN
     		IF (i_xPurge) THEN
     		iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, 100); 
-    		i_xPurge := FALSE;
     		ELSE iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, iq_stVCN.rUpperLimit); 
     		END_IF
     	END_IF
