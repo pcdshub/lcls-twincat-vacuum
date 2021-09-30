@@ -54,28 +54,10 @@ IF xFirstPass THEN
 END_IF
 
 
-
-
-///Check valve position
-(*IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
-	iq_stValve.eState:=INVALID;
-ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND iq_stValve.q_xOPN_DO THEN 
-	iq_stValve.eState:=OPEN;
-ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
-	iq_stValve.eState:=OPEN_F;
-ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xOPN_DO THEN 
-	iq_stValve.eState:=CLOSED;
-ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
-	iq_stValve.eState:=MOVING;
-ELSE
-	iq_stValve.eState:=INVALID;
-END_IF
-*)
-
 IF NOT iq_stValve.i_xClsLS AND iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=OPEN;
 ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.q_xOPN_DO THEN 
-	iq_stValve.eState:=OPEN_F;
+	iq_stValve.eState:=INVALID;
 ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.q_xOPN_DO THEN 
 	iq_stValve.eState:=CLOSED;
 ELSIF iq_stValve.i_xClsLS AND iq_stValve.q_xOPN_DO THEN 
@@ -227,9 +209,7 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VRC_NC_ClsLS">
-      <LineId Id="3" Count="16" />
-      <LineId Id="224" Count="1" />
-      <LineId Id="20" Count="7" />
+      <LineId Id="3" Count="8" />
       <LineId Id="268" Count="0" />
       <LineId Id="271" Count="5" />
       <LineId Id="282" Count="0" />
