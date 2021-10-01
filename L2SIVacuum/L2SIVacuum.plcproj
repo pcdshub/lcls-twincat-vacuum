@@ -325,6 +325,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VRC_NC_ClsLS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VRC_NO.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
