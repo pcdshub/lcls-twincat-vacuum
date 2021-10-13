@@ -2088,6 +2088,50 @@ Related:
     * `ST_VG`_
 
 
+F_TurboExtILK_TOF
+^^^^^^^^^^^^^^^^^
+
+::
+
+    (* This function evaluates the Turbo ILK logic when no isolation valve between turbo and chamber and no gauge between roughing valve and turbo to measuring turbo backing pressure*)
+    (* The Turbo shall not Run if the scroll pump is not running*)
+    (* The function switches off the Turbo if the Inlet pressure or the backing Pressure*)
+    (* are higher than the configured set point*)
+    (* The Turbo shall not Run if the roughing valve is closed, add delay timer to keep turbo running for a short period after roughing valve closed *)
+
+    FUNCTION F_TurboExtILK_TOF : BOOL
+    VAR_INPUT
+    	Turbo		   :	ST_PTM;
+    	BackingGauge   :	ST_VG;
+    	InletGauge     :	ST_VG;
+    	ScrollPump	   :	ST_RoughPump;
+    	RoughingValve  : ST_VRC;
+    	
+    	tDelay : TIME;
+    END_VAR
+    VAR
+    	tofDelay : TOF;
+    	bValveOpenILK : BOOL; 
+    END_VAR
+    tofDelay.IN :=RoughingValve.i_xOpnLS OR (Turbo.eState = pumpSTOPPED); // Start timer when valve closes (IN goes low)
+    tofDelay.PT := tDelay;
+    tofDelay();
+    bValveOpenILK := tofDelay.Q; 
+
+    F_TurboExtILK_TOF := ( ScrollPump.q_xRunDo and ScrollPump.eState = pumpRUNNING ) 
+                          AND (InletGauge.xPRESS_OK and InletGauge.rPRESS < Turbo.rInletPressureSP) AND (BackingGauge.xPRESS_OK and BackingGauge.rPRESS < Turbo.rBackingPressureSP) 
+                              AND bValveOpenILK;
+
+    END_FUNCTION
+
+
+Related:
+    * `ST_PTM`_
+    * `ST_RoughPump`_
+    * `ST_VG`_
+    * `ST_VRC`_
+
+
 F_TurboExtILKLogic
 ^^^^^^^^^^^^^^^^^^
 
