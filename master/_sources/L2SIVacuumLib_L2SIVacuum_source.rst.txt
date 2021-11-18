@@ -2120,7 +2120,7 @@ F_TurboExtILK_TOF
 
     F_TurboExtILK_TOF := ( ScrollPump.q_xRunDo and ScrollPump.eState = pumpRUNNING ) 
                           AND (InletGauge.xPRESS_OK and InletGauge.rPRESS < Turbo.rInletPressureSP) AND (BackingGauge.xPRESS_OK and BackingGauge.rPRESS < Turbo.rBackingPressureSP) 
-                              AND bValveOpenILK;
+                              OR bValveOpenILK;
 
     END_FUNCTION
 
@@ -11249,6 +11249,26 @@ FB_VRC_DA
     iq_stValve.q_xCLS_DO  := (i_CLS_OK AND iq_stValve.pv_xCLS_SW AND NOT iq_stValve.pv_xOPN_SW) OR (tonOvrd.Q AND iq_stValve.pv_xOvrdCls AND i_xOverrideMode);
     iq_stValve.q_xOPN_DO  := (i_OPN_OK AND iq_stValve.pv_xOPN_SW AND NOT iq_stValve.pv_xCLS_SW) OR (tonOvrd.Q AND iq_stValve.pv_xOvrdOpn AND i_xOverrideMode) ;
 
+    (*evaluate Valve open external interlock*)
+
+    IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
+    	iq_stValve.pv_xOPN_SW := FALSE;
+    	iq_stValve.eVGC_State := ERR_ExtFault;
+    END_IF
+
+    IF (iq_stValve.q_xOPN_DO) AND (iq_stValve.xOPN_OK) THEN
+    	iq_stValve.eVGC_State := AtVacuum;
+    END_IF
+    	
+    IF NOT iq_stValve.xCLS_OK and NOT tonOvrd.Q THEN
+    	iq_stValve.pv_xCLS_SW := FALSE;
+    	iq_stValve.eVGC_State := ERR_ExtFault;
+    END_IF
+
+    IF (iq_stValve.q_xCLS_DO) AND (iq_stValve.xCLS_OK) THEN
+    	iq_stValve.eVGC_State := AtVacuum;
+    END_IF
+
 
     (*Reset the Control signal when command has been executed and give time to ensure the actuator is fully seated in either direction*)
     (* for pulse control*)
@@ -11261,9 +11281,11 @@ FB_VRC_DA
     IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
     	iq_stValve.bErrorPresent := TRUE;
     	iq_stValve.sErrorMessage := ' Close Timeout';
+
     ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
     	iq_stValve.bErrorPresent := TRUE; 
     	iq_stValve.sErrorMessage := ' Open Timeout';
+
     END_IF
     IF (iq_stValve.eState=INVALID) THEN
     	iq_stValve.bErrorPresent := TRUE; 
@@ -11272,7 +11294,7 @@ FB_VRC_DA
 
     (*Timers*)
     tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
-    tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
+    tCLStimeout(IN:= iq_stValve.q_xCLS_DO, PT := tTimeOutDuration);
     tCLSLimitSwitch(IN:= iq_stValve.i_xClsLS, PT := tLimitSwitchLatchDuration);
     tOPNLimitSwitch(IN:= iq_stValve.i_xOpnLS, PT := tLimitSwitchLatchDuration);
 

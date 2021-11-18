@@ -2281,7 +2281,7 @@ END_TYPE
 
 <span class="n">F_TurboExtILK_TOF</span> <span class="o">:=</span> <span class="p">(</span> <span class="n">ScrollPump</span><span class="o">.</span><span class="n">q_xRunDo</span> <span class="ow">and</span> <span class="n">ScrollPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">pumpRUNNING</span> <span class="p">)</span>
                       <span class="n">AND</span> <span class="p">(</span><span class="n">InletGauge</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="ow">and</span> <span class="n">InletGauge</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;</span> <span class="n">Turbo</span><span class="o">.</span><span class="n">rInletPressureSP</span><span class="p">)</span> <span class="n">AND</span> <span class="p">(</span><span class="n">BackingGauge</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="ow">and</span> <span class="n">BackingGauge</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;</span> <span class="n">Turbo</span><span class="o">.</span><span class="n">rBackingPressureSP</span><span class="p">)</span>
-                          <span class="n">AND</span> <span class="n">bValveOpenILK</span><span class="p">;</span>
+                          <span class="n">OR</span> <span class="n">bValveOpenILK</span><span class="p">;</span>
 
 <span class="n">END_FUNCTION</span>
 </pre></div>
@@ -11402,6 +11402,26 @@ END_ACTION
 <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xCLS_DO</span>  <span class="o">:=</span> <span class="p">(</span><span class="n">i_CLS_OK</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xCLS_SW</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOPN_SW</span><span class="p">)</span> <span class="n">OR</span> <span class="p">(</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOvrdCls</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">);</span>
 <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span>  <span class="o">:=</span> <span class="p">(</span><span class="n">i_OPN_OK</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOPN_SW</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xCLS_SW</span><span class="p">)</span> <span class="n">OR</span> <span class="p">(</span><span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOvrdOpn</span> <span class="n">AND</span> <span class="n">i_xOverrideMode</span><span class="p">)</span> <span class="p">;</span>
 
+<span class="p">(</span><span class="o">*</span><span class="n">evaluate</span> <span class="n">Valve</span> <span class="nb">open</span> <span class="n">external</span> <span class="n">interlock</span><span class="o">*</span><span class="p">)</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">xOPN_OK</span> <span class="ow">and</span> <span class="n">NOT</span> <span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOPN_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eVGC_State</span> <span class="o">:=</span> <span class="n">ERR_ExtFault</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="n">IF</span> <span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span><span class="p">)</span> <span class="n">AND</span> <span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">xOPN_OK</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eVGC_State</span> <span class="o">:=</span> <span class="n">AtVacuum</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">xCLS_OK</span> <span class="ow">and</span> <span class="n">NOT</span> <span class="n">tonOvrd</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xCLS_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eVGC_State</span> <span class="o">:=</span> <span class="n">ERR_ExtFault</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="n">IF</span> <span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xCLS_DO</span><span class="p">)</span> <span class="n">AND</span> <span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">xCLS_OK</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eVGC_State</span> <span class="o">:=</span> <span class="n">AtVacuum</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
 
 <span class="p">(</span><span class="o">*</span><span class="n">Reset</span> <span class="n">the</span> <span class="n">Control</span> <span class="n">signal</span> <span class="n">when</span> <span class="n">command</span> <span class="n">has</span> <span class="n">been</span> <span class="n">executed</span> <span class="ow">and</span> <span class="n">give</span> <span class="n">time</span> <span class="n">to</span> <span class="n">ensure</span> <span class="n">the</span> <span class="n">actuator</span> <span class="ow">is</span> <span class="n">fully</span> <span class="n">seated</span> <span class="ow">in</span> <span class="n">either</span> <span class="n">direction</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span> <span class="k">for</span> <span class="n">pulse</span> <span class="n">control</span><span class="o">*</span><span class="p">)</span>
@@ -11414,9 +11434,11 @@ END_ACTION
 <span class="n">IF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span> <span class="n">AND</span> <span class="n">tCLStimeout</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
     <span class="n">iq_stValve</span><span class="o">.</span><span class="n">bErrorPresent</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
     <span class="n">iq_stValve</span><span class="o">.</span><span class="n">sErrorMessage</span> <span class="o">:=</span> <span class="s1">&#39; Close Timeout&#39;</span><span class="p">;</span>
+
 <span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">AND</span> <span class="n">tOPNtimeout</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
     <span class="n">iq_stValve</span><span class="o">.</span><span class="n">bErrorPresent</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
     <span class="n">iq_stValve</span><span class="o">.</span><span class="n">sErrorMessage</span> <span class="o">:=</span> <span class="s1">&#39; Open Timeout&#39;</span><span class="p">;</span>
+
 <span class="n">END_IF</span>
 <span class="n">IF</span> <span class="p">(</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="o">=</span><span class="n">INVALID</span><span class="p">)</span> <span class="n">THEN</span>
     <span class="n">iq_stValve</span><span class="o">.</span><span class="n">bErrorPresent</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
@@ -11425,7 +11447,7 @@ END_ACTION
 
 <span class="p">(</span><span class="o">*</span><span class="n">Timers</span><span class="o">*</span><span class="p">)</span>
 <span class="n">tOPNtimeout</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tTimeOutDuration</span> <span class="p">);</span>
-<span class="n">tCLStimeout</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">NOT</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xOPN_DO</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tTimeOutDuration</span><span class="p">);</span>
+<span class="n">tCLStimeout</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">q_xCLS_DO</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tTimeOutDuration</span><span class="p">);</span>
 <span class="n">tCLSLimitSwitch</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xClsLS</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tLimitSwitchLatchDuration</span><span class="p">);</span>
 <span class="n">tOPNLimitSwitch</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">i_xOpnLS</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">tLimitSwitchLatchDuration</span><span class="p">);</span>
 
