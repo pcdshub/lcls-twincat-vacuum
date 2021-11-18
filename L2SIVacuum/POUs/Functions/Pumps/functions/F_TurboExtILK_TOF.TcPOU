@@ -32,7 +32,7 @@ bValveOpenILK := tofDelay.Q;
 
 F_TurboExtILK_TOF := ( ScrollPump.q_xRunDo and ScrollPump.eState = pumpRUNNING ) 
                       AND (InletGauge.xPRESS_OK and InletGauge.rPRESS < Turbo.rInletPressureSP) AND (BackingGauge.xPRESS_OK and BackingGauge.rPRESS < Turbo.rBackingPressureSP) 
-                          AND bValveOpenILK;]]></ST>
+                          OR bValveOpenILK;]]></ST>
     </Implementation>
     <LineIds Name="F_TurboExtILK_TOF">
       <LineId Id="23" Count="0" />

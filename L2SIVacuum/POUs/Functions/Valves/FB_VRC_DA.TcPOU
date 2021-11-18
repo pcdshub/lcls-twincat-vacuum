@@ -102,6 +102,26 @@ tonOvrd(IN:=(iq_stValve.pv_xOvrdOpn OR iq_stValve.pv_xOvrdCls), PT:=tOvrd);
 iq_stValve.q_xCLS_DO  := (i_CLS_OK AND iq_stValve.pv_xCLS_SW AND NOT iq_stValve.pv_xOPN_SW) OR (tonOvrd.Q AND iq_stValve.pv_xOvrdCls AND i_xOverrideMode);
 iq_stValve.q_xOPN_DO  := (i_OPN_OK AND iq_stValve.pv_xOPN_SW AND NOT iq_stValve.pv_xCLS_SW) OR (tonOvrd.Q AND iq_stValve.pv_xOvrdOpn AND i_xOverrideMode) ;
 
+(*evaluate Valve open external interlock*)
+
+IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
+	iq_stValve.pv_xOPN_SW := FALSE;
+	iq_stValve.eVGC_State := ERR_ExtFault;
+END_IF
+
+IF (iq_stValve.q_xOPN_DO) AND (iq_stValve.xOPN_OK) THEN
+	iq_stValve.eVGC_State := AtVacuum;
+END_IF
+	
+IF NOT iq_stValve.xCLS_OK and NOT tonOvrd.Q THEN
+	iq_stValve.pv_xCLS_SW := FALSE;
+	iq_stValve.eVGC_State := ERR_ExtFault;
+END_IF
+
+IF (iq_stValve.q_xCLS_DO) AND (iq_stValve.xCLS_OK) THEN
+	iq_stValve.eVGC_State := AtVacuum;
+END_IF
+
 
 (*Reset the Control signal when command has been executed and give time to ensure the actuator is fully seated in either direction*)
 (* for pulse control*)
@@ -114,9 +134,11 @@ END_IF
 IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE;
 	iq_stValve.sErrorMessage := ' Close Timeout';
+
 ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
 	iq_stValve.bErrorPresent := TRUE; 
 	iq_stValve.sErrorMessage := ' Open Timeout';
+
 END_IF
 IF (iq_stValve.eState=INVALID) THEN
 	iq_stValve.bErrorPresent := TRUE; 
@@ -125,7 +147,7 @@ END_IF
 
 (*Timers*)
 tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tTimeOutDuration );
-tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
+tCLStimeout(IN:= iq_stValve.q_xCLS_DO, PT := tTimeOutDuration);
 tCLSLimitSwitch(IN:= iq_stValve.i_xClsLS, PT := tLimitSwitchLatchDuration);
 tOPNLimitSwitch(IN:= iq_stValve.i_xOpnLS, PT := tLimitSwitchLatchDuration);
 
@@ -228,5 +250,43 @@ END_VAR
 This^.iq_stValve.pv_xCLS_SW := NOT (value);]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VRC_DA">
+      <LineId Id="3" Count="50" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="147" Count="8" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="156" Count="6" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="55" Count="11" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="67" Count="2" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="70" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_DA.ACT_IO">
+      <LineId Id="2" Count="7" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_DA.ACT_Logger">
+      <LineId Id="2" Count="32" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_DA.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_DA.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_DA.M_Set_CLS_SW">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_DA.M_Set_OPN_SW">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
