@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+  <POU Name="FB_VCN_VAT590" Id="{4758ecab-cc0c-4c37-8981-9d3a1c0c082a}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function implements the Basic functions for the VAT590 needle valve*)
+FUNCTION_BLOCK FB_VCN_VAT590 EXTENDS FB_Valve
+VAR_INPUT
+	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
+	i_ReqPos	:	REAL; //Requested position
+	i_xPurge	: BOOL:= FALSE;// When purge is set the maximum threshold is ignored, has to be set evey cycle.
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv:
+	'}
+	iq_stVCN	:	ST_VCN; //Needle valve structure
+END_VAR
+VAR CONSTANT
+	rOpenPosition	:	REAL := 100000.0;   // Default upper scale value
+	rClosePosition	:	REAL := 0.0;        // Default lower scale value
+END_VAR
+VAR
+	{attribute 'pytmc' := '
+	pv: POS_AO;
+	io: i ;
+	'}
+	rReqPosition: REAL := 0;
+ 
+	(*VAT590 Ethercat IO Interface*)
+	q_iRawPosition AT %Q* :DINT; //connect to Ethercat interface
+	
+	i_iRawPosition AT %I* :DINT; //connect to Ethercat interface
+
+END_VAR
+VAR PERSISTENT
+    rUpperLimit	:	REAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Needle valve control FB
+J. Govednik 2021-11-22
+
+This FB should be used as a low level control block.
+
+It provides:
+
+Valve position ceiling
+Interlock
+Scaling
+
+It is not intended for:
+Closed-loop control
+
+It could be used for:
+Valve position/flow linearization
+*)
+
+
+iq_stVCN.rUpperLimit :=  LIMIT(0, iq_stVCN.rUpperLimit, 100);
+
+// Interlocking
+iq_stVCN.xIlkOK := i_xExtIlkOK;
+(*Checking which Control mode is selected*)
+IF iq_stVCN.xIlkOK THEN
+	IF iq_stVCN.eValveControl = OpenValve THEN
+		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;(*Percentage*)
+	ELSIF iq_stVCN.eValveControl = CloseValve THEN
+		iq_stVCN.rReqPosition := 0; (*Percentage*)
+	ELSIF (iq_stVCN.eValveControl = ManualControl) (*AND (iq_stVCN.xOPN_SW)*) THEN
+		iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
+	ELSIF iq_stVCN.eValveControl = PressureControl THEN
+		IF (i_xPurge) THEN
+			iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, 100); 
+		ELSE 
+			iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, iq_stVCN.rUpperLimit); 
+		END_IF
+	END_IF
+ELSE
+	iq_stVCN.rReqPosition := 0;
+	iq_stVCN.eValveControl := CloseValve;
+END_IF
+
+// Requested Position calculation
+rReqPosition := iq_stVCN.rReqPosition * (rOpenPosition-rClosePosition)/100 + rClosePosition;
+rReqPosition := LIMIT(rClosePosition, rReqPosition, rOpenPosition); //The requested position should remain within this range
+//Raw position calc
+iq_stvcn.q_iRawPosition := REAL_TO_INT(rReqPosition/1000);
+
+(*Soft IO Mapping*)
+ACT_IO();
+
+(*Load or save the persistent variables*)
+ACT_Persistent();
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_IO" Id="{9a4e6f74-514f-4f01-ac56-ae7213c7582f}">
+      <Implementation>
+        <ST><![CDATA[(*outputs*)
+q_iRawPosition := REAL_TO_DINT(rReqPosition);
+(*inputs*)
+iq_stVCN.i_iPosition := DINT_TO_REAL(i_iRawPosition);]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Logger" Id="{e05977be-b3df-4692-b1e1-f426b01665a8}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+
+IF NOT (iq_stVCN.xIlkOK ) AND NOT(ePrevState = CloseValve) THEN
+ 		fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+//Control STATE Logger  
+IF ePrevState <> iq_stVCN.eValveControl THEN
+	  CASE iq_stVCN.eValveControl OF
+		ManualControl:
+			fbLogger(sMsg:='Valve in manual control mode', eSevr:=TcEventSeverity.Warning);
+		OpenValve:
+			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+		PressureControl:
+			fbLogger(sMsg:='Valve in pressure control mode.', eSevr:=TcEventSeverity.Info);
+		CloseValve:
+			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stVCN.eValveControl;  
+  END_IF
+ 
+
+// Log valve open
+tAction(CLK:= (iq_stVCN.eValveControl = OpenValve) );
+IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEventSeverity.Info); END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{e5168615-6ef3-4946-b318-5dac9816d744}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (bRestorePersistentData) THEN
+	bRestorePersistentData	:= FALSE;
+	IF (rUpperLimit <> 0) THEN
+		iq_stVCN.rUpperLimit := rUpperLimit;
+	END_IF;
+	
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stVCN.rUpperLimit = rUpperLimit) THEN
+	rUpperLimit := iq_stVCN.rUpperLimit;
+	//fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
+ELSE
+     // fbWritePersistentData( START:=FALSE);
+END_IF;]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_SetThrottle" Id="{bc87ba94-efcb-4d7b-ace0-cb07482f478f}">
+      <Declaration><![CDATA[METHOD M_SetThrottle : BOOL
+VAR_INPUT
+	rUpperLimit	:	REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+iq_stVCN.rUpperLimit := LIMIT(0, rUpperLimit, 100);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_ValveControl" Id="{25066385-eb5f-47fb-8ac4-a5fcdc50740f}">
+      <Declaration><![CDATA[METHOD M_ValveControl : BOOL
+VAR_INPUT
+	state:E_VCN; // Close, Open, Pressure, Manual
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stVCN.eValveControl := state;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

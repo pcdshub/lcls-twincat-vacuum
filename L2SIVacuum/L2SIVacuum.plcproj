@@ -313,6 +313,9 @@
     <Compile Include="POUs\Functions\Valves\FB_Valve.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VCN_VAT590.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VFS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
