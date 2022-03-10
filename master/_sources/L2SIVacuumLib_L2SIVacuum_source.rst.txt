@@ -2450,6 +2450,7 @@ FB_901_ECAT
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Init:
     IF (bInit) THEN
     	bInit := False;
@@ -2458,9 +2459,11 @@ FB_901_ECAT
     	// value 0x00A10000 SDO index 0xf840, si 0x01 UDINT
     END_IF
     END_ACTION
+
     ACTION ACT_IO:
     PG.i_iPRESS_R := REAL_TO_INT(i_iPRESS_R);
     END_ACTION
+
     ACTION ACT_Logger:
     //STATE Logger  
     IF ePrevState <> PG.eState THEN
@@ -2535,9 +2538,17 @@ FB_972
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
     END_ACTION
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -2616,9 +2627,11 @@ FB_9XX
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
     END_ACTION
+
     ACTION ACT_Logger:
     //STATE Logger  
     IF ePrevState <> PG.eState THEN
@@ -2641,6 +2654,13 @@ FB_9XX
     	  ePrevState := PG.eState;  
       END_IF
     END_ACTION
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -2828,6 +2848,7 @@ FB_CCM501
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     // ILK logger
     IF (IG.xLog) THEN
@@ -2865,6 +2886,7 @@ FB_CCM501
     	  END_IF
     END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -2892,6 +2914,7 @@ FB_CCM501
     	rHYS_PR:= IG.rHYS_PR;
     END_IF;
     END_ACTION
+
     ACTION IO:
     (*soft link inputs*)
     IG.i_iPRESS_R:=	i_iPRESS_R; 
@@ -2902,6 +2925,20 @@ FB_CCM501
 
     IG.sPath := sPath;
     END_ACTION
+
+    METHOD M_HVE : BOOL
+    VAR_INPUT
+    		enable:bool; // set to true to enable, false to disable;
+    END_VAR
+    this^.IG.xHV_SW:= enable;
+    END_METHOD
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -2966,9 +3003,17 @@ FB_CMR362
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
     END_ACTION
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -3079,6 +3124,7 @@ FB_CVM201
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     //STATE Logger  
     if (PG.xLog) THEN
@@ -3103,6 +3149,7 @@ FB_CVM201
       END_IF 
     END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -3116,10 +3163,18 @@ FB_CVM201
     	rVAC_SP:= PG.rVAC_SP;
     END_IF;
     END_ACTION
+
     ACTION IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
     PG.sPath := sPath;
     END_ACTION
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -3224,6 +3279,7 @@ FB_EbaraDryPump
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*Outputs*)
     q_xMPStart	:= stPump.q_xMPStart;
@@ -3239,6 +3295,7 @@ FB_EbaraDryPump
     StPump.xErr := NOT(i_xAlarmOK);
     stPump.i_xRemote:= i_xRemote;
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
     IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
@@ -3345,6 +3402,7 @@ FB_EbaraEVA
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     stPump.i_xAlarmOK:=	i_xAlarmOK;
     stPump.xErr:=	NOT(i_xAlarmOK);
@@ -3353,6 +3411,7 @@ FB_EbaraEVA
     q_xRunDo:=stPump.q_xRunDo;
     q_xRemote:= stPump.q_xRemote;
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
     IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
@@ -3504,6 +3563,7 @@ FB_GaugeModbus
     A_ReadMB();
 
     END_FUNCTION_BLOCK
+
     ACTION A_ReadMB:
     (*Credit to Alex Wallace*)
     (* Modbus Info for Koyo
@@ -3567,6 +3627,31 @@ FB_GaugeModbus
     END_IF
     END_ACTION
 
+    METHOD M_GetBit : BOOL
+    VAR_INPUT
+    	iIndex:INT;
+    	iBit:INT;
+    END_VAR
+    Case iBit OF
+    	nZero: 
+    		M_GetBit:=i_PLC_nBits[iIndex].nZero;
+    	nOne: 
+    		M_GetBit:=i_PLC_nBits[iIndex].nOne;
+    	nTwo: 
+    		M_GetBit:=i_PLC_nBits[iIndex].nTwo;
+    	nThree: 
+    		M_GetBit:=i_PLC_nBits[iIndex].nThree;
+    	nFour: 
+    		M_GetBit:=i_PLC_nBits[iIndex].nFour;
+    	nFive: 
+    		M_GetBit:=i_PLC_nBits[iIndex].nFive;
+    	nSix: 
+    		M_GetBit:=i_PLC_nBits[iIndex].nSix;
+    	nSeven: 
+    		M_GetBit:=i_PLC_nBits[iIndex].nSeven;
+    END_CASE
+    END_METHOD
+
 
 Related:
     * `FB_GaugeBase`_
@@ -3598,11 +3683,170 @@ FB_GCC_Test
 
     END_FUNCTION_BLOCK
 
+    METHOD M_CheckRange
+    VAR
+    	Expected:REAL;
+    	Actual:REAL;
+    	eStateExpected: E_PressureState;
+    	eStateActual: E_PressureState;
+    END_VAR
+    TEST('Check_Range');
+    Case This^.cycle of
+    	12:
+    	This^.i_iPRESS_R :=  V_TO_INT(0.61);
+    	This^.PG.rPRESS := 1E-4;
+    	This^.PG.xPRESS_OK := True;
+    	fb_MKS422.M_HVE(TRUE);
+    	
+    	15:
+    	TEST('MKS422_Range_937B');
+    	Expected :=1E-11 ;
+    	eStateExpected := Valid;
+    	Actual := This^.fb_MKS422.IG.rPRESS;
+    	eStateActual := This^.fb_MKS422.IG.eState;
+    	AssertTrue(This^.fb_MKS422.IG.xPRESS_OK, 'MKS422B xPRESS_OK is set to False');
+    	AssertEquals(eStateExpected,eStateActual,'MKS422B eState Fail');
+    	AssertEquals_REAL(Expected, Actual,1E-12, 'MKS422B rPress Fail');
+    	TEST_FINISHED_NAMED('MKS422_Range_937B');
+    	
+    	16:
+    	This^.i_iPRESS_R := V_TO_INT(2.4);
+    	This^.fb_MKS422.b937A:=TRUE;
+    	
+    	20:
+    	TEST('MKS422_Range_937A');
+    	Expected :=1E-8 ;
+    	Actual := This^.fb_MKS422.IG.rPRESS;
+    	eStateExpected := Valid;
+    	eStateActual := This^.fb_MKS422.IG.eState;
+    	AssertTrue(This^.fb_MKS422.IG.xPRESS_OK, 'MKS422A xPRESS_OK is set to False');
+    	AssertEquals(eStateExpected,eStateActual,'MKS422A eState Fail');
+    	AssertEquals_REAL(Expected, Actual,1E-9, 'MKS422A rPress Fail');
+    	TEST_FINISHED_NAMED('MKS422_Range_937A');
+
+    	
+    	21:
+    	This^.i_iPRESS_R :=  V_TO_INT(0.1);  
+    	
+    	
+    	24:
+    	TEST('MKS422_Range_Off');
+    	Expected :=0 ;
+    	eStateExpected := GaugeDisconnected;
+    	Actual := This^.fb_MKS422.IG.rPRESS;
+    	eStateActual := This^.fb_MKS422.IG.eState;
+    	AssertFalse(This^.fb_MKS422.IG.xPRESS_OK, 'MKS422A xPRESS_OK is set to True');
+    	AssertEquals(eStateExpected,eStateActual,'MKS422A eState Fail');
+    	AssertEquals_REAL(Expected, Actual,1, 'MKS422A rPress Fail');
+    	TEST_FINISHED_NAMED('MKS422_Range_Off');
+
+    	
+    	25:
+    	This^.i_iPRESS_R :=  V_TO_INT(10); 
+    	
+    	
+    	29:
+    	TEST('MKS422_Range_Invalid');
+    	Expected :=0 ;
+    	eStateExpected := PressInvalid;
+    	Actual := This^.fb_MKS422.IG.rPRESS;
+    	eStateActual := This^.fb_MKS422.IG.eState;
+    	AssertFalse(This^.fb_MKS422.IG.xPRESS_OK, 'MKS422A xPRESS_OK is set to True');
+    	AssertEquals(eStateExpected,eStateActual,'MKS422A eState Fail');
+    	AssertEquals_REAL(Expected, Actual,1, 'MKS422A rPress Fail');
+    	TEST_FINISHED_NAMED('MKS422_Range_Invalid');
+    	TEST_FINISHED_NAMED('Check_Range');
+
+    END_CASE
+
+    This^.fb_MKS422(PG:=This^.PG, IG=>);
+    END_METHOD
+
+    METHOD M_INIT
+    VAR
+    END_VAR
+    TEST('MKS422_Startup');
+    This^.PG.rPRESS := 1E-4;
+    This^.PG.xPRESS_OK := TRUE;
+    This^.fb_MKS422(PG:=This^.PG, IG=>);
+    IF( cycle = 3) THEN
+    	AssertFalse(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to True');
+    	AssertTrue(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to False');
+    	TEST_FINISHED_NAMED('MKS422_Startup');
+    End_IF;
+    END_METHOD
+
+    METHOD M_Interlock
+    VAR_INPUT
+    END_VAR
+    TEST('MKS422_Interlock_Active');
+    TEST('MKS422_Interlock_OK');
+    TEST('MKS422_Interlock_Lost');
+
+    Case cycle of
+    	1:
+    	This^.PG.rPRESS := 1E-1;
+    	This^.PG.xPRESS_OK := TRUE;
+    	fb_MKS422.M_HVE(TRUE);
+    	
+    	3:
+    	AssertFalse(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to True');
+    	AssertTrue(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to False');
+    	TEST_FINISHED_NAMED('MKS422_Interlock_Active');
+    	
+    	4:
+    	This^.PG.rPRESS := 1E-4;
+    	This^.PG.xPRESS_OK := True;
+    	fb_MKS422.M_HVE(TRUE);
+    	
+    	7:
+    	AssertTrue(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to False');
+    	AssertFalse(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to True');
+    	TEST_FINISHED_NAMED('MKS422_Interlock_OK');
+
+    	8:
+    	This^.PG.rPRESS := 1E-1;
+    	This^.PG.xPRESS_OK := False;
+    	This^.fb_MKS422(PG:=This^.PG, IG=>);
+    	
+    	11:
+    	AssertFalse(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to True');
+    	AssertTrue(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to False');
+    	TEST_FINISHED_NAMED('MKS422_Interlock_Lost');
+    END_CASE
+
+    This^.fb_MKS422(PG:=This^.PG, IG=>);
+    END_METHOD
+
+    METHOD M_SelfProtection
+    VAR_INPUT
+    END_VAR
+    // Switching the Cold cathode backon
+    TEST('MKS422_Interlock_OK_1');
+    This^.PG.rPRESS := 1E-4;
+    This^.PG.xPRESS_OK := True;
+    fb_MKS422.M_HVE(TRUE);
+    This^.fb_MKS422(PG:=This^.PG, IG=>);
+    AssertTrue(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to False');
+    AssertFalse(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to True');
+    TEST_FINISHED_NAMED('MKS422_Interlock_OK_1');
+
+    TEST('MKS422_Self_Protection');
+    This^.PG.rPRESS := 1E-3;
+    This^.PG.xPRESS_OK := TRUE;
+    This^.fb_MKS422(PG:=This^.PG, IG=>);
+    AssertFalse(This^.fb_MKS422.IG.xHV_SW, 'MKS422 xHV_SW set to True');
+    AssertTrue(This^.fb_MKS422.IG.q_xHV_DIS, 'MKS422 q_xHV_DIS set to False');
+    TEST_FINISHED_NAMED('MKS422_Self_Protection');
+    END_METHOD
+
 
 Related:
+    * `E_PressureState`_
     * `FB_MKS422`_
     * `FB_MKS500`_
     * `ST_VG`_
+    * `V_TO_INT`_
 
 
 FB_GCM
@@ -3658,9 +3902,17 @@ FB_GCM
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
     END_ACTION
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -3689,10 +3941,115 @@ FB_GPI_Test
 
     END_FUNCTION_BLOCK
 
+    METHOD M_CheckRange
+    VAR
+    	Expected:REAL;
+    	Actual:REAL;
+    	eStateExpected: E_PressureState;
+    	eStateActual: E_PressureState;
+    END_VAR
+    TEST('MKS275_Check_Range');
+    Case cycle of
+    	4:
+    	This^.i_iPRESS_R := V_TO_INT(3.674);
+    	Expected :=5 ;
+    	eStateExpected := Valid;
+    	
+    	7:
+    	TEST('MKS275_Range_R2');
+    	Actual := This^.fb_MKS275.PG.rPRESS;
+    	eStateActual := This^.fb_MKS275.PG.eState;
+    	AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
+    	AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
+    	AssertEquals_REAL(Expected, Actual,0.1, 'MKS275 rPress Fail');
+    	TEST_FINISHED_NAMED('MKS275_Range_R2');
+    	
+    	8:
+    	This^.i_iPRESS_R := V_TO_INT(5.614);
+    	Expected :=900 ;
+    	eStateExpected := Valid;
+    	
+    	
+    	12:
+    	TEST('MKS275_Range_R3');
+    	Actual := This^.fb_MKS275.PG.rPRESS;
+    	eStateActual := This^.fb_MKS275.PG.eState;
+    	AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
+    	AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
+    	AssertEquals_REAL(Expected, Actual,1, 'MKS275 rPress Fail');
+    	TEST_FINISHED_NAMED('MKS275_Range_R3');
+
+    	
+    	13:
+    	This^.i_iPRESS_R := V_TO_INT(0.3);
+    	Expected :=-1 ;
+    	eStateExpected := GaugeDisconnected;
+    	
+    	17:
+    	TEST('MKS275_Range_Off');
+    	Actual := This^.fb_MKS275.PG.rPRESS;
+    	eStateActual := This^.fb_MKS275.PG.eState;
+    	AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
+    	AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
+    	AssertEquals_REAL(Expected, Actual,1, 'MKS275 rPress Fail');
+    	TEST_FINISHED_NAMED('MKS275_Range_Off');
+
+    	
+    	18:
+    	This^.i_iPRESS_R := V_TO_INT(5.66);
+    	Expected :=-1 ;
+    	eStateExpected := OoR;
+    	
+    	22:
+    	TEST('MKS275_Range_OoR');
+    	Actual := This^.fb_MKS275.PG.rPRESS;
+    	eStateActual := This^.fb_MKS275.PG.eState;
+    	AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
+    	AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
+    	AssertEquals_REAL(Expected, Actual,1, 'MKS275 rPress Fail');
+    	TEST_FINISHED_NAMED('MKS275_Range_OoR');
+    	TEST_FINISHED_NAMED('MKS275_Check_Range');
+    	
+    END_CASE
+
+    This^.fb_MKS275(PG=>);
+    This^.fb_MKS317(PG=>);
+    END_METHOD
+
+    METHOD M_INIT
+    VAR
+    	Expected:REAL;
+    	Actual:REAL;
+    	eStateExpected: E_PressureState;
+    	eStateActual: E_PressureState;
+    END_VAR
+    // Start the Test
+    TEST('MKS275_Startup');
+    //Assign Voltage to FB
+    This^.i_iPRESS_R := V_TO_INT(0.384);
+    // Assigne expected result corresponing to the test input
+    Expected :=0.001 ;
+    eStateExpected := Valid;
+    //Instantiate the function block
+    This^.fb_MKS275(PG=>);
+    // Wait for few cycles 
+    IF( cycle = 3) THEN
+    	// Check the results
+    	Actual := This^.fb_MKS275.PG.rPRESS;
+    	eStateActual := This^.fb_MKS275.PG.eState;
+    	AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
+    	AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
+    	AssertEquals_REAL(Expected, Actual,0.0001, 'MKS275 rPress Fail');
+    	TEST_FINISHED_NAMED('MKS275_Startup');
+    END_IF
+    END_METHOD
+
 
 Related:
+    * `E_PressureState`_
     * `FB_MKS275`_
     * `FB_MKS317`_
+    * `V_TO_INT`_
 
 
 FB_ITR90
@@ -3754,9 +4111,18 @@ FB_ITR90
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
     END_ACTION
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    If (iTermBits=0) THEN iTermBits := 32767;END_IF
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -3864,6 +4230,7 @@ FB_Kashiyama_VRC
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     q_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -3960,6 +4327,7 @@ FB_KashiyamaPump
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (* Output *)	
     	q_xRunDO 	:= q_stPump.q_xRunDO;
@@ -3972,6 +4340,13 @@ FB_KashiyamaPump
     	q_stPump.i_xWarningOK :=	i_xWarning;
     	q_stPump.i_xIsRun :=	i_xIsRun;
     END_ACTION
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.q_stPump.pv_xRunSW := run;
+    END_METHOD
 
 
 Related:
@@ -4033,6 +4408,7 @@ FB_MKS248
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*outputs*)
     q_iRawPosition := iq_stVFN.q_iRawPosition;
@@ -4147,6 +4523,7 @@ FB_MKS275
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     //STATE Logger  
     if (PG.xLog) THEN
@@ -4171,6 +4548,7 @@ FB_MKS275
       END_IF 
     END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -4184,10 +4562,18 @@ FB_MKS275
     	rVAC_SP:= PG.rVAC_SP;
     END_IF;
     END_ACTION
+
     ACTION IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
     PG.sPath := sPath;
     END_ACTION
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -4284,6 +4670,7 @@ FB_MKS317
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     //STATE Logger  
     IF (PG.xLog) THEN
@@ -4308,6 +4695,7 @@ FB_MKS317
     	  END_IF
      END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -4321,6 +4709,7 @@ FB_MKS317
     	rVAC_SP:= PG.rVAC_SP;
     END_IF;
     END_ACTION
+
     ACTION IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
 
@@ -4410,6 +4799,7 @@ FB_MKS317A
     IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     IF (PG.xLog) THEN
     //STATE Logger  
@@ -4434,6 +4824,7 @@ FB_MKS317A
       END_IF
      END_IF
     END_ACTION
+
     ACTION IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
     PG.sPath := sPath;
@@ -4497,6 +4888,7 @@ FB_MKS392
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
     END_ACTION
@@ -4629,6 +5021,7 @@ FB_MKS422
     ACT_Recover();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     // ILK logger
     IF (IG.xLog) THEN
@@ -4666,6 +5059,7 @@ FB_MKS422
     	  END_IF
     END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -4707,6 +5101,7 @@ FB_MKS422
     	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
     END_IF;
     END_ACTION
+
     ACTION ACT_Recover:
     fbGetCurTaskIdx();
     IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
@@ -4718,6 +5113,7 @@ FB_MKS422
     	tRecover.IN := FALSE;
     END_IF
     END_ACTION
+
     ACTION IO:
     (*soft link inputs*)
     IG.i_iPRESS_R:=	i_iPRESS_R; 
@@ -4728,6 +5124,27 @@ FB_MKS422
     IG.sPath := sPath;
     IG.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);
     END_ACTION
+
+    METHOD M_AutoOn : BOOL
+    VAR_INPUT
+    END_VAR
+    this^.IG.q_xHV_DIS:= FALSE;
+    END_METHOD
+
+    METHOD M_HVE : BOOL
+    VAR_INPUT
+    		enable:bool; // set to true to enable, false to disable;
+    END_VAR
+    this^.IG.xHV_SW:= (enable);
+    END_METHOD
+
+    METHOD M_Recover : BOOL
+    VAR_INPUT
+    END_VAR
+    This^.M_HVE(This^.bWasOn);
+    M_Recover := bWasOn;
+    IF (bWasOn) THEN fbLogger(sMsg:='Auto Recovery Initiated.', eSevr:=TcEventSeverity.Info); END_IF;
+    END_METHOD
 
 
 Related:
@@ -4740,10 +5157,17 @@ FB_MKS500
 
 ::
 
-    (* This function is for the Cold Cathode MKS 500. If connected to Beckhoff EP boxes.
-    Set the EP bit to TRUE, this is necessary for the MKS500-to-EP box interface beacuse the EP
-    boxes do not natively support the 5v IO signals on the MKS500 gauge.*)
-    (*This function provides ILK and Set Point Protection for the Cold Cathode*)
+    (* This function is for the Cold Cathode MKS 500. 
+
+    If connected to Beckhoff EP boxes. Set the EP bit to TRUE, this is necessary for the 
+    MKS500-to-EP box interface because the EP boxes do not natively support the 5v IO 
+    signals on the MKS500 gauge.
+
+    A setup process is required for the MKS500 to be usable.
+    See here: https://confluence.slac.stanford.edu/display/PCDS/MKS+500+-+Cold+Cathode
+
+    This function provides ILK and Set Point Protection for the Cold Cathode.
+    *)
 
     FUNCTION_BLOCK FB_MKS500 EXTENDS FB_GaugeBase
     VAR_IN_OUT
@@ -4881,6 +5305,7 @@ FB_MKS500
     ACT_Recover();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     // ILK logger
     IF (IG.xLog) THEN
@@ -4919,6 +5344,7 @@ FB_MKS500
     	  END_IF
     END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -4960,6 +5386,7 @@ FB_MKS500
     	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
     END_IF;
     END_ACTION
+
     ACTION ACT_Recover:
     fbGetCurTaskIdx();
     IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
@@ -4971,6 +5398,7 @@ FB_MKS500
     	tRecover.IN := FALSE;
     END_IF
     END_ACTION
+
     ACTION IO:
     (*soft link inputs*)
     IG.i_iPRESS_R:=	i_iPRESS_R; 
@@ -4982,6 +5410,28 @@ FB_MKS500
     IG.sPath := sPath;
     IG.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);
     END_ACTION
+
+    METHOD M_HVE : BOOL
+    VAR_INPUT
+    		enable:bool; // set to true to enable, false to disable;
+    END_VAR
+    this^.IG.xHV_SW:= enable;
+    END_METHOD
+
+    METHOD M_Recover : BOOL
+    VAR_INPUT
+    END_VAR
+    This^.M_HVE(This^.bWasOn);
+    M_Recover := bWasOn;
+    IF (bWasOn) THEN fbLogger(sMsg:='Auto Recovery Initiated.', eSevr:=TcEventSeverity.Info); END_IF;
+    END_METHOD
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -5098,6 +5548,7 @@ FB_MKS500_EP
     IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     IF (IG.xLog) THEN
     // ILK logger
@@ -5134,6 +5585,7 @@ FB_MKS500_EP
       END_IF
     END_IF
     END_ACTION
+
     ACTION IO:
     (*soft link inputs*)
     IG.i_iPRESS_R:=	i_iPRESS_R; 
@@ -5142,6 +5594,13 @@ FB_MKS500_EP
 
     IG.sPath := sPath;
     END_ACTION
+
+    METHOD M_HVE : BOOL
+    VAR_INPUT
+    		enable:bool; // set to true to enable, false to disable;
+    END_VAR
+    this^.IG.xHV_SW:= NOT(enable);
+    END_METHOD
 
 
 Related:
@@ -5206,6 +5665,7 @@ FB_MKS722
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     VG.i_iPRESS_R :=i_iPRESS_R;
     END_ACTION
@@ -5310,6 +5770,7 @@ FB_MKS909
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*soft link inputs*)
     IG.i_iPRESS_R:=	i_iPRESS_R; 
@@ -5317,6 +5778,7 @@ FB_MKS909
     (*soft link outputs*)
     q_xHV_DIS := IG.q_xHV_DIS;
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
     IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
@@ -5349,6 +5811,7 @@ FB_MKS909
     	  ePrevState := IG.eState;  
       END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -5376,6 +5839,19 @@ FB_MKS909
     	rHYS_PR:= IG.rHYS_PR;
     END_IF;
     END_ACTION
+
+    METHOD M_AutoOn : BOOL
+    VAR_INPUT
+    END_VAR
+    this^.IG.q_xHV_DIS:= FALSE;
+    END_METHOD
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -5459,6 +5935,7 @@ FB_MKS_937A
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*soft link inputs*)
     VG.i_iPRESS_R:=	i_iPRESS_R; 
@@ -5555,6 +6032,7 @@ FB_MKS_937B
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*soft link inputs*)
     VG.i_iPRESS_R:=	i_iPRESS_R; 
@@ -5702,6 +6180,7 @@ FB_PIP_Gamma
     ACT_Recover();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IlkOverride:
     (* Override logic *)
     (* Goal: give ability to override, but do so in a way that people won't forget it.
@@ -5722,6 +6201,7 @@ FB_PIP_Gamma
     //Override timer
     tonOvrd(IN:= stPump.pv_xOvrdStart, PT:=tOvrd);
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
 
@@ -5760,6 +6240,7 @@ FB_PIP_Gamma
     tFault(CLK:=  NOT tPumpStartTimeout.Q);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -5786,6 +6267,7 @@ FB_PIP_Gamma
     	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
     END_IF;
     END_ACTION
+
     ACTION ACT_Recover:
     fbGetCurTaskIdx();
     IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
@@ -5797,6 +6279,7 @@ FB_PIP_Gamma
     	tRecover.IN := FALSE;
     END_IF
     END_ACTION
+
     ACTION ACT_SetGauge:
     (*MG*)
     (* convert the analog input into readable pressure*)
@@ -5823,6 +6306,7 @@ FB_PIP_Gamma
 
     q_IG.sPath := This^.stPump.sPath;
     END_ACTION
+
     ACTION IO:
     stPump.sIlkDeviceName := This^.i_stGauge.sPath;
     stPump.xError := (stPump.eState = pumpFAULT);
@@ -5836,6 +6320,27 @@ FB_PIP_Gamma
      This^.stPump.sPath:= sPath;
      stPump.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);
     END_ACTION
+
+    METHOD M_AutoOn : BOOL
+    VAR_INPUT
+    END_VAR
+    this^.stPump.xAutoOn:= TRUE; // Pump is set to auto start when the pressure is low enough
+    END_METHOD
+
+    METHOD M_Recover : BOOL
+    VAR_INPUT
+    END_VAR
+    This^.M_Run(This^.bWasOn);
+    M_Recover := bWasOn;
+    IF (bWasOn) THEN fbLogger(sMsg:='Auto Recovery Initiated.', eSevr:=TcEventSeverity.Info); END_IF;
+    END_METHOD
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.stPump.xHVEna_SW := run;
+    END_METHOD
 
 
 Related:
@@ -6046,6 +6551,7 @@ FB_PIP_SIP
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IlkOverride:
     (* Override logic *)
     (* Goal: give ability to override, but do so in a way that people won't forget it.
@@ -6066,6 +6572,7 @@ FB_PIP_SIP
     //Override timer
     tonOvrd(IN:= stPump.pv_xOvrdStart, PT:=tOvrd);
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
 
@@ -6103,6 +6610,7 @@ FB_PIP_SIP
     tFault(CLK:=  NOT tPumpStartTimeout.Q);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -6116,6 +6624,7 @@ FB_PIP_SIP
     	rHVEna_SP := stPump.rHVEna_SP;
     END_IF;
     END_ACTION
+
     ACTION ACT_SetGauge:
     (*MG*)
     (* convert the analog input into readable pressure*)
@@ -6147,6 +6656,7 @@ FB_PIP_SIP
 
     q_IG.sPath := This^.stPump.sPath;
     END_ACTION
+
     ACTION IO:
     stPump.sIlkDeviceName := This^.i_stGauge.sPath;
     stPump.xError := i_xError;// (stPump.eState = pumpFAULT);
@@ -6159,6 +6669,19 @@ FB_PIP_SIP
 
      This^.stPump.sPath:= sPath;
     END_ACTION
+
+    METHOD M_AutoOn : BOOL
+    VAR_INPUT
+    END_VAR
+    this^.stPump.xAutoOn:= TRUE; // Pump is set to auto start when the pressure is low enough
+    END_METHOD
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.stPump.xHVEna_SW := run;
+    END_METHOD
 
 
 Related:
@@ -6186,6 +6709,65 @@ FB_PIP_Test
     M_AutoStart();
 
     END_FUNCTION_BLOCK
+
+    METHOD M_AutoStart
+    VAR_INPUT
+    END_VAR
+    TEST('PIP_Auto_Restart');
+    This^.PG.rPRESS := 1E-6;
+    This^.PG.xPRESS_OK := TRUE;
+    This^.fb_PIP_GAMMA(i_stGauge:=PG, stPump=>, q_IG=>);
+    AssertTrue(This^.fb_PIP_GAMMA.stPump.q_xHVEna_DO, 'PIP HVEna_DO set to false');
+    TEST_FINISHED_NAMED('PIP_Auto_Restart');
+    END_METHOD
+
+    METHOD M_Check_State
+    VAR_INPUT
+    END_VAR
+
+    END_METHOD
+
+    METHOD M_INIT
+    VAR_INPUT
+    END_VAR
+    TEST('PIP_Startup');
+    This^.PG.rPRESS := 1E-1;
+    This^.PG.xPRESS_OK := TRUE;
+    This^.fb_PIP_GAMMA(i_stGauge:=PG, stPump=>, q_IG=>);
+    AssertFalse(This^.fb_PIP_GAMMA.stPump.xHVEna_SW, 'PIP xHVEna_SW set to True');
+    AssertFalse(This^.fb_PIP_GAMMA.stPump.q_xHVEna_DO, 'PIP HVEna_DO set to True');
+    TEST_FINISHED_NAMED('PIP_Startup');
+    END_METHOD
+
+    METHOD M_Interlock
+    VAR_INPUT
+    END_VAR
+    TEST('PIP_Interlock_Active');
+    This^.PG.rPRESS := 1E-1;
+    This^.PG.xPRESS_OK := True;
+    This^.fb_PIP_GAMMA.M_Run(TRUE);
+    This^.fb_PIP_GAMMA(i_stGauge:=PG, stPump=>, q_IG=>);
+    AssertFalse(This^.fb_PIP_GAMMA.stPump.xHVEna_SW, 'PIP xHVEna_SW set to True');
+    AssertFalse(This^.fb_PIP_GAMMA.stPump.q_xHVEna_DO, 'PIP HVEna_DO set to True');
+    TEST_FINISHED_NAMED('PIP_Interlock_Active');
+
+    TEST('PIP_Interlock_OK');
+    This^.PG.rPRESS := 1E-9;
+    This^.PG.xPRESS_OK := True;
+    This^.fb_PIP_GAMMA.M_Run(TRUE);
+    This^.fb_PIP_GAMMA(i_stGauge:=PG, stPump=>, q_IG=>);
+    AssertTrue(This^.fb_PIP_GAMMA.stPump.xHVEna_SW, 'PIP xHVEna_SW set to False');
+    AssertTrue(This^.fb_PIP_GAMMA.stPump.q_xHVEna_DO, 'PIP HVEna_DO set to False');
+    TEST_FINISHED_NAMED('PIP_Interlock_OK');
+
+    TEST('PIP_Interlock_Lost');
+    This^.PG.rPRESS := 1E-9;
+    This^.PG.xPRESS_OK := False;
+    This^.fb_PIP_GAMMA(i_stGauge:=PG, stPump=>, q_IG=>);
+    AssertFalse(This^.fb_PIP_GAMMA.stPump.xHVEna_SW, 'PIP xHVEna_SW set to True');
+    AssertFalse(This^.fb_PIP_GAMMA.stPump.q_xHVEna_DO, 'PIP HVEna_DO set to True');
+    TEST_FINISHED_NAMED('PIP_Interlock_Lost');
+    END_METHOD
 
 
 Related:
@@ -6511,9 +7093,11 @@ FB_PTM_Agilent
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Interlock:
     This^.tILK(IN:= (i_stGauge.rPRESS>=iq_stPtm.rBackingPressureSP), PT:=T#5S, Q=> );
     END_ACTION
+
     ACTION ACT_Logger:
     //STATE Logger  
     // ILK logger
@@ -6545,6 +7129,7 @@ FB_PTM_Agilent
     tFault(CLK:= iq_stPTM.i_xFault OR iq_stPtm.xPumpFaultLock);
     IF tFault.Q THEN fbLogger(sMsg:=iq_stPtm.sError, eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -6565,6 +7150,7 @@ FB_PTM_Agilent
     	rInletPressureSP := iq_stPTM.rInletPressureSP;
     END_IF;
     END_ACTION
+
     ACTION IO:
     (*inputs*)
     iq_stPtm.i_xSTART:=	i_xSTART;
@@ -6585,8 +7171,80 @@ FB_PTM_Agilent
     q_xLSpd := iq_stPtm.q_xLSpd;
     END_ACTION
 
+    METHOD BackingPressureSetPoint : REAL
+    VAR_INPUT
+    	i_SetPoint : REAL;
+    	rMaxBackingPressure: REAL;
+    END_VAR
+    BackingPressureSetPoint := Min(i_SetPoint , rMaxBackingPressure);
+    END_METHOD
+
+    METHOD PUBLIC ErrorMessage : STRING
+    VAR_INPUT
+    	nErrorCode : INT;
+    	eState: E_PumpState;
+    END_VAR
+    IF (eState = pumpFAULT ) THEN
+    	CASE nErrorCode OF
+    		950:
+    			ErrorMessage := 'Pump Starting Fault';
+    		930: 
+    			ErrorMessage := 'Pump could not achieve running speed';
+    	
+    		920:
+    			ErrorMessage := 'Running at speed signal lost multiple times';
+
+    		900:
+    			ErrorMessage := 'Pump Controller Fault';	
+    	END_CASE
+    	
+    END_IF
+    END_METHOD
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.iq_stPtm.xRunSW := run;
+    END_METHOD
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
+
+    METHOD M_SetCurrentScale : BOOL
+    VAR_INPUT
+    	Scale:REAL;//In Amps
+    END_VAR
+    This^.rCurrentScale := Scale;
+    END_METHOD
+
+    METHOD M_SetMaxSpeed : BOOL
+    VAR_INPUT
+    	iMaxSpeed: INT; //963Hz for 3.1,300HT and 1010Hz for 401 and 1350 for 81
+    END_VAR
+    this^.iMaxSpeed := iMaxSpeed;
+    END_METHOD
+
+    METHOD M_SetPowerScale : BOOL
+    VAR_INPUT
+    	Scale:REAL;//In Watt
+    END_VAR
+    This^.rPowerScale := Scale;
+    END_METHOD
+
+    METHOD PUBLIC M_TurboIsOn : BOOL
+    VAR_INPUT
+    END_VAR
+    M_TurboIsOn := (This^.iq_stPtm.eState =  E_PumpState.pumpSTARTING ) OR (This^.iq_stPtm.eState =  E_PumpState.pumpRUNNING );
+    END_METHOD
+
 
 Related:
+    * `E_PumpState`_
     * `FB_Pump`_
     * `ST_AgilentPTM`_
     * `ST_VG`_
@@ -6732,6 +7390,7 @@ FB_PTM_Ebara_010M
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*soft io mapping*)
     (*inputs*)
@@ -6758,6 +7417,7 @@ FB_PTM_Ebara_010M
     	q_iSpeedSet  := LIMIT(0, DINT_TO_INT((iq_stPTM.q_iSpeedSet - i_iMinSpeed) / i_iMaxSpeed *16383/5),16383); //Max 5V
     END_IF
     END_ACTION
+
     ACTION ACT_Logger:
     IF NOT i_xExtIlkOK AND (ePrevState = pumpRUNNING OR ePrevState = pumpSTARTING) THEN
      		fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical);  	
@@ -6790,6 +7450,7 @@ FB_PTM_Ebara_010M
     tFault(CLK:= iq_stPTM.i_xNCFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -6810,6 +7471,21 @@ FB_PTM_Ebara_010M
     	rInletPressureSP := iq_stPTM.rInletPressureSP;
     END_IF;
     END_ACTION
+
+    METHOD PUBLIC BackingPressureSetPoint : REAL
+    VAR_INPUT
+    	i_SetPoint : REAL;
+    	rMaxBackingPressure: REAL;
+    END_VAR
+    BackingPressureSetPoint := Min(i_SetPoint , rMaxBackingPressure);
+    END_METHOD
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.iq_stPtm.xRunSW := run;
+    END_METHOD
 
 
 Related:
@@ -6950,6 +7626,7 @@ FB_PTM_Ebara_011M
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*soft io mapping*)
     (*inputs*)
@@ -6985,6 +7662,7 @@ FB_PTM_Ebara_011M
     //Normally closed fault handling
     iq_stPTM.i_xFault := NOT iq_stPTM.i_xNCFault; //??
     END_ACTION
+
     ACTION ACT_Logger:
     //STATE Logger  
     IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
@@ -7021,6 +7699,7 @@ FB_PTM_Ebara_011M
     tFault(CLK:= iq_stPTM.i_xNCFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -7041,6 +7720,21 @@ FB_PTM_Ebara_011M
     	rInletPressureSP := iq_stPTM.rInletPressureSP;
     END_IF;
     END_ACTION
+
+    METHOD PUBLIC BackingPressureSetPoint : REAL
+    VAR_INPUT
+    	i_SetPoint : REAL;
+    	rMaxBackingPressure: REAL;
+    END_VAR
+    BackingPressureSetPoint := Min(i_SetPoint , rMaxBackingPressure);
+    END_METHOD
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.iq_stPtm.xRunSW := run;
+    END_METHOD
 
 
 Related:
@@ -7127,6 +7821,7 @@ FB_PTM_MagDriveDigital
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*Inputs*)
     iq_stPtm.i_xAtSpd := i_xAtSpd;
@@ -7139,6 +7834,7 @@ FB_PTM_MagDriveDigital
     q_RunDO := iq_stPtm.q_RunDO;
     q_xRemote := iq_stPtm.q_xRemote; // remote out
     END_ACTION
+
     ACTION ACT_Logger:
     //STATE Logger  
     IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
@@ -7173,6 +7869,7 @@ FB_PTM_MagDriveDigital
     tFault(CLK:= NOT iq_stPTM.i_xFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -7193,6 +7890,13 @@ FB_PTM_MagDriveDigital
     	rInletPressureSP := iq_stPTM.rInletPressureSP;
     END_IF;
     END_ACTION
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.iq_stPtm.xRunSW := run;
+    END_METHOD
 
 
 Related:
@@ -7289,6 +7993,7 @@ FB_PTM_Pfeiffer
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*outputs*)
     q_RunDO := iq_stPTM.q_RunDO;
@@ -7301,6 +8006,7 @@ FB_PTM_Pfeiffer
     iq_stPTM.i_xFault:= NOT i_xFaultNC; 
     iq_stPTM.i_xWarn:=  	i_xWarn ;
     END_ACTION
+
     ACTION ACT_Logger:
     //STATE Logger  
     IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
@@ -7335,6 +8041,7 @@ FB_PTM_Pfeiffer
     tFault(CLK:= NOT iq_stPTM.i_xFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -7355,6 +8062,74 @@ FB_PTM_Pfeiffer
     	rInletPressureSP := iq_stPTM.rInletPressureSP;
     END_IF;
     END_ACTION
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.iq_stPtm.xRunSW := run;
+    END_METHOD
+
+    METHOD PUBLIC M_Serial_IO : BOOL
+    VAR_INPUT
+    	st_Pfeiffer_RBK: ST_PfeifferStatus;
+    END_VAR
+    VAR_IN_OUT
+    	st_Pfeiffer_CTRL: ST_PfeifferControl;
+    END_VAR
+    (* This function block is used to map the IO points from the pfeiffer structures
+    to the generic turbo structures *)
+    (*
+    if (bInit) Then
+    	bInit := False;
+    	st_Pfeiffer_CTRL.diSetRotationSpeed_309 := st_Pfeiffer_RBK.diActiveRotationSpeed_309;
+    END_IF*)
+
+    (* Controls *) (* Controls is via DIO*)
+    //st_Pfeiffer_CTRL.xPumpingStation_010 := iq_stPTM.q_RunDO;
+    //st_Pfeiffer_CTRL.xMotorPump_023 := 1; //Setting always true because parameter 10 alone can enable/disable the pump
+    //st_Pfeiffer_CTRL.uiPowerPct_708 := iq_stPTM.q_uiPowerPct;
+    //st_Pfeiffer_CTRL.xErrorAck_009 := iq_stPTM.xResetSW;
+
+
+
+    (* Readbacks *)
+    iq_stPTM.i_xAccel := st_Pfeiffer_RBK.xPumpAccelerating_307;
+    //iq_stPTM.i_xAtSpd := st_Pfeiffer_RBK.xRotationSpeedAttn_306; The Atspd is already linked via Digital I/Os
+    iq_stPTM.i_diCurSpd := st_Pfeiffer_RBK.diActiveRotationSpeed_309;
+    iq_stPTM.i_diPwr := st_Pfeiffer_RBK.diDrivePower_316;
+    iq_stPTM.i_diElecTemp := st_Pfeiffer_RBK.diTempElec_326;
+    iq_stPTM.i_diBtmTemp := st_Pfeiffer_RBK.diTempPmpBot_330;
+    iq_stPTM.i_diBrngTemp := st_Pfeiffer_RBK.diTempBearng_342;
+    iq_stPTM.i_diMtrTemp := st_Pfeiffer_RBK.diTempMotor_346;
+    iq_stPTM.i_uiPowerPctRbk := st_Pfeiffer_RBK.uiPowerPct_708;
+    iq_stPTM.i_rCurrentMon :=  st_Pfeiffer_RBK.lrDriveCurrent_310;
+    iq_stPTM.xCommTimeout	:=	st_Pfeiffer_RBK.xTimeout;
+    iq_stPTM.i_iErrorCode := st_Pfeiffer_RBK.iErrorCode_303;
+    iq_stPTM.i_iWarningCode := st_Pfeiffer_RBK.iWarningCode_303;
+
+    (* Check that error acknowledgment is processed *)
+    IF st_Pfeiffer_RBK.xErrorAcknowledged THEN
+    	st_Pfeiffer_RBK.xErrorAcknowledged := FALSE;
+    	st_Pfeiffer_CTRL.xErrorAck_009 := FALSE;
+    	iq_stPTM.xResetSW := FALSE;
+    END_IF
+
+    IF st_Pfeiffer_RBK.sErrorCode_303 = '' THEN
+    	;
+    ELSIF st_Pfeiffer_RBK.sErrorCode_303 <> '000000' THEN
+    iq_stPTM.i_xFault := TRUE;
+    ELSE
+    iq_stPTM.i_xFault := FALSE;
+    END_IF
+
+    st_Pfeiffer_CTRL.xSetSpdMode_026:= iq_stPTM.q_bSetSpd;
+    iq_stPTM.i_dSetSpd := LIMIT (0, iq_stPTM.i_dSetSpd, 1500); // 1500 nominal frequency
+    IF ( iq_stPTM.i_dSetSpd <>0) THEN
+    	st_Pfeiffer_CTRL.iSetRotationSpeed_707 := DINT_TO_INT(iq_stPTM.i_dSetSpd * 100/1500);
+    	st_Pfeiffer_CTRL.iSetRotationSpeed_707 := LIMIT(20, st_Pfeiffer_CTRL.iSetRotationSpeed_707 ,100); // Manual Page 18
+    END_IF
+    END_METHOD
 
 
 Related:
@@ -7392,6 +8167,96 @@ FB_PTM_Test
     cycle:=cycle+1;
 
     END_FUNCTION_BLOCK
+
+    METHOD M_INIT : BOOL
+    VAR_INPUT
+    END_VAR
+    TEST('PTM_Twistorr_Startup');
+    fb_TwisTorr(i_xExtILKOk:= TRUE , iq_stPtm=> );
+    IF( cycle = 3) THEN
+    	AssertFalse(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to true');	
+    	AssertFalse(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to true');
+    	TEST_FINISHED_NAMED('PTM_Twistorr_Startup');
+    END_IF
+
+
+    TEST('PTM_Ebara011M_Startup');
+    fb_PTM_Ebara_010M(i_xExtILKOk:= TRUE , iq_stPtm=> );
+    IF( cycle = 3) THEN
+    	AssertFalse(fb_PTM_Ebara_010M.iq_stPtm.xRunSW ,'PTM Ebara011M xRunSW is set to true');	
+    	AssertFalse(fb_PTM_Ebara_010M.iq_stPtm.q_RunDO ,'PTM Ebara011M q_RunDO is set to true');
+    	AssertFalse(fb_PTM_Ebara_010M.iq_stPtm.q_xProtection ,'PTM Ebara011M q_xProtection is set to True');
+    	TEST_FINISHED_NAMED('PTM_Ebara011M_Startup');
+    END_IF
+    END_METHOD
+
+    METHOD M_Interlock
+    VAR_INPUT
+    END_VAR
+    TEST('PTM_Twistorr_Interlock_Active');
+    fb_TwisTorr.M_Run(TRUE);
+    fb_TwisTorr(i_xExtILKOk:= FALSE , iq_stPtm=> );
+    IF( cycle = 3) THEN
+    	AssertFalse(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to true');	
+    	AssertFalse(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to true');
+    	TEST_FINISHED_NAMED('PTM_Twistorr_Interlock_Active');
+    END_IF
+
+    TEST('PTM_Twistorr_Interlock_OK');
+    fb_TwisTorr.M_Run(TRUE);
+    fb_TwisTorr(i_xExtILKOk:= TRUE , iq_stPtm=> );
+    IF( cycle = 3) THEN
+    	AssertTrue(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to False');	
+    	AssertTrue(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to False');
+    	TEST_FINISHED_NAMED('PTM_Twistorr_Interlock_OK');
+    END_IF
+
+    TEST('PTM_Twistorr_Interlock_Lost');
+    fb_TwisTorr(i_xExtILKOk:= FALSE , iq_stPtm=> );
+    IF( cycle = 3) THEN
+    	AssertFalse(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to true');	
+    	AssertFalse(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to true');
+    	TEST_FINISHED_NAMED('PTM_Twistorr_Interlock_Lost');
+    END_IF
+    END_METHOD
+
+    METHOD M_PTM_EBARA
+    VAR
+    	Expected:REAL;
+    	Actual:REAL;
+    	diExpected:DINT;
+    	diActual: DINT;
+    END_VAR
+    TEST('PTM_EBARA_AI');
+    This^.i_iRawSpeed := v_to_int(5);
+    This^.i_iTempMon := v_to_int(2.5);
+    THIS^.i_iCurrentMon := v_to_int(2.5);
+    //THIS^.q_iSpeedSet := 560;
+
+    fb_PTM_Ebara_010M(
+    	i_xExtILKOk:= TRUE , 
+    	i_rMaxBackingPressure:= 1, 
+    	iq_stPTM=> );
+
+
+    IF( cycle = 10) THEN
+    	Expected := 5;
+    	Actual := (fb_PTM_Ebara_010M.iq_stPTM.i_rCurrentMon);
+    	AssertEquals_REAL(Expected, Actual,0.1, 'PTM EBARA010 i_iCurrentMon Fail');
+    	Expected := 50;
+    	Actual := (fb_PTM_Ebara_010M.iq_stPTM.i_rTempMon);
+    	AssertEquals_REAL(Expected, Actual,0.1, 'PTM EBARA010 i_iTempMon Fail');
+    	diExpected := 0;
+    	diActual := fb_PTM_Ebara_010M.iq_stPTM.q_iSpeedSet;
+    	AssertEquals(diExpected, diActual, 'PTM EBARA010 q_iSpeedSet Fail');
+    	diExpected := 560;
+    	diActual :=  fb_PTM_Ebara_010M.iq_stPTM.i_diCurSpd;
+    	AssertEquals(diExpected, diActual, 'PTM EBARA010 i_diCurSpd Fail');
+    	TEST_FINISHED_NAMED('PTM_EBARA_AI');
+    	
+    	
+    End_IF;
+    END_METHOD
 
 
 Related:
@@ -7469,6 +8334,7 @@ FB_PTM_TurboDrive
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*Inputs*)
     iq_stPtm.i_xAtSpd := i_xAtSpd;
@@ -7480,6 +8346,7 @@ FB_PTM_TurboDrive
     (*Outputs*)
     iq_stPtm.q_RunDO := q_RunDO;
     END_ACTION
+
     ACTION ACT_Logger:
     //STATE Logger  
     // ILK logger
@@ -7511,6 +8378,7 @@ FB_PTM_TurboDrive
     tFault(CLK:= NOT iq_stPTM.i_xFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -7531,6 +8399,37 @@ FB_PTM_TurboDrive
     	rInletPressureSP := iq_stPTM.rInletPressureSP;
     END_IF;
     END_ACTION
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.iq_stPtm.xRunSW := run;
+    END_METHOD
+
+    METHOD PUBLIC M_Serial_IO : BOOL
+    VAR_INPUT
+    	i_st_TD20_RBK			: ST_TD20Status;
+    END_VAR
+    (* This function block is used to map the IO points from the Oerlikon structures
+    to the generic turbo structures *)
+
+    (* Readbacks *)
+    iq_stPTM.i_xAccel := i_st_TD20_RBK.wStatusWord.4;
+    iq_stPTM.i_xDecel := i_st_TD20_RBK.wStatusWord.5;
+    //iq_stPTM.i_xAtSpd := i_st_TD20_RBK.wStatusWord.10;
+    iq_stPTM.i_xRemote := i_st_TD20_RBK.wStatusWord.15; (* Remote control enabled *)
+    iq_stPTM.i_diCurSpd := WORD_TO_DINT(i_st_TD20_RBK.wFrequency_P3);
+    iq_stPTM.i_rCurrentMon := WORD_TO_INT(i_st_TD20_RBK.wMotorCurrent_P5);
+    iq_stPTM.i_diPwr := WORD_TO_DINT(i_st_TD20_RBK.wMotorCurrent_P5 * i_st_TD20_RBK.wVoltage_P4);
+    iq_stPTM.i_diElecTemp := WORD_TO_DINT(i_st_TD20_RBK.wConverterTemp_P11);
+    iq_stPTM.i_rTempMon := WORD_TO_INT(i_st_TD20_RBK.wPumpTemp_P127);
+
+    (* Faults and warnings *)
+    //iq_stPTM.i_xFault := i_st_TD20_RBK.wStatusWord.3;
+    iq_stPTM.i_xTempFault := i_st_TD20_RBK.wStatusWord.7; (* specified as a temperature warning but it could be a fault *)
+    iq_stPTM.i_xWarn := i_st_TD20_RBK.wStatusWord.14; (* warning summary bit *)
+    END_METHOD
 
 
 Related:
@@ -7593,6 +8492,7 @@ FB_PTM_TwisTorr
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*Inputs*)
     iq_stPtm.i_xAtSpd := i_xAtSpd;
@@ -7602,6 +8502,7 @@ FB_PTM_TwisTorr
     (*Outputs*)
     q_RunDO := iq_stPtm.q_RunDO;
     END_ACTION
+
     ACTION ACT_Logger:
     //STATE Logger  
     // ILK logger
@@ -7633,6 +8534,7 @@ FB_PTM_TwisTorr
     tFault(CLK:= NOT iq_stPTM.i_xFault);
     IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -7653,6 +8555,13 @@ FB_PTM_TwisTorr
     	rInletPressureSP := iq_stPTM.rInletPressureSP;
     END_IF;
     END_ACTION
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.iq_stPtm.xRunSW := run;
+    END_METHOD
 
 
 Related:
@@ -7684,6 +8593,7 @@ FB_Pump
 
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
 
     END_ACTION
@@ -7750,9 +8660,17 @@ FB_ScrollPump
     IO();
 
     END_FUNCTION_BLOCK
+
     ACTION IO:
     q_xRunDo:= iq_stPFO.q_xRunDo;
     END_ACTION
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+    	run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.iq_stPFO.pv_xRunSW := run;
+    END_METHOD
 
 
 Related:
@@ -7823,6 +8741,7 @@ FB_TBOOL_ADS
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     IF tErrorPresent.Q THEN
      IF(fb_Read.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
@@ -7900,6 +8819,7 @@ FB_TGCC_ADS
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     IF tErrorPresent.Q THEN
      IF(fb_Read_VG.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
@@ -7978,6 +8898,7 @@ FB_TGPI_ADS
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     IF tErrorPresent.Q THEN
      IF(fb_Read_VG.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
@@ -8055,6 +8976,7 @@ FB_TPIP_ADS
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     IF tErrorPresent.Q THEN
      IF(fb_Read_VG.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
@@ -8128,10 +9050,18 @@ FB_TurbVentvalve_NO
 
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*outputs*)
     q_xCLS_DO:= q_stValve.xCLS_DO;
     END_ACTION
+
+    METHOD M_Close : BOOL
+    VAR_INPUT
+    		close:BOOL; //True to CLose, False to OPEN
+    END_VAR
+    This^.q_stValve.pv_xCLS_SW :=Close;
+    END_METHOD
 
 
 Related:
@@ -8194,6 +9124,7 @@ FB_TVGC_2S_ADS
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     IF tErrorPresent.Q THEN
      IF(fb_Read_VGC.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
@@ -8263,6 +9194,7 @@ FB_TVGC_ADS
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     IF tErrorPresent.Q THEN
      IF(fb_Read_VGC.bError) THEN fbLogger(sMsg:='ADS Read Error', eSevr:=TcEventSeverity.Critical); END_IF;
@@ -8301,6 +9233,7 @@ FB_Valve
 
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
 
     END_ACTION
@@ -8404,12 +9337,33 @@ FB_VCC
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.xOverrideMode := i_xOverrideMode;
     (*outputs*)
     q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     END_ACTION
+
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := NOT This^.q_xOPN_DO;
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := This^.q_xOPN_DO;
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_OPN_SW : BOOL
+    VAR_INPUT
+    		value:BOOL;  //True to SET, False to RESET
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := value;
+    END_METHOD
 
 
 Related:
@@ -8469,12 +9423,20 @@ FB_VCC_NO
     iq_stValve.xCLS_DO := (iq_stValve.pv_xCLS_SW AND iq_stValve.xCLS_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.xOverrideMode := i_xOverrideMode;
     (*outputs*)
     xCLS_DO:= iq_stValve.xCLS_DO;
     END_ACTION
+
+    METHOD M_Close : BOOL
+    VAR_INPUT
+    		close:BOOL; //True to CLose, False to OPEN
+    END_VAR
+    This^.iq_stValve.pv_xCLS_SW :=Close;
+    END_METHOD
 
 
 Related:
@@ -8575,12 +9537,14 @@ FB_VCN
     ACT_Persistent();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*outputs*)
     q_iRawPosition := iq_stVCN.q_iRawPosition;
     (*inputs*)
     iq_stVCN.i_iPosition := iq_stvcn.q_iRawPosition;
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
 
@@ -8609,6 +9573,7 @@ FB_VCN
     tAction(CLK:= (iq_stVCN.eValveControl = OpenValve) );
     IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEventSeverity.Info); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (bRestorePersistentData) THEN
@@ -8627,8 +9592,23 @@ FB_VCN
     END_IF;
     END_ACTION
 
+    METHOD M_SetThrottle : BOOL
+    VAR_INPUT
+    	rUpperLimit	:	REAL;
+    END_VAR
+    iq_stVCN.rUpperLimit := LIMIT(0, rUpperLimit, 100);
+    END_METHOD
+
+    METHOD M_ValveControl : BOOL
+    VAR_INPUT
+    	state:E_VCN; // Close, Open, Pressure, Manual
+    END_VAR
+    iq_stVCN.eValveControl := state;
+    END_METHOD
+
 
 Related:
+    * `E_VCN`_
     * `FB_Valve`_
     * `ST_VCN`_
 
@@ -8854,6 +9834,7 @@ FB_VFS
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_ResetAlarms:
     //iq_stValve.xERR_DifPres R= i_xResetFault;
 
@@ -8869,6 +9850,7 @@ FB_VFS
     	i_xVAC_FAULT_Reset:=FALSE;
     END_IF
     END_ACTION
+
     ACTION IO:
     q_xTrigger := i_xTrigger;
     q_xVFS_Closed:= i_xClsLS;
@@ -8973,6 +9955,7 @@ FB_VFS_Interface
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_Logger:
     // ILK logger
 
@@ -9018,6 +10001,7 @@ FB_VFS_Interface
     rtTriggered(CLK:= ((q_xPRESS_OK) OR (i_xTrigger)) AND ( q_xVetoValveOpenDO AND NOT q_xVetoValveClosed));
     IF rtTriggered.Q THEN fbLogger(sMsg:='Fast valve triggered!', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
+
     ACTION IO:
     (*inputs*)
     iq_stValve.i_xTrigger := i_xTrigger;
@@ -9439,6 +10423,7 @@ FB_VGC
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -9452,6 +10437,7 @@ FB_VGC
     iq_stValve.sIlkUSDeviceName := This^.i_stUSG.sPath;
     iq_stValve.sIlkDSDeviceName := This^.i_stDSG.sPath;
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
 
@@ -9508,6 +10494,7 @@ FB_VGC
     tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -9528,6 +10515,7 @@ FB_VGC
     	rHYST_PERC:= iq_stValve.rHYST_PERC;
     END_IF;
     END_ACTION
+
     ACTION ACT_PMPS:
     bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);
     bDone := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xOpnLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xClsLS);
@@ -9555,6 +10543,7 @@ FB_VGC
     	fbArbiter.RemoveRequest(bptm.i_nRequestedAssertionID);
     END_IF
     END_ACTION
+
     ACTION ACT_ResetAlarms:
     iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
     iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
@@ -9567,9 +10556,30 @@ FB_VGC
     END_IF
     END_ACTION
 
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_OPN_SW : BOOL
+    VAR_INPUT
+    		value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := value;
+    END_METHOD
+
 
 Related:
     * `E_VGC`_
+    * `E_ValvePositionState`_
     * `FB_Valve`_
     * `ST_VG`_
     * `ST_VGC`_
@@ -9974,6 +10984,7 @@ FB_VGC_2S
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -9987,6 +10998,7 @@ FB_VGC_2S
     iq_stValve.sIlkUSDeviceName := This^.i_stUSG.sPath;
     iq_stValve.sIlkDSDeviceName := This^.i_stDSG.sPath;
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
 
@@ -10043,6 +11055,7 @@ FB_VGC_2S
     tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
     END_ACTION
+
     ACTION ACT_Persistent:
     (*On first PLC pass, load the persistent value into the structrue variable*)
     IF (SUPER^.bRestorePersistentData) THEN
@@ -10070,6 +11083,7 @@ FB_VGC_2S
     	rAT_VAC_SP_DS := iq_stValve.rAT_VAC_SP_DS;
     END_IF;
     END_ACTION
+
     ACTION ACT_PMPS:
     bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);
     bDone := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xOpnLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xClsLS);
@@ -10097,6 +11111,7 @@ FB_VGC_2S
     	fbArbiter.RemoveRequest(bptm.i_nRequestedAssertionID);
     END_IF
     END_ACTION
+
     ACTION ACT_ResetAlarms:
     iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
     iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
@@ -10109,9 +11124,30 @@ FB_VGC_2S
     END_IF
     END_ACTION
 
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_OPN_SW : BOOL
+    VAR_INPUT
+    		value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := value;
+    END_METHOD
+
 
 Related:
     * `E_VGC`_
+    * `E_ValvePositionState`_
     * `FB_Valve`_
     * `ST_VG`_
     * `ST_VGC_2S`_
@@ -10494,6 +11530,7 @@ FB_VGC_AP
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -10503,6 +11540,7 @@ FB_VGC_AP
     (*outputs*)
     q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     END_ACTION
+
     ACTION ACT_ResetAlarms:
     iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
     iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
@@ -10513,9 +11551,30 @@ FB_VGC_AP
     END_IF
     END_ACTION
 
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_OPN_SW : BOOL
+    VAR_INPUT
+    		value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := value;
+    END_METHOD
+
 
 Related:
     * `E_VGC`_
+    * `E_ValvePositionState`_
     * `ST_VG`_
     * `ST_VGC`_
 
@@ -10895,6 +11954,7 @@ FB_VGC_EBD
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -10910,6 +11970,7 @@ FB_VGC_EBD
     iq_stValve.sIlkUSDeviceName := This^.i_stUSG.sPath;
     iq_stValve.sIlkDSDeviceName := This^.i_stDSG.sPath;
     END_ACTION
+
     ACTION ACT_ResetAlarms:
     iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
     iq_stValve.xERR_SP R= iq_stValve.pv_xAlmRst;
@@ -10920,9 +11981,30 @@ FB_VGC_EBD
     END_IF
     END_ACTION
 
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_OPN_SW : BOOL
+    VAR_INPUT
+    		value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := value;
+    END_METHOD
+
 
 Related:
     * `E_VGC`_
+    * `E_ValvePositionState`_
     * `FB_VGC`_
     * `ST_VG`_
     * `ST_VGC`_
@@ -10950,6 +12032,111 @@ FB_VGC_Test
     M_Interlock();
 
     END_FUNCTION_BLOCK
+
+    METHOD M_Check_State
+    VAR_INPUT
+    END_VAR
+
+    END_METHOD
+
+    METHOD M_INIT : BOOL
+    VAR//_INPUT
+    	
+    END_VAR
+    TEST('VGC_Startup');
+    This^.US_IG.rPRESS := 1E-9;
+    This^.US_IG.xPRESS_OK := TRUE;
+    This^.US_IG.xAT_VAC := TRUE;
+
+    This^.DS_IG.rPRESS := 1E-9;
+    This^.DS_IG.xPRESS_OK := TRUE;
+
+    (*This^.VGC(
+    	i_stUSG:= This^.US_IG, 
+    	i_stDSG:= This^.DS_IG , 
+    	i_xDis_DPIlk:= FALSE, 
+    	i_xEPS_OK:= TRUE , 
+    	//i_xPMPS_OK:= TRUE, 
+    	i_xExt_OK:= TRUE, 
+    	i_xOverrideMode:= , 
+    	i_xReset:= , 
+    	iq_stValve=> , 
+    	xMPS_OK=> , 
+    	io_fbFFHWO:= This^.io_fbFFHWO,
+    	fbArbiter:=g_fbArbiter);
+    *)
+    AssertFalse(This^.VGC.iq_stValve.pv_xOPN_SW,'VGC pv_xOPN_SW is set to true');
+    AssertFalse(VGC.iq_stValve.q_xOPN_DO,'VGC q_xOPN_DO is set to true');
+    TEST_FINISHED_NAMED('VGC_Startup');
+    END_METHOD
+
+    METHOD M_Interlock : BOOL
+    VAR//_INPUT
+    	
+    END_VAR
+    // Test interlock is active and attempting to open valve
+    TEST('VGC_Interlock_Active');
+    This^.US_IG.xPRESS_OK := FALSE; 
+    This^.DS_IG.xPRESS_OK := FALSE;
+    VGC.M_Set_OPN_SW(TRUE);
+    // run the function block one more time
+    (*VGC(
+    	i_stUSG:= US_IG, 
+    	i_stDSG:= DS_IG , 
+    	i_xDis_DPIlk:= FALSE, 
+    	i_xEPS_OK:= TRUE , 
+    	i_xPMPS_OK:= TRUE , 
+    	i_xExt_OK:= TRUE, 
+    	i_xOverrideMode:= , 
+    	i_xReset:= , 
+    	iq_stValve=> , 
+    	xMPS_OK=> , 
+    	io_fbFFHWO:= io_fbFFHWO);*)
+    AssertFalse(VGC.iq_stValve.pv_xOPN_SW,'VGC pv_xOPN_SW is set to true');
+    AssertFalse(VGC.iq_stValve.q_xOPN_DO,'VGC q_xOPN_DO is set to true');
+    TEST_FINISHED_NAMED('VGC_Interlock_Active');
+    // Test interlock is not active and attempting to open valve
+    TEST('VGC_Interlock_OK');
+    This^.US_IG.xPRESS_OK := TRUE; 
+    This^.DS_IG.xPRESS_OK := TRUE;
+    VGC.M_Set_OPN_SW(TRUE);
+    // run the function block one more time
+    (*VGC(
+    	i_stUSG:= US_IG, 
+    	i_stDSG:= DS_IG , 
+    	i_xDis_DPIlk:= FALSE, 
+    	i_xEPS_OK:= , 
+    	i_xPMPS_OK:= , 
+    	i_xExt_OK:= , 
+    	i_xOverrideMode:= , 
+    	i_xReset:= , 
+    	iq_stValve=> , 
+    	xMPS_OK=> , 
+    	io_fbFFHWO:= io_fbFFHWO);*)
+    AssertTrue(VGC.iq_stValve.pv_xOPN_SW,'VGC pv_xOPN_SW is set to false');
+    AssertTrue(VGC.iq_stValve.q_xOPN_DO,'VGC q_xOPN_DO is set to false');
+    TEST_FINISHED_NAMED('VGC_Interlock_OK');
+    // Test interlock ok lost while valve is open
+    TEST('VGC_Interlock_Lost');
+    This^.US_IG.xPRESS_OK := False; 
+    This^.DS_IG.xPRESS_OK := TRUE;
+    // run the function block one more time
+    (*VGC(
+    	i_stUSG:= US_IG, 
+    	i_stDSG:= DS_IG , 
+    	i_xDis_DPIlk:= FALSE, 
+    	i_xEPS_OK:= , 
+    	i_xPMPS_OK:= , 
+    	i_xExt_OK:= , 
+    	i_xOverrideMode:= , 
+    	i_xReset:= , 
+    	iq_stValve=> , 
+    	xMPS_OK=> , 
+    	io_fbFFHWO:= io_fbFFHWO);*)
+    AssertFalse(VGC.iq_stValve.pv_xOPN_SW,'VGC pv_xOPN_SW is set to true');
+    AssertFalse(VGC.iq_stValve.q_xOPN_DO,'VGC q_xOPN_DO is set to true');
+    TEST_FINISHED_NAMED('VGC_Interlock_Lost');
+    END_METHOD
 
 
 Related:
@@ -11091,6 +12278,7 @@ FB_VRC
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -11099,6 +12287,7 @@ FB_VRC
     (*outputs*)
     q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
 
@@ -11138,8 +12327,29 @@ FB_VRC
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
     END_ACTION
 
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_OPN_SW : BOOL
+    VAR_INPUT
+    	value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := value;
+    END_METHOD
+
 
 Related:
+    * `E_ValvePositionState`_
     * `FB_Valve`_
     * `F_TURBO_VRC_ILK`_
     * `ST_VRC`_
@@ -11305,6 +12515,7 @@ FB_VRC_DA
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -11316,6 +12527,7 @@ FB_VRC_DA
     q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     q_xCLS_DO:= iq_stValve.q_xCLS_DO;
     END_ACTION
+
     ACTION ACT_Logger:
     //STATE Logger  
 
@@ -11351,8 +12563,38 @@ FB_VRC_DA
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
     END_ACTION
 
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);
+    END_METHOD
+
+    METHOD M_Set_CLS_SW : BOOL
+    VAR_INPUT
+    	value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := NOT (value);
+    This^.iq_stValve.pv_xCLS_SW := value;
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_OPN_SW : BOOL
+    VAR_INPUT
+    	value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := value;
+    This^.iq_stValve.pv_xCLS_SW := NOT (value);
+    END_METHOD
+
 
 Related:
+    * `E_ValvePositionState`_
     * `FB_Valve`_
     * `ST_VRC_NO`_
 
@@ -11479,6 +12721,7 @@ FB_VRC_EBD
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -11488,6 +12731,7 @@ FB_VRC_EBD
     q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     q_xOPN_DO_2:= iq_stValve.q_xOPN_DO;
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
 
@@ -11527,8 +12771,29 @@ FB_VRC_EBD
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
     END_ACTION
 
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_OPN_SW : BOOL
+    VAR_INPUT
+    	value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := value;
+    END_METHOD
+
 
 Related:
+    * `E_ValvePositionState`_
     * `FB_VGC`_
     * `FB_Valve`_
     * `F_TURBO_VRC_ILK`_
@@ -11665,6 +12930,7 @@ FB_VRC_NC_ClsLS
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     //iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -11673,6 +12939,7 @@ FB_VRC_NC_ClsLS
     (*outputs*)
     q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     END_ACTION
+
     ACTION ACT_Logger:
     // ILK logger
 
@@ -11712,8 +12979,29 @@ FB_VRC_NC_ClsLS
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
     END_ACTION
 
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_OPN_SW : BOOL
+    VAR_INPUT
+    	value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := value;
+    END_METHOD
+
 
 Related:
+    * `E_ValvePositionState`_
     * `FB_Valve`_
     * `F_TURBO_VRC_ILK`_
     * `ST_VRC`_
@@ -11844,6 +13132,7 @@ FB_VRC_NO
     ACT_Logger();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -11854,8 +13143,29 @@ FB_VRC_NO
     iq_stValve.q_xCLS_DO := q_xCLS_DO;
     END_ACTION
 
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_CLS_SW : BOOL
+    VAR_INPUT
+    		value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xCLS_SW := value;
+    END_METHOD
+
 
 Related:
+    * `E_ValvePositionState`_
     * `FB_Valve`_
     * `F_TURBO_VRC_ILK`_
     * `ST_VRC_NO`_
@@ -12012,6 +13322,7 @@ FB_VRC_NO_FFO
         io_fbFFHWO := io_fbFFHWO);
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.i_xOpnLS := 	i_xOpnLS;
@@ -12022,6 +13333,7 @@ FB_VRC_NO_FFO
     //q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     iq_stValve.q_xCLS_DO:= q_xCLS_DO;
     END_ACTION
+
     ACTION ACT_PMPS:
     bMoving := (iq_stValve.pv_xCLS_SW AND NOT iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xCLS_SW AND NOT i_xOpnLS);
     bDone := (NOT iq_stValve.pv_xCLS_SW AND iq_stValve.i_xOpnLS) XOR ( iq_stValve.pv_xCLS_SW AND i_xClsLS);
@@ -12049,8 +13361,29 @@ FB_VRC_NO_FFO
     END_IF
     END_ACTION
 
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);
+    END_METHOD
+
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_CLS_SW : BOOL
+    VAR_INPUT
+    		value:BOOL;
+    END_VAR
+    This^.iq_stValve.pv_xCLS_SW := value;
+    END_METHOD
+
 
 Related:
+    * `E_ValvePositionState`_
     * `FB_VRC_NO`_
 
 
@@ -12124,9 +13457,63 @@ FB_VRC_Test
 
     END_FUNCTION_BLOCK
 
+    METHOD M_Check_State
+    VAR_INPUT
+    END_VAR
+
+    END_METHOD
+
+    METHOD M_INIT : BOOL
+    VAR//_INPUT
+    	
+    	
+    	Interlock_OK :BOOL := TRUE;
+     
+    	ex: INT;
+    END_VAR
+    TEST('VRC_Startup');
+    //__TRY
+    VRC(i_xExtILK_OK:= Interlock_OK, i_xOverrideMode:= , iq_stValve=> );
+    AssertFalse(VRC.iq_stValve.q_xOPN_DO,'VRC q_xOPN_DO is set to true');
+    AssertFalse(VRC.iq_stValve.pv_xOPN_SW,'VRC pv_xOPN_SW is set to true');
+    //__CATCH(ex) 
+    //__FINALLY
+    TEST_FINISHED_NAMED('VRC_Startup');
+    //__ENDTRY
+    END_METHOD
+
+    METHOD M_Interlock
+    VAR
+    	US_IG : ST_VG;
+    	DS_IG : ST_VG;
+    	
+    	VRC: FB_VRC;
+    END_VAR
+    TEST('VRC_Interlock_Active');
+    VRC.M_Set_OPN_SW (TRUE);
+    VRC(i_xExtILK_OK:= FALSE, i_xOverrideMode:= , iq_stValve=> );
+    AssertFalse(VRC.iq_stValve.pv_xOPN_SW,'VRC open_SW is set to true');
+    AssertFalse(VRC.iq_stValve.q_xOPN_DO,'VRC open DO is set to true');
+    TEST_FINISHED_NAMED('VRC_Interlock_Active');
+
+    TEST('VRC_Interlock_OK');
+    VRC.M_Set_OPN_SW (TRUE);
+    VRC(i_xExtILK_OK:= TRUE, i_xOverrideMode:= , iq_stValve=> );
+    AssertTrue(VRC.iq_stValve.pv_xOPN_SW,'VRC open_SW is set to FALSE');
+    AssertTrue(VRC.iq_stValve.q_xOPN_DO,'VRC open DO is set to FALSE');
+    TEST_FINISHED_NAMED('VRC_Interlock_OK');
+
+    TEST('VRC_Interlock_Lost');
+    VRC(i_xExtILK_OK:= FALSE, i_xOverrideMode:= , iq_stValve=> );
+    AssertFalse(VRC.iq_stValve.pv_xOPN_SW,'VRC open_SW is set to true');
+    AssertFalse(VRC.iq_stValve.q_xOPN_DO,'VRC open DO is set to true');
+    TEST_FINISHED_NAMED('VRC_Interlock_Lost');
+    END_METHOD
+
 
 Related:
     * `FB_VRC`_
+    * `ST_VG`_
 
 
 FB_VVC
@@ -12192,12 +13579,42 @@ FB_VVC
     ACT_IO();
 
     END_FUNCTION_BLOCK
+
     ACTION ACT_IO:
     (*inputs*)
     iq_stValve.xOverrideMode := i_xOverrideMode;
     (*outputs*)
     q_xOPN_DO:= iq_stValve.q_xOPN_DO;
     END_ACTION
+
+    // Method Returns True if the Valve is closed, i.e. the open digital output is not active
+    METHOD PUBLIC M_IsClosed : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsClosed := NOT This^.q_xOPN_DO;
+    END_METHOD
+
+    // Method Returns True if the Valve is open, i.e. the open digital output is active
+    METHOD PUBLIC M_IsOpen : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsOpen := This^.q_xOPN_DO;
+    END_METHOD
+
+    METHOD PUBLIC M_Open : BOOL
+    VAR_INPUT
+    	open: bool; //Set to true to open the valvue, false to close
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := open;
+    END_METHOD
+
+    // Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
+    METHOD PUBLIC M_Set_OPN_SW : BOOL
+    VAR_INPUT
+    	value:BOOL; //True to SET, False to RESET
+    END_VAR
+    This^.iq_stValve.pv_xOPN_SW := value;
+    END_METHOD
 
 
 Related:
