@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_VCN_VAT590" Id="{1cac1206-fd6c-43b8-ae08-593989ed3a26}">
+    <Declaration><![CDATA[TYPE ST_VCN_VAT590 :
+STRUCT
+	(* VCN - Valve Controlled Needle
+	Used for VAT590 needle valves *)
+	{attribute 'pytmc' := '
+    pv: POS_RAW_RBV
+	io: i
+    '}
+	nRawPosition : DINT; //Position readback
+	{attribute 'pytmc' := '
+    pv: PRES_RAW_RBV
+	io: i
+    '}
+	nRawPressure : DINT; //Pressure readback
+	{attribute 'pytmc' := '
+    pv: PRES_TORR_RBV
+	field: EGU "TORR"
+	io: i
+    '}
+	fPressure : REAL; //Pressure readback in Torr units
+	{attribute 'pytmc' := '
+	pv: POS_SP_RBV
+	io: i
+	'}
+	nPositionSP : DINT; //Position setpoint readback
+	{attribute 'pytmc' := '
+	pv: PRES_SP_RBV
+	io: i
+	'}
+	nPressureSP : DINT; //Pressure setpoint readback
+	{attribute 'pytmc' := '
+    pv: ILK_OK
+	field: ZNAM NOT OK
+	field: ONAM OK
+	field: ZSV MAJOR
+	field: OSV NO_ALARM
+	io: i
+    '}
+	bIlkOK : BOOL := FALSE; // Interlock Bit status
+	{attribute 'pytmc' := '
+    pv: Limit
+	io: io
+	autosave_pass1: VAL DESC
+    '}
+	fUpperLimit	: REAL := 100; // Percentage Upper limit on valve open
+	{attribute 'pytmc' := '
+    pv: PresLimit
+	io: io
+	autosave_pass1: VAL DESC
+    '}
+	fPresUpperLimit	: REAL := 1E-2; // Upper limit for pressure control 
+	{attribute 'pytmc' := '
+	pv: POS_REQ
+	field: DRVL 0.0
+	field: DRVH 100.0
+	io: io
+	'}
+	fReqPosition : REAL; //Requested position (0.0-100.0%)
+	{attribute 'pytmc' := '
+	pv: PRES_REQ
+	field: EGU "TORR"
+	io: io;
+	'}
+	fReqPressure : REAL; //Requested pressure in Torr units
+	{attribute 'pytmc' :=  ' 
+	pv: STATE
+	io: io
+	'}
+	eValveControl : E_VCN_VAT590; //Valve control mode
+	{attribute 'pytmc' := '
+    pv: 
+	'}
+	stValveStatus : ST_VAT590_STATUS; //All Valve status readbacks
+	{attribute 'pytmc' :=  ' 
+	pv: PRES_SENS
+	io: io
+	'}
+	ePressureSensor : E_VAT590_PressureSensor; // Select pressure sensor
+	{attribute 'pytmc' :=  ' 
+	pv: REM_CTRL
+	io: o
+	'}
+	eRemoteControl : E_VAT590_AccessMode; // Select remote control mode
+	{attribute 'pytmc' := '
+	pv: ZERO
+	field: ZNAM NO_OPERATION
+	field: ONAM ZERO
+	io: o
+	'}
+	bZero : BOOL; // Activate Zero function bit
+	{attribute 'pytmc' :=  ' 
+	pv: GEN_STATUS
+	io: i
+	'}
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

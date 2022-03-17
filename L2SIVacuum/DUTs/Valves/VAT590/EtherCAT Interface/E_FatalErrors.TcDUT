@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_FatalErrors" Id="{a7468a7d-d8ef-44f4-83de-890c933bd59d}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_FatalErrors :
+(
+	NO_FATAL_ERROR := 0,
+	NoStopDetectedSynch := 20,
+	ValveBlockedSynch := 21,
+	ValveBlocked := 22,
+	StepLossSynch := 25,
+	MotorDriverFault := 40
+) UINT := NO_FATAL_ERROR;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

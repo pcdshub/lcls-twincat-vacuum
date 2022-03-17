@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_VCN_VAT590" Id="{bdb8ce15-01a9-412d-9a47-0daa193b23f8}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_VCN_VAT590 :
+(
+	ManualControl := 0,
+	CloseValve := 1,
+	OpenValve := 2,
+	PressureControl := 3,
+	HoldValve := 4
+) USINT := CloseValve;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

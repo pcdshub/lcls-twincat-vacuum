@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_ControlMode" Id="{c6a57a62-6838-40b1-a442-f57f4d63d5d3}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_ControlMode :
+(
+	Init := 0,
+	Synch := 1,
+	ManualControl := 2,
+	CloseValve := 3,
+	OpenValve := 4,
+	PressureControl := 5,
+	HoldValve := 6,
+	LearnProcedure := 7,
+	InterlockOpen := 8,
+	InterlockClose := 9,
+	MaintenanceOpen := 10,
+	MaintenanceClose := 11,
+	PowerFailure := 12,
+	Safety := 13,
+	FatalError := 14
+) USINT := Init;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

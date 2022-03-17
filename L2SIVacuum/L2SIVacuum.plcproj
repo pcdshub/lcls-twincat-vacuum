@@ -113,6 +113,42 @@
     <Compile Include="DUTs\Valves\ST_VRC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Valves\VAT590\EtherCAT Interface\E_ControlMode.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\EtherCAT Interface\E_ControlModeSP.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\EtherCAT Interface\E_FatalErrors.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\EtherCAT Interface\ST_ExtendedWarnings.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\EtherCAT Interface\ST_GeneralControlSP.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\EtherCAT Interface\ST_GeneralStatus.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\EtherCAT Interface\ST_GeneralWarnings.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\E_VAT590_AccessMode.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\E_VAT590_PressureSensor.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\E_VCN_VAT590.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\ST_VAT590_STATUS.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\ST_VCN_VAT590.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GVLs\Constants.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -315,6 +351,7 @@
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VCN_VAT590.TcPOU">
       <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VFS.TcPOU">
       <SubType>Code</SubType>
@@ -438,6 +475,8 @@
     <Folder Include="DUTs\Gauges" />
     <Folder Include="DUTs\Pumps" />
     <Folder Include="DUTs\Valves" />
+    <Folder Include="DUTs\Valves\VAT590" />
+    <Folder Include="DUTs\Valves\VAT590\EtherCAT Interface" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\Functions\Deprecated" />
     <Folder Include="POUs\Functions\Deprecated\Gauges" />
