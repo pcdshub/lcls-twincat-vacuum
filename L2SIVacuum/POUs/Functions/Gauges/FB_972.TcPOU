@@ -28,23 +28,56 @@ END_VAR
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
-IF rV > 1 THEN
+IF (rV > 1) AND (rV <= 1) THEN
 	PG.rPRESS := LREAL_TO_REAL(EXPT(10, 2*rV-11));
 	PG.xPRESS_OK := TRUE;
 	PG.eState := Valid; //Press OK
 ELSE
 	PG.xPRESS_OK := FALSE;
-	PG.eState := OoR;
+	IF (rV <= 1) THEN PG.eState := GaugeDisconnected;
+		ELSE PG.eState := OoR;
+	END_IF
 END_IF
 
+(* Setpoint evaluation *)
+PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS < PG.rVAC_SP);
 
-
+(*Logger*)
+ACT_Logger();
 (* Soft IO Mapping*)
 ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{57edb1c8-c4ce-46a6-8329-dd1927c8ce8e}">
       <Implementation>
         <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Logger" Id="{e27f7c5d-a6a0-44f8-9f5b-d0a5d2ac0c45}">
+      <Implementation>
+        <ST><![CDATA[
+//STATE Logger  
+IF ePrevState <> PG.eState THEN
+	  CASE PG.eState OF
+		ValidHi:
+			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+		ValidLo:
+			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+		Valid:
+			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+  		GaugeDisconnected:
+			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+		PressInvalid:
+			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+		OoR:
+			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+		Starting:
+			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := PG.eState;  
+  END_IF
+  
+
+]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_SetBits" Id="{c873eda2-ce3a-4d08-a1f9-e53b8f43dbd9}">
@@ -57,15 +90,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_972">
-      <LineId Id="3" Count="17" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_972.ACT_IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_972.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
