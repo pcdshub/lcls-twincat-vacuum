@@ -3074,17 +3074,22 @@ FB_972
     If (iTermBits=0) THEN iTermBits := 32767;END_IF
     rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
-    IF rV > 1 THEN
+    IF (rV > 1) AND (rV <= 7) THEN
     	PG.rPRESS := LREAL_TO_REAL(EXPT(10, 2*rV-11));
     	PG.xPRESS_OK := TRUE;
     	PG.eState := Valid; //Press OK
     ELSE
     	PG.xPRESS_OK := FALSE;
-    	PG.eState := OoR;
+    	IF (rV <= 1) THEN PG.eState := GaugeDisconnected;
+    		ELSE PG.eState := OoR;
+    	END_IF
     END_IF
 
+    (* Setpoint evaluation *)
+    PG.xAT_VAC := PG.xPRESS_OK AND (PG.rPRESS < PG.rVAC_SP);
 
-
+    (*Logger*)
+    ACT_Logger();
     (* Soft IO Mapping*)
     ACT_IO();
 
@@ -3092,6 +3097,29 @@ FB_972
 
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
+    END_ACTION
+
+    ACTION ACT_Logger:
+    //STATE Logger  
+    IF ePrevState <> PG.eState THEN
+    	  CASE PG.eState OF
+    		ValidHi:
+    			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+    		ValidLo:
+    			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+    		Valid:
+    			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+      		GaugeDisconnected:
+    			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+    		PressInvalid:
+    			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+    		OoR:
+    			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+    		Starting:
+    			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+    	  END_CASE
+    	  ePrevState := PG.eState;  
+      END_IF
     END_ACTION
 
     METHOD M_SetBits : BOOL

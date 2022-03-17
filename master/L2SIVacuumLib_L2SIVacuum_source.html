@@ -3212,17 +3212,22 @@ END_FUNCTION
 <span class="n">If</span> <span class="p">(</span><span class="n">iTermBits</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">iTermBits</span> <span class="o">:=</span> <span class="mi">32767</span><span class="p">;</span><span class="n">END_IF</span>
 <span class="n">rV</span> <span class="o">:=</span> <span class="mi">10</span><span class="o">*</span><span class="n">INT_TO_REAL</span><span class="p">(</span><span class="n">PG</span><span class="o">.</span><span class="n">i_iPRESS_R</span><span class="p">)</span><span class="o">/</span><span class="n">iTermBits</span><span class="p">;</span>
 
-<span class="n">IF</span> <span class="n">rV</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="n">THEN</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">rV</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">AND</span> <span class="p">(</span><span class="n">rV</span> <span class="o">&lt;=</span> <span class="mi">7</span><span class="p">)</span> <span class="n">THEN</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">rV</span><span class="o">-</span><span class="mi">11</span><span class="p">));</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">Valid</span><span class="p">;</span> <span class="o">//</span><span class="n">Press</span> <span class="n">OK</span>
 <span class="n">ELSE</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
-    <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">OoR</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">rV</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">GaugeDisconnected</span><span class="p">;</span>
+            <span class="n">ELSE</span> <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">OoR</span><span class="p">;</span>
+    <span class="n">END_IF</span>
 <span class="n">END_IF</span>
 
+<span class="p">(</span><span class="o">*</span> <span class="n">Setpoint</span> <span class="n">evaluation</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">PG</span><span class="o">.</span><span class="n">xAT_VAC</span> <span class="o">:=</span> <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">AND</span> <span class="p">(</span><span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;</span> <span class="n">PG</span><span class="o">.</span><span class="n">rVAC_SP</span><span class="p">);</span>
 
-
+<span class="p">(</span><span class="o">*</span><span class="n">Logger</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Logger</span><span class="p">();</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">Soft</span> <span class="n">IO</span> <span class="n">Mapping</span><span class="o">*</span><span class="p">)</span>
 <span class="n">ACT_IO</span><span class="p">();</span>
 
@@ -3230,6 +3235,29 @@ END_FUNCTION
 
 <span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
 <span class="n">PG</span><span class="o">.</span><span class="n">i_iPRESS_R</span> <span class="o">:=</span><span class="n">i_iPRESS_R</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
+
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="o">//</span><span class="n">STATE</span> <span class="n">Logger</span>
+<span class="n">IF</span> <span class="n">ePrevState</span> <span class="o">&lt;&gt;</span> <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="n">THEN</span>
+      <span class="n">CASE</span> <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="n">OF</span>
+            <span class="n">ValidHi</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure valid high.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">ValidLo</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure valid low.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">Valid</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure valid.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">GaugeDisconnected</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge Disconnected.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+            <span class="n">PressInvalid</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure invalid.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+            <span class="n">OoR</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure out of range.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+            <span class="n">Starting</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge starting.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+      <span class="n">END_CASE</span>
+      <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">PG</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
+  <span class="n">END_IF</span>
 <span class="n">END_ACTION</span>
 
 <span class="n">METHOD</span> <span class="n">M_SetBits</span> <span class="p">:</span> <span class="n">BOOL</span>
