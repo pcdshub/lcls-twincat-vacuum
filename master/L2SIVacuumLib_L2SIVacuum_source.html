@@ -53,16 +53,26 @@
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_epics.html">Data Types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_L2SIVacuum_epics.html#database-records">Database Records</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">DUTs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#e-controlmode">E_ControlMode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#e-controlmodesp">E_ControlModeSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#e-fatalerrors">E_FatalErrors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#e-pressurestate">E_PressureState</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#e-pumpstate">E_PumpState</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#e-valvepositionstate">E_ValvePositionState</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#e-vat590-accessmode">E_VAT590_AccessMode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#e-vat590-pressuresensor">E_VAT590_PressureSensor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#e-vcn">E_VCN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#e-vcn-vat590">E_VCN_VAT590</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#e-vgc">E_VGC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#gauge-type">Gauge_Type</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-agilentptm">ST_AgilentPTM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-ebaradrypump">ST_EbaraDryPump</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-ebaraeva">ST_EbaraEVA</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-ebaraptm">ST_EbaraPTM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-extendedwarnings">ST_ExtendedWarnings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-generalcontrolsp">ST_GeneralControlSP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-generalstatus">ST_GeneralStatus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-generalwarnings">ST_GeneralWarnings</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-kashiyamadrypump">ST_KashiyamaDryPump</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-leyboldptm">ST_LeyboldPTM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-pfeifferptm">ST_PfeifferPTM</a></li>
@@ -70,8 +80,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#st-ptm">ST_PTM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-roughpump">ST_RoughPump</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-valvebase">ST_ValveBase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-vat590-status">ST_VAT590_STATUS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-vcc-no">ST_VCC_NO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-vcn">ST_VCN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#st-vcn-vat590">ST_VCN_VAT590</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-vfs">ST_VFS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-vg">ST_VG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#st-vgc">ST_VGC</a></li>
@@ -162,6 +174,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#fb-vcc">FB_VCC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-vcc-no">FB_VCC_NO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-vcn">FB_VCN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-vcn-vat590">FB_VCN_VAT590</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-vfs">FB_VFS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-vfs-interface">FB_VFS_Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-vgc">FB_VGC</a></li>
@@ -210,6 +223,72 @@
              
   <section id="duts">
 <h1>DUTs<a class="headerlink" href="#duts" title="Permalink to this headline"></a></h1>
+<section id="e-controlmode">
+<h2>E_ControlMode<a class="headerlink" href="#e-controlmode" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;qualified_only&#39;</span><span class="p">}</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;strict&#39;</span><span class="p">}</span>
+<span class="n">TYPE</span> <span class="n">E_ControlMode</span> <span class="p">:</span>
+<span class="p">(</span>
+    <span class="n">Init</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">Synch</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">ManualControl</span> <span class="o">:=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">CloseValve</span> <span class="o">:=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">OpenValve</span> <span class="o">:=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">PressureControl</span> <span class="o">:=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">HoldValve</span> <span class="o">:=</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="n">LearnProcedure</span> <span class="o">:=</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="n">InterlockOpen</span> <span class="o">:=</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="n">InterlockClose</span> <span class="o">:=</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="n">MaintenanceOpen</span> <span class="o">:=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">MaintenanceClose</span> <span class="o">:=</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="n">PowerFailure</span> <span class="o">:=</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="n">Safety</span> <span class="o">:=</span> <span class="mi">13</span><span class="p">,</span>
+    <span class="n">FatalError</span> <span class="o">:=</span> <span class="mi">14</span>
+<span class="p">)</span> <span class="n">USINT</span> <span class="o">:=</span> <span class="n">Init</span><span class="p">;</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Related:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#e-controlmode">E_ControlMode</a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="e-controlmodesp">
+<h2>E_ControlModeSP<a class="headerlink" href="#e-controlmodesp" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;qualified_only&#39;</span><span class="p">}</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;strict&#39;</span><span class="p">}</span>
+<span class="n">TYPE</span> <span class="n">E_ControlModeSP</span> <span class="p">:</span>
+<span class="p">(</span>
+    <span class="n">ManualControl</span> <span class="o">:=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">CloseValve</span> <span class="o">:=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">OpenValve</span> <span class="o">:=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">PressureControl</span> <span class="o">:=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">HoldValve</span> <span class="o">:=</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="n">LearnProcedure</span> <span class="o">:=</span> <span class="mi">7</span>
+<span class="p">)</span> <span class="n">USINT</span> <span class="o">:=</span> <span class="n">CloseValve</span><span class="p">;</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+</section>
+<section id="e-fatalerrors">
+<h2>E_FatalErrors<a class="headerlink" href="#e-fatalerrors" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;qualified_only&#39;</span><span class="p">}</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;strict&#39;</span><span class="p">}</span>
+<span class="n">TYPE</span> <span class="n">E_FatalErrors</span> <span class="p">:</span>
+<span class="p">(</span>
+    <span class="n">NO_FATAL_ERROR</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">NoStopDetectedSynch</span> <span class="o">:=</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="n">ValveBlockedSynch</span> <span class="o">:=</span> <span class="mi">21</span><span class="p">,</span>
+    <span class="n">ValveBlocked</span> <span class="o">:=</span> <span class="mi">22</span><span class="p">,</span>
+    <span class="n">StepLossSynch</span> <span class="o">:=</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="n">MotorDriverFault</span> <span class="o">:=</span> <span class="mi">40</span>
+<span class="p">)</span> <span class="n">UINT</span> <span class="o">:=</span> <span class="n">NO_FATAL_ERROR</span><span class="p">;</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+</section>
 <section id="e-pressurestate">
 <h2>E_PressureState<a class="headerlink" href="#e-pressurestate" title="Permalink to this headline"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">E_PressureState</span> <span class="p">:</span>
@@ -234,7 +313,6 @@
 <dl class="simple">
 <dt>Related:</dt><dd><ul class="simple">
 <li><p><a class="reference internal" href="#constants">Constants</a></p></li>
-<li><p><a class="reference internal" href="#e-pressurestate">E_PressureState</a></p></li>
 </ul>
 </dd>
 </dl>
@@ -267,6 +345,33 @@
 </pre></div>
 </div>
 </section>
+<section id="e-vat590-accessmode">
+<h2>E_VAT590_AccessMode<a class="headerlink" href="#e-vat590-accessmode" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;qualified_only&#39;</span><span class="p">}</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;strict&#39;</span><span class="p">}</span>
+<span class="n">TYPE</span> <span class="n">E_VAT590_AccessMode</span> <span class="p">:</span>
+<span class="p">(</span>
+    <span class="n">LOCAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">REMOTE</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">LOCKED</span> <span class="o">:=</span> <span class="mi">2</span>
+<span class="p">)</span> <span class="n">USINT</span> <span class="o">:=</span> <span class="n">REMOTE</span><span class="p">;</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+</section>
+<section id="e-vat590-pressuresensor">
+<h2>E_VAT590_PressureSensor<a class="headerlink" href="#e-vat590-pressuresensor" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;qualified_only&#39;</span><span class="p">}</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;strict&#39;</span><span class="p">}</span>
+<span class="n">TYPE</span> <span class="n">E_VAT590_PressureSensor</span> <span class="p">:</span>
+<span class="p">(</span>
+    <span class="n">NOT_DEFINED</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">MKS500</span> <span class="o">:=</span> <span class="mi">1</span>
+<span class="p">)</span> <span class="n">USINT</span> <span class="o">:=</span> <span class="n">MKS500</span><span class="p">;</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+</section>
 <section id="e-vcn">
 <h2>E_VCN<a class="headerlink" href="#e-vcn" title="Permalink to this headline"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">E_VCN</span> <span class="p">:</span>
@@ -277,6 +382,22 @@
 <span class="n">ManualControl</span>       <span class="o">:=</span> <span class="mi">3</span>
 
     <span class="p">);</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+</section>
+<section id="e-vcn-vat590">
+<h2>E_VCN_VAT590<a class="headerlink" href="#e-vcn-vat590" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;qualified_only&#39;</span><span class="p">}</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;strict&#39;</span><span class="p">}</span>
+<span class="n">TYPE</span> <span class="n">E_VCN_VAT590</span> <span class="p">:</span>
+<span class="p">(</span>
+    <span class="n">ManualControl</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">CloseValve</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">OpenValve</span> <span class="o">:=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">PressureControl</span> <span class="o">:=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">HoldValve</span> <span class="o">:=</span> <span class="mi">4</span>
+<span class="p">)</span> <span class="n">USINT</span> <span class="o">:=</span> <span class="n">CloseValve</span><span class="p">;</span>
 <span class="n">END_TYPE</span>
 </pre></div>
 </div>
@@ -642,6 +763,106 @@
 </ul>
 </dd>
 </dl>
+</section>
+<section id="st-extendedwarnings">
+<h2>ST_ExtendedWarnings<a class="headerlink" href="#st-extendedwarnings" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_ExtendedWarnings</span> <span class="p">:</span>
+<span class="n">STRUCT</span>
+    <span class="n">Bit0RemoteControlNotPossible</span><span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit1ControlModeSPNotAllowed</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit2ZeroDisabled</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit3PFODeactivated</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit4Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit5PressureSPOutOfRange</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit6PositionSPOutOfRange</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit7Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit8Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit9Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit10CtrlSPOutOfRange</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit11GeneralCtrlSPOutOfRange</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit12ProcDataSettingsNotvalid</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit13Reserved5</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit14Reserved6</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit15Reserved7</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+<span class="n">END_STRUCT</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+</section>
+<section id="st-generalcontrolsp">
+<h2>ST_GeneralControlSP<a class="headerlink" href="#st-generalcontrolsp" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_GeneralControlSP</span> <span class="p">:</span>
+<span class="n">STRUCT</span>
+    <span class="n">Bit0ExecuteZero</span><span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit1Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit2PingPongTxBit</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit3Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit4AccessMode</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit5Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit6Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit7Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit8Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit9Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit10Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit11Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit12Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit13Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit14Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit15Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+<span class="n">END_STRUCT</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+</section>
+<section id="st-generalstatus">
+<h2>ST_GeneralStatus<a class="headerlink" href="#st-generalstatus" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_GeneralStatus</span> <span class="p">:</span>
+<span class="n">STRUCT</span>
+    <span class="n">Bit0FieldBusDatavalid</span><span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit1ZeroExecuted</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit2PingPongRxBit</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit3PressureSimulation</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit4PressureSPReached</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit5Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit6Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit7AccessModeBit0</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit8AccessModeBit1</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit9WarningsActive</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit10Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit11Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit12Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit13Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit14Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit15Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+<span class="n">END_STRUCT</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+</section>
+<section id="st-generalwarnings">
+<h2>ST_GeneralWarnings<a class="headerlink" href="#st-generalwarnings" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_GeneralWarnings</span> <span class="p">:</span>
+<span class="n">STRUCT</span>
+    <span class="n">Bit0ServiceRequest</span><span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit1Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit2Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit3PowerFailureBattery</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit4Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit5Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit6Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit7Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit8Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit9Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit10SensMeasUnitFault</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit11Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit12Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit13Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit14Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+    <span class="n">Bit15Reserved</span> <span class="p">:</span> <span class="n">BIT</span><span class="p">;</span>
+<span class="n">END_STRUCT</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
 </section>
 <section id="st-kashiyamadrypump">
 <h2>ST_KashiyamaDryPump<a class="headerlink" href="#st-kashiyamadrypump" title="Permalink to this headline"></a></h2>
@@ -1427,6 +1648,203 @@ END_TYPE
 </dd>
 </dl>
 </section>
+<section id="st-vat590-status">
+<h2>ST_VAT590_STATUS<a class="headerlink" href="#st-vat590-status" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_VAT590_STATUS</span> <span class="p">:</span>
+<span class="n">STRUCT</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span>  <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">CTRL_MODE_RBV</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">eControlMode</span> <span class="p">:</span> <span class="n">E_ControlMode</span><span class="p">;</span> <span class="o">//</span> <span class="n">Valve</span> <span class="n">control</span> <span class="n">mode</span> <span class="n">readback</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span>  <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">FATAL_ERR_RBV</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">eFatalErrors</span> <span class="p">:</span> <span class="n">E_FatalErrors</span><span class="p">;</span> <span class="o">//</span> <span class="n">Valve</span> <span class="n">Fatal</span> <span class="n">Error</span> <span class="n">status</span> <span class="n">readback</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">General</span> <span class="n">Status</span> <span class="n">readback</span><span class="o">*</span><span class="p">)</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_STATUS</span><span class="p">:</span><span class="n">ECAT_DATA_VALID</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">MAJOR</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">NO_ALARM</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bFieldBusDatavalid</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_STATUS</span><span class="p">:</span><span class="n">ZERO_EXECUTED</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">NOT_EXECUTED</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">EXECUTED</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">NO_ALARM</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bZeroExecuted</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_STATUS</span><span class="p">:</span><span class="n">ECAT_RxBIT</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">INVERTED</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_INVERTED</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">NO_ALARM</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bPingPongRxBit</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_STATUS</span><span class="p">:</span><span class="n">PRES_SIM</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OFF</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">ON</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">NO_ALARM</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bPressureSimulation</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_STATUS</span><span class="p">:</span><span class="n">PRES_SP_REACHED</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">NO_ALARM</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bPressureSPReached</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_STATUS</span><span class="p">:</span><span class="n">WARN_STATUS</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MAJOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bWarningsActive</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span>  <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_STATUS</span><span class="p">:</span><span class="n">REM_CTRL</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">eRemoteStatus</span> <span class="p">:</span> <span class="n">E_VAT590_AccessMode</span><span class="p">;</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">General</span> <span class="n">Warnings</span> <span class="n">readback</span><span class="o">*</span><span class="p">)</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_WARN</span><span class="p">:</span><span class="n">SERVICE_REQ</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MAJOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bServiceRequest</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_WARN</span><span class="p">:</span><span class="n">POWER_FAIL_BATT</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">READY</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_READY</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MINOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bPowerFailureBattery</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_WARN</span><span class="p">:</span><span class="n">ADC_UNIT_STATUS</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">FAULTED</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MAJOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bSensMeasUnitFault</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">Extended</span> <span class="n">Warnings</span> <span class="n">readback</span><span class="o">*</span><span class="p">)</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">EXT_WARN</span><span class="p">:</span><span class="n">REM_NOT_POSSIBLE</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MINOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bRemoteControlNotPossible</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">EXT_WARN</span><span class="p">:</span><span class="n">CTRL_SP_NOT_ALLOWED</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MINOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bControlModeSPNotAllowed</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">EXT_WARN</span><span class="p">:</span><span class="n">ZERO_STATUS</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">ENABLED</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">DISABLED</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MINOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bZeroDisabled</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">EXT_WARN</span><span class="p">:</span><span class="n">PFO_STATUS</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">ENABLED</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">DISABLED</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MINOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bPFODeactivated</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">EXT_WARN</span><span class="p">:</span><span class="n">PRES_SP_OOR</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MAJOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bPressureSPOutOfRange</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">EXT_WARN</span><span class="p">:</span><span class="n">POS_SP_OOR</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MAJOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bPositionSPOutOfRange</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">EXT_WARN</span><span class="p">:</span><span class="n">CTRL_SP_OOR</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MAJOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bCtrlSPOutOfRange</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">EXT_WARN</span><span class="p">:</span><span class="n">GENCTRL_SP_OOR</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MAJOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bGeneralCtrlSPOutOfRange</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">EXT_WARN</span><span class="p">:</span><span class="n">PROC_DATA_NOT_VALID</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">NOT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">NO_ALARM</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">MAJOR</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bProcDataSettingsNotvalid</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+<span class="n">END_STRUCT</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Related:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#e-controlmode">E_ControlMode</a></p></li>
+<li><p><a class="reference internal" href="#e-fatalerrors">E_FatalErrors</a></p></li>
+<li><p><a class="reference internal" href="#e-vat590-accessmode">E_VAT590_AccessMode</a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
 <section id="st-vcc-no">
 <h2>ST_VCC_NO<a class="headerlink" href="#st-vcc-no" title="Permalink to this headline"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>TYPE ST_VCC_NO:
@@ -1556,6 +1974,116 @@ END_TYPE
 <dl class="simple">
 <dt>Related:</dt><dd><ul class="simple">
 <li><p><a class="reference internal" href="#e-vcn">E_VCN</a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="st-vcn-vat590">
+<h2>ST_VCN_VAT590<a class="headerlink" href="#st-vcn-vat590" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TYPE</span> <span class="n">ST_VCN_VAT590</span> <span class="p">:</span>
+<span class="n">STRUCT</span>
+    <span class="p">(</span><span class="o">*</span> <span class="n">VCN</span> <span class="o">-</span> <span class="n">Valve</span> <span class="n">Controlled</span> <span class="n">Needle</span>
+    <span class="n">Used</span> <span class="k">for</span> <span class="n">VAT590</span> <span class="n">needle</span> <span class="n">valves</span> <span class="o">*</span><span class="p">)</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">POS_RAW_RBV</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">nRawPosition</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span> <span class="o">//</span><span class="n">Position</span> <span class="n">readback</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">PRES_RAW_RBV</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">nRawPressure</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span> <span class="o">//</span><span class="n">Pressure</span> <span class="n">readback</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">PRES_TORR_RBV</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">EGU</span> <span class="s2">&quot;TORR&quot;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">fPressure</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span> <span class="o">//</span><span class="n">Pressure</span> <span class="n">readback</span> <span class="ow">in</span> <span class="n">Torr</span> <span class="n">units</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">POS_SP_RBV</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">nPositionSP</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span> <span class="o">//</span><span class="n">Position</span> <span class="n">setpoint</span> <span class="n">readback</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">PRES_SP_RBV</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">nPressureSP</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span> <span class="o">//</span><span class="n">Pressure</span> <span class="n">setpoint</span> <span class="n">readback</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">ILK_OK</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">NOT</span> <span class="n">OK</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">OK</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ZSV</span> <span class="n">MAJOR</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">OSV</span> <span class="n">NO_ALARM</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bIlkOK</span> <span class="p">:</span> <span class="n">BOOL</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span> <span class="o">//</span> <span class="n">Interlock</span> <span class="n">Bit</span> <span class="n">status</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">Limit</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+    <span class="n">autosave_pass1</span><span class="p">:</span> <span class="n">VAL</span> <span class="n">DESC</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">fUpperLimit</span>     <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">100</span><span class="p">;</span> <span class="o">//</span> <span class="n">Percentage</span> <span class="n">Upper</span> <span class="n">limit</span> <span class="n">on</span> <span class="n">valve</span> <span class="nb">open</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">PresLimit</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+    <span class="n">autosave_pass1</span><span class="p">:</span> <span class="n">VAL</span> <span class="n">DESC</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">fPresUpperLimit</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E-2</span><span class="p">;</span> <span class="o">//</span> <span class="n">Upper</span> <span class="n">limit</span> <span class="k">for</span> <span class="n">pressure</span> <span class="n">control</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">POS_REQ</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">DRVL</span> <span class="mf">0.0</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">DRVH</span> <span class="mf">100.0</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">fReqPosition</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span> <span class="o">//</span><span class="n">Requested</span> <span class="n">position</span> <span class="p">(</span><span class="mf">0.0</span><span class="o">-</span><span class="mf">100.0</span><span class="o">%</span><span class="p">)</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">PRES_REQ</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">EGU</span> <span class="s2">&quot;TORR&quot;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">fReqPressure</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span> <span class="o">//</span><span class="n">Requested</span> <span class="n">pressure</span> <span class="ow">in</span> <span class="n">Torr</span> <span class="n">units</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span>  <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">STATE</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">eValveControl</span> <span class="p">:</span> <span class="n">E_VCN_VAT590</span><span class="p">;</span> <span class="o">//</span><span class="n">Valve</span> <span class="n">control</span> <span class="n">mode</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">stValveStatus</span> <span class="p">:</span> <span class="n">ST_VAT590_STATUS</span><span class="p">;</span> <span class="o">//</span><span class="n">All</span> <span class="n">Valve</span> <span class="n">status</span> <span class="n">readbacks</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span>  <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">PRES_SENS</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">ePressureSensor</span> <span class="p">:</span> <span class="n">E_VAT590_PressureSensor</span><span class="p">;</span> <span class="o">//</span> <span class="n">Select</span> <span class="n">pressure</span> <span class="n">sensor</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span>  <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">REM_CTRL</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">o</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">eRemoteControl</span> <span class="p">:</span> <span class="n">E_VAT590_AccessMode</span><span class="p">;</span> <span class="o">//</span> <span class="n">Select</span> <span class="n">remote</span> <span class="n">control</span> <span class="n">mode</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">ZERO</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">NO_OPERATION</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">ZERO</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">o</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">bZero</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Activate</span> <span class="n">Zero</span> <span class="n">function</span> <span class="n">bit</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span>  <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">GEN_STATUS</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+<span class="n">END_STRUCT</span>
+<span class="n">END_TYPE</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Related:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#e-vat590-accessmode">E_VAT590_AccessMode</a></p></li>
+<li><p><a class="reference internal" href="#e-vat590-pressuresensor">E_VAT590_PressureSensor</a></p></li>
+<li><p><a class="reference internal" href="#e-vcn-vat590">E_VCN_VAT590</a></p></li>
+<li><p><a class="reference internal" href="#st-vat590-status">ST_VAT590_STATUS</a></p></li>
 </ul>
 </dd>
 </dl>
@@ -9765,6 +10293,303 @@ END_METHOD
 <li><p><a class="reference internal" href="#e-vcn">E_VCN</a></p></li>
 <li><p><a class="reference internal" href="#fb-valve">FB_Valve</a></p></li>
 <li><p><a class="reference internal" href="#st-vcn">ST_VCN</a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="fb-vcn-vat590">
+<h2>FB_VCN_VAT590<a class="headerlink" href="#fb-vcn-vat590" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;no_check&#39;</span><span class="p">}</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">implements</span> <span class="n">the</span> <span class="n">Basic</span> <span class="n">functions</span> <span class="k">for</span> <span class="n">the</span> <span class="n">VAT590</span> <span class="n">needle</span> <span class="n">valve</span><span class="o">*</span><span class="p">)</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_VCN_VAT590</span> <span class="n">EXTENDS</span> <span class="n">FB_Valve</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">bExtIlkOK</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>        <span class="o">//</span> <span class="n">External</span> <span class="n">Interlock</span><span class="p">,</span> <span class="n">SET</span> <span class="n">to</span> <span class="n">TRUE</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">used</span>
+    <span class="n">IG</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span>              <span class="o">//</span> <span class="n">Input</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">cold</span> <span class="n">cathode</span> <span class="n">gauge</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">control</span> <span class="n">loop</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">stVcnVat590</span>     <span class="p">:</span> <span class="n">ST_VCN_VAT590</span><span class="p">;</span>       <span class="o">//</span> <span class="n">Needle</span> <span class="n">valve</span> <span class="n">VAT590</span> <span class="n">structure</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span> <span class="n">CONSTANT</span>
+    <span class="n">cOpenPosition</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>      <span class="o">//</span> <span class="n">Default</span> <span class="n">position</span> <span class="n">setpoint</span> <span class="n">upper</span> <span class="n">scale</span> <span class="n">value</span>
+    <span class="n">cClosePosition</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">0.0</span><span class="p">;</span>      <span class="o">//</span> <span class="n">Default</span> <span class="n">position</span> <span class="n">setpoint</span> <span class="n">lower</span> <span class="n">scale</span> <span class="n">value</span>
+    <span class="n">cPresSPUpLim</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E+6</span><span class="p">;</span>       <span class="o">//</span> <span class="n">Default</span> <span class="n">pressure</span> <span class="n">setpoint</span> <span class="n">upper</span> <span class="n">scale</span> <span class="n">value</span>
+    <span class="n">cPresSPLowLim</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>         <span class="o">//</span> <span class="n">Default</span> <span class="n">pressure</span> <span class="n">setpoint</span> <span class="n">lower</span> <span class="n">scale</span> <span class="n">value</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">fCalcPosSP</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">fCalcPresSP</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">eValveModeSP</span> <span class="p">:</span> <span class="n">E_ControlModeSP</span><span class="p">;</span>
+    <span class="n">fReqPos</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>                    <span class="o">//</span> <span class="n">Requested</span> <span class="n">position</span> <span class="n">internal</span> <span class="n">variable</span>
+    <span class="n">fReqPres</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>                   <span class="o">//</span> <span class="n">Requested</span> <span class="n">pressure</span> <span class="n">internal</span> <span class="n">variable</span>
+    <span class="n">fPresLowLim</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E-10</span><span class="p">;</span>       <span class="o">//</span> <span class="n">Pressure</span> <span class="n">sensor</span> <span class="n">lower</span> <span class="n">scale</span> <span class="n">value</span>
+    <span class="n">fSlope</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>             <span class="o">//</span> <span class="n">Slope</span> <span class="p">(</span><span class="n">Units</span> <span class="n">per</span> <span class="n">decade</span><span class="p">)</span> <span class="n">used</span> <span class="k">for</span> <span class="n">conversion</span> <span class="kn">from</span> <span class="nn">Torr</span> <span class="n">units</span>
+    <span class="n">fVbase</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>             <span class="o">//</span> <span class="n">Vbase</span> <span class="p">(</span><span class="n">Units</span> <span class="n">per</span> <span class="n">decade</span><span class="p">)</span> <span class="n">defined</span> <span class="k">for</span> <span class="n">how</span> <span class="n">much</span> <span class="n">the</span> <span class="n">curve</span> <span class="ow">is</span> <span class="n">shifted</span>
+    <span class="n">bRemAcsToggle</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>              <span class="o">//</span> <span class="n">Remote</span> <span class="n">access</span> <span class="n">control</span> <span class="n">bit</span>
+    <span class="o">//</span><span class="n">timer</span> <span class="k">for</span> <span class="n">zero</span> <span class="n">function</span>
+    <span class="n">tZeroTogg</span> <span class="p">:</span> <span class="n">TON</span> <span class="o">:=</span> <span class="p">(</span><span class="n">PT</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#1S);</span>
+    <span class="o">//</span><span class="n">Rising</span> <span class="n">edge</span> <span class="n">trigger</span> <span class="k">for</span> <span class="n">Zero</span> <span class="n">function</span>
+    <span class="n">rtZero</span> <span class="p">:</span> <span class="n">R_TRIG</span><span class="p">;</span>
+    <span class="o">//</span><span class="n">timer</span> <span class="k">for</span> <span class="n">remote</span> <span class="n">function</span>
+    <span class="n">tRemAcsTogg</span> <span class="p">:</span> <span class="n">TON</span> <span class="o">:=</span> <span class="p">(</span><span class="n">PT</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#500MS);</span>
+    <span class="o">//</span><span class="n">used</span> <span class="k">for</span> <span class="n">logging</span>
+    <span class="n">ePreviousState</span> <span class="p">:</span> <span class="n">E_VCN_VAT590</span><span class="p">;</span>
+
+    <span class="p">(</span><span class="o">*</span><span class="n">VAT590</span> <span class="n">Ethercat</span> <span class="n">IO</span> <span class="n">Interface</span><span class="o">*</span><span class="p">)</span>
+    <span class="o">//</span><span class="n">Ethercat</span> <span class="n">Interface</span> <span class="n">Inputs</span>
+    <span class="n">i_nRawPosition</span>       <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span>               <span class="o">//</span> <span class="n">Position</span> <span class="n">readback</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">valve</span>
+    <span class="n">i_nRawPressure</span>       <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span>               <span class="o">//</span> <span class="n">Pressure</span> <span class="n">readback</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">valve</span>
+    <span class="n">i_eControlMode</span>       <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">E_ControlMode</span><span class="p">;</span>      <span class="o">//</span> <span class="n">Valve</span> <span class="n">control</span> <span class="n">mode</span> <span class="n">readback</span>
+    <span class="n">i_eFatalError</span>        <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">E_FatalErrors</span><span class="p">;</span>      <span class="o">//</span> <span class="n">Valve</span> <span class="n">Fatal</span> <span class="n">Errors</span> <span class="n">readback</span>
+    <span class="n">i_stGenStatus</span>        <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">ST_GeneralStatus</span><span class="p">;</span>   <span class="o">//</span> <span class="n">Valve</span> <span class="n">General</span> <span class="n">Status</span> <span class="n">readback</span>
+    <span class="n">i_stGenWarnings</span>      <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">ST_GeneralWarnings</span><span class="p">;</span> <span class="o">//</span> <span class="n">Valve</span> <span class="n">General</span> <span class="n">Warnings</span> <span class="n">readback</span>
+    <span class="n">i_stExtnWarnings</span>     <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">ST_ExtendedWarnings</span><span class="p">;</span><span class="o">//</span> <span class="n">Valve</span> <span class="n">Extended</span> <span class="n">Warnings</span> <span class="n">readback</span>
+    <span class="o">//</span><span class="n">Ethercat</span> <span class="n">Interface</span> <span class="n">Outputs</span>
+    <span class="n">o_nRawPositionSP</span>     <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span>               <span class="o">//</span> <span class="n">Position</span> <span class="n">setpoint</span>
+    <span class="n">o_nRawPressureSP</span>     <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span>               <span class="o">//</span> <span class="n">Pressure</span> <span class="n">setpoint</span>
+    <span class="n">o_eCtrlModeSP</span>        <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">E_ControlModeSP</span><span class="p">;</span>    <span class="o">//</span> <span class="n">Valve</span> <span class="n">control</span> <span class="n">mode</span> <span class="n">setpoint</span>
+    <span class="n">o_stGenCtrlSP</span>        <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">ST_GeneralControlSP</span><span class="p">;</span><span class="o">//</span> <span class="n">General</span> <span class="n">Control</span> <span class="n">setpoint</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span> <span class="n">PERSISTENT</span>
+    <span class="n">fUpperLimit</span>     <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>                <span class="o">//</span> <span class="n">Max</span> <span class="n">position</span> <span class="ow">in</span> <span class="o">%</span> <span class="n">that</span> <span class="n">can</span> <span class="n">be</span> <span class="n">requested</span>
+    <span class="n">fPresMaxLim</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>                <span class="o">//</span> <span class="n">Max</span> <span class="n">pressure</span> <span class="ow">in</span> <span class="n">Torr</span> <span class="n">that</span> <span class="n">can</span> <span class="n">be</span> <span class="n">requested</span>
+<span class="n">END_VAR</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Needle</span> <span class="n">valve</span> <span class="n">control</span> <span class="n">FB</span>
+<span class="n">J</span><span class="o">.</span> <span class="n">Govednik</span> <span class="mi">2021</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">22</span>
+
+<span class="n">This</span> <span class="n">FB</span> <span class="n">should</span> <span class="n">be</span> <span class="n">used</span> <span class="k">as</span> <span class="n">a</span> <span class="n">low</span> <span class="n">level</span> <span class="n">control</span> <span class="n">block</span><span class="o">.</span>
+
+<span class="n">It</span> <span class="n">provides</span><span class="p">:</span>
+<span class="n">Valve</span> <span class="n">position</span> <span class="n">ceiling</span>
+<span class="n">Interlock</span>
+<span class="n">Scaling</span>
+
+<span class="n">It</span> <span class="n">could</span> <span class="n">be</span> <span class="n">used</span> <span class="k">for</span><span class="p">:</span>
+<span class="n">Valve</span> <span class="n">position</span><span class="o">/</span><span class="n">flow</span> <span class="n">linearization</span>
+<span class="o">*</span><span class="p">)</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Read</span> <span class="kn">from</span> <span class="nn">EPICS</span> <span class="ow">and</span> <span class="n">Valve</span> <span class="n">Ethercat</span> <span class="n">interface</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ReadFromInput</span><span class="p">();</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Checking</span> <span class="n">which</span> <span class="n">Control</span> <span class="n">mode</span> <span class="ow">is</span> <span class="n">selected</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">bExtIlkOK</span> <span class="n">THEN</span>
+    <span class="n">CASE</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">eValveControl</span> <span class="n">OF</span>
+            <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">OpenValve</span><span class="p">:</span>
+                    <span class="n">eValveModeSP</span> <span class="o">:=</span> <span class="n">E_ControlModeSP</span><span class="o">.</span><span class="n">OpenValve</span><span class="p">;</span>
+            <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">CloseValve</span><span class="p">:</span>
+                    <span class="n">eValveModeSP</span> <span class="o">:=</span> <span class="n">E_ControlModeSP</span><span class="o">.</span><span class="n">CloseValve</span><span class="p">;</span>
+            <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">ManualControl</span><span class="p">:</span>
+                    <span class="n">eValveModeSP</span> <span class="o">:=</span> <span class="n">E_ControlModeSP</span><span class="o">.</span><span class="n">ManualControl</span><span class="p">;</span>
+            <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">PressureControl</span><span class="p">:</span>
+                    <span class="n">IF</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">E_PressureState</span><span class="o">.</span><span class="n">Valid</span> <span class="n">THEN</span>
+                            <span class="n">eValveModeSP</span> <span class="o">:=</span> <span class="n">E_ControlModeSP</span><span class="o">.</span><span class="n">PressureControl</span><span class="p">;</span>
+                    <span class="n">ELSE</span>
+                            <span class="n">eValveModeSP</span> <span class="o">:=</span> <span class="n">E_ControlModeSP</span><span class="o">.</span><span class="n">CloseValve</span><span class="p">;</span> <span class="o">//</span> <span class="n">Close</span> <span class="n">valve</span> <span class="k">if</span> <span class="n">something</span> <span class="ow">is</span> <span class="n">wrong</span> <span class="k">with</span> <span class="n">the</span> <span class="n">gauge</span>
+                            <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">eValveControl</span> <span class="o">:=</span> <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">CloseValve</span><span class="p">;</span>
+                    <span class="n">END_IF</span>
+            <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">HoldValve</span><span class="p">:</span>
+                    <span class="n">IF</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">eControlMode</span> <span class="o">=</span> <span class="n">E_ControlMode</span><span class="o">.</span><span class="n">ManualControl</span> <span class="n">OR</span>
+                            <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">eControlMode</span> <span class="o">=</span> <span class="n">E_ControlMode</span><span class="o">.</span><span class="n">PressureControl</span> <span class="n">THEN</span>
+                            <span class="n">eValveModeSP</span> <span class="o">:=</span> <span class="n">E_ControlModeSP</span><span class="o">.</span><span class="n">HoldValve</span><span class="p">;</span>
+                    <span class="n">END_IF</span>
+    <span class="n">END_CASE</span>
+<span class="n">ELSE</span>
+    <span class="n">fReqPos</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">eValveModeSP</span> <span class="o">:=</span> <span class="n">E_ControlModeSP</span><span class="o">.</span><span class="n">CloseValve</span><span class="p">;</span>
+    <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">eValveControl</span> <span class="o">:=</span> <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">CloseValve</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Requested</span> <span class="n">Position</span> <span class="n">calculation</span><span class="o">*</span><span class="p">)</span>
+<span class="n">fReqPos</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fReqPos</span><span class="p">,</span> <span class="n">fUpperLimit</span><span class="p">);</span>
+<span class="n">fCalcPosSP</span> <span class="o">:=</span> <span class="n">fReqPos</span> <span class="o">*</span> <span class="p">(</span><span class="n">cOpenPosition</span><span class="o">-</span><span class="n">cClosePosition</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span> <span class="o">+</span> <span class="n">cClosePosition</span><span class="p">;</span>
+<span class="n">fCalcPosSP</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">cClosePosition</span><span class="p">,</span> <span class="n">fCalcPosSP</span><span class="p">,</span> <span class="n">cOpenPosition</span><span class="p">);</span> <span class="o">//</span><span class="n">The</span> <span class="n">requested</span> <span class="n">position</span> <span class="n">SP</span> <span class="n">should</span> <span class="n">remain</span> <span class="n">within</span> <span class="n">this</span> <span class="nb">range</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Pressure</span> <span class="n">calculation</span><span class="o">*</span><span class="p">)</span>
+<span class="o">//</span><span class="n">Limit</span> <span class="n">the</span> <span class="nb">input</span> <span class="kn">from</span> <span class="nn">EPICS</span> <span class="n">between</span> <span class="n">upper</span> <span class="ow">and</span> <span class="n">lower</span> <span class="n">limit</span> <span class="n">defined</span> <span class="k">for</span> <span class="n">seleceted</span> <span class="n">pressure</span> <span class="n">sensor</span>
+<span class="n">fReqPres</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">fPresLowLim</span><span class="p">,</span> <span class="n">fReqPres</span><span class="p">,</span> <span class="n">fPresMaxLim</span><span class="p">);</span>
+
+<span class="o">//</span> <span class="n">Calculate</span> <span class="n">pressure</span> <span class="n">readback</span> <span class="ow">and</span> <span class="n">pressure</span> <span class="n">setpoint</span> <span class="n">according</span> <span class="n">to</span> <span class="n">selected</span> <span class="n">pressure</span> <span class="n">gauge</span>
+<span class="n">CASE</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">ePressureSensor</span> <span class="n">OF</span>
+    <span class="n">E_VAT590_PressureSensor</span><span class="o">.</span><span class="n">MKS500</span><span class="p">:</span>
+            <span class="n">fPresLowLim</span> <span class="o">:=</span> <span class="mf">1.0E-10</span><span class="p">;</span>
+            <span class="n">fSlope</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>
+            <span class="n">fVbase</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>
+            <span class="o">//</span><span class="n">Calcuate</span> <span class="n">pressure</span> <span class="n">setpoint</span>
+            <span class="n">fCalcPresSP</span> <span class="o">:=</span> <span class="n">fSlope</span> <span class="o">*</span> <span class="n">LOG</span><span class="p">(</span><span class="n">fReqPres</span><span class="o">/</span><span class="n">fPresLowLim</span><span class="p">)</span> <span class="o">+</span> <span class="n">fVbase</span><span class="p">;</span>
+            <span class="n">fCalcPresSP</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">cPresSPLowLim</span><span class="p">,</span> <span class="n">fCalcPresSP</span><span class="p">,</span> <span class="n">cPresSPUpLim</span><span class="p">);</span> <span class="o">//</span><span class="n">The</span> <span class="n">requested</span> <span class="n">pressure</span> <span class="n">SP</span> <span class="n">should</span> <span class="n">remain</span> <span class="n">within</span> <span class="n">this</span> <span class="nb">range</span>
+            <span class="o">//</span><span class="n">Calculate</span> <span class="n">pressure</span> <span class="n">readback</span> <span class="ow">in</span> <span class="n">Torr</span> <span class="n">units</span>
+            <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPressure</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,((</span><span class="n">DINT_TO_REAL</span><span class="p">(</span><span class="n">i_nRawPressure</span><span class="p">)</span><span class="o">-</span><span class="n">fVbase</span><span class="p">)</span><span class="o">/</span><span class="n">fSlope</span> <span class="o">+</span> <span class="n">LOG</span><span class="p">(</span><span class="n">fPresLowLim</span><span class="p">))));</span>
+    <span class="n">ELSE</span>
+            <span class="n">fCalcPresSP</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPressure</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">END_CASE</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Calculated</span> <span class="n">Pressure</span> <span class="n">SP</span> <span class="ow">and</span> <span class="n">Pressure</span> <span class="n">readback</span> <span class="ow">is</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">Pressure</span> <span class="n">sensor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">working</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">&lt;&gt;</span> <span class="n">E_PressureState</span><span class="o">.</span><span class="n">Valid</span> <span class="n">THEN</span>
+    <span class="n">fCalcPresSP</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPressure</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Zero</span> <span class="n">function</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bZeroDisabled</span> <span class="n">OR</span> <span class="n">tZeroTogg</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+    <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">bZero</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">rtZero</span><span class="p">(</span><span class="n">CLK</span> <span class="o">:=</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">bZero</span><span class="p">);</span>
+<span class="n">tZeroTogg</span><span class="o">.</span><span class="n">IN</span> <span class="o">:=</span> <span class="n">rtZero</span><span class="o">.</span><span class="n">Q</span><span class="p">;</span>
+<span class="n">tZeroTogg</span><span class="p">();</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Set</span> <span class="n">Remote</span> <span class="n">Access</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">eRemoteStatus</span> <span class="o">&lt;&gt;</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">eRemoteControl</span> <span class="n">THEN</span>
+    <span class="n">tRemAcsTogg</span><span class="o">.</span><span class="n">IN</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="n">tRemAcsTogg</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+            <span class="n">bRemAcsToggle</span> <span class="o">:=</span> <span class="n">NOT</span> <span class="n">bRemAcsToggle</span><span class="p">;</span>
+            <span class="n">tRemAcsTogg</span><span class="o">.</span><span class="n">IN</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">END_IF</span>
+<span class="n">END_IF</span>
+<span class="n">tRemAcsTogg</span><span class="p">();</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Write</span> <span class="n">to</span> <span class="n">EPICS</span> <span class="ow">and</span> <span class="n">Valve</span> <span class="n">Ethercat</span> <span class="n">interface</span><span class="o">*</span><span class="p">)</span>
+<span class="n">WriteToOutput</span><span class="p">();</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Logging</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Logger</span><span class="p">();</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="o">//</span> <span class="n">ILK</span> <span class="n">logger</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">bIlkOK</span> <span class="p">)</span> <span class="n">AND</span> <span class="n">NOT</span><span class="p">(</span><span class="n">ePreviousState</span> <span class="o">=</span> <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">CloseValve</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Lost interlock ok bit while valve was open.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+<span class="n">END_IF</span>
+
+
+<span class="o">//</span><span class="n">Control</span> <span class="n">STATE</span> <span class="n">Logger</span>
+<span class="n">IF</span> <span class="n">ePreviousState</span> <span class="o">&lt;&gt;</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">eValveControl</span> <span class="n">THEN</span>
+      <span class="n">CASE</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">eValveControl</span> <span class="n">OF</span>
+            <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">ManualControl</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve in manual control mode.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+            <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">HoldValve</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve in hold control mode.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+            <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">OpenValve</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve Open.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">PressureControl</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve in pressure control mode.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">CloseValve</span><span class="p">:</span>
+                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve closed.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+      <span class="n">END_CASE</span>
+      <span class="n">ePreviousState</span> <span class="o">:=</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">eValveControl</span><span class="p">;</span>
+  <span class="n">END_IF</span>
+
+
+<span class="o">//</span> <span class="n">Log</span> <span class="n">valve</span> <span class="nb">open</span>
+<span class="n">tAction</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">eValveControl</span> <span class="o">=</span> <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">OpenValve</span><span class="p">)</span> <span class="p">);</span>
+<span class="n">IF</span> <span class="n">tAction</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve commanded to fully open&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span> <span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">bRestorePersistentData</span>  <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">fUpperLimit</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fUpperLimit</span> <span class="o">:=</span> <span class="n">fUpperLimit</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span><span class="n">fPresMaxLim</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+            <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPresUpperLimit</span> <span class="o">:=</span> <span class="n">fPresMaxLim</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+
+<span class="n">ACTION</span> <span class="n">ReadFromInput</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Read</span> <span class="kn">from</span> <span class="nn">EPICS</span><span class="o">*</span><span class="p">)</span>
+<span class="n">fUpperLimit</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fUpperLimit</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<span class="n">fPresMaxLim</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mf">1.0E-10</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPresUpperLimit</span><span class="p">,</span> <span class="mf">1.0E-2</span><span class="p">);</span>
+<span class="n">fReqPos</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fReqPosition</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<span class="n">fReqPres</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mf">1.0E-10</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fReqPressure</span><span class="p">,</span> <span class="mf">1.0E-2</span><span class="p">);</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Read</span> <span class="kn">from</span> <span class="nn">VAT</span> <span class="n">valve</span><span class="o">*</span><span class="p">)</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">eControlMode</span> <span class="o">:=</span> <span class="n">i_eControlMode</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">eFatalErrors</span> <span class="o">:=</span> <span class="n">i_eFatalError</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">nRawPosition</span> <span class="o">:=</span> <span class="n">i_nRawPosition</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">nRawPressure</span> <span class="o">:=</span> <span class="n">i_nRawPressure</span><span class="p">;</span>
+<span class="o">//</span><span class="n">Mapping</span> <span class="n">General</span> <span class="n">statuses</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bFieldBusDatavalid</span> <span class="o">:=</span> <span class="n">i_stGenStatus</span><span class="o">.</span><span class="n">Bit0FieldBusDatavalid</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bZeroExecuted</span> <span class="o">:=</span> <span class="n">i_stGenStatus</span><span class="o">.</span><span class="n">Bit1ZeroExecuted</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bPingPongRxBit</span> <span class="o">:=</span> <span class="n">i_stGenStatus</span><span class="o">.</span><span class="n">Bit2PingPongRxBit</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bPressureSimulation</span> <span class="o">:=</span> <span class="n">i_stGenStatus</span><span class="o">.</span><span class="n">Bit3PressureSimulation</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bPressureSPReached</span> <span class="o">:=</span> <span class="n">i_stGenStatus</span><span class="o">.</span><span class="n">Bit4PressureSPReached</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bWarningsActive</span> <span class="o">:=</span> <span class="n">i_stGenStatus</span><span class="o">.</span><span class="n">Bit9WarningsActive</span><span class="p">;</span>
+<span class="o">//</span><span class="n">Read</span> <span class="n">Remote</span> <span class="n">status</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">eRemoteStatus</span><span class="mf">.0</span> <span class="o">:=</span> <span class="n">i_stGenStatus</span><span class="o">.</span><span class="n">Bit7AccessModeBit0</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">eRemoteStatus</span><span class="mf">.1</span> <span class="o">:=</span> <span class="n">i_stGenStatus</span><span class="o">.</span><span class="n">Bit8AccessModeBit1</span><span class="p">;</span>
+<span class="o">//</span><span class="n">Mapping</span> <span class="n">General</span> <span class="n">warnings</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bServiceRequest</span> <span class="o">:=</span> <span class="n">i_stGenWarnings</span><span class="o">.</span><span class="n">Bit0ServiceRequest</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bPowerFailureBattery</span> <span class="o">:=</span> <span class="n">i_stGenWarnings</span><span class="o">.</span><span class="n">Bit3PowerFailureBattery</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bSensMeasUnitFault</span> <span class="o">:=</span> <span class="n">i_stGenWarnings</span><span class="o">.</span><span class="n">Bit10SensMeasUnitFault</span><span class="p">;</span>
+<span class="o">//</span><span class="n">Mapping</span> <span class="n">Extended</span> <span class="n">warnings</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bRemoteControlNotPossible</span> <span class="o">:=</span> <span class="n">i_stExtnWarnings</span><span class="o">.</span><span class="n">Bit0RemoteControlNotPossible</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bControlModeSPNotAllowed</span> <span class="o">:=</span> <span class="n">i_stExtnWarnings</span><span class="o">.</span><span class="n">Bit1ControlModeSPNotAllowed</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bZeroDisabled</span> <span class="o">:=</span> <span class="n">i_stExtnWarnings</span><span class="o">.</span><span class="n">Bit2ZeroDisabled</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bPFODeactivated</span> <span class="o">:=</span> <span class="n">i_stExtnWarnings</span><span class="o">.</span><span class="n">Bit3PFODeactivated</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bPressureSPOutOfRange</span> <span class="o">:=</span> <span class="n">i_stExtnWarnings</span><span class="o">.</span><span class="n">Bit5PressureSPOutOfRange</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bPositionSPOutOfRange</span> <span class="o">:=</span> <span class="n">i_stExtnWarnings</span><span class="o">.</span><span class="n">Bit6PositionSPOutOfRange</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bCtrlSPOutOfRange</span> <span class="o">:=</span> <span class="n">i_stExtnWarnings</span><span class="o">.</span><span class="n">Bit10CtrlSPOutOfRange</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bGeneralCtrlSPOutOfRange</span> <span class="o">:=</span> <span class="n">i_stExtnWarnings</span><span class="o">.</span><span class="n">Bit11GeneralCtrlSPOutOfRange</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">bProcDataSettingsNotvalid</span> <span class="o">:=</span> <span class="n">i_stExtnWarnings</span><span class="o">.</span><span class="n">Bit12ProcDataSettingsNotvalid</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
+
+<span class="n">ACTION</span> <span class="n">WriteToOutput</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Write</span> <span class="n">to</span> <span class="n">EPICS</span><span class="o">*</span><span class="p">)</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">bIlkOK</span> <span class="o">:=</span> <span class="n">bExtIlkOK</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">nPositionSP</span> <span class="o">:=</span> <span class="n">REAL_TO_DINT</span><span class="p">(</span><span class="n">fCalcPosSP</span><span class="p">);</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">nPressureSP</span> <span class="o">:=</span> <span class="n">REAL_TO_DINT</span><span class="p">(</span><span class="n">fCalcPresSP</span><span class="p">);</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fReqPosition</span> <span class="o">:=</span> <span class="n">fReqPos</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fReqPressure</span> <span class="o">:=</span> <span class="n">fReqPres</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPresUpperLimit</span> <span class="o">:=</span> <span class="n">fPresMaxLim</span><span class="p">;</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fUpperLimit</span> <span class="o">:=</span> <span class="n">fUpperLimit</span><span class="p">;</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">Write</span> <span class="n">to</span> <span class="n">VAT</span> <span class="n">valve</span><span class="o">*</span><span class="p">)</span>
+<span class="n">o_eCtrlModeSP</span> <span class="o">:=</span> <span class="n">eValveModeSP</span><span class="p">;</span>
+<span class="n">o_nRawPositionSP</span> <span class="o">:=</span> <span class="n">REAL_TO_DINT</span><span class="p">(</span><span class="n">fCalcPosSP</span><span class="p">);</span>
+<span class="n">o_nRawPressureSP</span> <span class="o">:=</span> <span class="n">REAL_TO_DINT</span><span class="p">(</span><span class="n">fCalcPresSP</span><span class="p">);</span>
+<span class="n">o_stGenCtrlSP</span><span class="o">.</span><span class="n">Bit0ExecuteZero</span> <span class="o">:=</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">bZero</span><span class="p">;</span>
+<span class="n">o_stGenCtrlSP</span><span class="o">.</span><span class="n">Bit4AccessMode</span> <span class="o">:=</span> <span class="n">bRemAcsToggle</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
+
+<span class="n">METHOD</span> <span class="n">M_SetThrottle</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">rUpperLimit</span>     <span class="p">:</span>       <span class="n">REAL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fUpperLimit</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rUpperLimit</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_ValveControl</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">state</span> <span class="p">:</span> <span class="n">E_VCN_VAT590</span><span class="p">;</span> <span class="o">//</span> <span class="n">Set</span> <span class="n">Control</span> <span class="n">modes</span>
+<span class="n">END_VAR</span>
+<span class="n">stVcnVat590</span><span class="o">.</span><span class="n">eValveControl</span> <span class="o">:=</span> <span class="n">state</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Related:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#e-controlmode">E_ControlMode</a></p></li>
+<li><p><a class="reference internal" href="#e-controlmodesp">E_ControlModeSP</a></p></li>
+<li><p><a class="reference internal" href="#e-fatalerrors">E_FatalErrors</a></p></li>
+<li><p><a class="reference internal" href="#e-pressurestate">E_PressureState</a></p></li>
+<li><p><a class="reference internal" href="#e-vat590-pressuresensor">E_VAT590_PressureSensor</a></p></li>
+<li><p><a class="reference internal" href="#e-vcn-vat590">E_VCN_VAT590</a></p></li>
+<li><p><a class="reference internal" href="#fb-valve">FB_Valve</a></p></li>
+<li><p><a class="reference internal" href="#st-extendedwarnings">ST_ExtendedWarnings</a></p></li>
+<li><p><a class="reference internal" href="#st-generalcontrolsp">ST_GeneralControlSP</a></p></li>
+<li><p><a class="reference internal" href="#st-generalstatus">ST_GeneralStatus</a></p></li>
+<li><p><a class="reference internal" href="#st-generalwarnings">ST_GeneralWarnings</a></p></li>
+<li><p><a class="reference internal" href="#st-vcn-vat590">ST_VCN_VAT590</a></p></li>
+<li><p><a class="reference internal" href="#st-vg">ST_VG</a></p></li>
 </ul>
 </dd>
 </dl>
