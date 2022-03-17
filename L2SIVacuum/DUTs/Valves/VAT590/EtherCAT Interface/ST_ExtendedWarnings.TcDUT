@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_ExtendedWarnings" Id="{e3b55802-b467-4309-b703-620150bf1489}">
+    <Declaration><![CDATA[TYPE ST_ExtendedWarnings :
+STRUCT
+	Bit0RemoteControlNotPossible: BIT;
+	Bit1ControlModeSPNotAllowed : BIT;
+	Bit2ZeroDisabled : BIT;
+	Bit3PFODeactivated : BIT;
+	Bit4Reserved : BIT;
+	Bit5PressureSPOutOfRange : BIT;
+	Bit6PositionSPOutOfRange : BIT;
+	Bit7Reserved : BIT;
+	Bit8Reserved : BIT;
+	Bit9Reserved : BIT;
+	Bit10CtrlSPOutOfRange : BIT;
+	Bit11GeneralCtrlSPOutOfRange : BIT;
+	Bit12ProcDataSettingsNotvalid : BIT;
+	Bit13Reserved5 : BIT;
+	Bit14Reserved6 : BIT;
+	Bit15Reserved7 : BIT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_VAT590_AccessMode" Id="{6d9245de-47bf-4fe9-9bfb-c39f203b1c4a}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_VAT590_AccessMode :
+(
+	LOCAL := 0,
+	REMOTE := 1,
+	LOCKED := 2
+) USINT := REMOTE;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

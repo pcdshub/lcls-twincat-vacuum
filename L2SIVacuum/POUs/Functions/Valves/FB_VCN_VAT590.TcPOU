@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_VCN_VAT590" Id="{4758ecab-cc0c-4c37-8981-9d3a1c0c082a}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'no_check'}
+(* This function implements the Basic functions for the VAT590 needle valve*)
+FUNCTION_BLOCK FB_VCN_VAT590 EXTENDS FB_Valve
+VAR_INPUT
+	bExtIlkOK : BOOL;        // External Interlock, SET to TRUE if not used
+	IG : ST_VG;              // Input from a cold cathode gauge used in control loop
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv:
+	'}
+	stVcnVat590	: ST_VCN_VAT590;       // Needle valve VAT590 structure
+END_VAR
+VAR CONSTANT
+	cOpenPosition : REAL := 1E+5;      // Default position setpoint upper scale value
+	cClosePosition : REAL := 0.0;      // Default position setpoint lower scale value
+	cPresSPUpLim : REAL := 1E+6;       // Default pressure setpoint upper scale value
+	cPresSPLowLim : REAL := 0;         // Default pressure setpoint lower scale value
+END_VAR
+VAR
+	fCalcPosSP : REAL := 0;
+	fCalcPresSP : REAL := 0;
+	eValveModeSP : E_ControlModeSP;
+	fReqPos : REAL;                    // Requested position internal variable
+	fReqPres : REAL;                   // Requested pressure internal variable
+	fPresLowLim : REAL := 1E-10;       // Pressure sensor lower scale value
+	fSlope : REAL := 1E+5;             // Slope (Units per decade) used for conversion from Torr units
+	fVbase : REAL := 1E+5;             // Vbase (Units per decade) defined for how much the curve is shifted
+	bRemAcsToggle : BOOL;              // Remote access control bit
+	//timer for zero function 
+	tZeroTogg : TON := (PT := T#1S);
+	//Rising edge trigger for Zero function
+	rtZero : R_TRIG;
+	//timer for remote function
+	tRemAcsTogg : TON := (PT := T#500MS);
+	//used for logging
+	ePreviousState : E_VCN_VAT590;
+	
+	(*VAT590 Ethercat IO Interface*)
+	//Ethercat Interface Inputs
+	i_nRawPosition       AT %I* : DINT;               // Position readback from the valve
+	i_nRawPressure       AT %I* : DINT;               // Pressure readback from the valve
+	i_eControlMode       AT %I* : E_ControlMode;      // Valve control mode readback
+	i_eFatalError        AT %I* : E_FatalErrors;      // Valve Fatal Errors readback
+	i_stGenStatus        AT %I* : ST_GeneralStatus;   // Valve General Status readback
+	i_stGenWarnings      AT %I* : ST_GeneralWarnings; // Valve General Warnings readback
+	i_stExtnWarnings     AT %I* : ST_ExtendedWarnings;// Valve Extended Warnings readback
+	//Ethercat Interface Outputs
+	o_nRawPositionSP     AT %Q* : DINT;               // Position setpoint
+	o_nRawPressureSP     AT %Q* : DINT;               // Pressure setpoint
+	o_eCtrlModeSP        AT %Q* : E_ControlModeSP;    // Valve control mode setpoint
+	o_stGenCtrlSP        AT %Q* : ST_GeneralControlSP;// General Control setpoint
+END_VAR
+VAR PERSISTENT
+    fUpperLimit	: REAL;                // Max position in % that can be requested
+	fPresMaxLim : REAL;                // Max pressure in Torr that can be requested
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Needle valve control FB
+J. Govednik 2021-11-22
+
+This FB should be used as a low level control block.
+
+It provides:
+Valve position ceiling
+Interlock
+Scaling
+
+It could be used for:
+Valve position/flow linearization
+*)	
+
+(*Read from EPICS and Valve Ethercat interface*)
+ReadFromInput();
+
+(*Checking which Control mode is selected*)
+IF bExtIlkOK THEN
+	CASE stVcnVat590.eValveControl OF
+		E_VCN_VAT590.OpenValve:
+			eValveModeSP := E_ControlModeSP.OpenValve;
+		E_VCN_VAT590.CloseValve:
+			eValveModeSP := E_ControlModeSP.CloseValve;
+		E_VCN_VAT590.ManualControl:
+			eValveModeSP := E_ControlModeSP.ManualControl;
+		E_VCN_VAT590.PressureControl:
+			IF IG.eState = E_PressureState.Valid THEN
+				eValveModeSP := E_ControlModeSP.PressureControl;
+			ELSE
+				eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
+				stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
+			END_IF
+		E_VCN_VAT590.HoldValve:
+			IF stVcnVat590.stValveStatus.eControlMode = E_ControlMode.ManualControl OR
+				stVcnVat590.stValveStatus.eControlMode = E_ControlMode.PressureControl THEN
+				eValveModeSP := E_ControlModeSP.HoldValve;
+			END_IF
+	END_CASE
+ELSE
+	fReqPos := 0;
+	eValveModeSP := E_ControlModeSP.CloseValve;
+	stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
+END_IF
+
+(*Requested Position calculation*)
+fReqPos := LIMIT(0, fReqPos, fUpperLimit);
+fCalcPosSP := fReqPos * (cOpenPosition-cClosePosition)/100 + cClosePosition;
+fCalcPosSP := LIMIT(cClosePosition, fCalcPosSP, cOpenPosition); //The requested position SP should remain within this range
+
+(*Pressure calculation*)
+//Limit the input from EPICS between upper and lower limit defined for seleceted pressure sensor
+fReqPres := LIMIT(fPresLowLim, fReqPres, fPresMaxLim);
+
+// Calculate pressure readback and pressure setpoint according to selected pressure gauge
+CASE stVcnVat590.ePressureSensor OF
+	E_VAT590_PressureSensor.MKS500:
+		fPresLowLim := 1.0E-10;
+		fSlope := 1E+5;
+		fVbase := 1E+5;
+		//Calcuate pressure setpoint
+		fCalcPresSP := fSlope * LOG(fReqPres/fPresLowLim) + fVbase;
+		fCalcPresSP := LIMIT(cPresSPLowLim, fCalcPresSP, cPresSPUpLim); //The requested pressure SP should remain within this range
+		//Calculate pressure readback in Torr units
+		stVcnVat590.fPressure := LREAL_TO_REAL(EXPT(10,((DINT_TO_REAL(i_nRawPressure)-fVbase)/fSlope + LOG(fPresLowLim))));
+	ELSE
+		fCalcPresSP := 0;
+		stVcnVat590.fPressure := 0;
+END_CASE
+
+(*Calculated Pressure SP and Pressure readback is 0 if Pressure sensor is not working*) 
+IF IG.eState <> E_PressureState.Valid THEN
+	fCalcPresSP := 0;
+	stVcnVat590.fPressure := 0;
+END_IF
+
+(*Zero function*)
+IF stVcnVat590.stValveStatus.bZeroDisabled OR tZeroTogg.Q THEN
+	stVcnVat590.bZero := FALSE;
+END_IF
+rtZero(CLK := stVcnVat590.bZero);
+tZeroTogg.IN := rtZero.Q;
+tZeroTogg();
+
+(*Set Remote Access*)
+IF stVcnVat590.stValveStatus.eRemoteStatus <> stVcnVat590.eRemoteControl THEN
+	tRemAcsTogg.IN := TRUE;
+	IF tRemAcsTogg.Q THEN
+		bRemAcsToggle := NOT bRemAcsToggle;
+		tRemAcsTogg.IN := FALSE;
+	END_IF
+END_IF
+tRemAcsTogg();
+
+(*Write to EPICS and Valve Ethercat interface*)
+WriteToOutput();
+
+(*Load or save the persistent variables*)
+ACT_Persistent();
+
+(*Logging*)
+ACT_Logger();]]></ST>
+    </Implementation>
+    <Action Name="ACT_Logger" Id="{e05977be-b3df-4692-b1e1-f426b01665a8}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+IF NOT (stVcnVat590.bIlkOK ) AND NOT(ePreviousState = E_VCN_VAT590.CloseValve) THEN
+ 		fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+//Control STATE Logger  
+IF ePreviousState <> stVcnVat590.eValveControl THEN
+	  CASE stVcnVat590.eValveControl OF
+		E_VCN_VAT590.ManualControl:
+			fbLogger(sMsg:='Valve in manual control mode.', eSevr:=TcEventSeverity.Warning);
+		E_VCN_VAT590.HoldValve:
+			fbLogger(sMsg:='Valve in hold control mode.', eSevr:=TcEventSeverity.Warning);
+		E_VCN_VAT590.OpenValve:
+			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+		E_VCN_VAT590.PressureControl:
+			fbLogger(sMsg:='Valve in pressure control mode.', eSevr:=TcEventSeverity.Info);
+		E_VCN_VAT590.CloseValve:
+			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePreviousState := stVcnVat590.eValveControl;  
+  END_IF
+ 
+
+// Log valve open
+tAction(CLK:= (stVcnVat590.eValveControl = E_VCN_VAT590.OpenValve) );
+IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEventSeverity.Info); END_IF
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{e5168615-6ef3-4946-b318-5dac9816d744}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (bRestorePersistentData) THEN
+	bRestorePersistentData	:= FALSE;
+	IF (fUpperLimit <> 0) THEN
+		stVcnVat590.fUpperLimit := fUpperLimit;
+	END_IF;
+	IF (fPresMaxLim <> 0) THEN
+		stVcnVat590.fPresUpperLimit := fPresMaxLim;
+	END_IF;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_SetThrottle" Id="{bc87ba94-efcb-4d7b-ace0-cb07482f478f}">
+      <Declaration><![CDATA[METHOD M_SetThrottle : BOOL
+VAR_INPUT
+	rUpperLimit	:	REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+stVcnVat590.fUpperLimit := LIMIT(0, rUpperLimit, 100);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_ValveControl" Id="{25066385-eb5f-47fb-8ac4-a5fcdc50740f}">
+      <Declaration><![CDATA[METHOD M_ValveControl : BOOL
+VAR_INPUT
+	state : E_VCN_VAT590; // Set Control modes
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[stVcnVat590.eValveControl := state;]]></ST>
+      </Implementation>
+    </Method>
+    <Action Name="ReadFromInput" Id="{2b46db7d-12fe-424a-afdf-e2d60ed01bdb}">
+      <Implementation>
+        <ST><![CDATA[(*Read from EPICS*)
+fUpperLimit := LIMIT(0, stVcnVat590.fUpperLimit, 100);
+fPresMaxLim := LIMIT(1.0E-10, stVcnVat590.fPresUpperLimit, 1.0E-2);
+fReqPos := LIMIT(0, stVcnVat590.fReqPosition, 100);
+fReqPres := LIMIT(1.0E-10, stVcnVat590.fReqPressure, 1.0E-2);
+
+(*Read from VAT valve*)
+stVcnVat590.stValveStatus.eControlMode := i_eControlMode;
+stVcnVat590.stValveStatus.eFatalErrors := i_eFatalError;
+stVcnVat590.nRawPosition := i_nRawPosition;
+stVcnVat590.nRawPressure := i_nRawPressure;
+//Mapping General statuses
+stVcnVat590.stValveStatus.bFieldBusDatavalid := i_stGenStatus.Bit0FieldBusDatavalid;
+stVcnVat590.stValveStatus.bZeroExecuted := i_stGenStatus.Bit1ZeroExecuted;
+stVcnVat590.stValveStatus.bPingPongRxBit := i_stGenStatus.Bit2PingPongRxBit;
+stVcnVat590.stValveStatus.bPressureSimulation := i_stGenStatus.Bit3PressureSimulation;
+stVcnVat590.stValveStatus.bPressureSPReached := i_stGenStatus.Bit4PressureSPReached;
+stVcnVat590.stValveStatus.bWarningsActive := i_stGenStatus.Bit9WarningsActive;
+//Read Remote status 
+stVcnVat590.stValveStatus.eRemoteStatus.0 := i_stGenStatus.Bit7AccessModeBit0;
+stVcnVat590.stValveStatus.eRemoteStatus.1 := i_stGenStatus.Bit8AccessModeBit1;
+//Mapping General warnings
+stVcnVat590.stValveStatus.bServiceRequest := i_stGenWarnings.Bit0ServiceRequest;
+stVcnVat590.stValveStatus.bPowerFailureBattery := i_stGenWarnings.Bit3PowerFailureBattery;
+stVcnVat590.stValveStatus.bSensMeasUnitFault := i_stGenWarnings.Bit10SensMeasUnitFault;
+//Mapping Extended warnings
+stVcnVat590.stValveStatus.bRemoteControlNotPossible := i_stExtnWarnings.Bit0RemoteControlNotPossible;
+stVcnVat590.stValveStatus.bControlModeSPNotAllowed := i_stExtnWarnings.Bit1ControlModeSPNotAllowed;
+stVcnVat590.stValveStatus.bZeroDisabled := i_stExtnWarnings.Bit2ZeroDisabled;
+stVcnVat590.stValveStatus.bPFODeactivated := i_stExtnWarnings.Bit3PFODeactivated;
+stVcnVat590.stValveStatus.bPressureSPOutOfRange := i_stExtnWarnings.Bit5PressureSPOutOfRange;
+stVcnVat590.stValveStatus.bPositionSPOutOfRange := i_stExtnWarnings.Bit6PositionSPOutOfRange;
+stVcnVat590.stValveStatus.bCtrlSPOutOfRange := i_stExtnWarnings.Bit10CtrlSPOutOfRange;
+stVcnVat590.stValveStatus.bGeneralCtrlSPOutOfRange := i_stExtnWarnings.Bit11GeneralCtrlSPOutOfRange;
+stVcnVat590.stValveStatus.bProcDataSettingsNotvalid := i_stExtnWarnings.Bit12ProcDataSettingsNotvalid;
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="WriteToOutput" Id="{d6e20cf1-2c45-411b-b669-d1005d8dcb97}">
+      <Implementation>
+        <ST><![CDATA[(*Write to EPICS*)
+stVcnVat590.bIlkOK := bExtIlkOK;
+stVcnVat590.nPositionSP := REAL_TO_DINT(fCalcPosSP);
+stVcnVat590.nPressureSP := REAL_TO_DINT(fCalcPresSP);
+stVcnVat590.fReqPosition := fReqPos;
+stVcnVat590.fReqPressure := fReqPres;
+stVcnVat590.fPresUpperLimit := fPresMaxLim;
+stVcnVat590.fUpperLimit := fUpperLimit;
+
+(*Write to VAT valve*)
+o_eCtrlModeSP := eValveModeSP;
+o_nRawPositionSP := REAL_TO_DINT(fCalcPosSP);
+o_nRawPressureSP := REAL_TO_DINT(fCalcPresSP);
+o_stGenCtrlSP.Bit0ExecuteZero := stVcnVat590.bZero;
+o_stGenCtrlSP.Bit4AccessMode := bRemAcsToggle;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_VCN_VAT590">
+      <LineId Id="3" Count="12" />
+      <LineId Id="372" Count="0" />
+      <LineId Id="17" Count="11" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="357" Count="0" />
+      <LineId Id="359" Count="1" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="32" Count="10" />
+      <LineId Id="462" Count="0" />
+      <LineId Id="461" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="460" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="451" Count="1" />
+      <LineId Id="473" Count="0" />
+      <LineId Id="48" Count="1" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="464" Count="3" />
+      <LineId Id="463" Count="0" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="470" Count="0" />
+      <LineId Id="468" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="381" Count="0" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="380" Count="0" />
+      <LineId Id="388" Count="0" />
+      <LineId Id="375" Count="0" />
+      <LineId Id="350" Count="0" />
+      <LineId Id="69" Count="3" />
+      <LineId Id="536" Count="0" />
+      <LineId Id="73" Count="9" />
+      <LineId Id="85" Count="7" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="363" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCN_VAT590.ACT_Logger">
+      <LineId Id="2" Count="0" />
+      <LineId Id="4" Count="25" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCN_VAT590.ACT_Persistent">
+      <LineId Id="2" Count="5" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCN_VAT590.M_SetThrottle">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCN_VAT590.M_ValveControl">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCN_VAT590.ReadFromInput">
+      <LineId Id="2" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="5" Count="12" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="18" Count="13" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VCN_VAT590.WriteToOutput">
+      <LineId Id="2" Count="5" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="10" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

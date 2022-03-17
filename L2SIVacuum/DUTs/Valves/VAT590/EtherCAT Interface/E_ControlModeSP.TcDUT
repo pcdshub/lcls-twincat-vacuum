@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_ControlModeSP" Id="{ba6b9899-bb05-401a-88ad-c50fd12e5d8e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_ControlModeSP :
+(
+	ManualControl := 2,
+	CloseValve := 3,
+	OpenValve := 4,
+	PressureControl := 5,
+	HoldValve := 6,
+	LearnProcedure := 7
+) USINT := CloseValve;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

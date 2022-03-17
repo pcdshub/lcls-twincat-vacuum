@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_GeneralControlSP" Id="{5ce17432-0e91-4ebe-a55f-dcffebe2eede}">
+    <Declaration><![CDATA[TYPE ST_GeneralControlSP :
+STRUCT
+	Bit0ExecuteZero: BIT;
+	Bit1Reserved : BIT;
+	Bit2PingPongTxBit : BIT;
+	Bit3Reserved : BIT;
+	Bit4AccessMode : BIT;
+	Bit5Reserved : BIT;
+	Bit6Reserved : BIT;
+	Bit7Reserved : BIT;
+	Bit8Reserved : BIT;
+	Bit9Reserved : BIT;
+	Bit10Reserved : BIT;
+	Bit11Reserved : BIT;
+	Bit12Reserved : BIT;
+	Bit13Reserved : BIT;
+	Bit14Reserved : BIT;
+	Bit15Reserved : BIT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
