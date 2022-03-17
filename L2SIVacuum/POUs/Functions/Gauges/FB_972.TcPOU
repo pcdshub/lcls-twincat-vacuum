@@ -28,7 +28,7 @@ END_VAR
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
-IF (rV > 1) AND (rV <= 1) THEN
+IF (rV > 1) AND (rV <= 7) THEN
 	PG.rPRESS := LREAL_TO_REAL(EXPT(10, 2*rV-11));
 	PG.xPRESS_OK := TRUE;
 	PG.eState := Valid; //Press OK
