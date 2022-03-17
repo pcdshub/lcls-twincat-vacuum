@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_VAT590_STATUS" Id="{5e783fe2-c351-442f-9875-c955ce4eebbc}">
+    <Declaration><![CDATA[TYPE ST_VAT590_STATUS :
+STRUCT
+	{attribute 'pytmc' :=  ' 
+		pv: CTRL_MODE_RBV
+		io: i
+	'}
+	eControlMode : E_ControlMode; // Valve control mode readback
+	{attribute 'pytmc' :=  ' 
+		pv: FATAL_ERR_RBV
+		io: i
+	'}
+	eFatalErrors : E_FatalErrors; // Valve Fatal Error status readback
+	(*General Status readback*)
+	{attribute 'pytmc' := '
+		pv: GEN_STATUS:ECAT_DATA_VALID
+		io: i
+		field: ZNAM NOT_OK
+		field: ONAM OK
+		field: ZSV MAJOR
+		field: OSV NO_ALARM
+	'}
+	bFieldBusDatavalid: BOOL;
+	{attribute 'pytmc' := '
+		pv: GEN_STATUS:ZERO_EXECUTED
+		io: i
+		field: ZNAM NOT_EXECUTED
+		field: ONAM EXECUTED
+		field: ZSV NO_ALARM
+		field: OSV NO_ALARM
+	'}
+	bZeroExecuted : BOOL;
+	{attribute 'pytmc' := '
+		pv: GEN_STATUS:ECAT_RxBIT
+		io: i
+		field: ZNAM INVERTED
+		field: ONAM NOT_INVERTED
+		field: ZSV NO_ALARM
+		field: OSV NO_ALARM
+	'}
+	bPingPongRxBit : BOOL;
+	{attribute 'pytmc' := '
+		pv: GEN_STATUS:PRES_SIM
+		io: i
+		field: ZNAM OFF
+		field: ONAM ON
+		field: ZSV NO_ALARM
+		field: OSV NO_ALARM
+	'}
+	bPressureSimulation : BOOL;
+	{attribute 'pytmc' := '
+		pv: GEN_STATUS:PRES_SP_REACHED
+		io: i
+		field: ZNAM NOT_OK
+		field: ONAM OK
+		field: ZSV NO_ALARM
+		field: OSV NO_ALARM
+	'}
+	bPressureSPReached : BOOL;
+	{attribute 'pytmc' := '
+		pv: GEN_STATUS:WARN_STATUS
+		io: i
+		field: ZNAM OK
+		field: ONAM NOT_OK
+		field: ZSV NO_ALARM
+		field: OSV MAJOR
+	'}
+	bWarningsActive : BOOL;
+	{attribute 'pytmc' :=  ' 
+		pv: GEN_STATUS:REM_CTRL
+		io: i
+	'}
+	eRemoteStatus : E_VAT590_AccessMode;
+	(*General Warnings readback*)
+	{attribute 'pytmc' := '
+		pv: GEN_WARN:SERVICE_REQ
+		io: i
+		field: ZNAM OK
+		field: ONAM NOT_OK
+		field: ZSV NO_ALARM
+		field: OSV MAJOR
+	'}
+	bServiceRequest: BOOL;
+	{attribute 'pytmc' := '
+		pv: GEN_WARN:POWER_FAIL_BATT
+		io: i
+		field: ZNAM READY
+		field: ONAM NOT_READY
+		field: ZSV NO_ALARM
+		field: OSV MINOR
+	'}
+	bPowerFailureBattery : BOOL;
+	{attribute 'pytmc' := '
+		pv: GEN_WARN:ADC_UNIT_STATUS
+		io: i
+		field: ZNAM OK
+		field: ONAM FAULTED
+		field: ZSV NO_ALARM
+		field: OSV MAJOR
+	'}
+	bSensMeasUnitFault : BOOL;
+	(*Extended Warnings readback*)
+	{attribute 'pytmc' := '
+		pv: EXT_WARN:REM_NOT_POSSIBLE
+		io: i
+		field: ZNAM OK
+		field: ONAM NOT_OK
+		field: ZSV NO_ALARM
+		field: OSV MINOR
+	'}
+	bRemoteControlNotPossible: BOOL;
+	{attribute 'pytmc' := '
+		pv: EXT_WARN:CTRL_SP_NOT_ALLOWED
+		io: i
+		field: ZNAM OK
+		field: ONAM NOT_OK
+		field: ZSV NO_ALARM
+		field: OSV MINOR
+	'}
+	bControlModeSPNotAllowed : BOOL;
+	{attribute 'pytmc' := '
+		pv: EXT_WARN:ZERO_STATUS
+		io: i
+		field: ZNAM ENABLED
+		field: ONAM DISABLED
+		field: ZSV NO_ALARM
+		field: OSV MINOR
+	'}
+	bZeroDisabled : BOOL;
+	{attribute 'pytmc' := '
+		pv: EXT_WARN:PFO_STATUS
+		io: i
+		field: ZNAM ENABLED
+		field: ONAM DISABLED
+		field: ZSV NO_ALARM
+		field: OSV MINOR
+	'}
+	bPFODeactivated : BOOL;
+	{attribute 'pytmc' := '
+		pv: EXT_WARN:PRES_SP_OOR
+		io: i
+		field: ZNAM OK
+		field: ONAM NOT_OK
+		field: ZSV NO_ALARM
+		field: OSV MAJOR
+	'}
+	bPressureSPOutOfRange : BOOL;
+	{attribute 'pytmc' := '
+		pv: EXT_WARN:POS_SP_OOR
+		io: i
+		field: ZNAM OK
+		field: ONAM NOT_OK
+		field: ZSV NO_ALARM
+		field: OSV MAJOR
+	'}
+	bPositionSPOutOfRange : BOOL;
+	{attribute 'pytmc' := '
+		pv: EXT_WARN:CTRL_SP_OOR
+		io: i
+		field: ZNAM OK
+		field: ONAM NOT_OK
+		field: ZSV NO_ALARM
+		field: OSV MAJOR
+	'}
+	bCtrlSPOutOfRange : BOOL;
+	{attribute 'pytmc' := '
+		pv: EXT_WARN:GENCTRL_SP_OOR
+		io: i
+		field: ZNAM OK
+		field: ONAM NOT_OK
+		field: ZSV NO_ALARM
+		field: OSV MAJOR
+	'}
+	bGeneralCtrlSPOutOfRange : BOOL;
+	{attribute 'pytmc' := '
+		pv: EXT_WARN:PROC_DATA_NOT_VALID
+		io: i
+		field: ZNAM OK
+		field: ONAM NOT_OK
+		field: ZSV NO_ALARM
+		field: OSV MAJOR
+	'}
+	bProcDataSettingsNotvalid : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
