@@ -57,6 +57,7 @@ END_VAR
 VAR PERSISTENT
     fUpperLimit	: REAL;                // Max position in % that can be requested
 	fPresMaxLim : REAL;                // Max pressure in Torr that can be requested
+	valveOpnSP: REAL := 10E-4;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Needle valve control FB
@@ -84,9 +85,14 @@ IF bExtIlkOK THEN
 		E_VCN_VAT590.CloseValve:
 			eValveModeSP := E_ControlModeSP.CloseValve;
 		E_VCN_VAT590.ManualControl:
-			eValveModeSP := E_ControlModeSP.ManualControl;
+		    IF IG.xPRESS_OK AND IG.rPRESS <= valveOpnSP THEN
+				eValveModeSP := E_ControlModeSP.ManualControl;
+			ELSE
+				eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
+				stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
+			END_IF	
 		E_VCN_VAT590.PressureControl:
-			IF IG.eState = E_PressureState.Valid THEN
+			IF IG.xPRESS_OK AND IG.rPRESS <= valveOpnSP THEN
 				eValveModeSP := E_ControlModeSP.PressureControl;
 			ELSE
 				eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
@@ -130,7 +136,7 @@ CASE stVcnVat590.ePressureSensor OF
 END_CASE
 
 (*Calculated Pressure SP and Pressure readback is 0 if Pressure sensor is not working*) 
-IF IG.eState <> E_PressureState.Valid THEN
+IF NOT (IG.xPRESS_OK AND IG.rPRESS < valveOpnSP ) THEN
 	fCalcPresSP := 0;
 	stVcnVat590.fPressure := 0;
 END_IF
@@ -205,6 +211,7 @@ IF (bRestorePersistentData) THEN
 	IF (fPresMaxLim <> 0) THEN
 		stVcnVat590.fPresUpperLimit := fPresMaxLim;
 	END_IF;
+	    
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -291,7 +298,11 @@ o_stGenCtrlSP.Bit4AccessMode := bRemAcsToggle;]]></ST>
     <LineIds Name="FB_VCN_VAT590">
       <LineId Id="3" Count="12" />
       <LineId Id="372" Count="0" />
-      <LineId Id="17" Count="11" />
+      <LineId Id="17" Count="10" />
+      <LineId Id="594" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="595" Count="0" />
+      <LineId Id="597" Count="2" />
       <LineId Id="30" Count="0" />
       <LineId Id="356" Count="0" />
       <LineId Id="31" Count="0" />
@@ -341,6 +352,7 @@ o_stGenCtrlSP.Bit4AccessMode := bRemAcsToggle;]]></ST>
       <LineId Id="2" Count="5" />
       <LineId Id="17" Count="1" />
       <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_VCN_VAT590.M_SetThrottle">
