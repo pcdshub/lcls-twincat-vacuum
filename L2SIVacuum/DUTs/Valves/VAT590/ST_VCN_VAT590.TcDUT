@@ -6,28 +6,28 @@ STRUCT
 	(* VCN - Valve Controlled Needle
 	Used for VAT590 needle valves *)
 	{attribute 'pytmc' := '
-    pv: POS_RAW_RBV
+    pv: POS_RAW
 	io: i
     '}
 	nRawPosition : DINT; //Position readback
 	{attribute 'pytmc' := '
-    pv: PRES_RAW_RBV
+    pv: PRES_RAW
 	io: i
     '}
 	nRawPressure : DINT; //Pressure readback
 	{attribute 'pytmc' := '
-    pv: PRES_TORR_RBV
+    pv: PRES_TORR
 	field: EGU "TORR"
 	io: i
     '}
 	fPressure : REAL; //Pressure readback in Torr units
 	{attribute 'pytmc' := '
-	pv: POS_SP_RBV
+	pv: POS_SP
 	io: i
 	'}
 	nPositionSP : DINT; //Position setpoint readback
 	{attribute 'pytmc' := '
-	pv: PRES_SP_RBV
+	pv: PRES_SP
 	io: i
 	'}
 	nPressureSP : DINT; //Pressure setpoint readback
@@ -41,17 +41,23 @@ STRUCT
     '}
 	bIlkOK : BOOL := FALSE; // Interlock Bit status
 	{attribute 'pytmc' := '
-    pv: Limit
+    pv: POS_LIMIT
 	io: io
 	autosave_pass1: VAL DESC
     '}
-	fUpperLimit	: REAL := 100; // Percentage Upper limit on valve open
+	fPosSetLimit	: REAL := 100; // Percentage Upper limit on valve open
 	{attribute 'pytmc' := '
-    pv: PresLimit
+    pv: PRES_SET_LIMIT
 	io: io
 	autosave_pass1: VAL DESC
     '}
-	fPresUpperLimit	: REAL := 1E-2; // Upper limit for pressure control 
+	fPresSetLimit	: REAL := 1E-2; // Upper limit for pressure control 	
+	{attribute 'pytmc' := '
+    pv: PRES_RDBK_LIMIT
+	io: io
+	autosave_pass1: VAL DESC
+    '}	
+	fPresRdbkLimit : REAL := 1E-4;  //upper limit for pressure reading before valve close
 	{attribute 'pytmc' := '
 	pv: POS_REQ
 	field: DRVL 0.0
@@ -91,10 +97,7 @@ STRUCT
 	io: o
 	'}
 	bZero : BOOL; // Activate Zero function bit
-	{attribute 'pytmc' :=  ' 
-	pv: GEN_STATUS
-	io: i
-	'}
+
 END_STRUCT
 END_TYPE
 ]]></Declaration>
