@@ -2,10 +2,11 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VFS_2OO3Interface" Id="{289d35ca-42e8-4943-8216-657a27c694cb}" SpecialFunc="None">
     <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo valve to communicate over two task on the same PLC.*) 
-(*for FAST shutter control*)
+(*NOTE: All 3 gauge cards with fast TTL output need to be installed in the same gauge controller*)
+(*For FAST shutter control*)
 FUNCTION_BLOCK FB_VFS_2OO3Interface EXTENDS FB_Valve
 VAR_INPUT
-	(*Make sure all tri CC gauge cards are in the same controller*)
+	(*Make sure all three CC gauge cards are in the same controller*)
 	IG1 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 1
 	IG2 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 2
 	IG3 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 3

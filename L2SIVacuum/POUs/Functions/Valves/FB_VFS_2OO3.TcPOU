@@ -2,6 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VFS_2OO3" Id="{49c99ac3-de9e-429f-8ce1-1cbcf3f0f700}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements basic functionality for Fast Shutter/Valves*)
+(* NOTE: All 3 gauge cards with fast TTL output need to be installed in the same gauge controller*)
 (* Create a separate virtual PLC for the fast shutter logic, and tie/map this task to the FAST I/O portion of the ethercat bus,
  so we can scan these I/Os faster than the rest of the vacuum I/Os.
 The Fast shutter was tested with PLC task Cycle Base Time 50us with cycle time 0.050ms.
