@@ -356,6 +356,9 @@
     <Compile Include="POUs\Functions\Valves\FB_VFS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VFS_2OO3.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VGC_2S.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -428,6 +431,9 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_TVGC_2S_ADS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\Interfaces\FB_VFS_2OO3Interface.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\Interfaces\FB_VFS_Interface.TcPOU">

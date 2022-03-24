@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_VFS_2OO3Interface" Id="{289d35ca-42e8-4943-8216-657a27c694cb}" SpecialFunc="None">
+    <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo valve to communicate over two task on the same PLC.*) 
+(*for FAST shutter control*)
+FUNCTION_BLOCK FB_VFS_2OO3Interface EXTENDS FB_Valve
+VAR_INPUT
+	(*Make sure all tri CC gauge cards are in the same controller*)
+	IG1 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 1
+	IG2 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 2
+	IG3 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 3
+	Veto_Valve : ST_VGC;// The VGC structure for the Veto Valve
+END_VAR
+VAR_OUTPUT
+	{attribute 'pytmc' := '
+    pv: ;
+    '}
+	iq_stValve : ST_VFS; (* All valve data and states will be in this struct*)
+	i_xVAC_FAULT_OK AT%I* : BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+END_VAR
+VAR
+	rtTriggerVetoed : R_TRIG;
+	rtTriggered : R_TRIG;
+	tonOvrd	: TON;
+	tOvrd : TIME := T#10s;
+	rtOK : R_TRIG;
+	tonDelOK : TON;
+	xOPN_OK : BOOL;
+	tDelOK	: TIME := T#60S;
+
+	(*outputs*)
+	q_xPRESS_OK AT%Q* : BOOL;
+	q_xOPN_SW AT%Q* : BOOL;
+	q_xCLS_SW AT%Q* : BOOL; (*external open signal e.g epics*)
+	q_xVAC_FAULT_Reset AT%Q* : BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+	q_xOverrideMode AT%Q* : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+	q_xOverrideOpen AT%Q* : BOOL;
+	
+	(*VETO Devices*)
+	q_xVetoValveOpenDO AT%Q* : BOOL;
+	q_xVetoValveClosed AT%Q* : BOOL;
+	(*inputs*)
+	i_xTrigger AT%I* : BOOL;
+	i_xVFS_Open AT%I* : BOOL;
+	i_xVFS_Closed AT%I* : BOOL;
+	{attribute 'pytmc' := '
+    pv: MPS_FAULT_OK
+	field: ZNAM MPS FAULT ;
+	field: ONAM MPS OK ;
+	io: i ;
+	'}
+	i_xMPS_OK AT%I* : BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
+	i_eVFS_State AT%I* : E_VGC; (*Interface*)
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*2oo3 logic*)
+q_xPRESS_OK := (IG1.xPRESS_OK AND IG2.xPRESS_OK) OR
+				(IG1.xPRESS_OK AND IG3.xPRESS_OK) OR
+				(IG2.xPRESS_OK AND IG3.xPRESS_OK);
+//Should ve also add the checking of the eState of the gauges? eState should be Valid? 
+			
+(* Soft IO Mapping*)
+IO();
+///Check valve postion
+IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
+	iq_stValve.eState:=INVALID;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=OPEN;
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=CLOSED;
+ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
+	iq_stValve.eState:=MOVING;
+ELSE
+	iq_stValve.eState:=INVALID;
+END_IF
+//Override timer
+tonOvrd(IN:=q_xOverrideOpen, PT:=tOvrd);
+tonDelOK(IN:=xOPN_OK, PT:=tDelOK);
+rtOK(CLK:=tonDelOK.Q);
+IF rtOK.Q AND q_xOverrideOpen THEN 
+	q_xOverrideOpen :=FALSE;
+	//if (i_xOpnLS) AND (i_xOverrideMode) THEN i_xOPN_SW := TRUE; END_IF //for seamless transition   
+    //Log
+    fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
+END_IF
+(*OPN OK evaluation bit *)
+xOPN_OK := (i_xVAC_FAULT_OK) AND (NOT i_xTrigger OR (q_xVetoValveClosed AND NOT q_xVetoValveOpenDO)) ;
+(* Soft IO Mapping*)
+IO();
+(*Logger*)
+ACT_Logger();]]></ST>
+    </Implementation>
+    <Action Name="ACT_Logger" Id="{f1b48cba-c0e7-4dbf-a658-9787ff37eaf0}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+
+IF i_xTrigger AND ePrevState = OPEN THEN
+ 		fbLogger(sMsg:='Fast valve triggered to close', eSevr:=TcEventSeverity.Critical);  	
+END_IF
+
+
+//STATE Logger  
+
+IF ePrevState <> iq_stValve.eState THEN
+	  CASE iq_stValve.eState OF
+		INVALID:
+			fbLogger(sMsg:='Valve invalid position.', eSevr:=TcEventSeverity.Critical);
+  		MOVING:
+			fbLogger(sMsg:='Valve moving', eSevr:=TcEventSeverity.Warning);
+		OPEN:
+			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+		CLOSED:
+			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+	  END_CASE
+	  ePrevState := iq_stValve.eState;  
+  END_IF
+  
+
+
+// Log valve timeouts
+tErrorPresent(CLK:=iq_stValve.bErrorPresent);
+IF tErrorPresent.Q THEN fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning); END_IF
+
+// Log valve open
+tAction(CLK:= iq_stValve.q_xOPN_DO);
+IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info); END_IF
+
+// Log override mode enabled
+tOverrideActivated(CLK:= (tonOvrd.Q AND q_xOverrideMode));
+IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
+
+//Log when the trigger is vetoed
+rtTriggerVetoed(CLK:= (NOT(q_xPRESS_OK) OR NOT(i_xTrigger)) AND (NOT q_xVetoValveOpenDO AND q_xVetoValveClosed));
+IF rtTriggerVetoed.Q THEN fbLogger(sMsg:='Valve triggered while veto device is in', eSevr:=TcEventSeverity.Warning); END_IF
+
+rtTriggered(CLK:= ((q_xPRESS_OK) OR (i_xTrigger)) AND ( q_xVetoValveOpenDO AND NOT q_xVetoValveClosed));
+IF rtTriggered.Q THEN fbLogger(sMsg:='Fast valve triggered!', eSevr:=TcEventSeverity.Critical); END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="IO" Id="{108f1a54-d994-46f1-b2ea-48d5b8b7e71d}">
+      <Implementation>
+        <ST><![CDATA[(*inputs*)
+iq_stValve.i_xTrigger := i_xTrigger;
+iq_stValve.i_xOpnLS := 	i_xVFS_Open;
+iq_stValve.i_xClsLS:=	i_xVFS_Closed;
+iq_stValve.eVGC_State := i_eVFS_State;
+iq_stValve.i_xVAC_FAULT_OK:= i_xVAC_FAULT_OK;
+(*output*)
+q_xOPN_SW := iq_stValve.pv_xOPN_SW;
+q_xCLS_SW:= iq_stValve.xCLS_SW;
+q_xVAC_FAULT_Reset :=  iq_stValve.pv_xAlmRst;
+q_xOverrideMode :=iq_stValve.xOverrideMode;
+q_xOverrideOpen := iq_stValve.pv_xOvrdOpn ;
+iq_stValve.sGFS := CONCAT(CONCAT(CONCAT(IG1.sPath,','),CONCAT(IG2.sPath,',')),IG3.sPath);
+
+(*Veto*)
+(*VETO Devices*)
+q_xVetoValveOpenDO := Veto_Valve.q_xOPN_DO;
+q_xVetoValveClosed := Veto_Valve.i_xClsLS;
+
+//reset the commands 
+IF ( iq_stValve.i_xOpnLS) THEN iq_stValve.pv_xOPN_SW := FALSE; END_IF
+IF ( iq_stValve.i_xClsLS) THEN iq_stValve.xCLS_SW := FALSE; END_IF
+
+//Veto device name
+iq_stValve.sVetoDeviceName := Veto_Valve.sDevName;
+]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_VFS_2OO3Interface">
+      <LineId Id="93" Count="2" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="6" Count="29" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VFS_2OO3Interface.ACT_Logger">
+      <LineId Id="2" Count="41" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VFS_2OO3Interface.IO">
+      <LineId Id="2" Count="24" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
