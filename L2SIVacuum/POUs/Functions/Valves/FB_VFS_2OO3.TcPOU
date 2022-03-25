@@ -42,7 +42,7 @@ VAR
 	
 	tDelOK : TIME := T#60S;
 	tOvrd : TIME := T#10s;
-	//rTrigOverrideOpen : R_TRIG; //not used
+	rTrigOverrideOpen : R_TRIG;
 	
 	xClose : BOOL;
 	xOpen : BOOL;
@@ -159,7 +159,7 @@ IF(CloseTimer.Q) OR (i_xClsLS) THEN
 END_IF
 
 // Set Valve open signal to FALSE when open timer expires or open limit switch is closed
-IF(OpenTimer.Q) AND (i_xOpnLS) THEN // Shouldnt we have OR here??
+IF(OpenTimer.Q) AND (i_xOpnLS) THEN
 	q_xOPN_DO :=  FALSE;
 	i_xOPN_SW := FALSE;
 	xOpen := FALSE;
@@ -187,8 +187,8 @@ q_xMPS_OK := i_xOpnLS AND ((NOT xTrigger AND i_xPress_OK) OR xVeto)  AND NOT(i_x
 Solution: Override only after ten seconds of override, protect against blips,
 when the valve permission goes true for more than ten seconds consistently, remove override
 *)
-//rTrigOverrideOpen (CLK := i_xOverrideOpen); // Not used
-// 
+rTrigOverrideOpen (CLK := i_xOverrideOpen); // Not used
+
 tonDelOK (IN := xOPN_OK, PT := tDelOK);
 rtOK (CLK := tonDelOK.Q);
 
@@ -218,7 +218,7 @@ END_IF
 
 (*Timers*)
 CloseTimer (IN := xClose, PT := TimDur);
-OpenTimer (IN := i_xOpnLS, PT := OpenTimDur); // WHY IS HERE OpnLS as an INPUT, I think it should be xOpen Signal frpm EPICS
+OpenTimer (IN := i_xOpnLS, PT := OpenTimDur);
 tOPNtimeout (IN := q_xOPN_DO, PT := tOPNTimeOutDuration);
 tCLStimeout (IN := q_xClose_A, PT := tCLSTimeOutDuration);
 

@@ -10,7 +10,7 @@ VAR_INPUT
 	IG1 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 1
 	IG2 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 2
 	IG3 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 3
-	Veto_Valve : ST_VGC;// The VGC structure for the Veto Valve
+	Veto_Valve : ST_VGC; // The VGC structure for the Veto Valve
 END_VAR
 VAR_OUTPUT
 	{attribute 'pytmc' := '
@@ -58,7 +58,6 @@ END_VAR]]></Declaration>
 q_xPRESS_OK := (IG1.xPRESS_OK AND IG2.xPRESS_OK) OR
 				(IG1.xPRESS_OK AND IG3.xPRESS_OK) OR
 				(IG2.xPRESS_OK AND IG3.xPRESS_OK);
-//Should ve also add the checking of the eState of the gauges? eState should be Valid? 
 			
 (* Soft IO Mapping*)
 IO();
@@ -171,7 +170,6 @@ iq_stValve.sVetoDeviceName := Veto_Valve.sDevName;
     <LineIds Name="FB_VFS_2OO3Interface">
       <LineId Id="93" Count="2" />
       <LineId Id="92" Count="0" />
-      <LineId Id="97" Count="0" />
       <LineId Id="6" Count="29" />
       <LineId Id="2" Count="0" />
     </LineIds>
