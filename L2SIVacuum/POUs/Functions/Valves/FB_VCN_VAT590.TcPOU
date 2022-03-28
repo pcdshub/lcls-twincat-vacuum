@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VCN_VAT590" Id="{4758ecab-cc0c-4c37-8981-9d3a1c0c082a}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'no_check'}
+    <Declaration><![CDATA[//{attribute 'no_check'}
 (* This function implements the Basic functions for the VAT590 needle valve*)
 FUNCTION_BLOCK FB_VCN_VAT590 EXTENDS FB_Valve
 VAR_INPUT
@@ -57,6 +57,7 @@ END_VAR
 VAR PERSISTENT
     fUpperLimit	: REAL;                // Max position in % that can be requested
 	fPresMaxLim : REAL;                // Max pressure in Torr that can be requested
+	fPresRbMaxLim : REAL;               // Max pressure in Torr read by chamber gauge, valve will close above the pressure.
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Needle valve control FB
@@ -84,9 +85,14 @@ IF bExtIlkOK THEN
 		E_VCN_VAT590.CloseValve:
 			eValveModeSP := E_ControlModeSP.CloseValve;
 		E_VCN_VAT590.ManualControl:
-			eValveModeSP := E_ControlModeSP.ManualControl;
+		    IF IG.xPRESS_OK AND IG.rPRESS <= fPresRbMaxLim THEN
+				eValveModeSP := E_ControlModeSP.ManualControl;
+			ELSE
+				eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
+				stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
+			END_IF	
 		E_VCN_VAT590.PressureControl:
-			IF IG.eState = E_PressureState.Valid THEN
+			IF IG.xPRESS_OK AND IG.rPRESS <= fPresRbMaxLim THEN
 				eValveModeSP := E_ControlModeSP.PressureControl;
 			ELSE
 				eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
@@ -130,7 +136,7 @@ CASE stVcnVat590.ePressureSensor OF
 END_CASE
 
 (*Calculated Pressure SP and Pressure readback is 0 if Pressure sensor is not working*) 
-IF IG.eState <> E_PressureState.Valid THEN
+IF NOT (IG.xPRESS_OK AND IG.rPRESS < fPresRbMaxLim ) THEN
 	fCalcPresSP := 0;
 	stVcnVat590.fPressure := 0;
 END_IF
@@ -200,11 +206,16 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEvent
 IF (bRestorePersistentData) THEN
 	bRestorePersistentData	:= FALSE;
 	IF (fUpperLimit <> 0) THEN
-		stVcnVat590.fUpperLimit := fUpperLimit;
+		stVcnVat590.fPosSetLimit := fUpperLimit;
 	END_IF;
 	IF (fPresMaxLim <> 0) THEN
-		stVcnVat590.fPresUpperLimit := fPresMaxLim;
+		stVcnVat590.fPresSetLimit := fPresMaxLim;
 	END_IF;
+	IF (fPresRbMaxLim <> 0) THEN
+		stVcnVat590.fPresRdbkLimit := fPresRbMaxLim;
+	END_IF;
+	
+	    
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -216,7 +227,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
-stVcnVat590.fUpperLimit := LIMIT(0, rUpperLimit, 100);]]></ST>
+stVcnVat590.fPosSetLimit := LIMIT(0, rUpperLimit, 100);]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_ValveControl" Id="{25066385-eb5f-47fb-8ac4-a5fcdc50740f}">
@@ -232,8 +243,9 @@ END_VAR
     <Action Name="ReadFromInput" Id="{2b46db7d-12fe-424a-afdf-e2d60ed01bdb}">
       <Implementation>
         <ST><![CDATA[(*Read from EPICS*)
-fUpperLimit := LIMIT(0, stVcnVat590.fUpperLimit, 100);
-fPresMaxLim := LIMIT(1.0E-10, stVcnVat590.fPresUpperLimit, 1.0E-2);
+fUpperLimit := LIMIT(0, stVcnVat590.fPosSetLimit, 100);
+fPresMaxLim := LIMIT(1.0E-10, stVcnVat590.fPresSetLimit, 1.0E-2);
+fPresRbMaxLim := LIMIT(1.0E-10, stVcnVat590.fPresRdbkLimit, 1.0E-2);
 fReqPos := LIMIT(0, stVcnVat590.fReqPosition, 100);
 fReqPres := LIMIT(1.0E-10, stVcnVat590.fReqPressure, 1.0E-2);
 
@@ -277,8 +289,8 @@ stVcnVat590.nPositionSP := REAL_TO_DINT(fCalcPosSP);
 stVcnVat590.nPressureSP := REAL_TO_DINT(fCalcPresSP);
 stVcnVat590.fReqPosition := fReqPos;
 stVcnVat590.fReqPressure := fReqPres;
-stVcnVat590.fPresUpperLimit := fPresMaxLim;
-stVcnVat590.fUpperLimit := fUpperLimit;
+stVcnVat590.fPresSetLimit := fPresMaxLim;
+stVcnVat590.fPosSetLimit := fUpperLimit;
 
 (*Write to VAT valve*)
 o_eCtrlModeSP := eValveModeSP;
@@ -291,7 +303,11 @@ o_stGenCtrlSP.Bit4AccessMode := bRemAcsToggle;]]></ST>
     <LineIds Name="FB_VCN_VAT590">
       <LineId Id="3" Count="12" />
       <LineId Id="372" Count="0" />
-      <LineId Id="17" Count="11" />
+      <LineId Id="17" Count="10" />
+      <LineId Id="594" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="595" Count="0" />
+      <LineId Id="597" Count="2" />
       <LineId Id="30" Count="0" />
       <LineId Id="356" Count="0" />
       <LineId Id="31" Count="0" />
@@ -341,6 +357,10 @@ o_stGenCtrlSP.Bit4AccessMode := bRemAcsToggle;]]></ST>
       <LineId Id="2" Count="5" />
       <LineId Id="17" Count="1" />
       <LineId Id="16" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="FB_VCN_VAT590.M_SetThrottle">
@@ -352,7 +372,7 @@ o_stGenCtrlSP.Bit4AccessMode := bRemAcsToggle;]]></ST>
     </LineIds>
     <LineIds Name="FB_VCN_VAT590.ReadFromInput">
       <LineId Id="2" Count="1" />
-      <LineId Id="38" Count="0" />
+      <LineId Id="38" Count="1" />
       <LineId Id="4" Count="0" />
       <LineId Id="37" Count="0" />
       <LineId Id="5" Count="12" />
