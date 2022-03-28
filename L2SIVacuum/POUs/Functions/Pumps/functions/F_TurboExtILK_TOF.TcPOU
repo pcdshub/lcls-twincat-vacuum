@@ -19,20 +19,18 @@ VAR_INPUT
 END_VAR
 VAR
 	tofDelay : TOF;
-	bValveOpenILK : BOOL; 
+	bRunOk : BOOL; 
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
 
-tofDelay.IN :=RoughingValve.i_xOpnLS OR (Turbo.eState = pumpSTOPPED); // Start timer when valve closes (IN goes low)
+tofDelay.IN :=RoughingValve.i_xOpnLS OR (Turbo.eState = pumpSTOPPED); // allow to restart turbo when roughing valve is open,  start a TOF timer to keep turbo running if valve is closing (IN goes low), 
 tofDelay.PT := tDelay;
 tofDelay();
-bValveOpenILK := tofDelay.Q; 
+bRunOk := tofDelay.Q; 
 
-F_TurboExtILK_TOF := ( ScrollPump.q_xRunDo and ScrollPump.eState = pumpRUNNING ) 
-                      AND (InletGauge.xPRESS_OK and InletGauge.rPRESS < Turbo.rInletPressureSP) AND (BackingGauge.xPRESS_OK and BackingGauge.rPRESS < Turbo.rBackingPressureSP) 
-                          OR bValveOpenILK;]]></ST>
+F_TurboExtILK_TOF :=  bRunOk;]]></ST>
     </Implementation>
     <LineIds Name="F_TurboExtILK_TOF">
       <LineId Id="23" Count="0" />
@@ -41,8 +39,6 @@ F_TurboExtILK_TOF := ( ScrollPump.q_xRunDo and ScrollPump.eState = pumpRUNNING )
       <LineId Id="19" Count="0" />
       <LineId Id="28" Count="0" />
       <LineId Id="26" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="17" Count="0" />
       <LineId Id="34" Count="0" />
     </LineIds>
   </POU>
