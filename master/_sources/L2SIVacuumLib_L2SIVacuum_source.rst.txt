@@ -2665,16 +2665,14 @@ F_TurboExtILK_TOF
     END_VAR
     VAR
     	tofDelay : TOF;
-    	bValveOpenILK : BOOL; 
+    	bRunOk : BOOL; 
     END_VAR
-    tofDelay.IN :=RoughingValve.i_xOpnLS OR (Turbo.eState = pumpSTOPPED); // Start timer when valve closes (IN goes low)
+    tofDelay.IN :=RoughingValve.i_xOpnLS OR (Turbo.eState = pumpSTOPPED); // allow to restart turbo when roughing valve is open,  start a TOF timer to keep turbo running if valve is closing (IN goes low), 
     tofDelay.PT := tDelay;
     tofDelay();
-    bValveOpenILK := tofDelay.Q; 
+    bRunOk := tofDelay.Q; 
 
-    F_TurboExtILK_TOF := ( ScrollPump.q_xRunDo and ScrollPump.eState = pumpRUNNING ) 
-                          AND (InletGauge.xPRESS_OK and InletGauge.rPRESS < Turbo.rInletPressureSP) AND (BackingGauge.xPRESS_OK and BackingGauge.rPRESS < Turbo.rBackingPressureSP) 
-                              OR bValveOpenILK;
+    F_TurboExtILK_TOF :=  bRunOk;
 
     END_FUNCTION
 
@@ -2978,13 +2976,15 @@ FB_901_ECAT
     	xPress_OK AT%I* : BOOL;
     	xOverrange AT%I* : BOOL;
     	xUnderrange AT%I* : BOOL; 
-    	i_iPRESS_R AT%I* :REAL; // input Pressure // Link to analog Input
+    	i_iPRESS_R AT%I* : REAL; // input Pressure // Link to analog Input
+    	bWcstate AT%I* : BOOL; // 0: date valid, 1: date invalid
+    	
     END_VAR
     (* Standard MKS 9XX series conversion *)
     (* works for 901 with Ethercat interface*)
     // no div by zero
     PG.rPRESS :=i_iPRESS_R;
-    PG.xPRESS_OK := xPress_OK;
+    PG.xPRESS_OK := xPress_OK and NOT bWcstate ;
     IF xPress_OK THEN
     	PG.xPRESS_OK := TRUE;
     	PG.eState := Valid; //Press OK
@@ -3016,6 +3016,7 @@ FB_901_ECAT
 
     ACTION ACT_IO:
     PG.i_iPRESS_R := REAL_TO_INT(i_iPRESS_R);
+    PG.sPath := sPath;
     END_ACTION
 
     ACTION ACT_Logger:
@@ -3100,6 +3101,7 @@ FB_972
 
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
+    PG.sPath := sPath;
     END_ACTION
 
     ACTION ACT_Logger:
