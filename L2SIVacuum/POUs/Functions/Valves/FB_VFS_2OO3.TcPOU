@@ -22,6 +22,7 @@ VAR
 	xERR_ExtFault : BOOL;   //internal variable External Fault signal
 	xVeto : BOOL;           //internal variable Veto signal
 	xTrigger : BOOL;        //internal trigger signal, output of 2oo3 logic
+	x2oo3Connected : BOOL;  //internal signal indicating if at least 2 gauges connected
 	
 	// PMPS
 	fbFF : FB_FastFault :=(
@@ -76,7 +77,10 @@ VAR
 	i_xVetoValveClosed AT%I* : BOOL; (*Link to VFS Interface*)
 	
 	(*Interface with external system*) 
-	i_xPress_OK        AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
+	//i_xPress_OK        AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
+	i_xPress_OK_IG1    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
+	i_xPress_OK_IG2    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
+	i_xPress_OK_IG3    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
 	i_xOPN_SW          AT%I* : BOOL; (*Link to VFS Interface, external open signal e.g epics*)
 	i_xCLS_SW          AT%I* : BOOL; (*Link to VFS Interface, external close signal e.g epics*)
 	i_xVAC_FAULT_Reset AT%I* : BOOL; (*Link to VFS Interface Valve Vacuum OK, is set to False when there is Vacuum Fault*)
@@ -116,14 +120,25 @@ IF (i_xVeto_Enable) THEN
 END_IF
 
 (*2oo3 logic*)
-xTrigger := (i_xTriggerIG1 AND i_xTriggerIG2) OR
-            (i_xTriggerIG1 AND i_xTriggerIG3) OR
-            (i_xTriggerIG2 AND i_xTriggerIG3);
+(*First let's verify that at least 2 gauges are connected*)
+x2oo3Connected := (i_xPress_OK_IG1 AND i_xPress_OK_IG2) OR
+                  (i_xPress_OK_IG1 AND i_xPress_OK_IG3) OR
+                  (i_xPress_OK_IG2 AND i_xPress_OK_IG3);
+				  
+(*Each trigger input validated with Press OK bit which indicates if the gauge is connected or disconnected*)
+IF x2oo3Connected THEN
+	xTrigger := ((i_xTriggerIG1 AND i_xPress_OK_IG1) AND (i_xTriggerIG2 AND i_xPress_OK_IG2)) OR
+                ((i_xTriggerIG1 AND i_xPress_OK_IG1) AND (i_xTriggerIG3 AND i_xPress_OK_IG3)) OR
+                ((i_xTriggerIG2 AND i_xPress_OK_IG2) AND (i_xTriggerIG3 AND i_xPress_OK_IG3));
+ELSE
+	xTrigger := TRUE;
+END_IF
 
 //xVeto:= i_xVeto AND (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
 (* Input Trigger to close the Fast Shutter*)
 (* Neighboring Valves Should also be triggered to Close*)
-IF ((xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK))  AND NOT (xVeto) AND NOT (tonOvrd.Q AND i_xOverrideMode) THEN 
+//IF ((xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK))  AND NOT (xVeto) AND NOT (tonOvrd.Q AND i_xOverrideMode) THEN
+IF ((xTrigger) OR NOT (i_xExt_OK))  AND NOT (xVeto) AND NOT (tonOvrd.Q AND i_xOverrideMode) THEN 
 	xClose := TRUE;
 	xOpen := FALSE;
 	q_xVAC_FAULT_OK := FALSE;
@@ -179,7 +194,8 @@ xOPN_OK := (NOT xERR_ExtFault) AND (NOT xTrigger OR xVeto) ;
 
 
 (* When the valve  is open MPS is OK*)
-q_xMPS_OK := i_xOpnLS AND ((NOT xTrigger AND i_xPress_OK) OR xVeto)  AND NOT(i_xCLS_SW);
+//q_xMPS_OK := i_xOpnLS AND ((NOT xTrigger AND i_xPress_OK) OR xVeto)  AND NOT(i_xCLS_SW);
+q_xMPS_OK := i_xOpnLS AND (NOT xTrigger OR xVeto) AND NOT(i_xCLS_SW);
 
 
 (* Override logic *)
@@ -267,7 +283,7 @@ q_xVFS_Open := i_xOpnLS;]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="FB_VFS_2OO3">
-      <LineId Id="806" Count="149" />
+      <LineId Id="3" Count="161" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_VFS_2OO3.ACT_ResetAlarms">
