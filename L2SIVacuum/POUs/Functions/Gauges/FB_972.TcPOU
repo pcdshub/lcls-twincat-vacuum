@@ -49,7 +49,8 @@ ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{57edb1c8-c4ce-46a6-8329-dd1927c8ce8e}">
       <Implementation>
-        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;
+PG.sPath := sPath;]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_Logger" Id="{e27f7c5d-a6a0-44f8-9f5b-d0a5d2ac0c45}">
@@ -95,7 +96,7 @@ END_VAR
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="FB_972.ACT_IO">
-      <LineId Id="1" Count="0" />
+      <LineId Id="1" Count="1" />
     </LineIds>
     <LineIds Name="FB_972.ACT_Logger">
       <LineId Id="2" Count="22" />
