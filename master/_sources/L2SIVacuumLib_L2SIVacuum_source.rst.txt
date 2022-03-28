@@ -1493,12 +1493,12 @@ ST_VAT590_STATUS
     TYPE ST_VAT590_STATUS :
     STRUCT
     	{attribute 'pytmc' :=  ' 
-    		pv: CTRL_MODE_RBV
+    		pv: CTRL_MODE
     		io: i
     	'}
     	eControlMode : E_ControlMode; // Valve control mode readback
     	{attribute 'pytmc' :=  ' 
-    		pv: FATAL_ERR_RBV
+    		pv: FATAL_ERR
     		io: i
     	'}
     	eFatalErrors : E_FatalErrors; // Valve Fatal Error status readback
@@ -1829,28 +1829,28 @@ ST_VCN_VAT590
     	(* VCN - Valve Controlled Needle
     	Used for VAT590 needle valves *)
     	{attribute 'pytmc' := '
-        pv: POS_RAW_RBV
+        pv: POS_RAW
     	io: i
         '}
     	nRawPosition : DINT; //Position readback
     	{attribute 'pytmc' := '
-        pv: PRES_RAW_RBV
+        pv: PRES_RAW
     	io: i
         '}
     	nRawPressure : DINT; //Pressure readback
     	{attribute 'pytmc' := '
-        pv: PRES_TORR_RBV
+        pv: PRES_TORR
     	field: EGU "TORR"
     	io: i
         '}
     	fPressure : REAL; //Pressure readback in Torr units
     	{attribute 'pytmc' := '
-    	pv: POS_SP_RBV
+    	pv: POS_SP
     	io: i
     	'}
     	nPositionSP : DINT; //Position setpoint readback
     	{attribute 'pytmc' := '
-    	pv: PRES_SP_RBV
+    	pv: PRES_SP
     	io: i
     	'}
     	nPressureSP : DINT; //Pressure setpoint readback
@@ -1864,17 +1864,23 @@ ST_VCN_VAT590
         '}
     	bIlkOK : BOOL := FALSE; // Interlock Bit status
     	{attribute 'pytmc' := '
-        pv: Limit
+        pv: POS_LIMIT
     	io: io
     	autosave_pass1: VAL DESC
         '}
-    	fUpperLimit	: REAL := 100; // Percentage Upper limit on valve open
+    	fPosSetLimit	: REAL := 100; // Percentage Upper limit on valve open
     	{attribute 'pytmc' := '
-        pv: PresLimit
+        pv: PRES_SET_LIMIT
     	io: io
     	autosave_pass1: VAL DESC
         '}
-    	fPresUpperLimit	: REAL := 1E-2; // Upper limit for pressure control 
+    	fPresSetLimit	: REAL := 1E-2; // Upper limit for pressure control 	
+    	{attribute 'pytmc' := '
+        pv: PRES_RDBK_LIMIT
+    	io: io
+    	autosave_pass1: VAL DESC
+        '}	
+    	fPresRdbkLimit : REAL := 1E-4;  //upper limit for pressure reading before valve close
     	{attribute 'pytmc' := '
     	pv: POS_REQ
     	field: DRVL 0.0
@@ -1914,10 +1920,7 @@ ST_VCN_VAT590
     	io: o
     	'}
     	bZero : BOOL; // Activate Zero function bit
-    	{attribute 'pytmc' :=  ' 
-    	pv: GEN_STATUS
-    	io: i
-    	'}
+
     END_STRUCT
     END_TYPE
 
@@ -10197,7 +10200,7 @@ FB_VCN_VAT590
 
 ::
 
-    {attribute 'no_check'}
+    //{attribute 'no_check'}
     (* This function implements the Basic functions for the VAT590 needle valve*)
     FUNCTION_BLOCK FB_VCN_VAT590 EXTENDS FB_Valve
     VAR_INPUT
@@ -10253,6 +10256,7 @@ FB_VCN_VAT590
     VAR PERSISTENT
         fUpperLimit	: REAL;                // Max position in % that can be requested
     	fPresMaxLim : REAL;                // Max pressure in Torr that can be requested
+    	fPresRbMaxLim : REAL;               // Max pressure in Torr read by chamber gauge, valve will close above the pressure.
     END_VAR
     (* Needle valve control FB
     J. Govednik 2021-11-22
@@ -10279,9 +10283,14 @@ FB_VCN_VAT590
     		E_VCN_VAT590.CloseValve:
     			eValveModeSP := E_ControlModeSP.CloseValve;
     		E_VCN_VAT590.ManualControl:
-    			eValveModeSP := E_ControlModeSP.ManualControl;
+    		    IF IG.xPRESS_OK AND IG.rPRESS <= fPresRbMaxLim THEN
+    				eValveModeSP := E_ControlModeSP.ManualControl;
+    			ELSE
+    				eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
+    				stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
+    			END_IF	
     		E_VCN_VAT590.PressureControl:
-    			IF IG.eState = E_PressureState.Valid THEN
+    			IF IG.xPRESS_OK AND IG.rPRESS <= fPresRbMaxLim THEN
     				eValveModeSP := E_ControlModeSP.PressureControl;
     			ELSE
     				eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
@@ -10325,7 +10334,7 @@ FB_VCN_VAT590
     END_CASE
 
     (*Calculated Pressure SP and Pressure readback is 0 if Pressure sensor is not working*) 
-    IF IG.eState <> E_PressureState.Valid THEN
+    IF NOT (IG.xPRESS_OK AND IG.rPRESS < fPresRbMaxLim ) THEN
     	fCalcPresSP := 0;
     	stVcnVat590.fPressure := 0;
     END_IF
@@ -10394,18 +10403,24 @@ FB_VCN_VAT590
     IF (bRestorePersistentData) THEN
     	bRestorePersistentData	:= FALSE;
     	IF (fUpperLimit <> 0) THEN
-    		stVcnVat590.fUpperLimit := fUpperLimit;
+    		stVcnVat590.fPosSetLimit := fUpperLimit;
     	END_IF;
     	IF (fPresMaxLim <> 0) THEN
-    		stVcnVat590.fPresUpperLimit := fPresMaxLim;
+    		stVcnVat590.fPresSetLimit := fPresMaxLim;
     	END_IF;
+    	IF (fPresRbMaxLim <> 0) THEN
+    		stVcnVat590.fPresRdbkLimit := fPresRbMaxLim;
+    	END_IF;
+    	
+    	    
     END_IF
     END_ACTION
 
     ACTION ReadFromInput:
     (*Read from EPICS*)
-    fUpperLimit := LIMIT(0, stVcnVat590.fUpperLimit, 100);
-    fPresMaxLim := LIMIT(1.0E-10, stVcnVat590.fPresUpperLimit, 1.0E-2);
+    fUpperLimit := LIMIT(0, stVcnVat590.fPosSetLimit, 100);
+    fPresMaxLim := LIMIT(1.0E-10, stVcnVat590.fPresSetLimit, 1.0E-2);
+    fPresRbMaxLim := LIMIT(1.0E-10, stVcnVat590.fPresRdbkLimit, 1.0E-2);
     fReqPos := LIMIT(0, stVcnVat590.fReqPosition, 100);
     fReqPres := LIMIT(1.0E-10, stVcnVat590.fReqPressure, 1.0E-2);
 
@@ -10447,8 +10462,8 @@ FB_VCN_VAT590
     stVcnVat590.nPressureSP := REAL_TO_DINT(fCalcPresSP);
     stVcnVat590.fReqPosition := fReqPos;
     stVcnVat590.fReqPressure := fReqPres;
-    stVcnVat590.fPresUpperLimit := fPresMaxLim;
-    stVcnVat590.fUpperLimit := fUpperLimit;
+    stVcnVat590.fPresSetLimit := fPresMaxLim;
+    stVcnVat590.fPosSetLimit := fUpperLimit;
 
     (*Write to VAT valve*)
     o_eCtrlModeSP := eValveModeSP;
@@ -10462,7 +10477,7 @@ FB_VCN_VAT590
     VAR_INPUT
     	rUpperLimit	:	REAL;
     END_VAR
-    stVcnVat590.fUpperLimit := LIMIT(0, rUpperLimit, 100);
+    stVcnVat590.fPosSetLimit := LIMIT(0, rUpperLimit, 100);
     END_METHOD
 
     METHOD M_ValveControl : BOOL
@@ -10477,7 +10492,6 @@ Related:
     * `E_ControlMode`_
     * `E_ControlModeSP`_
     * `E_FatalErrors`_
-    * `E_PressureState`_
     * `E_VAT590_PressureSensor`_
     * `E_VCN_VAT590`_
     * `FB_Valve`_
