@@ -4,12 +4,12 @@
     <Declaration><![CDATA[TYPE ST_VAT590_STATUS :
 STRUCT
 	{attribute 'pytmc' :=  ' 
-		pv: CTRL_MODE_RBV
+		pv: CTRL_MODE
 		io: i
 	'}
 	eControlMode : E_ControlMode; // Valve control mode readback
 	{attribute 'pytmc' :=  ' 
-		pv: FATAL_ERR_RBV
+		pv: FATAL_ERR
 		io: i
 	'}
 	eFatalErrors : E_FatalErrors; // Valve Fatal Error status readback
