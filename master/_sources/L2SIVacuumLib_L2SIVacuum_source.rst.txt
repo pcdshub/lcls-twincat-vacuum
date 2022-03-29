@@ -2642,48 +2642,6 @@ Related:
     * `ST_VG`_
 
 
-F_TurboExtILK_TOF
-^^^^^^^^^^^^^^^^^
-
-::
-
-    (* This function evaluates the Turbo ILK logic when no isolation valve between turbo and chamber and no gauge between roughing valve and turbo to measuring turbo backing pressure*)
-    (* The Turbo shall not Run if the scroll pump is not running*)
-    (* The function switches off the Turbo if the Inlet pressure or the backing Pressure*)
-    (* are higher than the configured set point*)
-    (* The Turbo shall not Run if the roughing valve is closed, add delay timer to keep turbo running for a short period after roughing valve closed *)
-
-    FUNCTION F_TurboExtILK_TOF : BOOL
-    VAR_INPUT
-    	Turbo		   :	ST_PTM;
-    	BackingGauge   :	ST_VG;
-    	InletGauge     :	ST_VG;
-    	ScrollPump	   :	ST_RoughPump;
-    	RoughingValve  : ST_VRC;
-    	
-    	tDelay : TIME;
-    END_VAR
-    VAR
-    	tofDelay : TOF;
-    	bRunOk : BOOL; 
-    END_VAR
-    tofDelay.IN :=RoughingValve.i_xOpnLS OR (Turbo.eState = pumpSTOPPED); // allow to restart turbo when roughing valve is open,  start a TOF timer to keep turbo running if valve is closing (IN goes low), 
-    tofDelay.PT := tDelay;
-    tofDelay();
-    bRunOk := tofDelay.Q; 
-
-    F_TurboExtILK_TOF :=  bRunOk;
-
-    END_FUNCTION
-
-
-Related:
-    * `ST_PTM`_
-    * `ST_RoughPump`_
-    * `ST_VG`_
-    * `ST_VRC`_
-
-
 F_TurboExtILKLogic
 ^^^^^^^^^^^^^^^^^^
 
@@ -2985,15 +2943,16 @@ FB_901_ECAT
     // no div by zero
     PG.rPRESS :=i_iPRESS_R;
     PG.xPRESS_OK := xPress_OK and NOT bWcstate ;
-    IF xPress_OK THEN
+    IF xPress_OK and NOT bWcstate THEN
     	PG.xPRESS_OK := TRUE;
     	PG.eState := Valid; //Press OK
-    ELSIF xOverrange THEN
+    ELSIF xOverrange and NOT bWcstate THEN
     	PG.xPRESS_OK := FALSE;
     	PG.eState := OoR;
-    ELSIF xUnderrange THEN
+    ELSIF xUnderrange and NOT bWcstate THEN
     	PG.xPRESS_OK := FALSE;
     	PG.eState := PressInvalid;
+
     END_IF
 
 
@@ -3015,7 +2974,11 @@ FB_901_ECAT
     END_ACTION
 
     ACTION ACT_IO:
-    PG.i_iPRESS_R := REAL_TO_INT(i_iPRESS_R);
+    IF PG.xPRESS_OK THEN
+      	PG.i_iPRESS_R := REAL_TO_INT(i_iPRESS_R);
+    ELSE
+    	PG.rPRESS := 0.0;
+    END_IF
     PG.sPath := sPath;
     END_ACTION
 

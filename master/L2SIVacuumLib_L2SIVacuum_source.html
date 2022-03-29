@@ -105,7 +105,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#f-turbo-vrc-ilk">F_TURBO_VRC_ILK</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#f-turboextilk-no">F_TurboExtILK_NO</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#f-turboextilk-no-1">F_TurboExtILK_NO_1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#f-turboextilk-tof">F_TurboExtILK_TOF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#f-turboextilklogic">F_TurboExtILKLogic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#f-turboextilklogic-2">F_TurboExtILKLogic_2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#f-turbogatevalve-ilk">F_TurboGateValve_ILK</a></li>
@@ -2783,48 +2782,6 @@ END_TYPE
 </dd>
 </dl>
 </section>
-<section id="f-turboextilk-tof">
-<h2>F_TurboExtILK_TOF<a class="headerlink" href="#f-turboextilk-tof" title="Permalink to this headline"></a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">evaluates</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">ILK</span> <span class="n">logic</span> <span class="n">when</span> <span class="n">no</span> <span class="n">isolation</span> <span class="n">valve</span> <span class="n">between</span> <span class="n">turbo</span> <span class="ow">and</span> <span class="n">chamber</span> <span class="ow">and</span> <span class="n">no</span> <span class="n">gauge</span> <span class="n">between</span> <span class="n">roughing</span> <span class="n">valve</span> <span class="ow">and</span> <span class="n">turbo</span> <span class="n">to</span> <span class="n">measuring</span> <span class="n">turbo</span> <span class="n">backing</span> <span class="n">pressure</span><span class="o">*</span><span class="p">)</span>
-<span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">Turbo</span> <span class="n">shall</span> <span class="ow">not</span> <span class="n">Run</span> <span class="k">if</span> <span class="n">the</span> <span class="n">scroll</span> <span class="n">pump</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">running</span><span class="o">*</span><span class="p">)</span>
-<span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">function</span> <span class="n">switches</span> <span class="n">off</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="k">if</span> <span class="n">the</span> <span class="n">Inlet</span> <span class="n">pressure</span> <span class="ow">or</span> <span class="n">the</span> <span class="n">backing</span> <span class="n">Pressure</span><span class="o">*</span><span class="p">)</span>
-<span class="p">(</span><span class="o">*</span> <span class="n">are</span> <span class="n">higher</span> <span class="n">than</span> <span class="n">the</span> <span class="n">configured</span> <span class="nb">set</span> <span class="n">point</span><span class="o">*</span><span class="p">)</span>
-<span class="p">(</span><span class="o">*</span> <span class="n">The</span> <span class="n">Turbo</span> <span class="n">shall</span> <span class="ow">not</span> <span class="n">Run</span> <span class="k">if</span> <span class="n">the</span> <span class="n">roughing</span> <span class="n">valve</span> <span class="ow">is</span> <span class="n">closed</span><span class="p">,</span> <span class="n">add</span> <span class="n">delay</span> <span class="n">timer</span> <span class="n">to</span> <span class="n">keep</span> <span class="n">turbo</span> <span class="n">running</span> <span class="k">for</span> <span class="n">a</span> <span class="n">short</span> <span class="n">period</span> <span class="n">after</span> <span class="n">roughing</span> <span class="n">valve</span> <span class="n">closed</span> <span class="o">*</span><span class="p">)</span>
-
-<span class="n">FUNCTION</span> <span class="n">F_TurboExtILK_TOF</span> <span class="p">:</span> <span class="n">BOOL</span>
-<span class="n">VAR_INPUT</span>
-    <span class="n">Turbo</span>              <span class="p">:</span>    <span class="n">ST_PTM</span><span class="p">;</span>
-    <span class="n">BackingGauge</span>   <span class="p">:</span>        <span class="n">ST_VG</span><span class="p">;</span>
-    <span class="n">InletGauge</span>     <span class="p">:</span>        <span class="n">ST_VG</span><span class="p">;</span>
-    <span class="n">ScrollPump</span>         <span class="p">:</span>    <span class="n">ST_RoughPump</span><span class="p">;</span>
-    <span class="n">RoughingValve</span>  <span class="p">:</span> <span class="n">ST_VRC</span><span class="p">;</span>
-
-    <span class="n">tDelay</span> <span class="p">:</span> <span class="n">TIME</span><span class="p">;</span>
-<span class="n">END_VAR</span>
-<span class="n">VAR</span>
-    <span class="n">tofDelay</span> <span class="p">:</span> <span class="n">TOF</span><span class="p">;</span>
-    <span class="n">bRunOk</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
-<span class="n">END_VAR</span>
-<span class="n">tofDelay</span><span class="o">.</span><span class="n">IN</span> <span class="o">:=</span><span class="n">RoughingValve</span><span class="o">.</span><span class="n">i_xOpnLS</span> <span class="n">OR</span> <span class="p">(</span><span class="n">Turbo</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">pumpSTOPPED</span><span class="p">);</span> <span class="o">//</span> <span class="n">allow</span> <span class="n">to</span> <span class="n">restart</span> <span class="n">turbo</span> <span class="n">when</span> <span class="n">roughing</span> <span class="n">valve</span> <span class="ow">is</span> <span class="nb">open</span><span class="p">,</span>  <span class="n">start</span> <span class="n">a</span> <span class="n">TOF</span> <span class="n">timer</span> <span class="n">to</span> <span class="n">keep</span> <span class="n">turbo</span> <span class="n">running</span> <span class="k">if</span> <span class="n">valve</span> <span class="ow">is</span> <span class="n">closing</span> <span class="p">(</span><span class="n">IN</span> <span class="n">goes</span> <span class="n">low</span><span class="p">),</span>
-<span class="n">tofDelay</span><span class="o">.</span><span class="n">PT</span> <span class="o">:=</span> <span class="n">tDelay</span><span class="p">;</span>
-<span class="n">tofDelay</span><span class="p">();</span>
-<span class="n">bRunOk</span> <span class="o">:=</span> <span class="n">tofDelay</span><span class="o">.</span><span class="n">Q</span><span class="p">;</span>
-
-<span class="n">F_TurboExtILK_TOF</span> <span class="o">:=</span>  <span class="n">bRunOk</span><span class="p">;</span>
-
-<span class="n">END_FUNCTION</span>
-</pre></div>
-</div>
-<dl class="simple">
-<dt>Related:</dt><dd><ul class="simple">
-<li><p><a class="reference internal" href="#st-ptm">ST_PTM</a></p></li>
-<li><p><a class="reference internal" href="#st-roughpump">ST_RoughPump</a></p></li>
-<li><p><a class="reference internal" href="#st-vg">ST_VG</a></p></li>
-<li><p><a class="reference internal" href="#st-vrc">ST_VRC</a></p></li>
-</ul>
-</dd>
-</dl>
-</section>
 <section id="f-turboextilklogic">
 <h2>F_TurboExtILKLogic<a class="headerlink" href="#f-turboextilklogic" title="Permalink to this headline"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">evaluates</span> <span class="n">the</span> <span class="n">Turbo</span> <span class="n">ILK</span> <span class="n">logic</span><span class="o">*</span><span class="p">)</span>
@@ -3123,15 +3080,16 @@ END_FUNCTION
 <span class="o">//</span> <span class="n">no</span> <span class="n">div</span> <span class="n">by</span> <span class="n">zero</span>
 <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span><span class="n">i_iPRESS_R</span><span class="p">;</span>
 <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">xPress_OK</span> <span class="ow">and</span> <span class="n">NOT</span> <span class="n">bWcstate</span> <span class="p">;</span>
-<span class="n">IF</span> <span class="n">xPress_OK</span> <span class="n">THEN</span>
+<span class="n">IF</span> <span class="n">xPress_OK</span> <span class="ow">and</span> <span class="n">NOT</span> <span class="n">bWcstate</span> <span class="n">THEN</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">Valid</span><span class="p">;</span> <span class="o">//</span><span class="n">Press</span> <span class="n">OK</span>
-<span class="n">ELSIF</span> <span class="n">xOverrange</span> <span class="n">THEN</span>
+<span class="n">ELSIF</span> <span class="n">xOverrange</span> <span class="ow">and</span> <span class="n">NOT</span> <span class="n">bWcstate</span> <span class="n">THEN</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">OoR</span><span class="p">;</span>
-<span class="n">ELSIF</span> <span class="n">xUnderrange</span> <span class="n">THEN</span>
+<span class="n">ELSIF</span> <span class="n">xUnderrange</span> <span class="ow">and</span> <span class="n">NOT</span> <span class="n">bWcstate</span> <span class="n">THEN</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
     <span class="n">PG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">PressInvalid</span><span class="p">;</span>
+
 <span class="n">END_IF</span>
 
 
@@ -3153,7 +3111,11 @@ END_FUNCTION
 <span class="n">END_ACTION</span>
 
 <span class="n">ACTION</span> <span class="n">ACT_IO</span><span class="p">:</span>
-<span class="n">PG</span><span class="o">.</span><span class="n">i_iPRESS_R</span> <span class="o">:=</span> <span class="n">REAL_TO_INT</span><span class="p">(</span><span class="n">i_iPRESS_R</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">THEN</span>
+    <span class="n">PG</span><span class="o">.</span><span class="n">i_iPRESS_R</span> <span class="o">:=</span> <span class="n">REAL_TO_INT</span><span class="p">(</span><span class="n">i_iPRESS_R</span><span class="p">);</span>
+<span class="n">ELSE</span>
+    <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="mf">0.0</span><span class="p">;</span>
+<span class="n">END_IF</span>
 <span class="n">PG</span><span class="o">.</span><span class="n">sPath</span> <span class="o">:=</span> <span class="n">sPath</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 
