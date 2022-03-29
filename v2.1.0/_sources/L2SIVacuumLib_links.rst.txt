@@ -1,0 +1,15 @@
+
+Links
+-----
+
+.. csv-table::
+    :header: Owner A, Item A, Owner B, Item B
+    :align: center
+
+        TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Outputs^PRG_Test.fb_GCC_Test.i_iPRESS_R, TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Inputs^PRG_Test.fb_GCC_Test.fb_MKS422.i_iPRESS_R
+        TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Outputs^PRG_Test.fb_GPI_Test.i_iPRESS_R, TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Inputs^PRG_Test.fb_GPI_Test.fb_MKS275.i_iPRESS_R
+        TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Outputs^PRG_Test.fb_GPI_Test.i_iPRESS_R, TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Inputs^PRG_Test.fb_GPI_Test.fb_MKS317.i_iPRESS_R
+        TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Outputs^PRG_Test.fb_PTM_Test.i_diCurSpd, TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Inputs^PRG_Test.fb_PTM_Test.q_iSpeedSet
+        TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Outputs^PRG_Test.fb_PTM_Test.i_iCurrentMon, TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Inputs^PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iCurrentMon
+        TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Outputs^PRG_Test.fb_PTM_Test.i_iRawSpeed, TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Inputs^PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iRawSpeed
+        TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Outputs^PRG_Test.fb_PTM_Test.i_iTempMon, TIPC^L2SIVacuum^L2SIVacuum Instance, PlcTask Inputs^PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iTempMon
