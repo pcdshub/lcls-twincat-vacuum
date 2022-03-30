@@ -216,6 +216,9 @@
     <Compile Include="POUs\Functions\Gauges\FB_CCM501.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_IMG401.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS909.TcPOU">
       <SubType>Code</SubType>
     </Compile>
