@@ -7,8 +7,8 @@ STRUCT
 	//In case VRC is normally open
 	{attribute 'pytmc' := '
     pv: CLS_OK;
-	field: ONAM CLOSE; 
-	field: ZNAM OPEN;
+	field: ONAM TRUE; 
+	field: ZNAM FALSE;
 	io: i;
     '}
 	xCLS_OK : BOOL := TRUE;
