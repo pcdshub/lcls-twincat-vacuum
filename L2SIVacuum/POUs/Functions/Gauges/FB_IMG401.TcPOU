@@ -16,7 +16,6 @@ VAR_IN_OUT
 END_VAR
 VAR_INPUT
 	PG	:	ST_VG;
-	bEP : BOOL :=FALSE; // Set to True if This Gauge is connected to EP BOX and not EL Terminals
 	tRecoverDelay:TIME:=T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
 END_VAR
 VAR_OUTPUT
@@ -47,7 +46,7 @@ VAR CONSTANT
 	vTorr : REAL := 10; 
 	vGaugeOff: REAL := 10;
 	//vNoDischarge: REAL := 9.3;
-	MinPressure: REAL := 1E-10;
+	rMinPressure: REAL := 1E-10;
 	cDefaultPressure : REAL := 0;
 	rDeadband : REAL :=1.0;
 END_VAR
@@ -68,7 +67,6 @@ IF (bInit) THEN
 END_IF
 tStartupTimer(PT:=T#3S);
 
-(* 500 Logarithmic Output Conversion, factory default configuration *)
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
@@ -80,34 +78,21 @@ If (iTermBits=0) THEN iTermBits := 30518;END_IF
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (* Set Guage State based on the Analog voltage*)
-IF rV <= vDisconnected THEN
+IF rV <= vDisconnected AND IG.i_xHV_ON and IG.q_xHV_DIS THEN
+	IG.eState := ValidLo;
+	IG.rPRESS := rMinPressure;
+ELSIF rV <= vDisconnected AND Not IG.i_xHV_ON and IG.q_xHV_DIS THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
-ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband)  THEN
+ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) THEN
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV*vBase)- vTorr)));
-ELSIF rV >= (vGaugeOff -rDeadband) THEN
+ELSIF rV >= (vGaugeOff -rDeadband) AND NOT IG.q_xHV_DIS THEN
 	IG.eState := Off;
-	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 	IG.rPRESS := cDefaultPressure;
 ELSE
 	IG.eState := OoR;
-	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 	IG.rPRESS := cDefaultPressure;
-END_IF
-
-(* Set Guage State based on the inputs HV ON and Discharge current*)
-If (NOT bEP) THEN
-	IF IG.i_xHV_ON AND IG.rPRESS = cDefaultPressure THEN
-		IG.eState := Starting;
-		IG.rPRESS := cDefaultPressure;
-	ELSIF NOT IG.i_xHV_ON and NOT IG.q_xHV_DIS THEN
-		IG.eState := Off;
-		IG.rPRESS := cDefaultPressure;
-	ELSIF NOT IG.i_xHV_ON and IG.q_xHV_DIS THEN
-		IG.eState := GaugeDisconnected;
-		IG.rPRESS := cDefaultPressure;
-	END_IF
 END_IF
 
 
@@ -297,19 +282,19 @@ END_VAR
     <LineIds Name="FB_IMG401">
       <LineId Id="69" Count="4" />
       <LineId Id="9" Count="0" />
-      <LineId Id="75" Count="4" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="77" Count="2" />
       <LineId Id="116" Count="1" />
       <LineId Id="138" Count="0" />
       <LineId Id="136" Count="0" />
-      <LineId Id="118" Count="17" />
+      <LineId Id="118" Count="6" />
+      <LineId Id="261" Count="2" />
+      <LineId Id="125" Count="4" />
+      <LineId Id="131" Count="2" />
+      <LineId Id="135" Count="0" />
       <LineId Id="114" Count="0" />
-      <LineId Id="140" Count="5" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="150" Count="1" />
-      <LineId Id="256" Count="1" />
-      <LineId Id="255" Count="0" />
-      <LineId Id="152" Count="1" />
-      <LineId Id="155" Count="19" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="156" Count="18" />
       <LineId Id="154" Count="0" />
       <LineId Id="175" Count="3" />
       <LineId Id="181" Count="1" />
