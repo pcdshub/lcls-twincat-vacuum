@@ -40,7 +40,6 @@ VAR
 END_VAR
 
 VAR CONSTANT
-	// Ranges has to match the configurator software
 	vBase : REAL := 1.0;
 	vDisconnected : REAL:= 0.0;
 	vTorr : REAL := 10; 

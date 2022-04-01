@@ -40,7 +40,7 @@ VAR CONSTANT
 	vTorr : REAL := 12.875; 
 	vGaugeOff: REAL := 10.0;
 	//vNoDischarge: REAL := 9.3;
-	MinPressure: REAL := 1E-10;
+	rMinPressure: REAL := 1E-10;
 	cDefaultPressure : REAL := 0;
 	rDeadband : REAL := 1.0;
 END_VAR
@@ -51,41 +51,29 @@ VAR PERSISTENT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* 500 Logarithmic Output Conversion, factory default configuration *)
+      <ST><![CDATA[
 If (iTermBits=0) THEN iTermBits := 30518;END_IF
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (* Set Guage State based on the Analog voltage*)
-IF rV < vDisconnected THEN
+
+(* Set Guage State based on the Analog voltage*)
+IF rV <= vDisconnected AND IG.i_xHV_ON and IG.q_xHV_DIS THEN
+	IG.eState := ValidLo;
+	IG.rPRESS := rMinPressure;
+ELSIF rV <= vDisconnected AND Not IG.i_xHV_ON and IG.q_xHV_DIS THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
-ELSIF rV >= vDisconnected AND rV < (vGaugeOff -rDeadband)  THEN
+ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) THEN
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV*vBase)- vTorr)));
-ELSIF rV >= (vGaugeOff -rDeadband) THEN
+ELSIF rV >= (vGaugeOff -rDeadband) AND NOT IG.q_xHV_DIS THEN
 	IG.eState := Off;
-	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 	IG.rPRESS := cDefaultPressure;
 ELSE
 	IG.eState := OoR;
-	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 	IG.rPRESS := cDefaultPressure;
 END_IF
-
-(* Set Guage State based on the inputs HV ON and Discharge current*)
-If (NOT bEP) THEN
-	IF IG.i_xHV_ON AND IG.rPRESS = cDefaultPressure THEN
-		IG.eState := Starting;
-		IG.rPRESS := cDefaultPressure;
-	ELSIF NOT IG.i_xHV_ON and NOT IG.q_xHV_DIS THEN
-		IG.eState := Off;
-		IG.rPRESS := cDefaultPressure;
-	ELSIF NOT IG.i_xHV_ON and IG.q_xHV_DIS THEN
-		IG.eState := GaugeDisconnected;
-		IG.rPRESS := cDefaultPressure;
-	END_IF
-END_IF
-
 
 
 
@@ -258,9 +246,10 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_CCM501">
-      <LineId Id="3" Count="20" />
-      <LineId Id="107" Count="11" />
-      <LineId Id="104" Count="2" />
+      <LineId Id="3" Count="4" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="128" Count="16" />
+      <LineId Id="106" Count="0" />
       <LineId Id="24" Count="38" />
       <LineId Id="122" Count="0" />
       <LineId Id="121" Count="0" />
