@@ -29,7 +29,7 @@ VAR
 	rV : REAL;
 	GaugeTurnOnTmr : TON;
 	tStartupTimer:TON;
-	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits
 	(*IOs to be linked*)
 	/// Controls and I/Os
 	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
