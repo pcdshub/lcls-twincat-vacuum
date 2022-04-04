@@ -41,7 +41,7 @@ END_VAR
 
 VAR CONSTANT
 	vBase : REAL := 1.0;
-	vDisconnected : REAL:= 0.0;
+	vDisconnected : REAL:= 0.001; //shift from 0 to eliminate single noise effect
 	vTorr : REAL := 10; 
 	vGaugeOff: REAL := 10;
 	//vNoDischarge: REAL := 9.3;
@@ -77,13 +77,17 @@ If (iTermBits=0) THEN iTermBits := 30518;END_IF
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (* Set Guage State based on the Analog voltage*)
+
 IF rV <= vDisconnected AND IG.i_xHV_ON and IG.q_xHV_DIS THEN
 	IG.eState := ValidLo;
 	IG.rPRESS := rMinPressure;
+ELSIF rV <= vDisconnected AND NOT IG.i_xHV_ON and NOT IG.q_xHV_DIS THEN
+	IG.eState := Off;
+	IG.rPRESS := cDefaultPressure;
 ELSIF rV <= vDisconnected AND Not IG.i_xHV_ON and IG.q_xHV_DIS THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
-ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) THEN
+ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) AND IG.i_xHV_ON and IG.q_xHV_DIS THEN
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV*vBase)- vTorr)));
 ELSIF rV >= (vGaugeOff -rDeadband) AND NOT IG.q_xHV_DIS THEN
@@ -93,6 +97,7 @@ ELSE
 	IG.eState := OoR;
 	IG.rPRESS := cDefaultPressure;
 END_IF
+
 
 
 (* Ion Gauge Protection Functions *)
@@ -286,14 +291,15 @@ END_VAR
       <LineId Id="116" Count="1" />
       <LineId Id="138" Count="0" />
       <LineId Id="136" Count="0" />
-      <LineId Id="118" Count="6" />
-      <LineId Id="261" Count="2" />
-      <LineId Id="125" Count="4" />
-      <LineId Id="131" Count="2" />
-      <LineId Id="135" Count="0" />
-      <LineId Id="114" Count="0" />
-      <LineId Id="140" Count="0" />
-      <LineId Id="156" Count="18" />
+      <LineId Id="118" Count="1" />
+      <LineId Id="325" Count="1" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="327" Count="2" />
+      <LineId Id="365" Count="2" />
+      <LineId Id="330" Count="13" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="157" Count="17" />
       <LineId Id="154" Count="0" />
       <LineId Id="175" Count="3" />
       <LineId Id="181" Count="1" />

@@ -22,7 +22,7 @@ END_VAR
 VAR
 	rV : REAL;
 	GaugeTurnOnTmr : TON;
-	iTermBits: UINT := 305187 ; // The terminal's maximum value in bits
+	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits
 	(*IOs to be linked*)
 	/// Controls and I/Os
 	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
@@ -64,7 +64,7 @@ IF rV <= vDisconnected AND IG.i_xHV_ON and IG.q_xHV_DIS THEN
 ELSIF rV <= vDisconnected AND Not IG.i_xHV_ON and IG.q_xHV_DIS THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
-ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) THEN
+ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) AND IG.i_xHV_ON AND IG.q_xHV_DIS THEN
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV*vBase)- vTorr)));
 ELSIF rV >= (vGaugeOff -rDeadband) AND NOT IG.q_xHV_DIS THEN
