@@ -66,10 +66,6 @@ IF (bInit) THEN
 END_IF
 tStartupTimer(PT:=T#3S);
 
-If (iTermBits=0) THEN iTermBits := 32767;END_IF
-rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
-
-
 (* 401 Logarithmic Output Conversion, factory default configuration 
    EL3174, EL3174-xxxx iTermbits 30518, 10V
 *)
@@ -287,8 +283,7 @@ END_VAR
       <LineId Id="69" Count="4" />
       <LineId Id="9" Count="0" />
       <LineId Id="75" Count="0" />
-      <LineId Id="77" Count="2" />
-      <LineId Id="116" Count="1" />
+      <LineId Id="117" Count="0" />
       <LineId Id="138" Count="0" />
       <LineId Id="136" Count="0" />
       <LineId Id="118" Count="1" />
