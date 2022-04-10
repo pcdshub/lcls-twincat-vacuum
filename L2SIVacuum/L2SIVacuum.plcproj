@@ -137,10 +137,19 @@
     <Compile Include="DUTs\Valves\VAT590\E_VAT590_AccessMode.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Valves\VAT590\E_VAT590_PID_CTRL.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Valves\VAT590\E_VAT590_PressureSensor.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Valves\VAT590\E_VCN_VAT590.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\ST_CoEIndSub.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Valves\VAT590\ST_VAT590_COE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Valves\VAT590\ST_VAT590_STATUS.TcDUT">
