@@ -10,7 +10,7 @@ STRUCT
 	ePIDCtrl: E_VAT590_PID_CTRL;
 	(*Adaptive Downstream Parameters*)
 	{attribute 'pytmc' := '
-    pv: SENS_DELAY_AD
+	pv: SENS_DELAY_AD
 	io: io
 	field: EGU "s"
 	field: DRVL 0.0
@@ -18,7 +18,7 @@ STRUCT
     '}
 	fSensorDelay_AD : REAL;
 	{attribute 'pytmc' := '
-    pv: RAMP_TIME_AD
+	pv: RAMP_TIME_AD
 	io: io
 	field: EGU "s"
 	field: DRVL 0.0
@@ -26,14 +26,14 @@ STRUCT
     '}
 	fRampTime_AD : REAL;
 	{attribute 'pytmc' := '
-    pv: RAMP_MODE_AD
+	pv: RAMP_MODE_AD
 	io: io
 	field: ZNAM CONST_TIME
 	field: ONAM CONST_SLOPE
     '}
 	nRampMode_AD : BOOL;
 	{attribute 'pytmc' := '
-    pv: GAIN_FACTOR_AD
+	pv: GAIN_FACTOR_AD
 	io: io
 	field: DRVL 0.0001
 	field: DRVH 7.5
@@ -41,7 +41,7 @@ STRUCT
 	fGainFactor_AD : REAL;
 	(*Fixed 1 Parameters*)
 	{attribute 'pytmc' := '
-    pv: RAMP_TIME_FIX1
+	pv: RAMP_TIME_FIX1
 	io: io
 	field: EGU "s"
 	field: DRVL 0.0
@@ -49,28 +49,28 @@ STRUCT
     '}
 	fRampTime_FIX1 : REAL;
 	{attribute 'pytmc' := '
-    pv: RAMP_MODE_FIX1
+	pv: RAMP_MODE_FIX1
 	io: io
 	field: ZNAM CONST_TIME
 	field: ONAM CONST_SLOPE
     '}
 	nRampMode_FIX1 : BOOL;
 	{attribute 'pytmc' := '
-    pv: CTRL_DIR_FIX1
+	pv: CTRL_DIR_FIX1
 	io: io
 	field: ZNAM DOWNSTREAM
 	field: ONAM UPSTREAM
     '}
 	nCtrlDir_FIX1 : BOOL;
 	{attribute 'pytmc' := '
-    pv: PGAIN_FIX1
+	pv: PGAIN_FIX1
 	io: io
 	field: DRVL 0.001
 	field: DRVH 100.0
     '}
 	fPGain_FIX1 : REAL;
 	{attribute 'pytmc' := '
-    pv: IGAIN_FIX1
+	pv: IGAIN_FIX1
 	io: io
 	field: DRVL 0.0
 	field: DRVH 100.0
@@ -78,7 +78,7 @@ STRUCT
 	fIGain_FIX1 : REAL;
 	(*Fixed 2 Parameters*)
 	{attribute 'pytmc' := '
-    pv: RAMP_TIME_FIX2
+	pv: RAMP_TIME_FIX2
 	io: io
 	field: EGU "s"
 	field: DRVL 0.0
@@ -86,28 +86,28 @@ STRUCT
     '}
 	fRampTime_FIX2 : REAL;
 	{attribute 'pytmc' := '
-    pv: RAMP_MODE_FIX2
+	pv: RAMP_MODE_FIX2
 	io: io
 	field: ZNAM CONST_TIME
 	field: ONAM CONST_SLOPE
     '}
 	nRampMode_FIX2 : BOOL;
 	{attribute 'pytmc' := '
-    pv: CTRL_DIR_FIX2
+	pv: CTRL_DIR_FIX2
 	io: io
 	field: ZNAM DOWNSTREAM
 	field: ONAM UPSTREAM
     '}
 	nCtrlDir_FIX2 : BOOL;
 	{attribute 'pytmc' := '
-    pv: PGAIN_FIX2
+	pv: PGAIN_FIX2
 	io: io
 	field: DRVL 0.001
 	field: DRVH 100.0
     '}
 	fPGain_FIX2 : REAL;
 	{attribute 'pytmc' := '
-    pv: IGAIN_FIX2
+	pv: IGAIN_FIX2
 	io: io
 	field: DRVL 0.0
 	field: DRVH 100.0
@@ -115,7 +115,7 @@ STRUCT
 	fIGain_FIX2 : REAL;
 	(*Soft Pump Parameters*)
 	{attribute 'pytmc' := '
-    pv: RAMP_TIME_SP
+	pv: RAMP_TIME_SP
 	io: io
 	field: EGU "s"
 	field: DRVL 0.0
@@ -123,14 +123,14 @@ STRUCT
     '}
 	fRampTime_SP : REAL;
 	{attribute 'pytmc' := '
-    pv: RAMP_MODE_SP
+	pv: RAMP_MODE_SP
 	io: io
 	field: ZNAM CONST_TIME
 	field: ONAM CONST_SLOPE
     '}
 	nRampMode_SP : BOOL;
 	{attribute 'pytmc' := '
-    pv: PGAIN_SP
+	pv: PGAIN_SP
 	io: io
 	field: DRVL 0.001
 	field: DRVH 100.0

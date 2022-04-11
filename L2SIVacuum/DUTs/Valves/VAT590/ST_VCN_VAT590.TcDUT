@@ -6,17 +6,17 @@ STRUCT
 	(* VCN - Valve Controlled Needle
 	Used for VAT590 needle valves *)
 	{attribute 'pytmc' := '
-    pv: POS_RAW
+	pv: POS_RAW
 	io: i
     '}
 	nRawPosition : DINT; //Position readback
 	{attribute 'pytmc' := '
-    pv: PRES_RAW
+	pv: PRES_RAW
 	io: i
     '}
 	nRawPressure : DINT; //Pressure readback
 	{attribute 'pytmc' := '
-    pv: PRES_TORR
+	pv: PRES_TORR
 	field: EGU "TORR"
 	io: i
     '}
@@ -32,32 +32,32 @@ STRUCT
 	'}
 	nPressureSP : DINT; //Pressure setpoint readback
 	{attribute 'pytmc' := '
-    pv: ILK_OK
+	pv: ILK_OK
 	field: ZNAM NOT OK
 	field: ONAM OK
 	field: ZSV MAJOR
 	field: OSV NO_ALARM
 	io: i
     '}
-	bIlkOK : BOOL := FALSE; // Interlock Bit status
+	bIlkOK : BOOL := FALSE; //Interlock Bit status
 	{attribute 'pytmc' := '
-    pv: POS_LIMIT
+	pv: POS_LIMIT
 	io: io
 	autosave_pass1: VAL DESC
     '}
-	fPosSetLimit	: REAL := 100; // Percentage Upper limit on valve open
+	fPosSetLimit	: REAL := 100; //Percentage Upper limit on valve open
 	{attribute 'pytmc' := '
-    pv: PRES_SET_LIMIT
+	pv: PRES_SET_LIMIT
 	io: io
 	autosave_pass1: VAL DESC
     '}
-	fPresSetLimit	: REAL := 1E-2; // Upper limit for pressure control 	
+	fPresSetLimit	: REAL := 1E-2; //Upper limit for pressure control 	
 	{attribute 'pytmc' := '
-    pv: PRES_RDBK_LIMIT
+	pv: PRES_RDBK_LIMIT
 	io: io
 	autosave_pass1: VAL DESC
     '}	
-	fPresRdbkLimit : REAL := 1E-4;  //upper limit for pressure reading before valve close
+	fPresRdbkLimit : REAL := 1E-4;  //Upper limit for pressure reading before valve close
 	{attribute 'pytmc' := '
 	pv: POS_REQ
 	field: DRVL 0.0
@@ -77,32 +77,34 @@ STRUCT
 	'}
 	eValveControl : E_VCN_VAT590; //Valve control mode
 	{attribute 'pytmc' := '
-    pv: 
+	pv: 
 	'}
 	stValveStatus : ST_VAT590_STATUS; //All Valve status readbacks
 	{attribute 'pytmc' :=  ' 
 	pv: PRES_SENS
 	io: io
 	'}
-	ePressureSensor : E_VAT590_PressureSensor; // Select pressure sensor
+	ePressureSensor : E_VAT590_PressureSensor; //Select pressure sensor
 	{attribute 'pytmc' :=  ' 
 	pv: REM_CTRL
-	io: o
+	io: io
 	'}
-	eRemoteControl : E_VAT590_AccessMode; // Select remote control mode
+	eRemoteControl : E_VAT590_AccessMode; //Select remote control mode
 	{attribute 'pytmc' := '
 	pv: ZERO
-	field: ZNAM NOT_ACTIVE
-	field: ONAM ACTIVE
-	io: o
+	io: io
 	'}
-	bZero : BOOL; // Activate Zero function bit
+	bZero : BOOL; //Activate Zero function bit
 	{attribute 'pytmc' := '
-    pv: COE_PARAM
+	pv: COE_PARAM
 	'}
 	stCoeParameters : ST_VAT590_COE; //Coe Parameters
 	{attribute 'pytmc' := '
 	pv: COE_ERROR
+	field: ZNAM OK
+	field: ONAM ERROR
+	field: ZSV NO_ALARM
+	field: OSV MINOR
 	io: i
 	'}
 	bCoeError : BOOL; //Coe Interface Error
@@ -110,7 +112,7 @@ STRUCT
 	pv: COE_RESET
 	io: io
 	'}
-	bResetCoeError : BOOL; //Reset Coe Interface
+	bResetCoeError : BOOL; //Reset Coe Interface Error
 END_STRUCT
 END_TYPE
 ]]></Declaration>
