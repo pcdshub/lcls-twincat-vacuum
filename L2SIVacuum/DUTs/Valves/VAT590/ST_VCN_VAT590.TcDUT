@@ -98,7 +98,7 @@ STRUCT
 	'}
 	bZero : BOOL; // Activate Zero function bit
 	{attribute 'pytmc' := '
-    pv: 
+    pv: COE_PARAM
 	'}
 	stCoeParameters : ST_VAT590_COE; //Coe Parameters
 	{attribute 'pytmc' := '
