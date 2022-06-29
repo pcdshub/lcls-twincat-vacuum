@@ -78,7 +78,7 @@ ELSIF rV <= vDisconnected AND Not IG.i_xHV_ON and IG.q_xHV_DIS THEN
 ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) AND IG.i_xHV_ON and IG.q_xHV_DIS   THEN
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV*vBase)- vTorr)));
-ELSIF rV >= (vGaugeOff -rDeadband) AND NOT IG.q_xHV_DIS THEN
+ELSIF rV >= (vGaugeOff -rDeadband) THEN
 	IG.eState := Off;
 	IG.rPRESS := cDefaultPressure;
 ELSE
