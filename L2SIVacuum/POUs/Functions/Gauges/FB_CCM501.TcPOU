@@ -72,9 +72,6 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 IF rV <= vDisconnected AND IG.i_xHV_ON and IG.q_xHV_DIS THEN
 	IG.eState := ValidLo;
 	IG.rPRESS := rMinPressure;
-ELSIF rV <= vDisconnected AND NOT IG.i_xHV_ON and NOT IG.q_xHV_DIS THEN
-	IG.eState := Off;
-	IG.rPRESS := cDefaultPressure;
 ELSIF rV <= vDisconnected AND Not IG.i_xHV_ON and IG.q_xHV_DIS THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
@@ -287,7 +284,8 @@ END_VAR
       <LineId Id="105" Count="0" />
       <LineId Id="128" Count="0" />
       <LineId Id="106" Count="0" />
-      <LineId Id="193" Count="20" />
+      <LineId Id="193" Count="2" />
+      <LineId Id="199" Count="14" />
       <LineId Id="24" Count="16" />
       <LineId Id="229" Count="0" />
       <LineId Id="42" Count="2" />
