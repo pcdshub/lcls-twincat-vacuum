@@ -1,16 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
-  <POU Name="FB_CCM501" Id="{a694e345-1167-47e5-8470-6cec1a701b87}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function is for the Cold Cathode CCM 501 fro instrutech (hornet). *)
-(*This function provides ILK and Set Point Protection for the Cold Cathode*)
+  <POU Name="FB_IMG401" Id="{4a2fc267-eb2d-4ea0-9303-08a3354738d4}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500. 
 
-FUNCTION_BLOCK FB_CCM501 EXTENDS FB_GaugeBase
+If connected to Beckhoff EP boxes. Set the EP bit to TRUE, this is necessary for the 
+IMG401-to-EP box interface because the EP boxes do not natively support the 5v IO 
+signals on the gauge.
+
+This function provides ILK and Set Point Protection for the hot Cathode.
+*)
+
+FUNCTION_BLOCK FB_IMG401 EXTENDS FB_GaugeBase
 VAR_IN_OUT
 		
 END_VAR
 VAR_INPUT
 	PG	:	ST_VG;
-//	bEP : BOOL :=FALSE; // Set to True if This Gauge is connected to EP BOX and not EL Terminals
 	tRecoverDelay:TIME:=T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
 END_VAR
 VAR_OUTPUT
@@ -29,43 +34,43 @@ VAR
 	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
 	q_xHV_DIS AT %Q* : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EP2624) ^Output
 	// only for EL and ES terminal
-	i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1124) ^Input
+	i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1084) ^Input
 //	i_xDisc_Active AT %I* : BOOL;// Discharge Current Active // 'TcLinkTo' (EL1124) ^Input
 	binit:BOOL:=TRUE;
 END_VAR
 
 VAR CONSTANT
-	// Ranges 1.8 to 8.7 Vdc, 0.8V/decade analog output - Torr
-	vBase : REAL := 1.25;
-	vDisconnected : REAL:= 1.8;
-	vTorr : REAL := 12.875; 
-	vGaugeOff: REAL := 10.0;
+	vBase : REAL := 1.0;
+	vDisconnected : REAL:= 0.001; //shift from 0 to eliminate single noise effect
+	vTorr : REAL := 10; 
+	vGaugeOff: REAL := 10;
 	//vNoDischarge: REAL := 9.3;
 	rMinPressure: REAL := 1E-10;
 	cDefaultPressure : REAL := 0;
-	rDeadband : REAL := 1.0;
+	rDeadband : REAL :=1.0;
 END_VAR
+
 VAR PERSISTENT
 	bWasOn : BOOL;
 	bAutoRecover:BOOL;
 	bAutoRecoverWrite:BOOL;
 END_VAR
+
+
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-(*Startup time*)
+      <ST><![CDATA[(*Startup time*)
 IF (bInit) THEN
 	tStartupTimer.IN:=TRUE;
 	bInit :=FALSE;
 END_IF
 tStartupTimer(PT:=T#3S);
 
-
-
+(* 401 Logarithmic Output Conversion, factory default configuration 
+   EL3174, EL3174-xxxx iTermbits 30518, 10V
+*)
 If (iTermBits=0) THEN iTermBits := 30518;END_IF
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
-
-(* Set Guage State based on the Analog voltage*)
 
 (* Set Guage State based on the Analog voltage*)
 
@@ -75,7 +80,7 @@ IF rV <= vDisconnected AND IG.i_xHV_ON and IG.q_xHV_DIS THEN
 ELSIF rV <= vDisconnected AND Not IG.i_xHV_ON and IG.q_xHV_DIS THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
-ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) AND IG.i_xHV_ON and IG.q_xHV_DIS   THEN
+ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) AND IG.i_xHV_ON and IG.q_xHV_DIS THEN
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV*vBase)- vTorr)));
 ELSIF rV >= (vGaugeOff -rDeadband) THEN
@@ -85,7 +90,6 @@ ELSE
 	IG.eState := OoR;
 	IG.rPRESS := cDefaultPressure;
 END_IF
-
 
 
 
@@ -109,11 +113,9 @@ ELSE
 	IG.xILKOk := FALSE;
 END_IF
 
-
 (* Pressure gauge OK checks *)
 
 GaugeTurnOnTmr(IN:=IG.q_xHV_DIS, PT:=T#10S, Q=>IG.xTurnOnTime);
-
 
 //Backwards compatibility
 IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
@@ -127,14 +129,10 @@ ACT_Logger();
 IO();
 (*Load or save the persistent variables*)
 ACT_Persistent();
-
 (*Run Auto Recovery*)
-ACT_Recover();
-
-
-]]></ST>
+ACT_Recover();]]></ST>
     </Implementation>
-    <Action Name="ACT_Logger" Id="{99961f85-7dce-4ed0-bee5-af963152edee}">
+    <Action Name="ACT_Logger" Id="{32bd2498-b785-470b-9d53-5fe2d5a7230c}">
       <Implementation>
         <ST><![CDATA[// ILK logger
 IF (IG.xLog) THEN
@@ -169,16 +167,17 @@ IF (IG.xLog) THEN
 				fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
 		  END_CASE
 		  ePrevState := IG.eState;  
+		  stateTimer.IN := TRUE;
 	  END_IF
 END_IF  
+
 
 ]]></ST>
       </Implementation>
     </Action>
-    <Action Name="ACT_Persistent" Id="{d61b101a-8e7b-490f-9c85-1ba602630ca3}">
+    <Action Name="ACT_Persistent" Id="{19b99cce-686e-4553-a919-0f2d44f7d372}">
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
-
 IF (SUPER^.bRestorePersistentData) THEN
 	SUPER^.bRestorePersistentData	:= FALSE;
 	IF ( rVAC_SP <> 0) THEN
@@ -219,7 +218,7 @@ IF (stateTimer.Q) THEN
 END_IF;]]></ST>
       </Implementation>
     </Action>
-    <Action Name="ACT_Recover" Id="{e533aa39-f7e4-475e-a226-8e757c2d178a}">
+    <Action Name="ACT_Recover" Id="{1692d52d-07c8-44ef-8ca5-dd37315ae382}">
       <Implementation>
         <ST><![CDATA[fbGetCurTaskIdx();
 IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
@@ -232,7 +231,7 @@ IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
 END_IF]]></ST>
       </Implementation>
     </Action>
-    <Action Name="IO" Id="{d8491859-09d0-4a11-84b1-64e10f403b2b}">
+    <Action Name="IO" Id="{60cbf541-8efd-4b0a-8dbe-ac577a24b43e}">
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
 IG.i_iPRESS_R:=	i_iPRESS_R; 
@@ -241,21 +240,21 @@ IG.i_xHV_ON:= i_xHV_ON;
 (*soft link outputs*)
 q_xHV_DIS := IG.q_xHV_DIS;
 
-IG.sPath := sPath;]]></ST>
+IG.sPath := sPath;
+IG.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);]]></ST>
       </Implementation>
     </Action>
-    <Method Name="M_HVE" Id="{5c60ca96-2d6b-4374-b0f5-03f29913a437}">
+    <Method Name="M_HVE" Id="{f2664a00-2f21-407e-9b83-88176d4d07a8}">
       <Declaration><![CDATA[METHOD M_HVE : BOOL
 VAR_INPUT
 		enable:bool; // set to true to enable, false to disable;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-this^.IG.xHV_SW:= enable;]]></ST>
+        <ST><![CDATA[this^.IG.xHV_SW:= enable;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Recover" Id="{f68e6453-2e78-43b5-a7e3-ff49d68f47d8}">
+    <Method Name="M_Recover" Id="{34bdef07-51a5-4d00-b35d-f4abd6e58476}">
       <Declaration><![CDATA[METHOD M_Recover : BOOL
 VAR_INPUT
 END_VAR
@@ -266,64 +265,67 @@ M_Recover := bWasOn;
 IF (bWasOn) THEN fbLogger(sMsg:='Auto Recovery Initiated.', eSevr:=TcEventSeverity.Info); END_IF;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_SetBits" Id="{72c14520-2c59-468a-859d-9b3fd8e0ae82}">
+    <Method Name="M_SetBits" Id="{95269875-3fb6-4279-ba33-8df59a3308b4}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
 	TermBits : UINT; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+        <ST><![CDATA[This^.iTermBits := TermBits;
+]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_CCM501">
-      <LineId Id="3" Count="0" />
-      <LineId Id="218" Count="4" />
-      <LineId Id="214" Count="3" />
-      <LineId Id="4" Count="3" />
-      <LineId Id="105" Count="0" />
-      <LineId Id="128" Count="0" />
-      <LineId Id="106" Count="0" />
-      <LineId Id="193" Count="2" />
-      <LineId Id="199" Count="14" />
-      <LineId Id="24" Count="16" />
-      <LineId Id="229" Count="0" />
-      <LineId Id="42" Count="2" />
-      <LineId Id="228" Count="0" />
-      <LineId Id="45" Count="17" />
-      <LineId Id="122" Count="0" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="225" Count="1" />
-      <LineId Id="224" Count="0" />
+    <LineIds Name="FB_IMG401">
+      <LineId Id="69" Count="4" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="118" Count="1" />
+      <LineId Id="325" Count="1" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="327" Count="16" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="157" Count="17" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="175" Count="3" />
+      <LineId Id="181" Count="1" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="184" Count="1" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="186" Count="6" />
+      <LineId Id="139" Count="0" />
     </LineIds>
-    <LineIds Name="FB_CCM501.ACT_Logger">
-      <LineId Id="2" Count="35" />
+    <LineIds Name="FB_IMG401.ACT_Logger">
+      <LineId Id="2" Count="37" />
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_CCM501.ACT_Persistent">
-      <LineId Id="2" Count="0" />
-      <LineId Id="28" Count="37" />
-      <LineId Id="26" Count="0" />
+    <LineIds Name="FB_IMG401.ACT_Persistent">
+      <LineId Id="2" Count="37" />
+      <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_CCM501.ACT_Recover">
+    <LineIds Name="FB_IMG401.ACT_Recover">
       <LineId Id="2" Count="7" />
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_CCM501.IO">
-      <LineId Id="2" Count="6" />
+    <LineIds Name="FB_IMG401.IO">
+      <LineId Id="2" Count="7" />
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_CCM501.M_HVE">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
+    <LineIds Name="FB_IMG401.M_HVE">
+      <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_CCM501.M_Recover">
+    <LineIds Name="FB_IMG401.M_Recover">
       <LineId Id="6" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_CCM501.M_SetBits">
-      <LineId Id="2" Count="0" />
+    <LineIds Name="FB_IMG401.M_SetBits">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
