@@ -31,7 +31,7 @@ STRUCT
 	field: ZNAM CONST_TIME
 	field: ONAM CONST_SLOPE
     '}
-	nRampMode_AD : BOOL;
+	bRampMode_AD : BOOL;
 	{attribute 'pytmc' := '
 	pv: GAIN_FACTOR_AD
 	io: io
@@ -54,14 +54,14 @@ STRUCT
 	field: ZNAM CONST_TIME
 	field: ONAM CONST_SLOPE
     '}
-	nRampMode_FIX1 : BOOL;
+	bRampMode_FIX1 : BOOL;
 	{attribute 'pytmc' := '
 	pv: CTRL_DIR_FIX1
 	io: io
 	field: ZNAM DOWNSTREAM
 	field: ONAM UPSTREAM
     '}
-	nCtrlDir_FIX1 : BOOL;
+	bCtrlDir_FIX1 : BOOL;
 	{attribute 'pytmc' := '
 	pv: PGAIN_FIX1
 	io: io
@@ -91,14 +91,14 @@ STRUCT
 	field: ZNAM CONST_TIME
 	field: ONAM CONST_SLOPE
     '}
-	nRampMode_FIX2 : BOOL;
+	bRampMode_FIX2 : BOOL;
 	{attribute 'pytmc' := '
 	pv: CTRL_DIR_FIX2
 	io: io
 	field: ZNAM DOWNSTREAM
 	field: ONAM UPSTREAM
     '}
-	nCtrlDir_FIX2 : BOOL;
+	bCtrlDir_FIX2 : BOOL;
 	{attribute 'pytmc' := '
 	pv: PGAIN_FIX2
 	io: io
@@ -128,7 +128,7 @@ STRUCT
 	field: ZNAM CONST_TIME
 	field: ONAM CONST_SLOPE
     '}
-	nRampMode_SP : BOOL;
+	bRampMode_SP : BOOL;
 	{attribute 'pytmc' := '
 	pv: PGAIN_SP
 	io: io

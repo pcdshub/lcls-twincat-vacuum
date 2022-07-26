@@ -292,8 +292,8 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEvent
 	4:
 		fbCoeRead.nIndex := cRampMode_AD.nIndex;
 		fbCoeRead.nSubIndex := cRampMode_AD.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.nRampMode_AD);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nRampMode_AD);
+		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_AD);
+		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_AD);
 		fbCoeRead.bExecute := TRUE;
 	5:
 		fbCoeRead.nIndex := cGainFactor_AD.nIndex;
@@ -310,14 +310,14 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEvent
 	7:
 		fbCoeRead.nIndex := cRampMode_FIX1.nIndex;
 		fbCoeRead.nSubIndex := cRampMode_FIX1.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.nRampMode_FIX1);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nRampMode_FIX1);
+		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX1);
+		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX1);
 		fbCoeRead.bExecute := TRUE;
 	8:
 		fbCoeRead.nIndex := cCtrlDir_FIX1.nIndex;
 		fbCoeRead.nSubIndex := cCtrlDir_FIX1.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.nCtrlDir_FIX1);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nCtrlDir_FIX1);
+		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
+		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
 		fbCoeRead.bExecute := TRUE;
 	9:
 		fbCoeRead.nIndex := cPGain_FIX1.nIndex;
@@ -340,14 +340,14 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEvent
 	12:
 		fbCoeRead.nIndex := cRampMode_FIX2.nIndex;
 		fbCoeRead.nSubIndex := cRampMode_FIX2.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.nRampMode_FIX2);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nRampMode_FIX2);
+		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX2);
+		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX2);
 		fbCoeRead.bExecute := TRUE;
 	13:
 		fbCoeRead.nIndex := cCtrlDir_FIX2.nIndex;
 		fbCoeRead.nSubIndex := cCtrlDir_FIX2.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.nCtrlDir_FIX2);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nCtrlDir_FIX2);
+		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
+		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
 		fbCoeRead.bExecute := TRUE;
 	14:
 		fbCoeRead.nIndex := cPGain_FIX2.nIndex;
@@ -370,8 +370,8 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEvent
 	17:
 		fbCoeRead.nIndex := cRampMode_SP.nIndex;
 		fbCoeRead.nSubIndex := cRampMode_SP.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.nRampMode_SP);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nRampMode_SP);
+		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_SP);
+		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_SP);
 		fbCoeRead.bExecute := TRUE;
 	18:
 		fbCoeRead.nIndex := cPGain_SP.nIndex;
@@ -498,11 +498,11 @@ ELSIF stVcnVat590.stCoeParameters.fRampTime_AD <> stCoeParamsInternal.fRampTime_
 	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_AD);
 	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_AD);
 	fbCoeWrite.bExecute := TRUE;
-ELSIF stVcnVat590.stCoeParameters.nRampMode_AD <> stCoeParamsInternal.nRampMode_AD THEN
+ELSIF stVcnVat590.stCoeParameters.bRampMode_AD <> stCoeParamsInternal.bRampMode_AD THEN
 	fbCoeWrite.nIndex := cRampMode_AD.nIndex;
 	fbCoeWrite.nSubIndex := cRampMode_AD.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.nRampMode_AD);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nRampMode_AD);
+	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_AD);
+	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_AD);
 	fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fGainFactor_AD <> stCoeParamsInternal.fGainFactor_AD THEN
 	fbCoeWrite.nIndex := cGainFactor_AD.nIndex;
@@ -516,17 +516,17 @@ ELSIF stVcnVat590.stCoeParameters.fRampTime_FIX1 <> stCoeParamsInternal.fRampTim
 	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX1);
 	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX1);
 	fbCoeWrite.bExecute := TRUE;
-ELSIF stVcnVat590.stCoeParameters.nRampMode_FIX1 <> stCoeParamsInternal.nRampMode_FIX1 THEN
+ELSIF stVcnVat590.stCoeParameters.bRampMode_FIX1 <> stCoeParamsInternal.bRampMode_FIX1 THEN
 	fbCoeWrite.nIndex := cRampMode_FIX1.nIndex;
 	fbCoeWrite.nSubIndex := cRampMode_FIX1.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.nRampMode_FIX1);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nRampMode_FIX1);
+	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX1);
+	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX1);
 	fbCoeWrite.bExecute := TRUE;
-ELSIF stVcnVat590.stCoeParameters.nCtrlDir_FIX1 <> stCoeParamsInternal.nCtrlDir_FIX1 THEN
+ELSIF stVcnVat590.stCoeParameters.bCtrlDir_FIX1 <> stCoeParamsInternal.bCtrlDir_FIX1 THEN
 	fbCoeWrite.nIndex := cCtrlDir_FIX1.nIndex;
 	fbCoeWrite.nSubIndex := cCtrlDir_FIX1.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.nCtrlDir_FIX1);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nCtrlDir_FIX1);
+	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
+	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
 	fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fPGain_FIX1 <> stCoeParamsInternal.fPGain_FIX1 THEN
 	fbCoeWrite.nIndex := cPGain_FIX1.nIndex;
@@ -546,17 +546,17 @@ ELSIF stVcnVat590.stCoeParameters.fRampTime_FIX2 <> stCoeParamsInternal.fRampTim
 	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX2);
 	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX2);
 	fbCoeWrite.bExecute := TRUE;
-ELSIF stVcnVat590.stCoeParameters.nRampMode_FIX2 <> stCoeParamsInternal.nRampMode_FIX2 THEN
+ELSIF stVcnVat590.stCoeParameters.bRampMode_FIX2 <> stCoeParamsInternal.bRampMode_FIX2 THEN
 	fbCoeWrite.nIndex := cRampMode_FIX2.nIndex;
 	fbCoeWrite.nSubIndex := cRampMode_FIX2.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.nRampMode_FIX2);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nRampMode_FIX2);
+	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX2);
+	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX2);
 	fbCoeWrite.bExecute := TRUE;
-ELSIF stVcnVat590.stCoeParameters.nCtrlDir_FIX2 <> stCoeParamsInternal.nCtrlDir_FIX2 THEN
+ELSIF stVcnVat590.stCoeParameters.bCtrlDir_FIX2 <> stCoeParamsInternal.bCtrlDir_FIX2 THEN
 	fbCoeWrite.nIndex := cCtrlDir_FIX2.nIndex;
 	fbCoeWrite.nSubIndex := cCtrlDir_FIX2.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.nCtrlDir_FIX2);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nCtrlDir_FIX2);
+	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
+	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
 	fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fPGain_FIX2 <> stCoeParamsInternal.fPGain_FIX2 THEN
 	fbCoeWrite.nIndex := cPGain_FIX2.nIndex;
@@ -576,11 +576,11 @@ ELSIF stVcnVat590.stCoeParameters.fRampTime_SP <> stCoeParamsInternal.fRampTime_
 	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_SP);
 	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_SP);
 	fbCoeWrite.bExecute := TRUE;
-ELSIF stVcnVat590.stCoeParameters.nRampMode_SP <> stCoeParamsInternal.nRampMode_SP THEN
+ELSIF stVcnVat590.stCoeParameters.bRampMode_SP <> stCoeParamsInternal.bRampMode_SP THEN
 	fbCoeWrite.nIndex := cRampMode_SP.nIndex;
 	fbCoeWrite.nSubIndex := cRampMode_SP.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.nRampMode_SP);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.nRampMode_SP);
+	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_SP);
+	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_SP);
 	fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fPGain_SP <> stCoeParamsInternal.fPGain_SP THEN
 	fbCoeWrite.nIndex := cPGain_SP.nIndex;
@@ -620,229 +620,5 @@ o_stGenCtrlSP.Bit0ExecuteZero := stVcnVat590.bZero;
 o_stGenCtrlSP.Bit4AccessMode := bRemAcsToggle;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_VCN_VAT590">
-      <LineId Id="1200" Count="7" />
-      <LineId Id="1678" Count="0" />
-      <LineId Id="1209" Count="3" />
-      <LineId Id="1677" Count="0" />
-      <LineId Id="1675" Count="0" />
-      <LineId Id="1218" Count="0" />
-      <LineId Id="1676" Count="0" />
-      <LineId Id="1219" Count="1" />
-      <LineId Id="1228" Count="68" />
-      <LineId Id="1573" Count="0" />
-      <LineId Id="1299" Count="10" />
-      <LineId Id="1554" Count="0" />
-      <LineId Id="1550" Count="1" />
-      <LineId Id="1555" Count="2" />
-      <LineId Id="1673" Count="1" />
-      <LineId Id="1672" Count="0" />
-      <LineId Id="1570" Count="1" />
-      <LineId Id="1569" Count="0" />
-      <LineId Id="1387" Count="7" />
-      <LineId Id="363" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.LoadPersistentData">
-      <LineId Id="2" Count="5" />
-      <LineId Id="17" Count="1" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="22" Count="1" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.Logger">
-      <LineId Id="2" Count="0" />
-      <LineId Id="4" Count="25" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.ReadCoeParameters">
-      <LineId Id="24" Count="1" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="142" Count="2" />
-      <LineId Id="181" Count="0" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="67" Count="3" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="73" Count="2" />
-      <LineId Id="72" Count="0" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="77" Count="2" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="81" Count="2" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="150" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="85" Count="2" />
-      <LineId Id="84" Count="0" />
-      <LineId Id="151" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="89" Count="2" />
-      <LineId Id="88" Count="0" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="93" Count="2" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="153" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="97" Count="2" />
-      <LineId Id="96" Count="0" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="101" Count="2" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="155" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="105" Count="2" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="156" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="109" Count="2" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="157" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="113" Count="2" />
-      <LineId Id="112" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="117" Count="2" />
-      <LineId Id="116" Count="0" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="121" Count="2" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="160" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="125" Count="2" />
-      <LineId Id="124" Count="0" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="129" Count="2" />
-      <LineId Id="128" Count="0" />
-      <LineId Id="182" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="133" Count="2" />
-      <LineId Id="132" Count="0" />
-      <LineId Id="162" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="137" Count="2" />
-      <LineId Id="136" Count="0" />
-      <LineId Id="163" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="146" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="184" Count="1" />
-      <LineId Id="187" Count="0" />
-      <LineId Id="190" Count="3" />
-      <LineId Id="188" Count="0" />
-      <LineId Id="194" Count="1" />
-      <LineId Id="189" Count="0" />
-      <LineId Id="186" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="64" Count="0" />
-      <LineId Id="196" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.ReadFromInput">
-      <LineId Id="2" Count="1" />
-      <LineId Id="38" Count="1" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="5" Count="12" />
-      <LineId Id="35" Count="1" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="18" Count="13" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.SetCoeInterface">
-      <LineId Id="2" Count="4" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.SetThrottle">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.ValveControl">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.WriteCoeParameters">
-      <LineId Id="63" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="27" Count="2" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="34" Count="3" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="64" Count="3" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="68" Count="3" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="73" Count="3" />
-      <LineId Id="72" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="78" Count="3" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="83" Count="3" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="88" Count="3" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="98" Count="3" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="102" Count="3" />
-      <LineId Id="97" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="107" Count="3" />
-      <LineId Id="106" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="112" Count="3" />
-      <LineId Id="111" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="117" Count="2" />
-      <LineId Id="151" Count="0" />
-      <LineId Id="116" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="122" Count="3" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="127" Count="3" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="132" Count="3" />
-      <LineId Id="131" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="137" Count="3" />
-      <LineId Id="136" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="142" Count="3" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="147" Count="3" />
-      <LineId Id="146" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="158" Count="1" />
-      <LineId Id="175" Count="1" />
-      <LineId Id="178" Count="2" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="173" Count="0" />
-      <LineId Id="157" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.WriteToOutput">
-      <LineId Id="2" Count="5" />
-      <LineId Id="17" Count="1" />
-      <LineId Id="15" Count="1" />
-      <LineId Id="10" Count="3" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
