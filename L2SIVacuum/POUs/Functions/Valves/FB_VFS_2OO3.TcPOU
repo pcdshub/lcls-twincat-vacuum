@@ -263,17 +263,17 @@ rtOPN_SW (CLK := i_xOPN_SW);
 
 (*Gauge fault counters*)
 //IG1
-rtFault_IG1(CLK := i_xTriggerIG1);
+rtFault_IG1(CLK := i_xTriggerIG1 AND NOT xTrigger);
 IF rtFault_IG1.Q THEN
 	nFaultCounter_IG1 := nFaultCounter_IG1 + 1;
 END_IF
 //IG2
-rtFault_IG2(CLK := i_xTriggerIG2);
+rtFault_IG2(CLK := i_xTriggerIG2 AND NOT xTrigger);
 IF rtFault_IG2.Q THEN
 	nFaultCounter_IG2 := nFaultCounter_IG2 + 1;
 END_IF
 //IG3
-rtFault_IG3(CLK := i_xTriggerIG3);
+rtFault_IG3(CLK := i_xTriggerIG3 AND NOT xTrigger);
 IF rtFault_IG3.Q THEN
 	nFaultCounter_IG3 := nFaultCounter_IG3 + 1;
 END_IF
