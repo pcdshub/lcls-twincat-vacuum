@@ -80,7 +80,7 @@ VAR
 	i_xVetoValveClosed AT%I* : BOOL; (*Link to VFS Interface*)
 	
 	(*Interface with external system*) 
-	i_n2OO3_MODE       AT%I* : UINT; (*Link to VFS Interface, 2oo3 mode selector*)
+	i_e2OO3_MODE       AT%I* : E_2OO3_MODE; (*Link to VFS Interface, 2oo3 mode selector*)
 	i_xPress_OK_IG1    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
 	i_xPress_OK_IG2    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
 	i_xPress_OK_IG3    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
@@ -132,8 +132,8 @@ IF (i_xVeto_Enable) THEN
 END_IF
 
 (*User will be able to select gauge channel or 2oo3 function*)
-CASE i_n2OO3_MODE OF
-	0:
+CASE i_e2OO3_MODE OF
+	E_2OO3_MODE.MODE_2OO3:
 		(*2oo3 logic*)
 		(*First let's verify that at least 2 gauges are connected*)
 		xPress_OK := (i_xPress_OK_IG1 AND i_xPress_OK_IG2) OR
@@ -148,13 +148,13 @@ CASE i_n2OO3_MODE OF
 		ELSE
 			xTrigger := TRUE;
 		END_IF
-	1:
+	E_2OO3_MODE.IG_CH1:
 		xPress_OK := i_xPress_OK_IG1;
 		xTrigger := i_xTriggerIG1 AND i_xPress_OK_IG1;
-	2:
+	E_2OO3_MODE.IG_CH2:
 		xPress_OK := i_xPress_OK_IG2;
 		xTrigger := i_xTriggerIG2 AND i_xPress_OK_IG2;
-	3:
+	E_2OO3_MODE.IG_CH3:
 		xPress_OK := i_xPress_OK_IG3;
 		xTrigger := i_xTriggerIG3 AND i_xPress_OK_IG3;
 END_CASE;

@@ -80,6 +80,9 @@
     <Compile Include="DUTs\Valves\E_VCN.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Valves\E_2OO3_MODE.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Valves\E_VGC.TcDUT">
       <SubType>Code</SubType>
     </Compile>
