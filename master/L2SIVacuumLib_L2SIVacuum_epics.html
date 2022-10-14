@@ -16,6 +16,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
         <script src="_static/doctr-versions-menu.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -17956,21 +17957,84 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>$(PREFIX)0RateBeamCnst:Cohort_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:GlobalLogTrickleTrip_RBV</p></td>
+<td><p>bi</p></td>
+<td><p>Tripped by overall log count</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:LogHost_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>The log host IP address</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:LogHost</p></td>
+<td><p>waveform</p></td>
+<td><p>The log host IP address</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:LogPort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>Cohort inc on each arb cycle</p></td>
+<td><p>The log host UDP port</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:LogPort</p></td>
+<td><p>longout</p></td>
+<td><p>The log host UDP port</p></td>
+<td><div class="line-block">
+<div class="line">io: output</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:LogMessageCount_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>Total log messages on the last cycle</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX)AccumulatedFastFaults_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>PMPS_GVL.AccumulatedFF</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)SuccessfulPreemptions_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>PMPS_GVL.SuccessfulPreemption</p></td>
+<td><div class="line-block">
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX)0RateBeamCnst:Veto_RBV</p></td>
+<td><p>waveform</p></td>
+<td><p>0-rate beam constant</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)0RateBeamCnst:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)0RateBeamCnst:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>0-rate beam constant</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -17997,7 +18061,17 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)0RateBeamCnst:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)0RateBeamCnst:PhotonEnergyRanges_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>0-rate beam constant</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">field: EGU eV</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)0RateBeamCnst:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>0-rate beam constant</p></td>
 <td><div class="line-block">
@@ -18006,98 +18080,11 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)0RateBeamCnst:Veto_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)FullBeamCnst:Veto_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>0-rate beam constant</p></td>
+<td><p>Full beam constant</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)AccumulatedFastFaults_RBV</p></td>
-<td><p>longin</p></td>
-<td><p>PMPS_GVL.AccumulatedFF</p></td>
-<td><div class="line-block">
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX)CurrentBP:Cohort_RBV</p></td>
-<td><p>longin</p></td>
-<td><p>Cohort inc on each arb cycle</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)CurrentBP:PhotonEnergyRanges_RBV</p></td>
-<td><p>longin</p></td>
-<td><p>PMPS_GVL.stCurrentBeamParameters.neVRange</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX)CurrentBP:Rate_RBV</p></td>
-<td><p>longin</p></td>
-<td><p>PMPS_GVL.stCurrentBeamParameters.nRate</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU Hz</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)CurrentBP:Transmission_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>PMPS_GVL.stCurrentBeamParameters.nTran</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: HOPR 1</div>
-<div class="line">field: LOPR 0</div>
-<div class="line">field: PREC 2</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX)CurrentBP:Valid_RBV</p></td>
-<td><p>bi</p></td>
-<td><p>PMPS_GVL.stCurrentBeamParameters.xValid</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)CurrentBP:Veto_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>PMPS_GVL.stCurrentBeamParameters.aVetoDevices</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX)eVRangeCnst_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>Active eV Range constants</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)eVRangeHyst_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>eV Range hystersis</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -18107,6 +18094,28 @@
 <td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX)FullBeamCnst:Rate_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>Full beam constant</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">field: EGU Hz</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)FullBeamCnst:Transmission_RBV</p></td>
+<td><p>ai</p></td>
+<td><p>Full beam constant</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -18121,28 +18130,6 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)FullBeamCnst:Rate_RBV</p></td>
-<td><p>longin</p></td>
-<td><p>Full beam constant</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU Hz</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)FullBeamCnst:Transmission_RBV</p></td>
-<td><p>ai</p></td>
-<td><p>Full beam constant</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: HOPR 1</div>
-<div class="line">field: LOPR 0</div>
-<div class="line">field: PREC 2</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
 <tr class="row-odd"><td><p>$(PREFIX)FullBeamCnst:Valid_RBV</p></td>
 <td><p>bi</p></td>
 <td><p>Full beam constant</p></td>
@@ -18152,11 +18139,12 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)FullBeamCnst:Veto_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)eVRangeCnst_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>Full beam constant</p></td>
+<td><p>Active eV Range constants</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
+<div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
 </div>
 </td>
@@ -18181,55 +18169,26 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:GlobalLogTrickleTrip_RBV</p></td>
-<td><p>bi</p></td>
-<td><p>Tripped by overall log count</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)eVRangeHyst_RBV</p></td>
+<td><p>ai</p></td>
+<td><p>eV Range hystersis</p></td>
 <td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">field: EGU eV</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:LogHost</p></td>
+<tr class="row-even"><td><p>$(PREFIX)CurrentBP:Veto_RBV</p></td>
 <td><p>waveform</p></td>
-<td><p>The log host IP address</p></td>
+<td><p>PMPS_GVL.stCurrentBeamParameters.aVetoDevices</p></td>
 <td><div class="line-block">
-<div class="line">io: output</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:LogHost_RBV</p></td>
-<td><p>waveform</p></td>
-<td><p>The log host IP address</p></td>
-<td><div class="line-block">
-<div class="line">io: output</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:LogMessageCount_RBV</p></td>
-<td><p>longin</p></td>
-<td><p>Total log messages on the last cycle</p></td>
-<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
 <div class="line">io: input</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)LCLSGeneral:LogPort</p></td>
-<td><p>longout</p></td>
-<td><p>The log host UDP port</p></td>
-<td><div class="line-block">
-<div class="line">io: output</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>$(PREFIX)LCLSGeneral:LogPort_RBV</p></td>
-<td><p>longin</p></td>
-<td><p>The log host UDP port</p></td>
-<td><div class="line-block">
-<div class="line">io: output</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX)RequestedBP:Cohort_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)CurrentBP:Cohort_RBV</p></td>
 <td><p>longin</p></td>
 <td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
@@ -18238,19 +18197,9 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)RequestedBP:PhotonEnergyRanges_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)CurrentBP:Rate_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>PMPS_GVL.stRequestedBeamParameters.neVRange</p></td>
-<td><div class="line-block">
-<div class="line">archive: 1s monitor</div>
-<div class="line">field: EGU eV</div>
-<div class="line">io: input</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>$(PREFIX)RequestedBP:Rate_RBV</p></td>
-<td><p>longin</p></td>
-<td><p>PMPS_GVL.stRequestedBeamParameters.nRate</p></td>
+<td><p>PMPS_GVL.stCurrentBeamParameters.nRate</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">field: EGU Hz</div>
@@ -18258,9 +18207,9 @@
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p>$(PREFIX)RequestedBP:Transmission_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)CurrentBP:Transmission_RBV</p></td>
 <td><p>ai</p></td>
-<td><p>PMPS_GVL.stRequestedBeamParameters.nTran</p></td>
+<td><p>PMPS_GVL.stCurrentBeamParameters.nTran</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">field: HOPR 1</div>
@@ -18270,9 +18219,19 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)RequestedBP:Valid_RBV</p></td>
+<tr class="row-even"><td><p>$(PREFIX)CurrentBP:PhotonEnergyRanges_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>PMPS_GVL.stCurrentBeamParameters.neVRange</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">field: EGU eV</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)CurrentBP:Valid_RBV</p></td>
 <td><p>bi</p></td>
-<td><p>PMPS_GVL.stRequestedBeamParameters.xValid</p></td>
+<td><p>PMPS_GVL.stCurrentBeamParameters.xValid</p></td>
 <td><div class="line-block">
 <div class="line">archive: 1s monitor</div>
 <div class="line">io: input</div>
@@ -18288,10 +18247,52 @@
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p>$(PREFIX)SuccessfulPreemptions_RBV</p></td>
+<tr class="row-odd"><td><p>$(PREFIX)RequestedBP:Cohort_RBV</p></td>
 <td><p>longin</p></td>
-<td><p>PMPS_GVL.SuccessfulPreemption</p></td>
+<td><p>Cohort inc on each arb cycle</p></td>
 <td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX)RequestedBP:Rate_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>PMPS_GVL.stRequestedBeamParameters.nRate</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">field: EGU Hz</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)RequestedBP:Transmission_RBV</p></td>
+<td><p>ai</p></td>
+<td><p>PMPS_GVL.stRequestedBeamParameters.nTran</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">field: HOPR 1</div>
+<div class="line">field: LOPR 0</div>
+<div class="line">field: PREC 2</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>$(PREFIX)RequestedBP:PhotonEnergyRanges_RBV</p></td>
+<td><p>longin</p></td>
+<td><p>PMPS_GVL.stRequestedBeamParameters.neVRange</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
+<div class="line">field: EGU eV</div>
+<div class="line">io: input</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>$(PREFIX)RequestedBP:Valid_RBV</p></td>
+<td><p>bi</p></td>
+<td><p>PMPS_GVL.stRequestedBeamParameters.xValid</p></td>
+<td><div class="line-block">
+<div class="line">archive: 1s monitor</div>
 <div class="line">io: input</div>
 </div>
 </td>
