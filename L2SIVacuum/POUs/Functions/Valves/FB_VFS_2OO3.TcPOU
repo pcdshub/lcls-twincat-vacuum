@@ -135,28 +135,33 @@ END_IF
 CASE i_e2OO3_MODE OF
 	E_2OO3_MODE.MODE_2OO3:
 		(*2oo3 logic*)
-		(*First let's verify that at least 2 gauges are connected*)
+		//First let's verify that at least 2 gauges are connected
 		xPress_OK := (i_xPress_OK_IG1 AND i_xPress_OK_IG2) OR
              		 (i_xPress_OK_IG1 AND i_xPress_OK_IG3) OR
              		 (i_xPress_OK_IG2 AND i_xPress_OK_IG3);
 				  
-		(*Each trigger input validated with Press OK bit which indicates if the gauge is connected or disconnected*)
+		//Each trigger input validated with Press OK bit which indicates if the gauge is connected or disconnected
 		IF xPress_OK THEN
+			xTrigger := ((i_xTriggerIG1 OR NOT i_xPress_OK_IG1) AND (i_xTriggerIG2 OR NOT i_xPress_OK_IG2)) OR
+                		((i_xTriggerIG1 OR NOT i_xPress_OK_IG1) AND (i_xTriggerIG3 OR NOT i_xPress_OK_IG3)) OR
+                		((i_xTriggerIG2 OR NOT i_xPress_OK_IG2) AND (i_xTriggerIG3 OR NOT i_xPress_OK_IG3));
+			(*			
 			xTrigger := ((i_xTriggerIG1 AND i_xPress_OK_IG1) AND (i_xTriggerIG2 AND i_xPress_OK_IG2)) OR
                 		((i_xTriggerIG1 AND i_xPress_OK_IG1) AND (i_xTriggerIG3 AND i_xPress_OK_IG3)) OR
                 		((i_xTriggerIG2 AND i_xPress_OK_IG2) AND (i_xTriggerIG3 AND i_xPress_OK_IG3));
+			*)
 		ELSE
 			xTrigger := TRUE;
 		END_IF
-	E_2OO3_MODE.IG_CH1:
+	E_2OO3_MODE.IG1:
 		xPress_OK := i_xPress_OK_IG1;
-		xTrigger := i_xTriggerIG1 AND i_xPress_OK_IG1;
-	E_2OO3_MODE.IG_CH2:
+		xTrigger := i_xTriggerIG1 OR NOT i_xPress_OK_IG1;
+	E_2OO3_MODE.IG2:
 		xPress_OK := i_xPress_OK_IG2;
-		xTrigger := i_xTriggerIG2 AND i_xPress_OK_IG2;
-	E_2OO3_MODE.IG_CH3:
+		xTrigger := i_xTriggerIG2 OR NOT i_xPress_OK_IG2;
+	E_2OO3_MODE.IG3:
 		xPress_OK := i_xPress_OK_IG3;
-		xTrigger := i_xTriggerIG3 AND i_xPress_OK_IG3;
+		xTrigger := i_xTriggerIG3 OR NOT i_xPress_OK_IG3;
 END_CASE;
 
 //xVeto:= i_xVeto AND (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);

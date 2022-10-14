@@ -4,9 +4,9 @@
     <Declaration><![CDATA[TYPE E_2OO3_MODE :
 (
 	MODE_2OO3 := 0,
-	IG_CH1 := 1,
-	IG_CH2 := 2,
-	IG_CH3 := 3
+	IG1 := 1,
+	IG2 := 2,
+	IG3 := 3
 );
 END_TYPE
 ]]></Declaration>

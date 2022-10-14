@@ -109,7 +109,7 @@ IF rtOK.Q AND q_xOverrideOpen THEN
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
 (*OPN OK evaluation bit *)
-xOPN_OK := (i_xVAC_FAULT_OK) AND (NOT i_xTrigger OR (q_xVetoValveClosed AND NOT q_xVetoValveOpenDO)) ;
+xOPN_OK := (i_xVAC_FAULT_OK) AND (NOT i_xTrigger OR (q_xVetoValveClosed AND NOT q_xVetoValveOpenDO));
 
 (*Soft IO Mapping*)
 IO();
@@ -152,10 +152,10 @@ tOverrideActivated(CLK:= (tonOvrd.Q AND q_xOverrideMode));
 IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 
 //Log when the trigger is vetoed
-rtTriggerVetoed(CLK:= (i_xTrigger) AND (NOT q_xVetoValveOpenDO AND q_xVetoValveClosed));
+rtTriggerVetoed(CLK:= (i_xTrigger AND (NOT q_xVetoValveOpenDO AND q_xVetoValveClosed)));
 IF rtTriggerVetoed.Q THEN fbLogger(sMsg:='Valve triggered while veto device is in', eSevr:=TcEventSeverity.Warning); END_IF
 
-rtTriggered(CLK:= (i_xTrigger AND ( q_xVetoValveOpenDO AND NOT q_xVetoValveClosed));
+rtTriggered(CLK:= (i_xTrigger AND ( q_xVetoValveOpenDO AND NOT q_xVetoValveClosed)));
 IF rtTriggered.Q THEN fbLogger(sMsg:='Fast valve triggered!', eSevr:=TcEventSeverity.Critical); END_IF]]></ST>
       </Implementation>
     </Action>
