@@ -328,5 +328,17 @@ q_nFltCount_IG2 := nFaultCounter_IG2;
 q_nFltCount_IG3 := nFaultCounter_IG3;]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="FB_VFS_2OO3">
+      <LineId Id="491" Count="191" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VFS_2OO3.ACT_ResetAlarms">
+      <LineId Id="2" Count="11" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VFS_2OO3.IO">
+      <LineId Id="2" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
