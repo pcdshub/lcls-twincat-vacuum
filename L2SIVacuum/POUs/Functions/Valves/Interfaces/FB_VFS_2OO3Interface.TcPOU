@@ -65,17 +65,17 @@ VAR
     	pv: FLT_COUNT_IG1
 		io: i
 	'}
-	i_nFltCount_IG1 : UINT;      //Fault counter for IG1
+	i_nFltCount_IG1 AT%I* : UINT;      //Fault counter for IG1
     {attribute 'pytmc' := '
     	pv: FLT_COUNT_IG2
 		io: i
 	'}
-	i_nFltCount_IG2 : UINT;      //Fault counter for IG2
+	i_nFltCount_IG2 AT%I* : UINT;      //Fault counter for IG2
     {attribute 'pytmc' := '
     	pv: FLT_COUNT_IG3
 		io: i
 	'}
-	i_nFltCount_IG3 : UINT;      //Fault counter for IG3
+	i_nFltCount_IG3 AT%I* : UINT;      //Fault counter for IG3
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*Soft IO Mapping*)
