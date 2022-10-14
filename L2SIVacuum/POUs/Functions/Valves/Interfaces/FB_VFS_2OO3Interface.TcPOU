@@ -83,22 +83,6 @@ q_xPRESS_OK_IG1 := IG1.xPRESS_OK;
 q_xPRESS_OK_IG2 := IG2.xPRESS_OK;
 q_xPRESS_OK_IG3 := IG3.xPRESS_OK;
 
-
-(*User will be able to select gauge channel or 2oo3 function*)
-CASE e2OO3_MODE OF
-	E_2OO3_MODE.MODE_2OO3:
-		(*2oo3 logic*)
-		xPress_OK := (IG1.xPRESS_OK AND IG2.xPRESS_OK) OR
-             		 (IG1.xPRESS_OK AND IG3.xPRESS_OK) OR
-             		 (IG2.xPRESS_OK AND IG3.xPRESS_OK);
-	E_2OO3_MODE.IG_CH1:
-		xPress_OK := IG1.xPRESS_OK;
-	E_2OO3_MODE.IG_CH2:
-		xPress_OK := IG2.xPRESS_OK;
-	E_2OO3_MODE.IG_CH3:
-		xPress_OK := IG3.xPRESS_OK;
-END_CASE;
-
 (*Soft IO Mapping*)
 IO();
 
@@ -168,10 +152,10 @@ tOverrideActivated(CLK:= (tonOvrd.Q AND q_xOverrideMode));
 IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 
 //Log when the trigger is vetoed
-rtTriggerVetoed(CLK:= (NOT(xPress_OK) OR NOT(i_xTrigger)) AND (NOT q_xVetoValveOpenDO AND q_xVetoValveClosed));
+rtTriggerVetoed(CLK:= (i_xTrigger) AND (NOT q_xVetoValveOpenDO AND q_xVetoValveClosed));
 IF rtTriggerVetoed.Q THEN fbLogger(sMsg:='Valve triggered while veto device is in', eSevr:=TcEventSeverity.Warning); END_IF
 
-rtTriggered(CLK:= ((xPress_OK) OR (i_xTrigger)) AND ( q_xVetoValveOpenDO AND NOT q_xVetoValveClosed));
+rtTriggered(CLK:= (i_xTrigger AND ( q_xVetoValveOpenDO AND NOT q_xVetoValveClosed));
 IF rtTriggered.Q THEN fbLogger(sMsg:='Fast valve triggered!', eSevr:=TcEventSeverity.Critical); END_IF]]></ST>
       </Implementation>
     </Action>
