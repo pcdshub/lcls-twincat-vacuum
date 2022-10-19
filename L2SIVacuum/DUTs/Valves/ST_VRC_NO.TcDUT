@@ -29,8 +29,8 @@ STRUCT
 	q_xCLS_DO	: BOOL;
 	{attribute 'pytmc' := '
     pv: FORCE_CLS;
-	field: ONAM CLOSE; 
-	field: ZNAM OPEN;
+	field: ONAM FORCE CLOSE; 
+	field: ZNAM FALSE;
 	io: io;
 	'}
 	pv_xOvrdCls	:	BOOL;
