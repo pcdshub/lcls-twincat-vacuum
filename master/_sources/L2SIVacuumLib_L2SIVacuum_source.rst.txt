@@ -2374,8 +2374,8 @@ ST_VRC_NO
     	q_xCLS_DO	: BOOL;
     	{attribute 'pytmc' := '
         pv: FORCE_CLS;
-    	field: ONAM CLOSE; 
-    	field: ZNAM OPEN;
+    	field: ONAM FORCE CLOSE; 
+    	field: ZNAM FALSE;
     	io: io;
     	'}
     	pv_xOvrdCls	:	BOOL;
@@ -2408,7 +2408,7 @@ ST_VVC
     	{attribute 'pytmc' := '
     	pv:FORCE_OPN;
     	field: ZNAM FALSE;
-    	field: ONAM OPEN;
+    	field: ONAM FORCE OPEN;
     	io: io;
     	'}
     	xOvrdOpn	:	BOOL;
@@ -2467,8 +2467,8 @@ ST_VWC_NO
     	pv_xCLS_SW	: BOOL;
     	{attribute 'pytmc' := '
         pv: FORCE_CLS;
-    	field: ONAM CLOSE; 
-    	field: ZNAM OPEN;
+    	field: ONAM FORCE CLOSE; 
+    	field: ZNAM FALSE;
     	io: io;
     	'}
     	pv_xOvrdCls	:	BOOL;
@@ -11730,10 +11730,10 @@ FB_VFS_Interface
     IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 
     //Log when the trigger is vetoed
-    rtTriggerVetoed(CLK:= (NOT(q_xPRESS_OK) OR NOT(i_xTrigger)) AND (NOT q_xVetoValveOpenDO AND q_xVetoValveClosed));
+    rtTriggerVetoed(CLK:= (NOT q_xPRESS_OK OR i_xTrigger) AND (NOT q_xVetoValveOpenDO AND q_xVetoValveClosed));
     IF rtTriggerVetoed.Q THEN fbLogger(sMsg:='Valve triggered while veto device is in', eSevr:=TcEventSeverity.Warning); END_IF
 
-    rtTriggered(CLK:= ((q_xPRESS_OK) OR (i_xTrigger)) AND ( q_xVetoValveOpenDO AND NOT q_xVetoValveClosed));
+    rtTriggered(CLK:= (NOT q_xPRESS_OK OR i_xTrigger) AND ( q_xVetoValveOpenDO AND NOT q_xVetoValveClosed));
     IF rtTriggered.Q THEN fbLogger(sMsg:='Fast valve triggered!', eSevr:=TcEventSeverity.Critical); END_IF
     END_ACTION
 

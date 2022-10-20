@@ -2531,8 +2531,8 @@ END_TYPE
     <span class="n">q_xCLS_DO</span>       <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">FORCE_CLS</span><span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">CLOSE</span><span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OPEN</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">FORCE</span> <span class="n">CLOSE</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">FALSE</span><span class="p">;</span>
     <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">pv_xOvrdCls</span>     <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span>
@@ -2565,7 +2565,7 @@ END_TYPE
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span><span class="n">FORCE_OPN</span><span class="p">;</span>
     <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">FALSE</span><span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">OPEN</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">FORCE</span> <span class="n">OPEN</span><span class="p">;</span>
     <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">xOvrdOpn</span>        <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span>
@@ -2620,8 +2620,8 @@ END_TYPE
     <span class="n">pv_xCLS_SW</span>      <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">FORCE_CLS</span><span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">CLOSE</span><span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">OPEN</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">FORCE</span> <span class="n">CLOSE</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">FALSE</span><span class="p">;</span>
     <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">pv_xOvrdCls</span>     <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span>
@@ -11861,10 +11861,10 @@ END_METHOD
 <span class="n">IF</span> <span class="n">tOverrideActivated</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve override mode activated&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span> <span class="n">END_IF</span>
 
 <span class="o">//</span><span class="n">Log</span> <span class="n">when</span> <span class="n">the</span> <span class="n">trigger</span> <span class="ow">is</span> <span class="n">vetoed</span>
-<span class="n">rtTriggerVetoed</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="p">(</span><span class="n">NOT</span><span class="p">(</span><span class="n">q_xPRESS_OK</span><span class="p">)</span> <span class="n">OR</span> <span class="n">NOT</span><span class="p">(</span><span class="n">i_xTrigger</span><span class="p">))</span> <span class="n">AND</span> <span class="p">(</span><span class="n">NOT</span> <span class="n">q_xVetoValveOpenDO</span> <span class="n">AND</span> <span class="n">q_xVetoValveClosed</span><span class="p">));</span>
+<span class="n">rtTriggerVetoed</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="p">(</span><span class="n">NOT</span> <span class="n">q_xPRESS_OK</span> <span class="n">OR</span> <span class="n">i_xTrigger</span><span class="p">)</span> <span class="n">AND</span> <span class="p">(</span><span class="n">NOT</span> <span class="n">q_xVetoValveOpenDO</span> <span class="n">AND</span> <span class="n">q_xVetoValveClosed</span><span class="p">));</span>
 <span class="n">IF</span> <span class="n">rtTriggerVetoed</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve triggered while veto device is in&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span> <span class="n">END_IF</span>
 
-<span class="n">rtTriggered</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="p">((</span><span class="n">q_xPRESS_OK</span><span class="p">)</span> <span class="n">OR</span> <span class="p">(</span><span class="n">i_xTrigger</span><span class="p">))</span> <span class="n">AND</span> <span class="p">(</span> <span class="n">q_xVetoValveOpenDO</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">q_xVetoValveClosed</span><span class="p">));</span>
+<span class="n">rtTriggered</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span> <span class="p">(</span><span class="n">NOT</span> <span class="n">q_xPRESS_OK</span> <span class="n">OR</span> <span class="n">i_xTrigger</span><span class="p">)</span> <span class="n">AND</span> <span class="p">(</span> <span class="n">q_xVetoValveOpenDO</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">q_xVetoValveClosed</span><span class="p">));</span>
 <span class="n">IF</span> <span class="n">rtTriggered</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Fast valve triggered!&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span> <span class="n">END_IF</span>
 <span class="n">END_ACTION</span>
 
