@@ -11,11 +11,16 @@ VAR_INPUT
 	IG2 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 2
 	IG3 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 3
 	Veto_Valve : ST_VGC; // The VGC structure for the Veto Valve
+	{attribute 'pytmc' := '
+		pv: VFS_2OO3_MODE
+		io: io
+	'}
+	i_e2OO3_MODE : E_2OO3_MODE; // 2oo3 mode selector as EPICS Command or Input for global variable
 END_VAR
 VAR_OUTPUT
-   {attribute 'pytmc' := '
-    pv: ;
-    '}
+	{attribute 'pytmc' := '
+		pv: ;
+	'}
 	iq_stValve : ST_VFS; (* All valve data and states will be in this struct*)
 	i_xVAC_FAULT_OK AT%I* : BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 END_VAR
@@ -29,11 +34,6 @@ VAR
 	xOPN_OK : BOOL;
 	tDelOK	: TIME := T#60S;
 	xPress_OK : BOOL;                      //internal signal indicating if at gauges are connected and OK
-    {attribute 'pytmc' := '
-    	pv: VFS_2OO3_MODE
-		io: io
-	'}
-	e2OO3_MODE : E_2OO3_MODE;             //2oo3 mode selector EPICS Command
 
 	(*outputs*)
 	q_e2OO3_MODE AT%Q* : E_2OO3_MODE;             //2oo3 mode selector
@@ -54,25 +54,25 @@ VAR
 	i_xVFS_Open AT%I* : BOOL;
 	i_xVFS_Closed AT%I* : BOOL;
 	{attribute 'pytmc' := '
-    pv: MPS_FAULT_OK
-	field: ZNAM MPS FAULT ;
-	field: ONAM MPS OK ;
-	io: i ;
+		pv: MPS_FAULT_OK
+		field: ZNAM MPS FAULT ;
+		field: ONAM MPS OK ;
+		io: i ;
 	'}
 	i_xMPS_OK AT%I* : BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
 	i_eVFS_State AT%I* : E_VGC; (*Interface*)
-    {attribute 'pytmc' := '
-    	pv: FLT_COUNT_IG1
+	{attribute 'pytmc' := '
+		pv: FLT_COUNT_IG1
 		io: i
 	'}
 	i_nFltCount_IG1 AT%I* : UINT;      //Fault counter for IG1
-    {attribute 'pytmc' := '
-    	pv: FLT_COUNT_IG2
+	{attribute 'pytmc' := '
+		pv: FLT_COUNT_IG2
 		io: i
 	'}
 	i_nFltCount_IG2 AT%I* : UINT;      //Fault counter for IG2
-    {attribute 'pytmc' := '
-    	pv: FLT_COUNT_IG3
+	{attribute 'pytmc' := '
+		pv: FLT_COUNT_IG3
 		io: i
 	'}
 	i_nFltCount_IG3 AT%I* : UINT;      //Fault counter for IG3
@@ -188,20 +188,8 @@ IF ( iq_stValve.i_xClsLS) THEN iq_stValve.xCLS_SW := FALSE; END_IF
 iq_stValve.sVetoDeviceName := Veto_Valve.sDevName;
 
 (*2oo3 mode selector*)
-q_e2OO3_MODE := e2OO3_MODE;]]></ST>
+q_e2OO3_MODE := i_e2OO3_MODE;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_VFS_2OO3Interface">
-      <LineId Id="3" Count="36" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VFS_2OO3Interface.ACT_Logger">
-      <LineId Id="2" Count="36" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VFS_2OO3Interface.IO">
-      <LineId Id="2" Count="26" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
