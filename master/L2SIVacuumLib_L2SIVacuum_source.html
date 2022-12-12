@@ -215,8 +215,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>DUTs</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">DUTs</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/L2SIVacuumLib_L2SIVacuum_source.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -11540,10 +11540,15 @@ END_METHOD
     <span class="n">IG2</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">MKS422</span> <span class="n">Cold</span> <span class="n">Cathode</span> <span class="n">Data</span> <span class="n">Structure</span> <span class="k">for</span> <span class="n">CC</span> <span class="n">gauge</span> <span class="mi">2</span>
     <span class="n">IG3</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">MKS422</span> <span class="n">Cold</span> <span class="n">Cathode</span> <span class="n">Data</span> <span class="n">Structure</span> <span class="k">for</span> <span class="n">CC</span> <span class="n">gauge</span> <span class="mi">3</span>
     <span class="n">Veto_Valve</span> <span class="p">:</span> <span class="n">ST_VGC</span><span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">VGC</span> <span class="n">structure</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Veto</span> <span class="n">Valve</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">VFS_2OO3_MODE</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">i_e2OO3_MODE</span> <span class="p">:</span> <span class="n">E_2OO3_MODE</span><span class="p">;</span> <span class="o">//</span> <span class="mi">2</span><span class="n">oo3</span> <span class="n">mode</span> <span class="n">selector</span> <span class="k">as</span> <span class="n">EPICS</span> <span class="n">Command</span> <span class="ow">or</span> <span class="n">Input</span> <span class="k">for</span> <span class="k">global</span> <span class="n">variable</span>
 <span class="n">END_VAR</span>
 <span class="n">VAR_OUTPUT</span>
-   <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-    <span class="n">pv</span><span class="p">:</span> <span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">iq_stValve</span> <span class="p">:</span> <span class="n">ST_VFS</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span> <span class="n">All</span> <span class="n">valve</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">states</span> <span class="n">will</span> <span class="n">be</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">struct</span><span class="o">*</span><span class="p">)</span>
     <span class="n">i_xVAC_FAULT_OK</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">Valve</span> <span class="n">Vacuum</span> <span class="n">OK</span><span class="p">,</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">to</span> <span class="kc">False</span> <span class="n">when</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">Vacuum</span> <span class="n">Fault</span><span class="o">*</span><span class="p">)</span>
@@ -11558,11 +11563,6 @@ END_METHOD
     <span class="n">xOPN_OK</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">tDelOK</span>  <span class="p">:</span> <span class="n">TIME</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#60S;</span>
     <span class="n">xPress_OK</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>                      <span class="o">//</span><span class="n">internal</span> <span class="n">signal</span> <span class="n">indicating</span> <span class="k">if</span> <span class="n">at</span> <span class="n">gauges</span> <span class="n">are</span> <span class="n">connected</span> <span class="ow">and</span> <span class="n">OK</span>
-    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-            <span class="n">pv</span><span class="p">:</span> <span class="n">VFS_2OO3_MODE</span>
-            <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
-    <span class="s1">&#39;}</span>
-    <span class="n">e2OO3_MODE</span> <span class="p">:</span> <span class="n">E_2OO3_MODE</span><span class="p">;</span>             <span class="o">//</span><span class="mi">2</span><span class="n">oo3</span> <span class="n">mode</span> <span class="n">selector</span> <span class="n">EPICS</span> <span class="n">Command</span>
 
     <span class="p">(</span><span class="o">*</span><span class="n">outputs</span><span class="o">*</span><span class="p">)</span>
     <span class="n">q_e2OO3_MODE</span> <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">E_2OO3_MODE</span><span class="p">;</span>             <span class="o">//</span><span class="mi">2</span><span class="n">oo3</span> <span class="n">mode</span> <span class="n">selector</span>
@@ -11583,10 +11583,10 @@ END_METHOD
     <span class="n">i_xVFS_Open</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xVFS_Closed</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-    <span class="n">pv</span><span class="p">:</span> <span class="n">MPS_FAULT_OK</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">MPS</span> <span class="n">FAULT</span> <span class="p">;</span>
-    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">MPS</span> <span class="n">OK</span> <span class="p">;</span>
-    <span class="n">io</span><span class="p">:</span> <span class="n">i</span> <span class="p">;</span>
+            <span class="n">pv</span><span class="p">:</span> <span class="n">MPS_FAULT_OK</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">MPS</span> <span class="n">FAULT</span> <span class="p">;</span>
+            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">MPS</span> <span class="n">OK</span> <span class="p">;</span>
+            <span class="n">io</span><span class="p">:</span> <span class="n">i</span> <span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">i_xMPS_OK</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;(</span><span class="o">*</span><span class="n">MPS</span> <span class="n">Fault</span> <span class="n">OK</span><span class="p">,</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">when</span> <span class="n">the</span> <span class="n">Valve</span> <span class="ow">is</span> <span class="n">Open</span> <span class="ow">and</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">trigger</span><span class="o">*</span><span class="p">)</span>
     <span class="n">i_eVFS_State</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">E_VGC</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">Interface</span><span class="o">*</span><span class="p">)</span>
@@ -11716,7 +11716,7 @@ END_METHOD
 <span class="n">iq_stValve</span><span class="o">.</span><span class="n">sVetoDeviceName</span> <span class="o">:=</span> <span class="n">Veto_Valve</span><span class="o">.</span><span class="n">sDevName</span><span class="p">;</span>
 
 <span class="p">(</span><span class="o">*</span><span class="mi">2</span><span class="n">oo3</span> <span class="n">mode</span> <span class="n">selector</span><span class="o">*</span><span class="p">)</span>
-<span class="n">q_e2OO3_MODE</span> <span class="o">:=</span> <span class="n">e2OO3_MODE</span><span class="p">;</span>
+<span class="n">q_e2OO3_MODE</span> <span class="o">:=</span> <span class="n">i_e2OO3_MODE</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 </pre></div>
 </div>
