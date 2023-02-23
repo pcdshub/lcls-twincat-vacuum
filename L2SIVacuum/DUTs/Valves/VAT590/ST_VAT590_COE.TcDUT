@@ -35,6 +35,7 @@ STRUCT
 	{attribute 'pytmc' := '
 	pv: GAIN_FACTOR_AD
 	io: io
+	field: PREC 4
 	field: DRVL 0.0001
 	field: DRVH 7.5
     '}

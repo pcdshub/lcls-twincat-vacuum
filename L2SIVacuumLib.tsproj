@@ -351,6 +351,11 @@
 							<Type>UDINT</Type>
 							<InOut>7</InOut>
 						</Var>
+						<Var>
+							<Name>PMPS_GVL.BP_jsonDoc</Name>
+							<Type>SJsonValue</Type>
+							<InOut>7</InOut>
+						</Var>
 					</Vars>
 					<TaskPouOids>
 						<TaskPouOid Prio="16" OTCID="#x08502001"/>
