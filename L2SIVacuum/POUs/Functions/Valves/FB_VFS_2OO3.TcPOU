@@ -1,0 +1,344 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_VFS_2OO3" Id="{49c99ac3-de9e-429f-8ce1-1cbcf3f0f700}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block implements basic functionality for Fast Shutter/Valves*)
+(* NOTE: All 3 gauge cards with fast TTL output need to be installed in the same gauge controller*)
+(* Create a separate virtual PLC for the fast shutter logic, and tie/map this task to the FAST I/O portion of the ethercat bus,
+ so we can scan these I/Os faster than the rest of the vacuum I/Os.
+The Fast shutter was tested with PLC task Cycle Base Time 50us with cycle time 0.050ms.*)
+FUNCTION_BLOCK FB_VFS_2OO3 EXTENDS FB_Valve
+VAR_INPUT
+	i_xPMPS_OK : BOOL; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
+	i_xExt_OK : BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
+	i_sDevName : T_MaxString := 'VFS'; (*Device name for diagnostic*)
+	i_xVeto_Enable : BOOL := FALSE; (*Set to TRUE if there is a Veto Valve to this VFS*)
+END_VAR
+VAR_IN_OUT
+	io_fbFFHWO : FB_HardwareFFOutput;
+END_VAR
+VAR
+	xOPN_OK : BOOL;         //internal variable OK to Open signal
+	xERR_ExtFault : BOOL;   //internal variable External Fault signal
+	xVeto : BOOL;           //internal variable Veto signal
+	xTrigger : BOOL;        //internal trigger signal, output of 2oo3 logic
+	xPress_OK : BOOL;       //internal signal indicating if at gauges are connected and OK
+	//Fault counter triggers
+	rtFault_IG1 : R_TRIG;
+	rtFault_IG2 : R_TRIG;
+	rtFault_IG3 : R_TRIG;
+
+	//PMPS
+	fbFF : FB_FastFault :=(
+        i_DevName := 'VFS',
+        i_Desc := 'Fault occurs when fast valve is not in open state',
+        i_TypeCode := 16#1010);
+
+	rDiffPressAllowed : REAL := 22.5;     //Torr, Default value comes from Vat Valve Manual
+	rDiffPress : REAL;                    //Current pressure
+
+	xFirstPass : BOOL := TRUE;            //Do something on first pass, after that set to FALSE
+
+	rtOPN_SW : R_TRIG;                    //Detect rising endge on i_xOPN_SW input
+	
+	tonDelOK : TON;
+	rtOK : R_TRIG;
+	tonOvrd	: TON;
+	
+	tDelOK : TIME := T#60S;
+	tOvrd : TIME := T#10s;
+	rTrigOverrideOpen : R_TRIG;
+	
+	xClose : BOOL;
+	xOpen : BOOL;
+	CloseTimer : TON;
+	TimDur : TIME := T#20MS;
+	OpenTimer : TON;
+	OpenTimDur : TIME := T#2S;
+	
+	(*Timeouts*)
+	tCLSTimeOutDuration : TIME := T#0.5S;
+	tOPNTimeOutDuration : TIME := T#10S;
+	tOPNtimeout : TON;
+	tCLStimeout : TON;
+	
+
+	(*IO to the valve(s)*)
+	i_xOpnLS	AT%I* : BOOL; //VFS Open limit switch input
+	i_xClsLS	AT%I* : BOOL; //VFS Close limit switch input
+	q_xClose_A	AT%Q* : BOOL; //3x Valve Close output signals (current req.)
+	q_xClose_B	AT%Q* : BOOL; //3x Valve Close output signals (current req.)
+	q_xClose_C	AT%Q* : BOOL; //3x Valve Close output signals (current req.)
+	q_xOPN_DO	AT%Q* : BOOL; //Valve Open output signal
+	(*3x Fast trigger Inputs from CC Gauge controller.
+	  Make sure all tri CC gauge cards are in the same controller*)
+	i_xTriggerIG1 AT%I* : BOOL; //Fast trigger input from CC gauge 1
+	i_xTriggerIG2 AT%I* : BOOL; //Fast trigger input from CC gauge 2	 
+	i_xTriggerIG3 AT%I* : BOOL; //Fast trigger input from CC gauge 3
+	
+	(*VETO Devices*)
+	i_xVetoValveOpenDO AT%I* : BOOL; (*Link to VFS Interface*)
+	i_xVetoValveClosed AT%I* : BOOL; (*Link to VFS Interface*)
+	
+	(*Interface with external system*) 
+	i_e2OO3_MODE       AT%I* : E_2OO3_MODE; (*Link to VFS Interface, 2oo3 mode selector*)
+	i_xPress_OK_IG1    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
+	i_xPress_OK_IG2    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
+	i_xPress_OK_IG3    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
+	i_xOPN_SW          AT%I* : BOOL; (*Link to VFS Interface, external open signal e.g epics*)
+	i_xCLS_SW          AT%I* : BOOL; (*Link to VFS Interface, external close signal e.g epics*)
+	i_xVAC_FAULT_Reset AT%I* : BOOL; (*Link to VFS Interface Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+	i_xOverrideMode    AT%I* : BOOL; (*Link to VFS Interface, To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+	i_xOverrideOpen    AT%I* : BOOL; (*Link to VFS Interface*)
+	q_xTrigger         AT%Q* : BOOL; (*Link to VFS Interface*)
+	q_xVFS_Open        AT%Q* : BOOL; (*Link to VFS Interface*)
+	q_xVFS_Closed      AT%Q* : BOOL; (*Link to VFS Interface*)
+	q_xVAC_FAULT_OK    AT%Q* : BOOL; (*Link to VFS Interface, Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+	q_xMPS_OK          AT%Q* : BOOL; (*Link to VFS Interface, MPS Fault OK, is set when the Valve is Open and there is no trigger*)
+	q_eVFS_State       AT%Q* : E_VGC; (*Link to VFS Interface*)
+	q_nFltCount_IG1    AT%Q* : UINT; (*Link to VFS Interface*)
+	q_nFltCount_IG2    AT%Q* : UINT; (*Link to VFS Interface*)
+	q_nFltCount_IG3    AT%Q* : UINT; (*Link to VFS Interface*)
+END_VAR
+VAR PERSISTENT
+	nFaultCounter_IG1 : UINT;  //Fault counter for IG1
+	nFaultCounter_IG2 : UINT;  //Fault counter for IG2
+	nFaultCounter_IG3 : UINT;  //Fault counter for IG3
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*Fast Shutter/Valve Function Block*)
+(*M.Ghaly Feb 2019*)
+(*J. Govednik Jan 2022 Adding 2OO3 logic*)
+
+(* Fast Shutters do not function as complete isolation valves, but are intended to rapidly limit conductance 
+between vacuum regions.  They should be installed in conjunction with isolation gate valves.  The conductance 
+of the fast shutter in the closed state may be sufficiently low as to create an isolated vacuum region.  
+Thus, at least a pirani gauge, that can measure a pressure down to 1x10-4 Torr, needs to be installed between
+the shutter and the isolation gate valve.
+In the case where a gauge is not installed, the neigboring gate Valves should not be opened unless the shutter 
+is Open. 
+*)
+
+(*On first PLC pass, put valve into vented state, which implies a closed valve*)
+IF xFirstPass THEN
+	fbFF.i_DevName := i_sDevName;
+	xFirstPass := FALSE;
+END_IF
+
+(*set Veto bit*)
+IF (i_xVeto_Enable) THEN
+	xVeto := (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
+	ELSE xVeto := FALSE;
+END_IF
+
+(*User will be able to select gauge channel or 2oo3 function*)
+CASE i_e2OO3_MODE OF
+	E_2OO3_MODE.MODE_2OO3:
+		(*2oo3 logic*)
+		//First let's verify that at least 2 gauges are connected
+		xPress_OK := (i_xPress_OK_IG1 AND i_xPress_OK_IG2) OR
+             		 (i_xPress_OK_IG1 AND i_xPress_OK_IG3) OR
+             		 (i_xPress_OK_IG2 AND i_xPress_OK_IG3);
+				  
+		//Each trigger input validated with Press OK bit which indicates if the gauge is connected or disconnected
+		IF xPress_OK THEN
+			xTrigger := ((i_xTriggerIG1 OR NOT i_xPress_OK_IG1) AND (i_xTriggerIG2 OR NOT i_xPress_OK_IG2)) OR
+                		((i_xTriggerIG1 OR NOT i_xPress_OK_IG1) AND (i_xTriggerIG3 OR NOT i_xPress_OK_IG3)) OR
+                		((i_xTriggerIG2 OR NOT i_xPress_OK_IG2) AND (i_xTriggerIG3 OR NOT i_xPress_OK_IG3));
+			(*			
+			xTrigger := ((i_xTriggerIG1 AND i_xPress_OK_IG1) AND (i_xTriggerIG2 AND i_xPress_OK_IG2)) OR
+                		((i_xTriggerIG1 AND i_xPress_OK_IG1) AND (i_xTriggerIG3 AND i_xPress_OK_IG3)) OR
+                		((i_xTriggerIG2 AND i_xPress_OK_IG2) AND (i_xTriggerIG3 AND i_xPress_OK_IG3));
+			*)
+		ELSE
+			xTrigger := TRUE;
+		END_IF
+	E_2OO3_MODE.IG1:
+		xPress_OK := i_xPress_OK_IG1;
+		xTrigger := i_xTriggerIG1 OR NOT i_xPress_OK_IG1;
+	E_2OO3_MODE.IG2:
+		xPress_OK := i_xPress_OK_IG2;
+		xTrigger := i_xTriggerIG2 OR NOT i_xPress_OK_IG2;
+	E_2OO3_MODE.IG3:
+		xPress_OK := i_xPress_OK_IG3;
+		xTrigger := i_xTriggerIG3 OR NOT i_xPress_OK_IG3;
+END_CASE;
+
+//xVeto:= i_xVeto AND (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
+(*Input Trigger to close the Fast Shutter*)
+(*Neighboring Valves Should also be triggered to Close*)
+//IF ((xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK))  AND NOT (xVeto) AND NOT (tonOvrd.Q AND i_xOverrideMode) THEN
+IF ((xTrigger) OR NOT (i_xExt_OK))  AND NOT (xVeto) AND NOT (tonOvrd.Q AND i_xOverrideMode) THEN 
+	xClose := TRUE;
+	xOpen := FALSE;
+	q_xVAC_FAULT_OK := FALSE;
+	xERR_ExtFault := TRUE;
+	i_xCLS_SW := TRUE;
+	q_xOPN_DO := FALSE;
+	//i_xOPN_SW :=FALSE;
+ELSIF (i_xCLS_SW) THEN
+	xClose := TRUE;
+	xOpen := FALSE;
+	q_xVAC_FAULT_OK:= FALSE;
+	i_xCLS_SW := TRUE;
+	q_xOPN_DO := FALSE;
+	//i_xOPN_SW :=FALSE;
+ELSIF ((rtOPN_SW.Q) AND xOPN_OK AND NOT i_xOpnLS) OR (tonOvrd.Q AND i_xOverrideMode) THEN
+	q_xOPN_DO := TRUE;
+END_IF
+
+//Hold Valve close signals to TRUE until limit swith is hit
+IF (xClose) AND (NOT i_xClsLS) THEN
+	q_xClose_A := TRUE;
+	q_xClose_B := TRUE;
+	q_xClose_C := TRUE;
+END_IF
+
+//Set Valve close signals to FALSE when close timer expires or close limit switch is closed
+IF(CloseTimer.Q) OR (i_xClsLS) THEN
+	q_xClose_A := FALSE;
+	q_xClose_B := FALSE;
+	q_xClose_C := FALSE;
+	xClose := FALSE;
+	//i_xOPN_SW := FALSE;
+END_IF
+
+//Set Valve open signal to FALSE when open timer expires or open limit switch is closed
+IF(OpenTimer.Q) AND (i_xOpnLS) THEN
+	q_xOPN_DO :=  FALSE;
+	i_xOPN_SW := FALSE;
+	xOpen := FALSE;
+END_IF
+
+(*Neighboring Valves Interlock bit is reset When the Vacuum event error is reset and the Shutter is opened*)
+IF ((NOT xTrigger) OR xVeto) AND (NOT xERR_ExtFault) AND i_xOpnLS THEN
+	q_xVAC_FAULT_OK := TRUE;
+END_IF
+
+(*OPN OK evaluation bit*)
+xOPN_OK := (NOT xERR_ExtFault) AND (NOT xTrigger OR xVeto) ;
+
+(*When the valve  is open MPS is OK*)
+//q_xMPS_OK := i_xOpnLS AND ((NOT xTrigger AND i_xPress_OK) OR xVeto)  AND NOT(i_xCLS_SW);
+q_xMPS_OK := i_xOpnLS AND (NOT xTrigger OR xVeto) AND NOT(i_xCLS_SW);
+
+
+(*Override logic*)
+(*Goal: give ability to override, but do so in a way that people won't forget it.
+Solution: Override only after ten seconds of override, protect against blips,
+when the valve permission goes true for more than ten seconds consistently, remove override
+*)
+rTrigOverrideOpen (CLK := i_xOverrideOpen); // Not used
+
+tonDelOK (IN := xOPN_OK, PT := tDelOK);
+rtOK (CLK := tonDelOK.Q);
+
+IF rtOK.Q AND i_xOverrideOpen THEN 
+	i_xOverrideOpen := FALSE;
+	//if (i_xOpnLS) AND (i_xOverrideMode) THEN i_xOPN_SW := TRUE; END_IF //for seamless transition   
+    //Log
+    fbLogger(sMsg := 'Override expired', eSevr := TcEventSeverity.Warning);
+END_IF
+
+//Override timer
+tonOvrd(IN := i_xOverrideOpen, PT := tOvrd);
+
+
+//Assign valve state
+IF (xTrigger) THEN 
+	q_eVFS_State := E_VGC.Triggered;
+ELSIF xERR_ExtFault THEN 
+	q_eVFS_State :=  E_VGC.Vac_Fault;
+ELSIF NOT i_xClsLS AND tCLStimeout.Q THEN 
+	q_eVFS_State :=  E_VGC.Cls_Timeout;
+ELSIF NOT i_xOpnLS AND tOPNtimeout.Q THEN 
+	q_eVFS_State :=  E_VGC.Opn_Timeout;
+ELSE 
+	q_eVFS_State :=  E_VGC.At_Vac;
+END_IF
+
+(*Timers*)
+CloseTimer (IN := xClose, PT := TimDur);
+OpenTimer (IN := i_xOpnLS, PT := OpenTimDur);
+tOPNtimeout (IN := q_xOPN_DO, PT := tOPNTimeOutDuration);
+tCLStimeout (IN := q_xClose_A, PT := tCLSTimeOutDuration);
+
+//Detecting rising edge for i_xOPN_SW (epics command)
+rtOPN_SW (CLK := i_xOPN_SW);
+
+(*Gauge fault counters*)
+//IG1
+rtFault_IG1(CLK := i_xTriggerIG1 AND NOT xTrigger);
+IF rtFault_IG1.Q THEN
+	nFaultCounter_IG1 := nFaultCounter_IG1 + 1;
+END_IF
+//IG2
+rtFault_IG2(CLK := i_xTriggerIG2 AND NOT xTrigger);
+IF rtFault_IG2.Q THEN
+	nFaultCounter_IG2 := nFaultCounter_IG2 + 1;
+END_IF
+//IG3
+rtFault_IG3(CLK := i_xTriggerIG3 AND NOT xTrigger);
+IF rtFault_IG3.Q THEN
+	nFaultCounter_IG3 := nFaultCounter_IG3 + 1;
+END_IF
+
+(*Soft IO Mapping*)
+IO();
+
+(*Alarm reset *)
+ACT_ResetAlarms();
+
+(*FAST FAULT*)
+fbFF(i_xOK := q_xMPS_OK,
+    i_xReset := i_xVAC_FAULT_Reset,
+	i_xAutoReset := TRUE,
+    io_fbFFHWO := io_fbFFHWO);
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_ResetAlarms" Id="{5af72845-bf6c-4f4c-a31f-c7801298d670}">
+      <Implementation>
+        <ST><![CDATA[//iq_stValve.xERR_DifPres R= i_xResetFault;
+
+//iq_stValve.bErrorPresent R= i_xResetFault;
+
+IF (NOT xTrigger AND xPress_OK AND i_xVAC_FAULT_Reset) OR xVeto THEN
+	xERR_ExtFault := FALSE;
+	i_xVAC_FAULT_Reset := FALSE;
+END_IF
+
+
+IF (xTrigger OR NOT xPress_OK) AND NOT xVeto THEN
+	i_xVAC_FAULT_Reset := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="IO" Id="{527711f9-1a29-4900-952d-18824f0281c6}">
+      <Implementation>
+        <ST><![CDATA[q_xTrigger := xTrigger;
+q_xVFS_Closed := i_xClsLS;
+q_xVFS_Open := i_xOpnLS;
+
+q_nFltCount_IG1 := nFaultCounter_IG1;
+q_nFltCount_IG2 := nFaultCounter_IG2;
+q_nFltCount_IG3 := nFaultCounter_IG3;]]></ST>
+      </Implementation>
+    </Action>
+    <LineIds Name="FB_VFS_2OO3">
+      <LineId Id="875" Count="191" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VFS_2OO3.ACT_ResetAlarms">
+      <LineId Id="2" Count="11" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VFS_2OO3.IO">
+      <LineId Id="2" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

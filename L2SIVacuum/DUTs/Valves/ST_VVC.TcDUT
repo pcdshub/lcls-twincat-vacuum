@@ -16,7 +16,7 @@ STRUCT
 	{attribute 'pytmc' := '
 	pv:FORCE_OPN;
 	field: ZNAM FALSE;
-	field: ONAM OPEN;
+	field: ONAM FORCE OPEN;
 	io: io;
 	'}
 	xOvrdOpn	:	BOOL;
