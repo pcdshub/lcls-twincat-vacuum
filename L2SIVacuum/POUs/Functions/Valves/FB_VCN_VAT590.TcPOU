@@ -83,6 +83,9 @@ VAR
 	o_nRawPressureSP     AT %Q* : DINT;               // Pressure setpoint
 	o_eCtrlModeSP        AT %Q* : E_ControlModeSP;    // Valve control mode setpoint
 	o_stGenCtrlSP        AT %Q* : ST_GeneralControlSP;// General Control setpoint
+	(*Ethercat Interface Status Check*)
+	(*Link this to your VAT590 WcState variable under WcState*)
+	i_bValveEthCatStatus AT %I* : BOOL := TRUE;
 END_VAR
 VAR PERSISTENT
     fUpperLimit	: REAL;                // Max position in % that can be requested
@@ -438,7 +441,8 @@ stVcnVat590.stValveStatus.bPositionSPOutOfRange := i_stExtnWarnings.Bit6Position
 stVcnVat590.stValveStatus.bCtrlSPOutOfRange := i_stExtnWarnings.Bit10CtrlSPOutOfRange;
 stVcnVat590.stValveStatus.bGeneralCtrlSPOutOfRange := i_stExtnWarnings.Bit11GeneralCtrlSPOutOfRange;
 stVcnVat590.stValveStatus.bProcDataSettingsNotvalid := i_stExtnWarnings.Bit12ProcDataSettingsNotvalid;
-]]></ST>
+//Mapping WcState - Valve Ethercat Status
+stVcnVat590.bValveEthCatStatus := i_bValveEthCatStatus;]]></ST>
       </Implementation>
     </Action>
     <Action Name="SetCoeInterface" Id="{8fba1572-d062-4a30-8a85-24af9871d9c6}">

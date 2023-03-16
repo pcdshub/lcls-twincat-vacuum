@@ -113,6 +113,15 @@ STRUCT
 	io: io
 	'}
 	bResetCoeError : BOOL; //Reset Coe Interface Error
+	{attribute 'pytmc' := '
+	pv: ETHCAT_COMM_STATUS
+	field: ZNAM OK
+	field: ONAM ERROR
+	field: ZSV NO_ALARM
+	field: OSV MAJOR
+	io: i
+	'}
+	bValveEthCatStatus : BOOL; //Status of the Ethercat Communication with device
 END_STRUCT
 END_TYPE
 ]]></Declaration>
