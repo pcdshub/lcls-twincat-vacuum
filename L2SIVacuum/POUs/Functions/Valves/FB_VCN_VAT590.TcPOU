@@ -56,6 +56,8 @@ VAR
 	
 	(*CoE Interface*)
 	(*Link this to your VAT590 reference variables under InfoData.*)
+	//Connect i_stVat590PlcDriveRef.aNetId to the VAT590 Valve InfoData^AdsAddr^netId
+	//Connect i_stVat590PlcDriveRef.nSlaveAddr to the VAT590 Valve InfoData^AdsAddr^port
 	i_stVat590PlcDriveRef AT %I*: ST_PlcDriveRef;
 	stVat590DriveRef : ST_DriveRef;
 
@@ -113,8 +115,15 @@ SetCoeInterface();
 (*Read from EPICS and Valve Ethercat interface*)
 ReadFromInput();
 
-(*Checking which Control mode is selected*)
-IF bExtIlkOK THEN
+(*Checking which Control mode is selected and if valve's communication is OK*)
+IF stVcnVat590.bValveEthCatStatus THEN //If valve is not connected or something is wrong with EtherCAT communication PLC will set this bit to 1
+	fReqPos := 0; //set req. position to 0
+	eValveModeSP := E_ControlModeSP.CloseValve; //set control mode of the valve to CLOSE VALVE 
+	stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve; //EPICS command hold in CloseValve state
+	stVcnVat590.stValveStatus.eControlMode := E_ControlMode.FatalError; //override the readback from the valve because when valve is disconnected the value remains
+	stVcnVat590.nRawPosition := 0; //override the readback from the valve because when valve is disconnected the value remains
+	stVcnVat590.nRawPressure := 0; //override the readback from the valve because when valve is disconnected the value remains
+ELSIF bExtIlkOK THEN
 	CASE stVcnVat590.eValveControl OF
 		E_VCN_VAT590.OpenValve:
 			eValveModeSP := E_ControlModeSP.OpenValve;
@@ -165,7 +174,7 @@ CASE stVcnVat590.ePressureSensor OF
 		fCalcPresSP := fSlope * LOG(fReqPres/fPresLowLim) + fVbase;
 		fCalcPresSP := LIMIT(cPresSPLowLim, fCalcPresSP, cPresSPUpLim); //The requested pressure SP should remain within this range
 		//Calculate pressure readback in Torr units
-		stVcnVat590.fPressure := LREAL_TO_REAL(EXPT(10,((DINT_TO_REAL(i_nRawPressure)-fVbase)/fSlope + LOG(fPresLowLim))));
+		stVcnVat590.fPressure := LREAL_TO_REAL(EXPT(10,((DINT_TO_REAL(stVcnVat590.nRawPressure)-fVbase)/fSlope + LOG(fPresLowLim))));
 	ELSE
 		fCalcPresSP := 0;
 		stVcnVat590.fPressure := 0;
@@ -385,7 +394,6 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEvent
 END_CASE
 
 ftCoeReadBusy(CLK:=fbCoeRead.bBusy);
-
 IF ftCoeReadBusy.Q THEN
 	fbCoeRead.bExecute := FALSE;
 	IF NOT fbCoeRead.bError THEN
