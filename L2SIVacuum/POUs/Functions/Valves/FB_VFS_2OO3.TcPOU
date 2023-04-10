@@ -26,6 +26,8 @@ VAR
 	rtFault_IG1 : R_TRIG;
 	rtFault_IG2 : R_TRIG;
 	rtFault_IG3 : R_TRIG;
+	//Reset Fault counter trigger
+	rtResetFaultCounter : R_TRIG;
 
 	//PMPS
 	fbFF : FB_FastFault :=(
@@ -81,6 +83,7 @@ VAR
 	
 	(*Interface with external system*) 
 	i_e2OO3_MODE       AT%I* : E_2OO3_MODE; (*Link to VFS Interface, 2oo3 mode selector*)
+	i_ResetFaultCounter AT%I* : BOOL; (*Link to VFS Interface, FaultCounter Reset*)
 	i_xPress_OK_IG1    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
 	i_xPress_OK_IG2    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
 	i_xPress_OK_IG3    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
@@ -267,6 +270,12 @@ tCLStimeout (IN := q_xClose_A, PT := tCLSTimeOutDuration);
 rtOPN_SW (CLK := i_xOPN_SW);
 
 (*Gauge fault counters*)
+rtResetFaultCounter(CLK := i_ResetFaultCounter);
+IF rtResetFaultCounter.Q THEN
+	nFaultCounter_IG1 := 0;
+	nFaultCounter_IG2 := 0;
+	nFaultCounter_IG3 := 0;
+END_IF
 //IG1
 rtFault_IG1(CLK := i_xTriggerIG1 AND NOT xTrigger);
 IF rtFault_IG1.Q THEN
@@ -328,17 +337,5 @@ q_nFltCount_IG2 := nFaultCounter_IG2;
 q_nFltCount_IG3 := nFaultCounter_IG3;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_VFS_2OO3">
-      <LineId Id="875" Count="191" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VFS_2OO3.ACT_ResetAlarms">
-      <LineId Id="2" Count="11" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VFS_2OO3.IO">
-      <LineId Id="2" Count="5" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
