@@ -7,6 +7,7 @@ lcls-twincat-vacuum
 
     L2SIVacuumLib_pragmas
     L2SIVacuumLib_nc
+    L2SIVacuumLib_ethercat
     L2SIVacuumLib_boxes
     L2SIVacuumLib_links
 

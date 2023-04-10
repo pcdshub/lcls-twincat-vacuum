@@ -6,7 +6,7 @@ Pragmas
     :header: PLC Name, Total Pragmas, Errors
     :align: center
 
-    :ref:`L2SIVacuum <L2SIVacuum_overview_pragmas>`, 359, 0
+    :ref:`L2SIVacuum <L2SIVacuum_overview_pragmas>`, 385, 0
 
 
 .. _L2SIVacuum_overview_pragmas:
@@ -15,7 +15,7 @@ Pragmas
 L2SIVacuum
 ^^^^^^^^^^
 
-Total pragmas found: 359
+Total pragmas found: 385
 Total linter errors: 0
 
 

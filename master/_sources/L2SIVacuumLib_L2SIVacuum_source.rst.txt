@@ -177,6 +177,25 @@ E_VAT590_AccessMode
 
 
 
+E_VAT590_PID_CTRL
+^^^^^^^^^^^^^^^^^
+
+::
+
+    {attribute 'qualified_only'}
+    {attribute 'strict'}
+    TYPE E_VAT590_PID_CTRL :
+    (
+    	ADAPTIVE_DS := 0,
+    	FIXED_1 := 1,
+    	FIXED_2 := 2,
+    	SOFT_PUMP := 3
+    ) USINT := FIXED_1;
+    END_TYPE
+
+
+
+
 E_VAT590_PressureSensor
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -378,6 +397,21 @@ ST_AgilentPTM
 
 Related:
     * `ST_PTM`_
+
+
+ST_CoEIndSub
+^^^^^^^^^^^^
+
+::
+
+    TYPE ST_CoEIndSub :
+    STRUCT
+    	nIndex : WORD;
+    	nSubIndex : BYTE;
+    END_STRUCT
+    END_TYPE
+
+
 
 
 ST_EbaraDryPump
@@ -1502,6 +1536,155 @@ Related:
     * `FB_VGC`_
 
 
+ST_VAT590_COE
+^^^^^^^^^^^^^
+
+::
+
+    TYPE ST_VAT590_COE :
+    STRUCT
+    	{attribute 'pytmc' := '
+    	pv: PID_CTRL
+    	io: io
+    	'}
+    	ePIDCtrl: E_VAT590_PID_CTRL;
+    	(*Adaptive Downstream Parameters*)
+    	{attribute 'pytmc' := '
+    	pv: SENS_DELAY_AD
+    	io: io
+    	field: EGU "s"
+    	field: DRVL 0.0
+    	field: DRVH 1.0
+        '}
+    	fSensorDelay_AD : REAL;
+    	{attribute 'pytmc' := '
+    	pv: RAMP_TIME_AD
+    	io: io
+    	field: EGU "s"
+    	field: DRVL 0.0
+    	field: DRVH 1000000.0
+        '}
+    	fRampTime_AD : REAL;
+    	{attribute 'pytmc' := '
+    	pv: RAMP_MODE_AD
+    	io: io
+    	field: ZNAM CONST_TIME
+    	field: ONAM CONST_SLOPE
+        '}
+    	bRampMode_AD : BOOL;
+    	{attribute 'pytmc' := '
+    	pv: GAIN_FACTOR_AD
+    	io: io
+    	field: PREC 4
+    	field: DRVL 0.0001
+    	field: DRVH 7.5
+        '}
+    	fGainFactor_AD : REAL;
+    	(*Fixed 1 Parameters*)
+    	{attribute 'pytmc' := '
+    	pv: RAMP_TIME_FIX1
+    	io: io
+    	field: EGU "s"
+    	field: DRVL 0.0
+    	field: DRVH 1000000.0
+        '}
+    	fRampTime_FIX1 : REAL;
+    	{attribute 'pytmc' := '
+    	pv: RAMP_MODE_FIX1
+    	io: io
+    	field: ZNAM CONST_TIME
+    	field: ONAM CONST_SLOPE
+        '}
+    	bRampMode_FIX1 : BOOL;
+    	{attribute 'pytmc' := '
+    	pv: CTRL_DIR_FIX1
+    	io: io
+    	field: ZNAM DOWNSTREAM
+    	field: ONAM UPSTREAM
+        '}
+    	bCtrlDir_FIX1 : BOOL;
+    	{attribute 'pytmc' := '
+    	pv: PGAIN_FIX1
+    	io: io
+    	field: DRVL 0.001
+    	field: DRVH 100.0
+        '}
+    	fPGain_FIX1 : REAL;
+    	{attribute 'pytmc' := '
+    	pv: IGAIN_FIX1
+    	io: io
+    	field: DRVL 0.0
+    	field: DRVH 100.0
+        '}
+    	fIGain_FIX1 : REAL;
+    	(*Fixed 2 Parameters*)
+    	{attribute 'pytmc' := '
+    	pv: RAMP_TIME_FIX2
+    	io: io
+    	field: EGU "s"
+    	field: DRVL 0.0
+    	field: DRVH 1000000.0
+        '}
+    	fRampTime_FIX2 : REAL;
+    	{attribute 'pytmc' := '
+    	pv: RAMP_MODE_FIX2
+    	io: io
+    	field: ZNAM CONST_TIME
+    	field: ONAM CONST_SLOPE
+        '}
+    	bRampMode_FIX2 : BOOL;
+    	{attribute 'pytmc' := '
+    	pv: CTRL_DIR_FIX2
+    	io: io
+    	field: ZNAM DOWNSTREAM
+    	field: ONAM UPSTREAM
+        '}
+    	bCtrlDir_FIX2 : BOOL;
+    	{attribute 'pytmc' := '
+    	pv: PGAIN_FIX2
+    	io: io
+    	field: DRVL 0.001
+    	field: DRVH 100.0
+        '}
+    	fPGain_FIX2 : REAL;
+    	{attribute 'pytmc' := '
+    	pv: IGAIN_FIX2
+    	io: io
+    	field: DRVL 0.0
+    	field: DRVH 100.0
+        '}
+    	fIGain_FIX2 : REAL;
+    	(*Soft Pump Parameters*)
+    	{attribute 'pytmc' := '
+    	pv: RAMP_TIME_SP
+    	io: io
+    	field: EGU "s"
+    	field: DRVL 0.0
+    	field: DRVH 1000000.0
+        '}
+    	fRampTime_SP : REAL;
+    	{attribute 'pytmc' := '
+    	pv: RAMP_MODE_SP
+    	io: io
+    	field: ZNAM CONST_TIME
+    	field: ONAM CONST_SLOPE
+        '}
+    	bRampMode_SP : BOOL;
+    	{attribute 'pytmc' := '
+    	pv: PGAIN_SP
+    	io: io
+    	field: DRVL 0.001
+    	field: DRVH 100.0
+        '}
+    	fPGain_SP : REAL;
+    END_STRUCT
+    END_TYPE
+
+
+Related:
+    * `E_VAT590_PID_CTRL`_
+
+
 ST_VAT590_STATUS
 ^^^^^^^^^^^^^^^^
 
@@ -1523,8 +1706,8 @@ ST_VAT590_STATUS
     	{attribute 'pytmc' := '
     		pv: GEN_STATUS:ECAT_DATA_VALID
     		io: i
-    		field: ZNAM NOT_OK
-    		field: ONAM OK
+    		field: ZNAM NOT_VALID
+    		field: ONAM VALID
     		field: ZSV MAJOR
     		field: OSV NO_ALARM
     	'}
@@ -1541,8 +1724,8 @@ ST_VAT590_STATUS
     	{attribute 'pytmc' := '
     		pv: GEN_STATUS:ECAT_RxBIT
     		io: i
-    		field: ZNAM INVERTED
-    		field: ONAM NOT_INVERTED
+    		field: ZNAM NOT_INVERTED
+    		field: ONAM INVERTED
     		field: ZSV NO_ALARM
     		field: OSV NO_ALARM
     	'}
@@ -1559,8 +1742,8 @@ ST_VAT590_STATUS
     	{attribute 'pytmc' := '
     		pv: GEN_STATUS:PRES_SP_REACHED
     		io: i
-    		field: ZNAM NOT_OK
-    		field: ONAM OK
+    		field: ZNAM NOT_AT_SP
+    		field: ONAM AT_SP
     		field: ZSV NO_ALARM
     		field: OSV NO_ALARM
     	'}
@@ -1568,8 +1751,8 @@ ST_VAT590_STATUS
     	{attribute 'pytmc' := '
     		pv: GEN_STATUS:WARN_STATUS
     		io: i
-    		field: ZNAM OK
-    		field: ONAM NOT_OK
+    		field: ZNAM NOT_ACTIVE
+    		field: ONAM ACTIVE
     		field: ZSV NO_ALARM
     		field: OSV MAJOR
     	'}
@@ -1584,7 +1767,7 @@ ST_VAT590_STATUS
     		pv: GEN_WARN:SERVICE_REQ
     		io: i
     		field: ZNAM OK
-    		field: ONAM NOT_OK
+    		field: ONAM SERVICE
     		field: ZSV NO_ALARM
     		field: OSV MAJOR
     	'}
@@ -1602,7 +1785,7 @@ ST_VAT590_STATUS
     		pv: GEN_WARN:ADC_UNIT_STATUS
     		io: i
     		field: ZNAM OK
-    		field: ONAM FAULTED
+    		field: ONAM FAULT
     		field: ZSV NO_ALARM
     		field: OSV MAJOR
     	'}
@@ -1611,8 +1794,8 @@ ST_VAT590_STATUS
     	{attribute 'pytmc' := '
     		pv: EXT_WARN:REM_NOT_POSSIBLE
     		io: i
-    		field: ZNAM OK
-    		field: ONAM NOT_OK
+    		field: ZNAM ENABLED
+    		field: ONAM DISABLED
     		field: ZSV NO_ALARM
     		field: OSV MINOR
     	'}
@@ -1620,8 +1803,8 @@ ST_VAT590_STATUS
     	{attribute 'pytmc' := '
     		pv: EXT_WARN:CTRL_SP_NOT_ALLOWED
     		io: i
-    		field: ZNAM OK
-    		field: ONAM NOT_OK
+    		field: ZNAM ENABLED
+    		field: ONAM DISABLED
     		field: ZSV NO_ALARM
     		field: OSV MINOR
     	'}
@@ -1648,7 +1831,7 @@ ST_VAT590_STATUS
     		pv: EXT_WARN:PRES_SP_OOR
     		io: i
     		field: ZNAM OK
-    		field: ONAM NOT_OK
+    		field: ONAM FAULT
     		field: ZSV NO_ALARM
     		field: OSV MAJOR
     	'}
@@ -1657,7 +1840,7 @@ ST_VAT590_STATUS
     		pv: EXT_WARN:POS_SP_OOR
     		io: i
     		field: ZNAM OK
-    		field: ONAM NOT_OK
+    		field: ONAM FAULT
     		field: ZSV NO_ALARM
     		field: OSV MAJOR
     	'}
@@ -1666,7 +1849,7 @@ ST_VAT590_STATUS
     		pv: EXT_WARN:CTRL_SP_OOR
     		io: i
     		field: ZNAM OK
-    		field: ONAM NOT_OK
+    		field: ONAM FAULT
     		field: ZSV NO_ALARM
     		field: OSV MAJOR
     	'}
@@ -1675,7 +1858,7 @@ ST_VAT590_STATUS
     		pv: EXT_WARN:GENCTRL_SP_OOR
     		io: i
     		field: ZNAM OK
-    		field: ONAM NOT_OK
+    		field: ONAM FAULT
     		field: ZSV NO_ALARM
     		field: OSV MAJOR
     	'}
@@ -1684,7 +1867,7 @@ ST_VAT590_STATUS
     		pv: EXT_WARN:PROC_DATA_NOT_VALID
     		io: i
     		field: ZNAM OK
-    		field: ONAM NOT_OK
+    		field: ONAM FAULT
     		field: ZSV NO_ALARM
     		field: OSV MAJOR
     	'}
@@ -1846,17 +2029,17 @@ ST_VCN_VAT590
     	(* VCN - Valve Controlled Needle
     	Used for VAT590 needle valves *)
     	{attribute 'pytmc' := '
-        pv: POS_RAW
+    	pv: POS_RAW
     	io: i
         '}
     	nRawPosition : DINT; //Position readback
     	{attribute 'pytmc' := '
-        pv: PRES_RAW
+    	pv: PRES_RAW
     	io: i
         '}
     	nRawPressure : DINT; //Pressure readback
     	{attribute 'pytmc' := '
-        pv: PRES_TORR
+    	pv: PRES_TORR
     	field: EGU "TORR"
     	io: i
         '}
@@ -1872,32 +2055,32 @@ ST_VCN_VAT590
     	'}
     	nPressureSP : DINT; //Pressure setpoint readback
     	{attribute 'pytmc' := '
-        pv: ILK_OK
+    	pv: ILK_OK
     	field: ZNAM NOT OK
     	field: ONAM OK
     	field: ZSV MAJOR
     	field: OSV NO_ALARM
     	io: i
         '}
-    	bIlkOK : BOOL := FALSE; // Interlock Bit status
+    	bIlkOK : BOOL := FALSE; //Interlock Bit status
     	{attribute 'pytmc' := '
-        pv: POS_LIMIT
+    	pv: POS_LIMIT
     	io: io
     	autosave_pass1: VAL DESC
         '}
-    	fPosSetLimit	: REAL := 100; // Percentage Upper limit on valve open
+    	fPosSetLimit	: REAL := 100; //Percentage Upper limit on valve open
     	{attribute 'pytmc' := '
-        pv: PRES_SET_LIMIT
+    	pv: PRES_SET_LIMIT
     	io: io
     	autosave_pass1: VAL DESC
         '}
-    	fPresSetLimit	: REAL := 1E-2; // Upper limit for pressure control 	
+    	fPresSetLimit	: REAL := 1E-2; //Upper limit for pressure control 	
     	{attribute 'pytmc' := '
-        pv: PRES_RDBK_LIMIT
+    	pv: PRES_RDBK_LIMIT
     	io: io
     	autosave_pass1: VAL DESC
         '}	
-    	fPresRdbkLimit : REAL := 1E-4;  //upper limit for pressure reading before valve close
+    	fPresRdbkLimit : REAL := 1E-4;  //Upper limit for pressure reading before valve close
     	{attribute 'pytmc' := '
     	pv: POS_REQ
     	field: DRVL 0.0
@@ -1917,27 +2100,51 @@ ST_VCN_VAT590
     	'}
     	eValveControl : E_VCN_VAT590; //Valve control mode
     	{attribute 'pytmc' := '
-        pv: 
+    	pv: 
     	'}
     	stValveStatus : ST_VAT590_STATUS; //All Valve status readbacks
     	{attribute 'pytmc' :=  ' 
     	pv: PRES_SENS
     	io: io
     	'}
-    	ePressureSensor : E_VAT590_PressureSensor; // Select pressure sensor
+    	ePressureSensor : E_VAT590_PressureSensor; //Select pressure sensor
     	{attribute 'pytmc' :=  ' 
     	pv: REM_CTRL
-    	io: o
+    	io: io
     	'}
-    	eRemoteControl : E_VAT590_AccessMode; // Select remote control mode
+    	eRemoteControl : E_VAT590_AccessMode; //Select remote control mode
     	{attribute 'pytmc' := '
     	pv: ZERO
-    	field: ZNAM NO_OPERATION
-    	field: ONAM ZERO
-    	io: o
+    	io: io
     	'}
-    	bZero : BOOL; // Activate Zero function bit
-
+    	bZero : BOOL; //Activate Zero function bit
+    	{attribute 'pytmc' := '
+    	pv: COE_PARAM
+    	'}
+    	stCoeParameters : ST_VAT590_COE; //Coe Parameters
+    	{attribute 'pytmc' := '
+    	pv: COE_ERROR
+    	field: ZNAM OK
+    	field: ONAM ERROR
+    	field: ZSV NO_ALARM
+    	field: OSV MINOR
+    	io: i
+    	'}
+    	bCoeError : BOOL; //Coe Interface Error
+    	{attribute 'pytmc' := '
+    	pv: COE_RESET
+    	io: io
+    	'}
+    	bResetCoeError : BOOL; //Reset Coe Interface Error
+    	{attribute 'pytmc' := '
+    	pv: ETHCAT_COMM_STATUS
+    	field: ZNAM OK
+    	field: ONAM ERROR
+    	field: ZSV NO_ALARM
+    	field: OSV MAJOR
+    	io: i
+    	'}
+    	bValveEthCatStatus : BOOL; //Status of the Ethercat Communication with device
     END_STRUCT
     END_TYPE
 
@@ -1946,6 +2153,7 @@ Related:
     * `E_VAT590_AccessMode`_
     * `E_VAT590_PressureSensor`_
     * `E_VCN_VAT590`_
+    * `ST_VAT590_COE`_
     * `ST_VAT590_STATUS`_
 
 
@@ -2530,11 +2738,12 @@ Global_Version
 ::
 
     {attribute 'TcGenerated'}
+    {attribute 'no-analysis'}
+    {attribute 'linkalways'}
     // This function has been automatically generated from the project information.
     VAR_GLOBAL CONSTANT
-        {attribute 'const_non_replaced'}
-        {attribute 'linkalways'}
-        stLibVersion_LCLS_Vacuum : ST_LibVersion := (iMajor := 2, iMinor := 3, iBuild := 1, iRevision := 0, sVersion := '2.3.1');
+    	{attribute 'const_non_replaced'}
+    	stLibVersion_LCLS_Vacuum : ST_LibVersion := (iMajor := 0, iMinor := 0, iBuild := 0, iRevision := 0, sVersion := '0.0.0');
     END_VAR
 
 
@@ -6936,6 +7145,265 @@ Related:
     * `ST_VG`_
 
 
+FB_MX7M
+^^^^^^^
+
+::
+
+    (* This function is for the Cold Cathode MX7M from Televac. *)
+    (*This function provides ILK and Set Point Protection for the Cold Cathode*)
+    FUNCTION_BLOCK FB_MX7M EXTENDS FB_GaugeBase
+    VAR_IN_OUT
+    		
+    END_VAR
+    VAR_INPUT
+    	PG : ST_VG;
+    	tRecoverDelay : TIME := T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
+    END_VAR
+    VAR_OUTPUT
+        {attribute 'pytmc' := '
+        pv: 
+    	'}
+    	IG : ST_VG;
+    END_VAR
+    VAR
+    	rV : REAL; //Calculated raw voltage from ADC on analog input
+    	rPress : REAL; //Calculated pressure
+    	tGaugeTurnOnTmr : TON;
+    	iTermBits : UINT := 30518 ; //The terminal's maximum value in bits
+
+    	(*IOs to be linked*)
+    	//Controls and I/Os
+    	i_iPRESS_R AT %I* : INT; //Pressure reading // 'TcLinkTo' (EL3174-0002 or EP3174-0002)^Input
+    	q_xHV_DIS AT %Q* : BOOL; //Enable High Voltage when True // 'TcLinkTo' (EL2624 or EP2624-0002)^Output
+    END_VAR
+    VAR CONSTANT
+    	//Ranges 1.0 to 10.0 Vdc (1E-11 to 1E-2) 1.0V to ~1.7V indicates that the pressure is lower than 5E-11(lowest value) 
+    	//Must set the analog output scaling to logaritmic 2!!
+    	cSlope : REAL := 1.0;
+    	cBaseV : REAL := 1.0;
+    	cBaseP : REAL := 1E-11;
+    	cMinP : REAL := 5E-11;
+    	cGaugeMinV : REAL := 1.0;
+    	cGaugeLowV : REAL := 1.69;
+    	cGaugeMaxV : REAL := 10.0;
+    	cGaugeStartingV : REAL := 10.5;
+    	cDefaultP : REAL := 0.0;
+    	cDeadbandV : REAL := 0.1;
+    END_VAR
+    VAR PERSISTENT
+    	bWasOn : BOOL;
+    	bAutoRecover : BOOL;
+    	bAutoRecoverWrite : BOOL;
+    END_VAR
+    (*Calculate raw voltage*)
+    IF (iTermBits = 0) THEN iTermBits := 30518; END_IF
+    rV := 10*INT_TO_REAL(i_iPRESS_R)/iTermBits;
+
+    (*Calculate pressure*)
+    rPRESS := LREAL_TO_REAL(EXPT(10,((rV-cBaseV)/cSlope+LOG(cBaseP))));
+
+    (*Set Guage State based on the Analog voltage*)
+    IF IG.q_xHV_DIS THEN
+        IF rV >= cGaugeLowV AND rV <= cGaugeMaxV THEN
+    		IG.eState := Valid;
+    	    IG.rPRESS := rPRESS;
+        ELSIF rV < cGaugeLowV AND rV >= cGaugeMinV - cDeadbandV THEN
+    		IG.eState := Valid;
+    	    IG.rPRESS := cMinP;
+        ELSIF rV > cGaugeStartingV - cDeadbandV THEN
+    	    IG.eState := Starting;
+    	    IG.rPRESS := cDefaultP;
+        ELSIF rV < cGaugeMinV - cDeadbandV THEN
+    	    IG.eState := GaugeDisconnected;
+    	    IG.rPRESS := cDefaultP;
+        ELSIF rV > cGaugeMaxV AND rV < cGaugeStartingV - cDeadbandV THEN
+    	    IG.eState := OoR;
+    	    IG.rPRESS := cDefaultP;
+    	ELSE
+    	    IG.eState := PressInvalid;
+    	    IG.rPRESS := cDefaultP;
+        END_IF
+    ELSE
+    	IG.eState := Off;
+    	IG.rPRESS := cDefaultP;
+    END_IF
+
+
+    (* Ion Gauge Protection Functions *)
+    (* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
+    (* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
+    (* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+    IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
+    	IG.q_xHV_DIS := IG.xHV_SW;
+    	IG.xILKOk := TRUE;
+    ELSIF IG.q_xHV_DIS THEN
+    	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+    		IG.q_xHV_DIS := FALSE;
+    		IG.xHV_SW := FALSE;
+    	END_IF
+    ELSE
+    	IG.q_xHV_DIS := FALSE;
+    	IG.xHV_SW := FALSE;
+    	IG.xILKOk := FALSE;
+    END_IF
+
+
+    (*Pressure gauge OK checks*)
+    tGaugeTurnOnTmr(IN:=IG.q_xHV_DIS, PT:=T#10S, Q=>IG.xTurnOnTime);
+
+    //Backwards compatibility
+    IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
+
+    (*Setpoint evaluation*)
+    IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid);
+
+    (*Logging*)
+    ACT_Logger();
+
+    (*Soft IO Linking*)
+    IO();
+
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
+
+    (*Run Auto Recovery*)
+    ACT_Recover();
+
+    END_FUNCTION_BLOCK
+
+    ACTION ACT_Logger:
+    // ILK logger
+    IF (IG.xLog) THEN
+    	IF NOT IG.xILKOk AND IG.q_xHV_DIS THEN
+    			fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+    	END_IF
+    	
+    	
+    	// Log Action
+    	tAction(CLK := IG.xHV_SW);
+    	IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+    	
+    	
+    	
+    	//STATE Logger  
+    	IF ePrevState <> IG.eState THEN
+    		  CASE IG.eState OF
+    			ValidHi:
+    				fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+    			ValidLo:
+    				fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+    			Valid:
+    				fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+    			GaugeDisconnected:
+    				fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+    			PressInvalid:
+    				fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+    			OoR:
+    				fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+    			Starting:
+    				fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+    		  END_CASE
+          ePrevState := IG.eState;  
+    	  END_IF
+    END_IF
+    END_ACTION
+
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+    	SUPER^.bRestorePersistentData := FALSE;
+    	IF (rVAC_SP <> 0) THEN
+    		IG.rVAC_SP := rVAC_SP;
+    	END_IF;
+    	IF (rPRO_SP <> 0) THEN
+    		IG.rPRO_SP := rPRO_SP;
+    	END_IF;
+    	IF (rHYS_PR <> 0) THEN
+    		IG.rHYS_PR := rHYS_PR;
+    	END_IF;
+    	IF (bAutoRecoverWrite) THEN
+    		IG.xAutoOn := bAutoRecover;
+    	END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+    	rVAC_SP := IG.rVAC_SP;
+    END_IF;
+
+    IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+    	rPRO_SP := IG.rPRO_SP;
+    END_IF;
+
+    IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+    	rHYS_PR := IG.rHYS_PR;
+    END_IF;
+
+    IF NOT(bAutoRecoverWrite) OR NOT (bAutoRecover = IG.xAutoOn) THEN
+    	bAutoRecover := IG.xAutoOn;
+    	bAutoRecoverWrite := TRUE;
+    END_IF;
+
+    stateTimer(PT := T#10S);
+    IF (stateTimer.Q) THEN
+    	bWasOn := (IG.eState >= Valid);
+    	stateTimer.IN := FALSE;
+    	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s);
+    END_IF;
+    END_ACTION
+
+    ACTION ACT_Recover:
+    fbGetCurTaskIdx();
+    IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+    	tRecover.IN := TRUE;
+    END_IF
+    tRecover(PT := tRecoverDelay);
+    IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover) THEN
+    	This^.M_Recover();
+    	tRecover.IN := FALSE;
+    END_IF
+    END_ACTION
+
+    ACTION IO:
+    (*soft link inputs*)
+    IG.i_iPRESS_R := i_iPRESS_R; 
+    IG.i_xHV_ON := IG.q_xHV_DIS;  //not a real readback, assuming turning on HV output, HV status is ON and vice versa
+
+    (*soft link outputs*)
+    q_xHV_DIS := IG.q_xHV_DIS;
+
+    (*Gauge name link*)
+    IG.sPath := sPath;
+    END_ACTION
+
+    METHOD M_HVE : BOOL
+    VAR_INPUT
+    		bEnable : BOOL; // set to true to enable, false to disable;
+    END_VAR
+    this^.IG.xHV_SW := bEnable;
+    END_METHOD
+
+    METHOD M_Recover : BOOL
+    VAR_INPUT
+    END_VAR
+    This^.M_HVE(This^.bWasOn);
+    M_Recover := bWasOn;
+    IF (bWasOn) THEN fbLogger(sMsg:='Auto Recovery Initiated.', eSevr:=TcEventSeverity.Info); END_IF;
+    END_METHOD
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+    	TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
+
+
+Related:
+    * `FB_GaugeBase`_
+    * `ST_VG`_
+
+
 FB_PIP_Gamma
 ^^^^^^^^^^^^
 
@@ -10508,7 +10976,6 @@ FB_VCN_VAT590
 
 ::
 
-    //{attribute 'no_check'}
     (* This function implements the Basic functions for the VAT590 needle valve*)
     FUNCTION_BLOCK FB_VCN_VAT590 EXTENDS FB_Valve
     VAR_INPUT
@@ -10526,6 +10993,24 @@ FB_VCN_VAT590
     	cClosePosition : REAL := 0.0;      // Default position setpoint lower scale value
     	cPresSPUpLim : REAL := 1E+6;       // Default pressure setpoint upper scale value
     	cPresSPLowLim : REAL := 0;         // Default pressure setpoint lower scale value
+    	cPressCtrl : ST_CoEIndSub := (nIndex := 16#2199, nSubIndex := 0); // Selected pressure controller CoE register
+    	cSensorDelay_AD : ST_CoEIndSub := (nIndex := 16#219A, nSubIndex := 0); // Adaptive DS controller Sensor Delay CoE register
+    	cRampTime_AD : ST_CoEIndSub := (nIndex := 16#219B, nSubIndex := 0); // Adaptive DS controller Ramp Time CoE register
+    	cRampMode_AD : ST_CoEIndSub := (nIndex := 16#219C, nSubIndex := 0); // Adaptive DS controller Ramp Mode CoE register
+    	cGainFactor_AD : ST_CoEIndSub := (nIndex := 16#219E, nSubIndex := 0); // Adaptive DS controller Gain factor CoE register
+    	cRampTime_FIX1 : ST_CoEIndSub := (nIndex := 16#21A5, nSubIndex := 0); // Fixed 1 controller Ramp Time CoE register
+    	cRampMode_FIX1 : ST_CoEIndSub := (nIndex := 16#21A6, nSubIndex := 0); // Fixed 1 controller Ramp Mode CoE register
+    	cCtrlDir_FIX1 : ST_CoEIndSub := (nIndex := 16#21A7, nSubIndex := 0); // Fixed 1 controller Control Direction CoE register
+    	cPGain_FIX1 : ST_CoEIndSub := (nIndex := 16#21A8, nSubIndex := 0); // Fixed 1 controller P Gain CoE register
+    	cIGain_FIX1 : ST_CoEIndSub := (nIndex := 16#21A9, nSubIndex := 0); // Fixed 1 controller I Gain CoE register
+    	cRampTime_FIX2 : ST_CoEIndSub := (nIndex := 16#21AF, nSubIndex := 0); // Fixed 2 controller Ramp Time CoE register
+    	cRampMode_FIX2 : ST_CoEIndSub := (nIndex := 16#21B0, nSubIndex := 0); // Fixed 2 controller Ramp Mode CoE register
+    	cCtrlDir_FIX2 : ST_CoEIndSub := (nIndex := 16#21B1, nSubIndex := 0); // Fixed 2 controller Control Direction CoE register
+    	cPGain_FIX2 : ST_CoEIndSub := (nIndex := 16#21B2, nSubIndex := 0); // Fixed 2 controller P Gain CoE register
+    	cIGain_FIX2 : ST_CoEIndSub := (nIndex := 16#21B3, nSubIndex := 0); // Fixed 2 controller I Gain CoE register
+    	cRampTime_SP : ST_CoEIndSub := (nIndex := 16#21B9, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
+    	cRampMode_SP : ST_CoEIndSub := (nIndex := 16#21BA, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
+    	cPGain_SP : ST_CoEIndSub := (nIndex := 16#21BC, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
     END_VAR
     VAR
     	fCalcPosSP : REAL := 0;
@@ -10539,15 +11024,30 @@ FB_VCN_VAT590
     	bRemAcsToggle : BOOL;              // Remote access control bit
     	//timer for zero function 
     	tZeroTogg : TON := (PT := T#1S);
-    	//Rising edge trigger for Zero function
-    	rtZero : R_TRIG;
     	//timer for remote function
     	tRemAcsTogg : TON := (PT := T#500MS);
     	//used for logging
     	ePreviousState : E_VCN_VAT590;
     	
+    	(*CoE Interface*)
+    	(*Link this to your VAT590 reference variables under InfoData.*)
+    	//Connect i_stVat590PlcDriveRef.aNetId to the VAT590 Valve InfoData^AdsAddr^netId
+    	//Connect i_stVat590PlcDriveRef.nSlaveAddr to the VAT590 Valve InfoData^AdsAddr^port
+    	i_stVat590PlcDriveRef AT %I*: ST_PlcDriveRef;
+    	stVat590DriveRef : ST_DriveRef;
+
+    	fbCoeRead : FB_CoERead_ByDriveRef;   // CoE Read function block
+    	fbCoeWrite : FB_CoEWrite_ByDriveRef; // CoE Write function block
+    	
+    	stCoeParamsInternal : ST_VAT590_COE;   // Internal storage of CoE parameters
+    	nCaseReadCoe : UINT := 1;          // Iterator for going through all CoE parameters
+    	rtCoeReset : R_TRIG;               // Rising edge trigger for reset CoE Interface error
+    	ftCoeReadBusy : F_TRIG;            // Falling edge trigger for CoE read new data
+    	ftCoeWriteBusy : F_TRIG;           // Falling edge trigger for CoE write data
+    	bFirstRead : BOOL := TRUE;         // FALSE after succesfull first readout of all CoE parameters
+    	
     	(*VAT590 Ethercat IO Interface*)
-    	//Ethercat Interface Inputs
+    	// Ethercat Interface Inputs
     	i_nRawPosition       AT %I* : DINT;               // Position readback from the valve
     	i_nRawPressure       AT %I* : DINT;               // Pressure readback from the valve
     	i_eControlMode       AT %I* : E_ControlMode;      // Valve control mode readback
@@ -10555,16 +11055,19 @@ FB_VCN_VAT590
     	i_stGenStatus        AT %I* : ST_GeneralStatus;   // Valve General Status readback
     	i_stGenWarnings      AT %I* : ST_GeneralWarnings; // Valve General Warnings readback
     	i_stExtnWarnings     AT %I* : ST_ExtendedWarnings;// Valve Extended Warnings readback
-    	//Ethercat Interface Outputs
+    	// Ethercat Interface Outputs
     	o_nRawPositionSP     AT %Q* : DINT;               // Position setpoint
     	o_nRawPressureSP     AT %Q* : DINT;               // Pressure setpoint
     	o_eCtrlModeSP        AT %Q* : E_ControlModeSP;    // Valve control mode setpoint
     	o_stGenCtrlSP        AT %Q* : ST_GeneralControlSP;// General Control setpoint
+    	(*Ethercat Interface Status Check*)
+    	(*Link this to your VAT590 WcState variable under WcState*)
+    	i_bValveEthCatStatus AT %I* : BOOL := TRUE;
     END_VAR
     VAR PERSISTENT
         fUpperLimit	: REAL;                // Max position in % that can be requested
     	fPresMaxLim : REAL;                // Max pressure in Torr that can be requested
-    	fPresRbMaxLim : REAL;               // Max pressure in Torr read by chamber gauge, valve will close above the pressure.
+    	fPresRbMaxLim : REAL;              // Max pressure in Torr read by chamber gauge, valve will close above the pressure.
     END_VAR
     (* Needle valve control FB
     J. Govednik 2021-11-22
@@ -10574,17 +11077,27 @@ FB_VCN_VAT590
     It provides:
     Valve position ceiling
     Interlock
-    Scaling
+    CoE Interface
 
     It could be used for:
     Valve position/flow linearization
-    *)	
+    *)
+
+    (*Set Coe Interface, AmsNetID, Slave address etc*)
+    SetCoeInterface();
 
     (*Read from EPICS and Valve Ethercat interface*)
     ReadFromInput();
 
-    (*Checking which Control mode is selected*)
-    IF bExtIlkOK THEN
+    (*Checking which Control mode is selected and if valve's communication is OK*)
+    IF stVcnVat590.bValveEthCatStatus THEN //If valve is not connected or something is wrong with EtherCAT communication PLC will set this bit to 1
+    	fReqPos := 0; //set req. position to 0
+    	eValveModeSP := E_ControlModeSP.CloseValve; //set control mode of the valve to CLOSE VALVE 
+    	stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve; //EPICS command hold in CloseValve state
+    	stVcnVat590.stValveStatus.eControlMode := E_ControlMode.FatalError; //override the readback from the valve because when valve is disconnected the value remains
+    	stVcnVat590.nRawPosition := 0; //override the readback from the valve because when valve is disconnected the value remains
+    	stVcnVat590.nRawPressure := 0; //override the readback from the valve because when valve is disconnected the value remains
+    ELSIF bExtIlkOK THEN
     	CASE stVcnVat590.eValveControl OF
     		E_VCN_VAT590.OpenValve:
     			eValveModeSP := E_ControlModeSP.OpenValve;
@@ -10635,7 +11148,7 @@ FB_VCN_VAT590
     		fCalcPresSP := fSlope * LOG(fReqPres/fPresLowLim) + fVbase;
     		fCalcPresSP := LIMIT(cPresSPLowLim, fCalcPresSP, cPresSPUpLim); //The requested pressure SP should remain within this range
     		//Calculate pressure readback in Torr units
-    		stVcnVat590.fPressure := LREAL_TO_REAL(EXPT(10,((DINT_TO_REAL(i_nRawPressure)-fVbase)/fSlope + LOG(fPresLowLim))));
+    		stVcnVat590.fPressure := LREAL_TO_REAL(EXPT(10,((DINT_TO_REAL(stVcnVat590.nRawPressure)-fVbase)/fSlope + LOG(fPresLowLim))));
     	ELSE
     		fCalcPresSP := 0;
     		stVcnVat590.fPressure := 0;
@@ -10651,8 +11164,7 @@ FB_VCN_VAT590
     IF stVcnVat590.stValveStatus.bZeroDisabled OR tZeroTogg.Q THEN
     	stVcnVat590.bZero := FALSE;
     END_IF
-    rtZero(CLK := stVcnVat590.bZero);
-    tZeroTogg.IN := rtZero.Q;
+    tZeroTogg.IN := stVcnVat590.bZero;
     tZeroTogg();
 
     (*Set Remote Access*)
@@ -10665,18 +11177,46 @@ FB_VCN_VAT590
     END_IF
     tRemAcsTogg();
 
+    (*Reset Coe Interface error*)
+    rtCoeReset(CLK := stVcnVat590.bResetCoeError);
+    IF rtCoeReset.Q THEN
+    	stVcnVat590.bResetCoeError := FALSE;
+    END_IF
+
+    (*Write CoE Parameters*)
+    WriteCoeParameters();
+
+    (*Read CoE Parameters*)
+    ReadCoeParameters();
+
     (*Write to EPICS and Valve Ethercat interface*)
     WriteToOutput();
 
     (*Load or save the persistent variables*)
-    ACT_Persistent();
+    LoadPersistentData();
 
     (*Logging*)
-    ACT_Logger();
+    Logger();
 
     END_FUNCTION_BLOCK
 
-    ACTION ACT_Logger:
+    ACTION LoadPersistentData:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (bRestorePersistentData) THEN
+    	bRestorePersistentData	:= FALSE;
+    	IF (fUpperLimit <> 0) THEN
+    		stVcnVat590.fPosSetLimit := fUpperLimit;
+    	END_IF;
+    	IF (fPresMaxLim <> 0) THEN
+    		stVcnVat590.fPresSetLimit := fPresMaxLim;
+    	END_IF;
+    	IF (fPresRbMaxLim <> 0) THEN
+    		stVcnVat590.fPresRdbkLimit := fPresRbMaxLim;
+    	END_IF;    
+    END_IF
+    END_ACTION
+
+    ACTION Logger:
     // ILK logger
     IF NOT (stVcnVat590.bIlkOK ) AND NOT(ePreviousState = E_VCN_VAT590.CloseValve) THEN
      		fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);  	
@@ -10706,22 +11246,141 @@ FB_VCN_VAT590
     IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEventSeverity.Info); END_IF
     END_ACTION
 
-    ACTION ACT_Persistent:
-    (*On first PLC pass, load the persistent value into the structrue variable*)
-    IF (bRestorePersistentData) THEN
-    	bRestorePersistentData	:= FALSE;
-    	IF (fUpperLimit <> 0) THEN
-    		stVcnVat590.fPosSetLimit := fUpperLimit;
-    	END_IF;
-    	IF (fPresMaxLim <> 0) THEN
-    		stVcnVat590.fPresSetLimit := fPresMaxLim;
-    	END_IF;
-    	IF (fPresRbMaxLim <> 0) THEN
-    		stVcnVat590.fPresRdbkLimit := fPresRbMaxLim;
-    	END_IF;
-    	
-    	    
+    ACTION ReadCoeParameters:
+    CASE nCaseReadCoe OF
+    	0:
+    		stVcnVat590.bCoeError := TRUE;
+    		IF rtCoeReset.Q THEN
+    			nCaseReadCoe := 1;
+    			stVcnVat590.bCoeError := FALSE;
+    			bFirstRead := TRUE; // Set bFirstRead after Coe interface reset
+    		END_IF
+    	1:
+    		fbCoeRead.nIndex := cPressCtrl.nIndex;
+    		fbCoeRead.nSubIndex := cPressCtrl.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.ePIDCtrl);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.ePIDCtrl);
+    		fbCoeRead.bExecute := TRUE;
+    	2:
+    		fbCoeRead.nIndex := cSensorDelay_AD.nIndex;
+    		fbCoeRead.nSubIndex := cSensorDelay_AD.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fSensorDelay_AD);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fSensorDelay_AD);
+    		fbCoeRead.bExecute := TRUE;
+    	3:
+    		fbCoeRead.nIndex := cRampTime_AD.nIndex;
+    		fbCoeRead.nSubIndex := cRampTime_AD.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_AD);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_AD);
+    		fbCoeRead.bExecute := TRUE;
+    	4:
+    		fbCoeRead.nIndex := cRampMode_AD.nIndex;
+    		fbCoeRead.nSubIndex := cRampMode_AD.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_AD);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_AD);
+    		fbCoeRead.bExecute := TRUE;
+    	5:
+    		fbCoeRead.nIndex := cGainFactor_AD.nIndex;
+    		fbCoeRead.nSubIndex := cGainFactor_AD.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fGainFactor_AD);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fGainFactor_AD);
+    		fbCoeRead.bExecute := TRUE;
+    	6:
+    		fbCoeRead.nIndex := cRampTime_FIX1.nIndex;
+    		fbCoeRead.nSubIndex := cRampTime_FIX1.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX1);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX1);
+    		fbCoeRead.bExecute := TRUE;
+    	7:
+    		fbCoeRead.nIndex := cRampMode_FIX1.nIndex;
+    		fbCoeRead.nSubIndex := cRampMode_FIX1.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX1);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX1);
+    		fbCoeRead.bExecute := TRUE;
+    	8:
+    		fbCoeRead.nIndex := cCtrlDir_FIX1.nIndex;
+    		fbCoeRead.nSubIndex := cCtrlDir_FIX1.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
+    		fbCoeRead.bExecute := TRUE;
+    	9:
+    		fbCoeRead.nIndex := cPGain_FIX1.nIndex;
+    		fbCoeRead.nSubIndex := cPGain_FIX1.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX1);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX1);
+    		fbCoeRead.bExecute := TRUE;
+    	10:
+    		fbCoeRead.nIndex := cIGain_FIX1.nIndex;
+    		fbCoeRead.nSubIndex := cIGain_FIX1.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX1);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX1);
+    		fbCoeRead.bExecute := TRUE;
+    	11:
+    		fbCoeRead.nIndex := cRampTime_FIX2.nIndex;
+    		fbCoeRead.nSubIndex := cRampTime_FIX2.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX2);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX2);
+    		fbCoeRead.bExecute := TRUE;
+    	12:
+    		fbCoeRead.nIndex := cRampMode_FIX2.nIndex;
+    		fbCoeRead.nSubIndex := cRampMode_FIX2.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX2);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX2);
+    		fbCoeRead.bExecute := TRUE;
+    	13:
+    		fbCoeRead.nIndex := cCtrlDir_FIX2.nIndex;
+    		fbCoeRead.nSubIndex := cCtrlDir_FIX2.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
+    		fbCoeRead.bExecute := TRUE;
+    	14:
+    		fbCoeRead.nIndex := cPGain_FIX2.nIndex;
+    		fbCoeRead.nSubIndex := cPGain_FIX2.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX2);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX2);
+    		fbCoeRead.bExecute := TRUE;
+    	15:
+    		fbCoeRead.nIndex := cIGain_FIX2.nIndex;
+    		fbCoeRead.nSubIndex := cIGain_FIX2.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX2);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX2);
+    		fbCoeRead.bExecute := TRUE;
+    	16:
+    		fbCoeRead.nIndex := cRampTime_SP.nIndex;
+    		fbCoeRead.nSubIndex := cRampTime_SP.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_SP);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_SP);
+    		fbCoeRead.bExecute := TRUE;
+    	17:
+    		fbCoeRead.nIndex := cRampMode_SP.nIndex;
+    		fbCoeRead.nSubIndex := cRampMode_SP.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_SP);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_SP);
+    		fbCoeRead.bExecute := TRUE;
+    	18:
+    		fbCoeRead.nIndex := cPGain_SP.nIndex;
+    		fbCoeRead.nSubIndex := cPGain_SP.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_SP);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_SP);
+    		fbCoeRead.bExecute := TRUE;
+    END_CASE
+
+    ftCoeReadBusy(CLK:=fbCoeRead.bBusy);
+    IF ftCoeReadBusy.Q THEN
+    	fbCoeRead.bExecute := FALSE;
+    	IF NOT fbCoeRead.bError THEN
+    		nCaseReadCoe := nCaseReadCoe + 1;
+    		IF nCaseReadCoe > 18 THEN
+    			nCaseReadCoe := 1;
+    			bFirstRead := FALSE; // Reset bFirstRead after successfull readout of all parameters
+    		END_IF
+    	ELSE
+    		nCaseReadCoe := 0; // Go to Error state
+    	END_IF
     END_IF
+
+    fbCoeRead();
+    stCoeParamsInternal := stVcnVat590.stCoeParameters; //Save current values to internal structure
     END_ACTION
 
     ACTION ReadFromInput:
@@ -10761,6 +11420,146 @@ FB_VCN_VAT590
     stVcnVat590.stValveStatus.bCtrlSPOutOfRange := i_stExtnWarnings.Bit10CtrlSPOutOfRange;
     stVcnVat590.stValveStatus.bGeneralCtrlSPOutOfRange := i_stExtnWarnings.Bit11GeneralCtrlSPOutOfRange;
     stVcnVat590.stValveStatus.bProcDataSettingsNotvalid := i_stExtnWarnings.Bit12ProcDataSettingsNotvalid;
+    //Mapping WcState - Valve Ethercat Status
+    stVcnVat590.bValveEthCatStatus := i_bValveEthCatStatus;
+    END_ACTION
+
+    ACTION SetCoeInterface:
+    stVat590DriveRef.sNetId := F_CreateAmsNetId(i_stVat590PlcDriveRef.aNetId);
+    stVat590DriveRef.nSlaveAddr := i_stVat590PlcDriveRef.nSlaveAddr;
+    stVat590DriveRef.nDriveNo := i_stVat590PlcDriveRef.nDriveNo;
+    stVat590DriveRef.nDriveType := i_stVat590PlcDriveRef.nDriveType;
+    fbCoeRead.stDriveRef := stVat590DriveRef;
+    fbCoeWrite.stDriveRef := stVat590DriveRef;
+    END_ACTION
+
+    ACTION WriteCoeParameters:
+    // User will change one parameter at a time so solution with ELSIF should work OK
+    IF stVcnVat590.bCoeError THEN
+    	IF rtCoeReset.Q THEN
+    		stVcnVat590.bCoeError := FALSE;
+    	END_IF;
+    ELSIF bFirstRead THEN
+    	;//Wait until first readout of all CoE parameters is completed
+    ELSIF stVcnVat590.stCoeParameters.ePIDCtrl <> stCoeParamsInternal.ePIDCtrl THEN
+    	fbCoeWrite.nIndex := cPressCtrl.nIndex;
+    	fbCoeWrite.nSubIndex := cPressCtrl.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.ePIDCtrl);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.ePIDCtrl);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fSensorDelay_AD <> stCoeParamsInternal.fSensorDelay_AD THEN
+    	fbCoeWrite.nIndex := cSensorDelay_AD.nIndex;
+    	fbCoeWrite.nSubIndex := cSensorDelay_AD.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fSensorDelay_AD);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fSensorDelay_AD);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fRampTime_AD <> stCoeParamsInternal.fRampTime_AD THEN
+    	fbCoeWrite.nIndex := cRampTime_AD.nIndex;
+    	fbCoeWrite.nSubIndex := cRampTime_AD.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_AD);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_AD);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.bRampMode_AD <> stCoeParamsInternal.bRampMode_AD THEN
+    	fbCoeWrite.nIndex := cRampMode_AD.nIndex;
+    	fbCoeWrite.nSubIndex := cRampMode_AD.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_AD);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_AD);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fGainFactor_AD <> stCoeParamsInternal.fGainFactor_AD THEN
+    	fbCoeWrite.nIndex := cGainFactor_AD.nIndex;
+    	fbCoeWrite.nSubIndex := cGainFactor_AD.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fGainFactor_AD);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fGainFactor_AD);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fRampTime_FIX1 <> stCoeParamsInternal.fRampTime_FIX1 THEN
+    	fbCoeWrite.nIndex := cRampTime_FIX1.nIndex;
+    	fbCoeWrite.nSubIndex := cRampTime_FIX1.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX1);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX1);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.bRampMode_FIX1 <> stCoeParamsInternal.bRampMode_FIX1 THEN
+    	fbCoeWrite.nIndex := cRampMode_FIX1.nIndex;
+    	fbCoeWrite.nSubIndex := cRampMode_FIX1.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX1);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX1);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.bCtrlDir_FIX1 <> stCoeParamsInternal.bCtrlDir_FIX1 THEN
+    	fbCoeWrite.nIndex := cCtrlDir_FIX1.nIndex;
+    	fbCoeWrite.nSubIndex := cCtrlDir_FIX1.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fPGain_FIX1 <> stCoeParamsInternal.fPGain_FIX1 THEN
+    	fbCoeWrite.nIndex := cPGain_FIX1.nIndex;
+    	fbCoeWrite.nSubIndex := cPGain_FIX1.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX1);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX1);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fIGain_FIX1 <> stCoeParamsInternal.fIGain_FIX1 THEN
+    	fbCoeWrite.nIndex := cIGain_FIX1.nIndex;
+    	fbCoeWrite.nSubIndex := cIGain_FIX1.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX1);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX1);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fRampTime_FIX2 <> stCoeParamsInternal.fRampTime_FIX2 THEN
+    	fbCoeWrite.nIndex := cRampTime_FIX2.nIndex;
+    	fbCoeWrite.nSubIndex := cRampTime_FIX2.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX2);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX2);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.bRampMode_FIX2 <> stCoeParamsInternal.bRampMode_FIX2 THEN
+    	fbCoeWrite.nIndex := cRampMode_FIX2.nIndex;
+    	fbCoeWrite.nSubIndex := cRampMode_FIX2.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX2);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX2);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.bCtrlDir_FIX2 <> stCoeParamsInternal.bCtrlDir_FIX2 THEN
+    	fbCoeWrite.nIndex := cCtrlDir_FIX2.nIndex;
+    	fbCoeWrite.nSubIndex := cCtrlDir_FIX2.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fPGain_FIX2 <> stCoeParamsInternal.fPGain_FIX2 THEN
+    	fbCoeWrite.nIndex := cPGain_FIX2.nIndex;
+    	fbCoeWrite.nSubIndex := cPGain_FIX2.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX2);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX2);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fIGain_FIX2 <> stCoeParamsInternal.fIGain_FIX2 THEN
+    	fbCoeWrite.nIndex := cIGain_FIX2.nIndex;
+    	fbCoeWrite.nSubIndex := cIGain_FIX2.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX2);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX2);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fRampTime_SP <> stCoeParamsInternal.fRampTime_SP THEN
+    	fbCoeWrite.nIndex := cRampTime_SP.nIndex;
+    	fbCoeWrite.nSubIndex := cRampTime_SP.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_SP);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_SP);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.bRampMode_SP <> stCoeParamsInternal.bRampMode_SP THEN
+    	fbCoeWrite.nIndex := cRampMode_SP.nIndex;
+    	fbCoeWrite.nSubIndex := cRampMode_SP.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_SP);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_SP);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fPGain_SP <> stCoeParamsInternal.fPGain_SP THEN
+    	fbCoeWrite.nIndex := cPGain_SP.nIndex;
+    	fbCoeWrite.nSubIndex := cPGain_SP.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_SP);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_SP);
+    	fbCoeWrite.bExecute := TRUE;
+    END_IF
+
+    ftCoeWriteBusy(CLK:=fbCoeWrite.bBusy);
+    IF ftCoeWriteBusy.Q THEN
+    	fbCoeWrite.bExecute := FALSE;
+    	IF fbCoeWrite.bError THEN
+    		stVcnVat590.bCoeError := TRUE;
+    	END_IF
+    END_IF
+
+    fbCoeWrite();
     END_ACTION
 
     ACTION WriteToOutput:
@@ -10781,14 +11580,14 @@ FB_VCN_VAT590
     o_stGenCtrlSP.Bit4AccessMode := bRemAcsToggle;
     END_ACTION
 
-    METHOD M_SetThrottle : BOOL
+    METHOD SetThrottle : BOOL
     VAR_INPUT
     	rUpperLimit	:	REAL;
     END_VAR
     stVcnVat590.fPosSetLimit := LIMIT(0, rUpperLimit, 100);
     END_METHOD
 
-    METHOD M_ValveControl : BOOL
+    METHOD ValveControl : BOOL
     VAR_INPUT
     	state : E_VCN_VAT590; // Set Control modes
     END_VAR
@@ -10803,10 +11602,12 @@ Related:
     * `E_VAT590_PressureSensor`_
     * `E_VCN_VAT590`_
     * `FB_Valve`_
+    * `ST_CoEIndSub`_
     * `ST_ExtendedWarnings`_
     * `ST_GeneralControlSP`_
     * `ST_GeneralStatus`_
     * `ST_GeneralWarnings`_
+    * `ST_VAT590_COE`_
     * `ST_VCN_VAT590`_
     * `ST_VG`_
 
@@ -11091,6 +11892,8 @@ FB_VFS_2OO3
     	rtFault_IG1 : R_TRIG;
     	rtFault_IG2 : R_TRIG;
     	rtFault_IG3 : R_TRIG;
+    	//Reset Fault counter trigger
+    	rtResetFaultCounter : R_TRIG;
 
     	//PMPS
     	fbFF : FB_FastFault :=(
@@ -11146,6 +11949,7 @@ FB_VFS_2OO3
     	
     	(*Interface with external system*) 
     	i_e2OO3_MODE       AT%I* : E_2OO3_MODE; (*Link to VFS Interface, 2oo3 mode selector*)
+    	i_ResetFaultCounter AT%I* : BOOL; (*Link to VFS Interface, FaultCounter Reset*)
     	i_xPress_OK_IG1    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
     	i_xPress_OK_IG2    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
     	i_xPress_OK_IG3    AT%I* : BOOL; (*Link to VFS Interface, IG.xPRESS_OK, to make sure that the device is connected*)
@@ -11330,6 +12134,12 @@ FB_VFS_2OO3
     rtOPN_SW (CLK := i_xOPN_SW);
 
     (*Gauge fault counters*)
+    rtResetFaultCounter(CLK := i_ResetFaultCounter);
+    IF rtResetFaultCounter.Q THEN
+    	nFaultCounter_IG1 := 0;
+    	nFaultCounter_IG2 := 0;
+    	nFaultCounter_IG3 := 0;
+    END_IF
     //IG1
     rtFault_IG1(CLK := i_xTriggerIG1 AND NOT xTrigger);
     IF rtFault_IG1.Q THEN
@@ -11412,7 +12222,12 @@ FB_VFS_2OO3Interface
     		pv: VFS_2OO3_MODE
     		io: io
     	'}
-    	i_e2OO3_MODE : E_2OO3_MODE; // 2oo3 mode selector as EPICS Command or Input for global variable
+    	i_e2OO3_MODE : E_2OO3_MODE; //2oo3 mode selector as EPICS Command or Input for global variable
+    	{attribute 'pytmc' := '
+    		pv: VFS_RESET_FAULT_COUNTER
+    		io: io
+    	'}
+    	i_ResetFaultCounter : BOOL; //Reset Fault counter as EPCIS Command or Input for global reset button
     END_VAR
     VAR_OUTPUT
     	{attribute 'pytmc' := '
@@ -11430,10 +12245,14 @@ FB_VFS_2OO3Interface
     	tonDelOK : TON;
     	xOPN_OK : BOOL;
     	tDelOK	: TIME := T#60S;
-    	xPress_OK : BOOL;                      //internal signal indicating if at gauges are connected and OK
+    	xPress_OK : BOOL; //internal signal indicating if at gauges are connected and OK
+
+    	//Reset Fault counter trigger
+    	rtResetFaultCounter : R_TRIG;
 
     	(*outputs*)
-    	q_e2OO3_MODE AT%Q* : E_2OO3_MODE;             //2oo3 mode selector
+    	q_e2OO3_MODE AT%Q* : E_2OO3_MODE; //2oo3 mode selector, connect to FB_VFS_2OO3 mode selector input
+    	q_ResetFaultCounter AT%Q* : BOOL; //Reset Fault counter, connect to FB_VFS_2OO3 reset fault counter input
     	q_xPRESS_OK_IG1 AT%Q* : BOOL;
     	q_xPRESS_OK_IG2 AT%Q* : BOOL;
     	q_xPRESS_OK_IG3 AT%Q* : BOOL;
@@ -11585,12 +12404,22 @@ FB_VFS_2OO3Interface
 
     (*2oo3 mode selector*)
     q_e2OO3_MODE := i_e2OO3_MODE;
+
+    (*Reset Fault counter, q_ResetFaultCounter output is TRUE for one plc cycle *)
+    rtResetFaultCounter(CLK := i_ResetFaultCounter);
+    IF rtResetFaultCounter.Q THEN
+        i_ResetFaultCounter := FALSE;
+        q_ResetFaultCounter := TRUE;
+    ELSE
+        q_ResetFaultCounter := FALSE;
+    END_IF
     END_ACTION
 
 
 Related:
     * `E_2OO3_MODE`_
     * `E_VGC`_
+    * `FB_VFS_2OO3`_
     * `FB_Valve`_
     * `ST_VFS`_
     * `ST_VG`_
