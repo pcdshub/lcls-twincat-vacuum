@@ -17,8 +17,8 @@ STRUCT
 	{attribute 'pytmc' := '
 		pv: GEN_STATUS:ECAT_DATA_VALID
 		io: i
-		field: ZNAM NOT_OK
-		field: ONAM OK
+		field: ZNAM NOT_VALID
+		field: ONAM VALID
 		field: ZSV MAJOR
 		field: OSV NO_ALARM
 	'}
@@ -35,8 +35,8 @@ STRUCT
 	{attribute 'pytmc' := '
 		pv: GEN_STATUS:ECAT_RxBIT
 		io: i
-		field: ZNAM INVERTED
-		field: ONAM NOT_INVERTED
+		field: ZNAM NOT_INVERTED
+		field: ONAM INVERTED
 		field: ZSV NO_ALARM
 		field: OSV NO_ALARM
 	'}
@@ -53,8 +53,8 @@ STRUCT
 	{attribute 'pytmc' := '
 		pv: GEN_STATUS:PRES_SP_REACHED
 		io: i
-		field: ZNAM NOT_OK
-		field: ONAM OK
+		field: ZNAM NOT_AT_SP
+		field: ONAM AT_SP
 		field: ZSV NO_ALARM
 		field: OSV NO_ALARM
 	'}
@@ -62,8 +62,8 @@ STRUCT
 	{attribute 'pytmc' := '
 		pv: GEN_STATUS:WARN_STATUS
 		io: i
-		field: ZNAM OK
-		field: ONAM NOT_OK
+		field: ZNAM NOT_ACTIVE
+		field: ONAM ACTIVE
 		field: ZSV NO_ALARM
 		field: OSV MAJOR
 	'}
@@ -78,7 +78,7 @@ STRUCT
 		pv: GEN_WARN:SERVICE_REQ
 		io: i
 		field: ZNAM OK
-		field: ONAM NOT_OK
+		field: ONAM SERVICE
 		field: ZSV NO_ALARM
 		field: OSV MAJOR
 	'}
@@ -96,7 +96,7 @@ STRUCT
 		pv: GEN_WARN:ADC_UNIT_STATUS
 		io: i
 		field: ZNAM OK
-		field: ONAM FAULTED
+		field: ONAM FAULT
 		field: ZSV NO_ALARM
 		field: OSV MAJOR
 	'}
@@ -105,8 +105,8 @@ STRUCT
 	{attribute 'pytmc' := '
 		pv: EXT_WARN:REM_NOT_POSSIBLE
 		io: i
-		field: ZNAM OK
-		field: ONAM NOT_OK
+		field: ZNAM ENABLED
+		field: ONAM DISABLED
 		field: ZSV NO_ALARM
 		field: OSV MINOR
 	'}
@@ -114,8 +114,8 @@ STRUCT
 	{attribute 'pytmc' := '
 		pv: EXT_WARN:CTRL_SP_NOT_ALLOWED
 		io: i
-		field: ZNAM OK
-		field: ONAM NOT_OK
+		field: ZNAM ENABLED
+		field: ONAM DISABLED
 		field: ZSV NO_ALARM
 		field: OSV MINOR
 	'}
@@ -142,7 +142,7 @@ STRUCT
 		pv: EXT_WARN:PRES_SP_OOR
 		io: i
 		field: ZNAM OK
-		field: ONAM NOT_OK
+		field: ONAM FAULT
 		field: ZSV NO_ALARM
 		field: OSV MAJOR
 	'}
@@ -151,7 +151,7 @@ STRUCT
 		pv: EXT_WARN:POS_SP_OOR
 		io: i
 		field: ZNAM OK
-		field: ONAM NOT_OK
+		field: ONAM FAULT
 		field: ZSV NO_ALARM
 		field: OSV MAJOR
 	'}
@@ -160,7 +160,7 @@ STRUCT
 		pv: EXT_WARN:CTRL_SP_OOR
 		io: i
 		field: ZNAM OK
-		field: ONAM NOT_OK
+		field: ONAM FAULT
 		field: ZSV NO_ALARM
 		field: OSV MAJOR
 	'}
@@ -169,7 +169,7 @@ STRUCT
 		pv: EXT_WARN:GENCTRL_SP_OOR
 		io: i
 		field: ZNAM OK
-		field: ONAM NOT_OK
+		field: ONAM FAULT
 		field: ZSV NO_ALARM
 		field: OSV MAJOR
 	'}
@@ -178,7 +178,7 @@ STRUCT
 		pv: EXT_WARN:PROC_DATA_NOT_VALID
 		io: i
 		field: ZNAM OK
-		field: ONAM NOT_OK
+		field: ONAM FAULT
 		field: ZSV NO_ALARM
 		field: OSV MAJOR
 	'}
