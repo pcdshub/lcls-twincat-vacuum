@@ -1,0 +1,256 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_MX7M" Id="{15379e40-3aed-42d9-b6b1-5d3c97c28cce}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function is for the Cold Cathode MX7M from Televac. *)
+(*This function provides ILK and Set Point Protection for the Cold Cathode*)
+FUNCTION_BLOCK FB_MX7M EXTENDS FB_GaugeBase
+VAR_IN_OUT
+		
+END_VAR
+VAR_INPUT
+	PG : ST_VG;
+	tRecoverDelay : TIME := T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
+END_VAR
+VAR_OUTPUT
+    {attribute 'pytmc' := '
+    pv: 
+	'}
+	IG : ST_VG;
+END_VAR
+VAR
+	rV : REAL; //Calculated raw voltage from ADC on analog input
+	GaugeTurnOnTmr : TON;
+	iTermBits : UINT := 30518 ; //The terminal's maximum value in bits
+	bInit : BOOL := TRUE;
+	(*IOs to be linked*)
+	//Controls and I/Os
+	i_iPRESS_R AT %I* : INT; //Pressure reading // 'TcLinkTo' (EL3174-0002 or EP3174-0002)^Input
+	q_xHV_DIS AT %Q* : BOOL; //Enable High Voltage when True // 'TcLinkTo' (EL2624 or EP2624-0002)^Output
+END_VAR
+VAR CONSTANT
+	//Ranges 0 to 10 Vdc, 1.25V/decade analog output - Torr
+	pBase : REAL := 1.0E-10; //default curve base pressure is 1E-10
+	vSlope : REAL := 1.25;
+	vDisconnected : REAL := 0.1;
+	vGaugeOff : REAL := 10.0;
+	rMinPressure : REAL := 1.0E-10;
+	cDefaultPressure : REAL := 0;
+	rDeadband : REAL := 0.1;
+END_VAR
+VAR PERSISTENT
+	bWasOn : BOOL;
+	bAutoRecover : BOOL;
+	bAutoRecoverWrite : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*Calculate raw voltage*)
+If (iTermBits = 0) THEN iTermBits := 30518; END_IF
+rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
+
+(*Set Guage State based on the Analog voltage*)  ////add starting case if possible, will see when start testing and see the voltage levels
+IF rV <= vDisconnected AND IG.q_xHV_DIS THEN
+	IG.eState := ValidLo;
+	IG.rPRESS := rMinPressure;
+ELSIF rV <= vDisconnected AND NOT IG.q_xHV_DIS THEN
+	IG.eState := GaugeDisconnected;
+	IG.rPRESS := cDefaultPressure;
+ELSIF rV > vDisconnected AND rV < (vGaugeOff-rDeadband) AND IG.q_xHV_DIS THEN
+	IG.eState := Valid;
+	IG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV/vSlope+LOG(pBase))));
+ELSIF rV >= (vGaugeOff-rDeadband) THEN
+	IG.eState := Off;
+	IG.rPRESS := cDefaultPressure;
+ELSE
+	IG.eState := OoR;
+	IG.rPRESS := cDefaultPressure;
+END_IF
+
+
+(* Ion Gauge Protection Functions *)
+(* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
+(* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
+(* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
+	IG.q_xHV_DIS := IG.xHV_SW;
+	IG.xILKOk := TRUE;
+ELSIF IG.q_xHV_DIS THEN
+	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+		IG.q_xHV_DIS := FALSE;
+		IG.xHV_SW := FALSE;
+	END_IF
+ELSE
+	IG.q_xHV_DIS := FALSE;
+	IG.xHV_SW := FALSE;
+	IG.xILKOk := FALSE;
+END_IF
+
+
+(*Pressure gauge OK checks*)
+GaugeTurnOnTmr(IN:=IG.q_xHV_DIS, PT:=T#10S, Q=>IG.xTurnOnTime);
+
+//Backwards compatibility
+IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
+
+(*Setpoint evaluation*)
+IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid);
+
+(*Logging*)
+ACT_Logger();
+
+(*Soft IO Linking*)
+IO();
+
+(*Load or save the persistent variables*)
+ACT_Persistent();
+
+(*Run Auto Recovery*)
+ACT_Recover();
+
+
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_Logger" Id="{5f773cc6-6ec3-4bf7-974e-d89e3810d19e}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+IF (IG.xLog) THEN
+	IF NOT IG.xILKOk AND IG.q_xHV_DIS THEN
+			fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+	END_IF
+	
+	
+	// Log Action
+	tAction(CLK := IG.xHV_SW);
+	IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+	
+	
+	
+	//STATE Logger  
+	tState(CLK := ePrevState <> IG.eState);
+	IF ePrevState <> IG.eState THEN
+		  CASE IG.eState OF
+			ValidHi:
+				fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+			ValidLo:
+				fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+			Valid:
+				fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+			GaugeDisconnected:
+				fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+			PressInvalid:
+				fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+			OoR:
+				fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+			Starting:
+				fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+		  END_CASE
+		  ePrevState := IG.eState;  
+	  END_IF
+END_IF  
+
+]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{ff82f030-759d-4d51-984f-cf72c5aaaa2d}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+
+IF (SUPER^.bRestorePersistentData) THEN
+	SUPER^.bRestorePersistentData := FALSE;
+	IF (rVAC_SP <> 0) THEN
+		IG.rVAC_SP := rVAC_SP;
+	END_IF;
+	IF (rPRO_SP <> 0) THEN
+		IG.rPRO_SP := rPRO_SP;
+	END_IF;
+	IF (rHYS_PR <> 0) THEN
+		IG.rHYS_PR := rHYS_PR;
+	END_IF;
+	IF (bAutoRecoverWrite) THEN
+		IG.xAutoOn := bAutoRecover;
+	END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+	rVAC_SP := IG.rVAC_SP;
+END_IF;
+
+IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+	rPRO_SP := IG.rPRO_SP;
+END_IF;
+
+IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+	rHYS_PR := IG.rHYS_PR;
+END_IF;
+
+IF NOT(bAutoRecoverWrite) OR NOT (bAutoRecover = IG.xAutoOn) THEN
+	bAutoRecover := IG.xAutoOn;
+	bAutoRecoverWrite := TRUE;
+END_IF;
+stateTimer(PT := T#10S);
+IF (stateTimer.Q) THEN
+	bWasOn := (IG.eState >= Valid);
+	stateTimer.IN := FALSE;
+	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s);
+END_IF;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Recover" Id="{88ffcfa4-6b9d-46a0-a87d-ce9b5497347c}">
+      <Implementation>
+        <ST><![CDATA[fbGetCurTaskIdx();
+IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+	tRecover.IN := TRUE;
+END_IF
+tRecover(PT := tRecoverDelay);
+IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover) THEN
+	This^.M_Recover();
+	tRecover.IN := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="IO" Id="{ec6eee01-f5ee-46f9-8599-9e4aba7e16a8}">
+      <Implementation>
+        <ST><![CDATA[(*soft link inputs*)
+IG.i_iPRESS_R:=	i_iPRESS_R; 
+IG.i_xHV_ON := IG.q_xHV_DIS;  //not a real readback, assuming turning on HV output, HV status is ON and vice versa
+
+(*soft link outputs*)
+q_xHV_DIS := IG.q_xHV_DIS;
+
+(*Gauge name link*)
+IG.sPath := sPath;]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_HVE" Id="{9509c34e-872d-44ca-a485-c34946b93bd0}">
+      <Declaration><![CDATA[METHOD M_HVE : BOOL
+VAR_INPUT
+		bEnable : BOOL; // set to true to enable, false to disable;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.IG.xHV_SW := bEnable;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Recover" Id="{1ca6eb05-8204-41b2-b395-4240c762dfcb}">
+      <Declaration><![CDATA[METHOD M_Recover : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.M_HVE(This^.bWasOn);
+M_Recover := bWasOn;
+IF (bWasOn) THEN fbLogger(sMsg:='Auto Recovery Initiated.', eSevr:=TcEventSeverity.Info); END_IF;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetBits" Id="{5e2152b2-9cf7-4581-81e5-08fce1faacd0}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+	TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
