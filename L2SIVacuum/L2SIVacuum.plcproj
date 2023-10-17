@@ -219,6 +219,9 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_MX7M.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_GaugeBase.TcPOU">
       <SubType>Code</SubType>
     </Compile>
