@@ -2,24 +2,6 @@
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4022.30">
 	<DataTypes>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-000000000041}" TcBaseType="true" HideSubItems="true" CName="AmsNetId">AMSNETID</Name>
-			<BitSize>48</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>6</Elements>
-			</ArrayInfo>
-			<Format>
-				<Printf>%d.%d.%d.%d.%d.%d</Printf>
-				<Parameter>[0]</Parameter>
-				<Parameter>[1]</Parameter>
-				<Parameter>[2]</Parameter>
-				<Parameter>[3]</Parameter>
-				<Parameter>[4]</Parameter>
-				<Parameter>[5]</Parameter>
-			</Format>
-		</DataType>
-		<DataType>
 			<Name GUID="{F27C2E36-F71A-4739-B9BA-8A892874FECC}" PersistentType="true">VacEventClass</Name>
 			<DisplayName TxtId="">
 				<![CDATA[NewEventClass_DisplayText]]>
@@ -84,20 +66,6 @@
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
-						<Var>
-							<Name>LCLS_General.DefaultGlobals.stSys.I_EcatMaster1</Name>
-							<Comment>
-								<![CDATA[ AMS Net ID used for FB_EcatDiag, among others ]]>
-							</Comment>
-							<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
-						</Var>
-						<Var>
-							<Name>LCLS_Vacuum_Serial.LCLS_Vacuum.Global_Variables.g_stSystem.I_EcatMaster1</Name>
-							<Comment>
-								<![CDATA[ AMS Net ID used for FB_EcatDiag, among others ]]>
-							</Comment>
-							<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
-						</Var>
 						<Var>
 							<Name>PRG_Test.fb_VGC_Test.VGC.i_xOpnLS</Name>
 							<Comment>
@@ -219,13 +187,6 @@
 								<![CDATA[ Controls and I/Os]]>
 							</Comment>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>Global_Variables.g_stSystem.I_EcatMaster1</Name>
-							<Comment>
-								<![CDATA[ AMS Net ID used for FB_EcatDiag, among others ]]>
-							</Comment>
-							<Type GUID="{18071995-0000-0000-0000-000000000041}">AMSNETID</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
@@ -369,13 +330,13 @@
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500800205008}" Id="#x02030010"/>
 		<OwnerA Name="TIPC^L2SIVacuum^L2SIVacuum Instance">
 			<OwnerB Name="TIPC^L2SIVacuum^L2SIVacuum Instance">
+				<Link VarA="PlcTask Inputs^PRG_Test.fb_GPI_Test.fb_MKS317.i_iPRESS_R" VarB="PlcTask Outputs^PRG_Test.fb_GPI_Test.i_iPRESS_R"/>
+				<Link VarA="PlcTask Inputs^PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iTempMon" VarB="PlcTask Outputs^PRG_Test.fb_PTM_Test.i_iTempMon"/>
+				<Link VarA="PlcTask Inputs^PRG_Test.fb_PTM_Test.q_iSpeedSet" VarB="PlcTask Outputs^PRG_Test.fb_PTM_Test.i_diCurSpd"/>
 				<Link VarA="PlcTask Outputs^PRG_Test.fb_GCC_Test.i_iPRESS_R" VarB="PlcTask Inputs^PRG_Test.fb_GCC_Test.fb_MKS422.i_iPRESS_R"/>
 				<Link VarA="PlcTask Outputs^PRG_Test.fb_GPI_Test.i_iPRESS_R" VarB="PlcTask Inputs^PRG_Test.fb_GPI_Test.fb_MKS275.i_iPRESS_R"/>
-				<Link VarA="PlcTask Outputs^PRG_Test.fb_GPI_Test.i_iPRESS_R" VarB="PlcTask Inputs^PRG_Test.fb_GPI_Test.fb_MKS317.i_iPRESS_R"/>
-				<Link VarA="PlcTask Outputs^PRG_Test.fb_PTM_Test.i_diCurSpd" VarB="PlcTask Inputs^PRG_Test.fb_PTM_Test.q_iSpeedSet"/>
 				<Link VarA="PlcTask Outputs^PRG_Test.fb_PTM_Test.i_iCurrentMon" VarB="PlcTask Inputs^PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iCurrentMon"/>
 				<Link VarA="PlcTask Outputs^PRG_Test.fb_PTM_Test.i_iRawSpeed" VarB="PlcTask Inputs^PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iRawSpeed"/>
-				<Link VarA="PlcTask Outputs^PRG_Test.fb_PTM_Test.i_iTempMon" VarB="PlcTask Inputs^PRG_Test.fb_PTM_Test.fb_PTM_Ebara_010M.i_iTempMon"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>
