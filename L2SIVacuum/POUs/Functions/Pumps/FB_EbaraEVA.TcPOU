@@ -71,7 +71,8 @@ stPump.xErr:=	NOT(i_xAlarmOK);
 stPump.i_xIsRun := i_xIsRun;
 (*outputs*)
 q_xRunDo:=stPump.q_xRunDo;
-q_xRemote:= stPump.q_xRemote;]]></ST>
+q_xRemote:= stPump.q_xRemote;
+q_xResetAlarm:=stPump.q_xReset;]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_Logger" Id="{64314086-c648-4cbf-8914-c1f81f7a5c99}">

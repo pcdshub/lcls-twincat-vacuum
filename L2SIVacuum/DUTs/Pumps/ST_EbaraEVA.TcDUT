@@ -32,6 +32,14 @@ STRUCT
     '}
 	i_xIsRun		:	BOOL;
 
+	
+    {attribute 'pytmc' := '
+	pv: RST_SW;
+	field: ZNAM FALSE; 
+	field: ONAM TRUE;
+	io: io;
+	'}
+	q_xReset	:	BOOL; //For resetting faults
 
 
 END_STRUCT
