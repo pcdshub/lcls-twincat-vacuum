@@ -532,6 +532,14 @@ ST_EbaraEVA
         '}
     	i_xIsRun		:	BOOL;
 
+    	
+        {attribute 'pytmc' := '
+    	pv: RST_SW;
+    	field: ZNAM FALSE; 
+    	field: ONAM TRUE;
+    	io: io;
+    	'}
+    	q_xReset	:	BOOL; //For resetting faults
 
 
     END_STRUCT
@@ -1677,6 +1685,23 @@ ST_VAT590_COE
     	field: DRVH 100.0
         '}
     	fPGain_SP : REAL;
+    	(*Position Limit Parameters*)
+    	{attribute 'pytmc' := '
+    	pv: POSITION_LIMIT_OPN
+    	io: io
+    	field: EGU "%"
+    	field: DRVL 0.0
+    	field: DRVH 100.0
+        '}
+    	fPositionLimitOpen : REAL;
+    	{attribute 'pytmc' := '
+    	pv: POSITION_LIMIT_OPN_CTRL
+    	io: io
+    	field: EGU "%"
+    	field: DRVL 0.0
+    	field: DRVH 100.0
+        '}
+    	fPositionLimitOpenControl : REAL;
     END_STRUCT
     END_TYPE
 
@@ -4242,6 +4267,7 @@ FB_EbaraEVA
     (*outputs*)
     q_xRunDo:=stPump.q_xRunDo;
     q_xRemote:= stPump.q_xRemote;
+    q_xResetAlarm:=stPump.q_xReset;
     END_ACTION
 
     ACTION ACT_Logger:
@@ -11011,6 +11037,8 @@ FB_VCN_VAT590
     	cRampTime_SP : ST_CoEIndSub := (nIndex := 16#21B9, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
     	cRampMode_SP : ST_CoEIndSub := (nIndex := 16#21BA, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
     	cPGain_SP : ST_CoEIndSub := (nIndex := 16#21BC, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
+    	cPosLimitOpen : ST_CoEIndSub := (nIndex := 16#56B3, nSubIndex := 0); // General open limit. It overides the PosLimitOpenCtrl if SET lower
+    	cPosLimitOpenCtrl : ST_CoEIndSub := (nIndex := 16#56B4, nSubIndex := 0); // Open limit active during pressure control only
     END_VAR
     VAR
     	fCalcPosSP : REAL := 0;
@@ -11363,6 +11391,18 @@ FB_VCN_VAT590
     		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_SP);
     		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_SP);
     		fbCoeRead.bExecute := TRUE;
+    	19:
+    		fbCoeRead.nIndex := cPosLimitOpen.nIndex;
+    		fbCoeRead.nSubIndex := cPosLimitOpen.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+    		fbCoeRead.bExecute := TRUE;
+    	20:
+    		fbCoeRead.nIndex := cPosLimitOpenCtrl.nIndex;
+    		fbCoeRead.nSubIndex := cPosLimitOpenCtrl.nSubIndex;
+    		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
+    		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
+    		fbCoeRead.bExecute := TRUE;
     END_CASE
 
     ftCoeReadBusy(CLK:=fbCoeRead.bBusy);
@@ -11370,7 +11410,7 @@ FB_VCN_VAT590
     	fbCoeRead.bExecute := FALSE;
     	IF NOT fbCoeRead.bError THEN
     		nCaseReadCoe := nCaseReadCoe + 1;
-    		IF nCaseReadCoe > 18 THEN
+    		IF nCaseReadCoe > 20 THEN
     			nCaseReadCoe := 1;
     			bFirstRead := FALSE; // Reset bFirstRead after successfull readout of all parameters
     		END_IF
@@ -11548,6 +11588,18 @@ FB_VCN_VAT590
     	fbCoeWrite.nSubIndex := cPGain_SP.nSubIndex;
     	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_SP);
     	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_SP);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fPositionLimitOpen <> stCoeParamsInternal.fPositionLimitOpen THEN
+    	fbCoeWrite.nIndex := cPosLimitOpen.nIndex;
+    	fbCoeWrite.nSubIndex := cPosLimitOpen.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+    	fbCoeWrite.bExecute := TRUE;
+    ELSIF stVcnVat590.stCoeParameters.fPositionLimitOpenControl <> stCoeParamsInternal.fPositionLimitOpenControl THEN
+    	fbCoeWrite.nIndex := cPosLimitOpenCtrl.nIndex;
+    	fbCoeWrite.nSubIndex := cPosLimitOpenCtrl.nSubIndex;
+    	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
+    	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
     	fbCoeWrite.bExecute := TRUE;
     END_IF
 
@@ -12326,6 +12378,15 @@ FB_VFS_2OO3Interface
     (*OPN OK evaluation bit *)
     xOPN_OK := (i_xVAC_FAULT_OK) AND (NOT i_xTrigger OR (q_xVetoValveClosed AND NOT q_xVetoValveOpenDO));
 
+    (*Reset Fault counter, q_ResetFaultCounter output is TRUE for one plc cycle *)
+    rtResetFaultCounter(CLK := i_ResetFaultCounter);
+    IF rtResetFaultCounter.Q THEN
+        i_ResetFaultCounter := FALSE;
+        q_ResetFaultCounter := TRUE;
+    ELSE
+        q_ResetFaultCounter := FALSE;
+    END_IF
+
     (*Soft IO Mapping*)
     IO();
 
@@ -12404,15 +12465,6 @@ FB_VFS_2OO3Interface
 
     (*2oo3 mode selector*)
     q_e2OO3_MODE := i_e2OO3_MODE;
-
-    (*Reset Fault counter, q_ResetFaultCounter output is TRUE for one plc cycle *)
-    rtResetFaultCounter(CLK := i_ResetFaultCounter);
-    IF rtResetFaultCounter.Q THEN
-        i_ResetFaultCounter := FALSE;
-        q_ResetFaultCounter := TRUE;
-    ELSE
-        q_ResetFaultCounter := FALSE;
-    END_IF
     END_ACTION
 
 

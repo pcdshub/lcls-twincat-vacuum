@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DUTs &mdash; pcdshub/lcls-twincat-vacuum  documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/tree.css?v=837a00b9" />
+      <link rel="stylesheet" type="text/css" href="_static/width.css?v=ab210c7a" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -46,7 +50,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_pragmas.html">Pragmas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_nc.html">NC Settings</a></li>
-<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_ethercat.html">Box Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_ethercat.html">EtherCAT Terminals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_boxes.html">Boxes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="L2SIVacuumLib_links.html">Links</a></li>
 </ul>
@@ -709,6 +713,14 @@
     <span class="s1">&#39;}</span>
     <span class="n">i_xIsRun</span>                <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span>
 
+
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">RST_SW</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span><span class="p">;</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">q_xReset</span>        <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span><span class="n">For</span> <span class="n">resetting</span> <span class="n">faults</span>
 
 
 <span class="n">END_STRUCT</span>
@@ -1838,6 +1850,23 @@ END_TYPE
     <span class="n">field</span><span class="p">:</span> <span class="n">DRVH</span> <span class="mf">100.0</span>
     <span class="s1">&#39;}</span>
     <span class="n">fPGain_SP</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">Position</span> <span class="n">Limit</span> <span class="n">Parameters</span><span class="o">*</span><span class="p">)</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">POSITION_LIMIT_OPN</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">EGU</span> <span class="s2">&quot;%&quot;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">DRVL</span> <span class="mf">0.0</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">DRVH</span> <span class="mf">100.0</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">fPositionLimitOpen</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">POSITION_LIMIT_OPN_CTRL</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">EGU</span> <span class="s2">&quot;%&quot;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">DRVL</span> <span class="mf">0.0</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">DRVH</span> <span class="mf">100.0</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">fPositionLimitOpenControl</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
 <span class="n">END_STRUCT</span>
 <span class="n">END_TYPE</span>
 </pre></div>
@@ -4373,6 +4402,7 @@ END_ACTION
 <span class="p">(</span><span class="o">*</span><span class="n">outputs</span><span class="o">*</span><span class="p">)</span>
 <span class="n">q_xRunDo</span><span class="o">:=</span><span class="n">stPump</span><span class="o">.</span><span class="n">q_xRunDo</span><span class="p">;</span>
 <span class="n">q_xRemote</span><span class="o">:=</span> <span class="n">stPump</span><span class="o">.</span><span class="n">q_xRemote</span><span class="p">;</span>
+<span class="n">q_xResetAlarm</span><span class="o">:=</span><span class="n">stPump</span><span class="o">.</span><span class="n">q_xReset</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
 
 <span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
@@ -11142,6 +11172,8 @@ END_METHOD
     <span class="n">cRampTime_SP</span> <span class="p">:</span> <span class="n">ST_CoEIndSub</span> <span class="o">:=</span> <span class="p">(</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="mi">16</span><span class="c1">#21B9, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register</span>
     <span class="n">cRampMode_SP</span> <span class="p">:</span> <span class="n">ST_CoEIndSub</span> <span class="o">:=</span> <span class="p">(</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="mi">16</span><span class="c1">#21BA, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register</span>
     <span class="n">cPGain_SP</span> <span class="p">:</span> <span class="n">ST_CoEIndSub</span> <span class="o">:=</span> <span class="p">(</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="mi">16</span><span class="c1">#21BC, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register</span>
+    <span class="n">cPosLimitOpen</span> <span class="p">:</span> <span class="n">ST_CoEIndSub</span> <span class="o">:=</span> <span class="p">(</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="mi">16</span><span class="c1">#56B3, nSubIndex := 0); // General open limit. It overides the PosLimitOpenCtrl if SET lower</span>
+    <span class="n">cPosLimitOpenCtrl</span> <span class="p">:</span> <span class="n">ST_CoEIndSub</span> <span class="o">:=</span> <span class="p">(</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="mi">16</span><span class="c1">#56B4, nSubIndex := 0); // Open limit active during pressure control only</span>
 <span class="n">END_VAR</span>
 <span class="n">VAR</span>
     <span class="n">fCalcPosSP</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
@@ -11494,6 +11526,18 @@ END_METHOD
             <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">pDstBuf</span> <span class="o">:=</span> <span class="n">ADR</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPGain_SP</span><span class="p">);</span>
             <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">cbBufLen</span> <span class="o">:=</span> <span class="n">SIZEOF</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPGain_SP</span><span class="p">);</span>
             <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">bExecute</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="mi">19</span><span class="p">:</span>
+            <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="n">cPosLimitOpen</span><span class="o">.</span><span class="n">nIndex</span><span class="p">;</span>
+            <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">nSubIndex</span> <span class="o">:=</span> <span class="n">cPosLimitOpen</span><span class="o">.</span><span class="n">nSubIndex</span><span class="p">;</span>
+            <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">pDstBuf</span> <span class="o">:=</span> <span class="n">ADR</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPositionLimitOpen</span><span class="p">);</span>
+            <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">cbBufLen</span> <span class="o">:=</span> <span class="n">SIZEOF</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPositionLimitOpen</span><span class="p">);</span>
+            <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">bExecute</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="mi">20</span><span class="p">:</span>
+            <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="n">cPosLimitOpenCtrl</span><span class="o">.</span><span class="n">nIndex</span><span class="p">;</span>
+            <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">nSubIndex</span> <span class="o">:=</span> <span class="n">cPosLimitOpenCtrl</span><span class="o">.</span><span class="n">nSubIndex</span><span class="p">;</span>
+            <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">pDstBuf</span> <span class="o">:=</span> <span class="n">ADR</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPositionLimitOpenControl</span><span class="p">);</span>
+            <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">cbBufLen</span> <span class="o">:=</span> <span class="n">SIZEOF</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPositionLimitOpenControl</span><span class="p">);</span>
+            <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">bExecute</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
 <span class="n">END_CASE</span>
 
 <span class="n">ftCoeReadBusy</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span><span class="n">fbCoeRead</span><span class="o">.</span><span class="n">bBusy</span><span class="p">);</span>
@@ -11501,7 +11545,7 @@ END_METHOD
     <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">bExecute</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
     <span class="n">IF</span> <span class="n">NOT</span> <span class="n">fbCoeRead</span><span class="o">.</span><span class="n">bError</span> <span class="n">THEN</span>
             <span class="n">nCaseReadCoe</span> <span class="o">:=</span> <span class="n">nCaseReadCoe</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-            <span class="n">IF</span> <span class="n">nCaseReadCoe</span> <span class="o">&gt;</span> <span class="mi">18</span> <span class="n">THEN</span>
+            <span class="n">IF</span> <span class="n">nCaseReadCoe</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="n">THEN</span>
                     <span class="n">nCaseReadCoe</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span>
                     <span class="n">bFirstRead</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span> <span class="o">//</span> <span class="n">Reset</span> <span class="n">bFirstRead</span> <span class="n">after</span> <span class="n">successfull</span> <span class="n">readout</span> <span class="n">of</span> <span class="nb">all</span> <span class="n">parameters</span>
             <span class="n">END_IF</span>
@@ -11679,6 +11723,18 @@ END_METHOD
     <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">nSubIndex</span> <span class="o">:=</span> <span class="n">cPGain_SP</span><span class="o">.</span><span class="n">nSubIndex</span><span class="p">;</span>
     <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">pSrcBuf</span> <span class="o">:=</span> <span class="n">ADR</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPGain_SP</span><span class="p">);</span>
     <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">cbBufLen</span> <span class="o">:=</span> <span class="n">SIZEOF</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPGain_SP</span><span class="p">);</span>
+    <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">bExecute</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPositionLimitOpen</span> <span class="o">&lt;&gt;</span> <span class="n">stCoeParamsInternal</span><span class="o">.</span><span class="n">fPositionLimitOpen</span> <span class="n">THEN</span>
+    <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="n">cPosLimitOpen</span><span class="o">.</span><span class="n">nIndex</span><span class="p">;</span>
+    <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">nSubIndex</span> <span class="o">:=</span> <span class="n">cPosLimitOpen</span><span class="o">.</span><span class="n">nSubIndex</span><span class="p">;</span>
+    <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">pSrcBuf</span> <span class="o">:=</span> <span class="n">ADR</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPositionLimitOpen</span><span class="p">);</span>
+    <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">cbBufLen</span> <span class="o">:=</span> <span class="n">SIZEOF</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPositionLimitOpen</span><span class="p">);</span>
+    <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">bExecute</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPositionLimitOpenControl</span> <span class="o">&lt;&gt;</span> <span class="n">stCoeParamsInternal</span><span class="o">.</span><span class="n">fPositionLimitOpenControl</span> <span class="n">THEN</span>
+    <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="n">cPosLimitOpenCtrl</span><span class="o">.</span><span class="n">nIndex</span><span class="p">;</span>
+    <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">nSubIndex</span> <span class="o">:=</span> <span class="n">cPosLimitOpenCtrl</span><span class="o">.</span><span class="n">nSubIndex</span><span class="p">;</span>
+    <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">pSrcBuf</span> <span class="o">:=</span> <span class="n">ADR</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPositionLimitOpenControl</span><span class="p">);</span>
+    <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">cbBufLen</span> <span class="o">:=</span> <span class="n">SIZEOF</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stCoeParameters</span><span class="o">.</span><span class="n">fPositionLimitOpenControl</span><span class="p">);</span>
     <span class="n">fbCoeWrite</span><span class="o">.</span><span class="n">bExecute</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
 <span class="n">END_IF</span>
 
@@ -12457,6 +12513,15 @@ END_METHOD
 <span class="p">(</span><span class="o">*</span><span class="n">OPN</span> <span class="n">OK</span> <span class="n">evaluation</span> <span class="n">bit</span> <span class="o">*</span><span class="p">)</span>
 <span class="n">xOPN_OK</span> <span class="o">:=</span> <span class="p">(</span><span class="n">i_xVAC_FAULT_OK</span><span class="p">)</span> <span class="n">AND</span> <span class="p">(</span><span class="n">NOT</span> <span class="n">i_xTrigger</span> <span class="n">OR</span> <span class="p">(</span><span class="n">q_xVetoValveClosed</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">q_xVetoValveOpenDO</span><span class="p">));</span>
 
+<span class="p">(</span><span class="o">*</span><span class="n">Reset</span> <span class="n">Fault</span> <span class="n">counter</span><span class="p">,</span> <span class="n">q_ResetFaultCounter</span> <span class="n">output</span> <span class="ow">is</span> <span class="n">TRUE</span> <span class="k">for</span> <span class="n">one</span> <span class="n">plc</span> <span class="n">cycle</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">rtResetFaultCounter</span><span class="p">(</span><span class="n">CLK</span> <span class="o">:=</span> <span class="n">i_ResetFaultCounter</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">rtResetFaultCounter</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+    <span class="n">i_ResetFaultCounter</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">q_ResetFaultCounter</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">ELSE</span>
+    <span class="n">q_ResetFaultCounter</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
 <span class="p">(</span><span class="o">*</span><span class="n">Soft</span> <span class="n">IO</span> <span class="n">Mapping</span><span class="o">*</span><span class="p">)</span>
 <span class="n">IO</span><span class="p">();</span>
 
@@ -12535,15 +12600,6 @@ END_METHOD
 
 <span class="p">(</span><span class="o">*</span><span class="mi">2</span><span class="n">oo3</span> <span class="n">mode</span> <span class="n">selector</span><span class="o">*</span><span class="p">)</span>
 <span class="n">q_e2OO3_MODE</span> <span class="o">:=</span> <span class="n">i_e2OO3_MODE</span><span class="p">;</span>
-
-<span class="p">(</span><span class="o">*</span><span class="n">Reset</span> <span class="n">Fault</span> <span class="n">counter</span><span class="p">,</span> <span class="n">q_ResetFaultCounter</span> <span class="n">output</span> <span class="ow">is</span> <span class="n">TRUE</span> <span class="k">for</span> <span class="n">one</span> <span class="n">plc</span> <span class="n">cycle</span> <span class="o">*</span><span class="p">)</span>
-<span class="n">rtResetFaultCounter</span><span class="p">(</span><span class="n">CLK</span> <span class="o">:=</span> <span class="n">i_ResetFaultCounter</span><span class="p">);</span>
-<span class="n">IF</span> <span class="n">rtResetFaultCounter</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
-    <span class="n">i_ResetFaultCounter</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
-    <span class="n">q_ResetFaultCounter</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
-<span class="n">ELSE</span>
-    <span class="n">q_ResetFaultCounter</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
-<span class="n">END_IF</span>
 <span class="n">END_ACTION</span>
 </pre></div>
 </div>
@@ -16378,7 +16434,7 @@ END_METHOD
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, SLAC National Accelerator Laboratory.</p>
+    <p>&#169; Copyright 2024, SLAC National Accelerator Laboratory.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
