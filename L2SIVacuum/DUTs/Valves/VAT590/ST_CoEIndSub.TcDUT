@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_CoEIndSub" Id="{62fd4c96-1a38-4aeb-82f8-1dcf9193e68a}">
+    <Declaration><![CDATA[TYPE ST_CoEIndSub :
+STRUCT
+	nIndex : WORD;
+	nSubIndex : BYTE;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

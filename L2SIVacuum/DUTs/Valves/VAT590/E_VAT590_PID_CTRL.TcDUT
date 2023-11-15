@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="E_VAT590_PID_CTRL" Id="{af01f995-67a3-4393-858e-c91aed6da23e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_VAT590_PID_CTRL :
+(
+	ADAPTIVE_DS := 0,
+	FIXED_1 := 1,
+	FIXED_2 := 2,
+	SOFT_PUMP := 3
+) USINT := FIXED_1;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
