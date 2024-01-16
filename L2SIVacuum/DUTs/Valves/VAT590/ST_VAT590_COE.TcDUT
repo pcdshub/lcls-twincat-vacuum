@@ -137,6 +137,23 @@ STRUCT
 	field: DRVH 100.0
     '}
 	fPGain_SP : REAL;
+	(*Position Limit Parameters*)
+	{attribute 'pytmc' := '
+	pv: POSITION_LIMIT_OPN
+	io: io
+	field: EGU "%"
+	field: DRVL 0.0
+	field: DRVH 100.0
+    '}
+	fPositionLimitOpen : REAL;
+	{attribute 'pytmc' := '
+	pv: POSITION_LIMIT_OPN_CTRL
+	io: io
+	field: EGU "%"
+	field: DRVL 0.0
+	field: DRVH 100.0
+    '}
+	fPositionLimitOpenControl : REAL;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

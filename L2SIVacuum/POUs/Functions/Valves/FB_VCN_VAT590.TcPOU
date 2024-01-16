@@ -36,6 +36,8 @@ VAR CONSTANT
 	cRampTime_SP : ST_CoEIndSub := (nIndex := 16#21B9, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
 	cRampMode_SP : ST_CoEIndSub := (nIndex := 16#21BA, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
 	cPGain_SP : ST_CoEIndSub := (nIndex := 16#21BC, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
+	cPosLimitOpen : ST_CoEIndSub := (nIndex := 16#56B3, nSubIndex := 0); // General open limit. It overides the PosLimitOpenCtrl if SET lower
+	cPosLimitOpenCtrl : ST_CoEIndSub := (nIndex := 16#56B4, nSubIndex := 0); // Open limit active during pressure control only
 END_VAR
 VAR
 	fCalcPosSP : REAL := 0;
@@ -391,6 +393,18 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEvent
 		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_SP);
 		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_SP);
 		fbCoeRead.bExecute := TRUE;
+	19:
+		fbCoeRead.nIndex := cPosLimitOpen.nIndex;
+		fbCoeRead.nSubIndex := cPosLimitOpen.nSubIndex;
+		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+		fbCoeRead.bExecute := TRUE;
+	20:
+		fbCoeRead.nIndex := cPosLimitOpenCtrl.nIndex;
+		fbCoeRead.nSubIndex := cPosLimitOpenCtrl.nSubIndex;
+		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
+		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
+		fbCoeRead.bExecute := TRUE;
 END_CASE
 
 ftCoeReadBusy(CLK:=fbCoeRead.bBusy);
@@ -398,7 +412,7 @@ IF ftCoeReadBusy.Q THEN
 	fbCoeRead.bExecute := FALSE;
 	IF NOT fbCoeRead.bError THEN
 		nCaseReadCoe := nCaseReadCoe + 1;
-		IF nCaseReadCoe > 18 THEN
+		IF nCaseReadCoe > 20 THEN
 			nCaseReadCoe := 1;
 			bFirstRead := FALSE; // Reset bFirstRead after successfull readout of all parameters
 		END_IF
@@ -599,6 +613,18 @@ ELSIF stVcnVat590.stCoeParameters.fPGain_SP <> stCoeParamsInternal.fPGain_SP THE
 	fbCoeWrite.nSubIndex := cPGain_SP.nSubIndex;
 	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_SP);
 	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_SP);
+	fbCoeWrite.bExecute := TRUE;
+ELSIF stVcnVat590.stCoeParameters.fPositionLimitOpen <> stCoeParamsInternal.fPositionLimitOpen THEN
+	fbCoeWrite.nIndex := cPosLimitOpen.nIndex;
+	fbCoeWrite.nSubIndex := cPosLimitOpen.nSubIndex;
+	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+	fbCoeWrite.bExecute := TRUE;
+ELSIF stVcnVat590.stCoeParameters.fPositionLimitOpenControl <> stCoeParamsInternal.fPositionLimitOpenControl THEN
+	fbCoeWrite.nIndex := cPosLimitOpenCtrl.nIndex;
+	fbCoeWrite.nSubIndex := cPosLimitOpenCtrl.nSubIndex;
+	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
+	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
 	fbCoeWrite.bExecute := TRUE;
 END_IF
 
