@@ -122,7 +122,12 @@ xOPN_OK := (i_xVAC_FAULT_OK) AND (NOT i_xTrigger OR (q_xVetoValveClosed AND NOT 
 
 (*Reset Fault counter, q_ResetFaultCounter output is TRUE for one plc cycle *)
 rtResetFaultCounter(CLK := i_ResetFaultCounter);
-q_ResetFaultCounter := rtResetFaultCounter.Q;
+IF rtResetFaultCounter.Q THEN
+    i_ResetFaultCounter := FALSE;
+    q_ResetFaultCounter := TRUE;
+ELSE
+    q_ResetFaultCounter := FALSE;
+END_IF
 
 (*Soft IO Mapping*)
 IO();
