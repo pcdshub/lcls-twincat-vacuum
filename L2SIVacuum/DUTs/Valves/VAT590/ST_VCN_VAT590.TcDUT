@@ -81,11 +81,6 @@ STRUCT
 	'}
 	stValveStatus : ST_VAT590_STATUS; //All Valve status readbacks
 	{attribute 'pytmc' :=  ' 
-	pv: PRES_SENS
-	io: io
-	'}
-	ePressureSensor : E_VAT590_PressureSensor; //Select pressure sensor
-	{attribute 'pytmc' :=  ' 
 	pv: REM_CTRL
 	io: io
 	'}
