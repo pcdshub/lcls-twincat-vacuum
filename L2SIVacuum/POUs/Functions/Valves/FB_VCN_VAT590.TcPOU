@@ -20,8 +20,7 @@ VAR CONSTANT
 	cPresSPLowLim : REAL := 0;         // Default pressure setpoint lower scale value
 	cMinPress : REAL := 1e-11;         // Default Min. pressure in Torr that can be used and requested
 	cMaxPress : REAL := 1e-2;          // Default Max. pressure in Torr that can be used and requested
-    //Ranges 0 to 1000000 (or 0.0 to 10V) (1E-11 to 1E-2)
-    cBasePress : REAL := 1E-11;        // Pressure sensor lower scale value
+	cBasePress : REAL := 1E-11;        // Pressure sensor base value
 	cPressRawSlope : REAL := 1E+5;     // Slope (in Units per decade) used for conversion of pressure in Torr to valve External Digital pressure sensor 1 input raw value (0-1000000)
 	cPressRawBase : REAL := 1E+5;      // Valve analog output base(in Units per decade) defined for how much the curve is shifted
 
@@ -49,8 +48,8 @@ END_VAR
 VAR
 	fCalcPosSP : REAL := 0;
 	fCalcPresSP : REAL := 0;
-	fPressRaw : REAL := 0;
-	eValveModeSP : E_ControlModeSP;
+	fPressRaw : REAL := 0;             // Ranges 0 to 1000000 (or 0.0 to 10V) (1E-12 to 1E-2)
+	eValveModeSP : E_ControlModeSP;    // Control Mode setpoint internal variable
 	fReqPos : REAL;                    // Requested position internal variable
 	fReqPres : REAL;                   // Requested pressure internal variable
 
@@ -91,7 +90,7 @@ VAR
 	// Ethercat Interface Outputs
 	o_nRawPositionSP     AT %Q* : DINT;               // Position setpoint
 	o_nRawPressureSP     AT %Q* : DINT;               // Pressure setpoint
-	o_nRawPressure       AT %Q* : DINT;               // Raw pressure output, eliminate need for external connection of the press. gauge, 0-100000 which coresponds to 0-10V
+	o_nRawPressure       AT %Q* : DINT;               // Raw pressure output, eliminate need for external connection of AI, ranges 0 to 1000000 (or 0.0 to 10V) (1E-12 Torr to 1E-2 Torr)
 	o_eCtrlModeSP        AT %Q* : E_ControlModeSP;    // Valve control mode setpoint
 	o_stGenCtrlSP        AT %Q* : ST_GeneralControlSP;// General Control setpoint
 	(*Ethercat Interface Status Check*)
@@ -176,19 +175,16 @@ fReqPres := LIMIT(cMinPress, fReqPres, fPresMaxLim);
 fCalcPresSP := cPressRawSlope * LOG(fReqPres/cBasePress) + cPressRawBase;
 fCalcPresSP := LIMIT(cPresSPLowLim, fCalcPresSP, cPresSPUpLim); //The requested pressure SP should remain within this range
 
-//Calculate pressure readback in Torr units
-//stVcnVat590.fPressure := LREAL_TO_REAL(EXPT(10,((DINT_TO_REAL(stVcnVat590.nRawPressure)-cBasePress)/cPressRawSlope + LOG(cBasePress))));
-
 (*Calculated Pressure SP, Pressure readback and PressureRaw output value are 0 if Pressure sensor is not working*)
-//Calculate PressureRaw value linked to the valve External Digital pressure sensor 1 input
-//Pressure information from IG input is liked to stVcnVat590.fPressure
+//Calculate PressureRaw value linked to the Valve's External Digital pressure sensor 1 input
+//Pressure information from IG input is linked to stVcnVat590.fPressure
 IF IG.xPRESS_OK THEN
-    stVcnVat590.fPressure := IG.rPRESS;
-    fPressRaw := cPressRawSlope * LOG(IG.rPRESS/cBasePress) + cPressRawBase;
+	stVcnVat590.fPressure := IG.rPRESS;
+	fPressRaw := cPressRawSlope * LOG(IG.rPRESS/cBasePress) + cPressRawBase;
 ELSE
-    fCalcPresSP := 0;
-    stVcnVat590.fPressure := 0;
-    fPressRaw := 0;
+	fCalcPresSP := 0;
+	stVcnVat590.fPressure := 0;
+	fPressRaw := 0;
 END_IF
 
 (*Zero function*)
