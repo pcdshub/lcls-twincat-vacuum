@@ -18,7 +18,7 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="_static/docs-versions-menu.js?v=3d6a1aea"></script>
     <script src="_static/js/theme.js"></script>
@@ -72,7 +72,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#e-valvepositionstate">E_ValvePositionState</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#e-vat590-accessmode">E_VAT590_AccessMode</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#e-vat590-pid-ctrl">E_VAT590_PID_CTRL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#e-vat590-pressuresensor">E_VAT590_PressureSensor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#e-vcn">E_VCN</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#e-vcn-vat590">E_VCN_VAT590</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#e-vgc">E_VGC</a></li>
@@ -400,19 +399,6 @@
     <span class="n">FIXED_2</span> <span class="o">:=</span> <span class="mi">2</span><span class="p">,</span>
     <span class="n">SOFT_PUMP</span> <span class="o">:=</span> <span class="mi">3</span>
 <span class="p">)</span> <span class="n">USINT</span> <span class="o">:=</span> <span class="n">FIXED_1</span><span class="p">;</span>
-<span class="n">END_TYPE</span>
-</pre></div>
-</div>
-</section>
-<section id="e-vat590-pressuresensor">
-<h2>E_VAT590_PressureSensor<a class="headerlink" href="#e-vat590-pressuresensor" title="Link to this heading"></a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;qualified_only&#39;</span><span class="p">}</span>
-<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;strict&#39;</span><span class="p">}</span>
-<span class="n">TYPE</span> <span class="n">E_VAT590_PressureSensor</span> <span class="p">:</span>
-<span class="p">(</span>
-    <span class="n">NOT_DEFINED</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">MKS500</span> <span class="o">:=</span> <span class="mi">1</span>
-<span class="p">)</span> <span class="n">USINT</span> <span class="o">:=</span> <span class="n">MKS500</span><span class="p">;</span>
 <span class="n">END_TYPE</span>
 </pre></div>
 </div>
@@ -2290,11 +2276,6 @@ END_TYPE
     <span class="s1">&#39;}</span>
     <span class="n">stValveStatus</span> <span class="p">:</span> <span class="n">ST_VAT590_STATUS</span><span class="p">;</span> <span class="o">//</span><span class="n">All</span> <span class="n">Valve</span> <span class="n">status</span> <span class="n">readbacks</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span>  <span class="s1">&#39;</span>
-    <span class="n">pv</span><span class="p">:</span> <span class="n">PRES_SENS</span>
-    <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
-    <span class="s1">&#39;}</span>
-    <span class="n">ePressureSensor</span> <span class="p">:</span> <span class="n">E_VAT590_PressureSensor</span><span class="p">;</span> <span class="o">//</span><span class="n">Select</span> <span class="n">pressure</span> <span class="n">sensor</span>
-    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span>  <span class="s1">&#39;</span>
     <span class="n">pv</span><span class="p">:</span> <span class="n">REM_CTRL</span>
     <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
     <span class="s1">&#39;}</span>
@@ -2338,7 +2319,6 @@ END_TYPE
 <dl class="simple">
 <dt>Related:</dt><dd><ul class="simple">
 <li><p><a class="reference internal" href="#e-vat590-accessmode">E_VAT590_AccessMode</a></p></li>
-<li><p><a class="reference internal" href="#e-vat590-pressuresensor">E_VAT590_PressureSensor</a></p></li>
 <li><p><a class="reference internal" href="#e-vcn-vat590">E_VCN_VAT590</a></p></li>
 <li><p><a class="reference internal" href="#st-vat590-coe">ST_VAT590_COE</a></p></li>
 <li><p><a class="reference internal" href="#st-vat590-status">ST_VAT590_STATUS</a></p></li>
@@ -11154,6 +11134,12 @@ END_METHOD
     <span class="n">cClosePosition</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">0.0</span><span class="p">;</span>      <span class="o">//</span> <span class="n">Default</span> <span class="n">position</span> <span class="n">setpoint</span> <span class="n">lower</span> <span class="n">scale</span> <span class="n">value</span>
     <span class="n">cPresSPUpLim</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E+6</span><span class="p">;</span>       <span class="o">//</span> <span class="n">Default</span> <span class="n">pressure</span> <span class="n">setpoint</span> <span class="n">upper</span> <span class="n">scale</span> <span class="n">value</span>
     <span class="n">cPresSPLowLim</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>         <span class="o">//</span> <span class="n">Default</span> <span class="n">pressure</span> <span class="n">setpoint</span> <span class="n">lower</span> <span class="n">scale</span> <span class="n">value</span>
+    <span class="n">cMinPress</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1e-11</span><span class="p">;</span>         <span class="o">//</span> <span class="n">Default</span> <span class="n">Min</span><span class="o">.</span> <span class="n">pressure</span> <span class="ow">in</span> <span class="n">Torr</span> <span class="n">that</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="ow">and</span> <span class="n">requested</span>
+    <span class="n">cMaxPress</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1e-2</span><span class="p">;</span>          <span class="o">//</span> <span class="n">Default</span> <span class="n">Max</span><span class="o">.</span> <span class="n">pressure</span> <span class="ow">in</span> <span class="n">Torr</span> <span class="n">that</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="ow">and</span> <span class="n">requested</span>
+    <span class="n">cBasePress</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E-11</span><span class="p">;</span>        <span class="o">//</span> <span class="n">Pressure</span> <span class="n">sensor</span> <span class="n">base</span> <span class="n">value</span>
+    <span class="n">cPressRawSlope</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>     <span class="o">//</span> <span class="n">Slope</span> <span class="p">(</span><span class="ow">in</span> <span class="n">Units</span> <span class="n">per</span> <span class="n">decade</span><span class="p">)</span> <span class="n">used</span> <span class="k">for</span> <span class="n">conversion</span> <span class="n">of</span> <span class="n">pressure</span> <span class="ow">in</span> <span class="n">Torr</span> <span class="n">to</span> <span class="n">valve</span> <span class="n">External</span> <span class="n">Digital</span> <span class="n">pressure</span> <span class="n">sensor</span> <span class="mi">1</span> <span class="nb">input</span> <span class="n">raw</span> <span class="n">value</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="mi">1000000</span><span class="p">)</span>
+    <span class="n">cPressRawBase</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>      <span class="o">//</span> <span class="n">Valve</span> <span class="n">analog</span> <span class="n">output</span> <span class="n">base</span><span class="p">(</span><span class="ow">in</span> <span class="n">Units</span> <span class="n">per</span> <span class="n">decade</span><span class="p">)</span> <span class="n">defined</span> <span class="k">for</span> <span class="n">how</span> <span class="n">much</span> <span class="n">the</span> <span class="n">curve</span> <span class="ow">is</span> <span class="n">shifted</span>
+
     <span class="n">cPressCtrl</span> <span class="p">:</span> <span class="n">ST_CoEIndSub</span> <span class="o">:=</span> <span class="p">(</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="mi">16</span><span class="c1">#2199, nSubIndex := 0); // Selected pressure controller CoE register</span>
     <span class="n">cSensorDelay_AD</span> <span class="p">:</span> <span class="n">ST_CoEIndSub</span> <span class="o">:=</span> <span class="p">(</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="mi">16</span><span class="c1">#219A, nSubIndex := 0); // Adaptive DS controller Sensor Delay CoE register</span>
     <span class="n">cRampTime_AD</span> <span class="p">:</span> <span class="n">ST_CoEIndSub</span> <span class="o">:=</span> <span class="p">(</span><span class="n">nIndex</span> <span class="o">:=</span> <span class="mi">16</span><span class="c1">#219B, nSubIndex := 0); // Adaptive DS controller Ramp Time CoE register</span>
@@ -11178,12 +11164,11 @@ END_METHOD
 <span class="n">VAR</span>
     <span class="n">fCalcPosSP</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">fCalcPresSP</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">eValveModeSP</span> <span class="p">:</span> <span class="n">E_ControlModeSP</span><span class="p">;</span>
+    <span class="n">fPressRaw</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>             <span class="o">//</span> <span class="n">Ranges</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">1000000</span> <span class="p">(</span><span class="ow">or</span> <span class="mf">0.0</span> <span class="n">to</span> <span class="mi">10</span><span class="n">V</span><span class="p">)</span> <span class="p">(</span><span class="mf">1E-12</span> <span class="n">to</span> <span class="mf">1E-2</span><span class="p">)</span>
+    <span class="n">eValveModeSP</span> <span class="p">:</span> <span class="n">E_ControlModeSP</span><span class="p">;</span>    <span class="o">//</span> <span class="n">Control</span> <span class="n">Mode</span> <span class="n">setpoint</span> <span class="n">internal</span> <span class="n">variable</span>
     <span class="n">fReqPos</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>                    <span class="o">//</span> <span class="n">Requested</span> <span class="n">position</span> <span class="n">internal</span> <span class="n">variable</span>
     <span class="n">fReqPres</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>                   <span class="o">//</span> <span class="n">Requested</span> <span class="n">pressure</span> <span class="n">internal</span> <span class="n">variable</span>
-    <span class="n">fPresLowLim</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E-10</span><span class="p">;</span>       <span class="o">//</span> <span class="n">Pressure</span> <span class="n">sensor</span> <span class="n">lower</span> <span class="n">scale</span> <span class="n">value</span>
-    <span class="n">fSlope</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>             <span class="o">//</span> <span class="n">Slope</span> <span class="p">(</span><span class="n">Units</span> <span class="n">per</span> <span class="n">decade</span><span class="p">)</span> <span class="n">used</span> <span class="k">for</span> <span class="n">conversion</span> <span class="kn">from</span> <span class="nn">Torr</span> <span class="n">units</span>
-    <span class="n">fVbase</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>             <span class="o">//</span> <span class="n">Vbase</span> <span class="p">(</span><span class="n">Units</span> <span class="n">per</span> <span class="n">decade</span><span class="p">)</span> <span class="n">defined</span> <span class="k">for</span> <span class="n">how</span> <span class="n">much</span> <span class="n">the</span> <span class="n">curve</span> <span class="ow">is</span> <span class="n">shifted</span>
+
     <span class="n">bRemAcsToggle</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>              <span class="o">//</span> <span class="n">Remote</span> <span class="n">access</span> <span class="n">control</span> <span class="n">bit</span>
     <span class="o">//</span><span class="n">timer</span> <span class="k">for</span> <span class="n">zero</span> <span class="n">function</span>
     <span class="n">tZeroTogg</span> <span class="p">:</span> <span class="n">TON</span> <span class="o">:=</span> <span class="p">(</span><span class="n">PT</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#1S);</span>
@@ -11221,6 +11206,7 @@ END_METHOD
     <span class="o">//</span> <span class="n">Ethercat</span> <span class="n">Interface</span> <span class="n">Outputs</span>
     <span class="n">o_nRawPositionSP</span>     <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span>               <span class="o">//</span> <span class="n">Position</span> <span class="n">setpoint</span>
     <span class="n">o_nRawPressureSP</span>     <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span>               <span class="o">//</span> <span class="n">Pressure</span> <span class="n">setpoint</span>
+    <span class="n">o_nRawPressure</span>       <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">DINT</span><span class="p">;</span>               <span class="o">//</span> <span class="n">Raw</span> <span class="n">pressure</span> <span class="n">output</span><span class="p">,</span> <span class="n">eliminate</span> <span class="n">need</span> <span class="k">for</span> <span class="n">external</span> <span class="n">connection</span> <span class="n">of</span> <span class="n">AI</span><span class="p">,</span> <span class="n">ranges</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">1000000</span> <span class="p">(</span><span class="ow">or</span> <span class="mf">0.0</span> <span class="n">to</span> <span class="mi">10</span><span class="n">V</span><span class="p">)</span> <span class="p">(</span><span class="mf">1E-12</span> <span class="n">Torr</span> <span class="n">to</span> <span class="mf">1E-2</span> <span class="n">Torr</span><span class="p">)</span>
     <span class="n">o_eCtrlModeSP</span>        <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">E_ControlModeSP</span><span class="p">;</span>    <span class="o">//</span> <span class="n">Valve</span> <span class="n">control</span> <span class="n">mode</span> <span class="n">setpoint</span>
     <span class="n">o_stGenCtrlSP</span>        <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">ST_GeneralControlSP</span><span class="p">;</span><span class="o">//</span> <span class="n">General</span> <span class="n">Control</span> <span class="n">setpoint</span>
     <span class="p">(</span><span class="o">*</span><span class="n">Ethercat</span> <span class="n">Interface</span> <span class="n">Status</span> <span class="n">Check</span><span class="o">*</span><span class="p">)</span>
@@ -11240,7 +11226,7 @@ END_METHOD
 <span class="n">It</span> <span class="n">provides</span><span class="p">:</span>
 <span class="n">Valve</span> <span class="n">position</span> <span class="n">ceiling</span>
 <span class="n">Interlock</span>
-<span class="n">CoE</span> <span class="n">Interface</span>
+<span class="n">CoE</span> <span class="n">Interface</span> <span class="n">R</span><span class="o">/</span><span class="n">W</span>
 
 <span class="n">It</span> <span class="n">could</span> <span class="n">be</span> <span class="n">used</span> <span class="k">for</span><span class="p">:</span>
 <span class="n">Valve</span> <span class="n">position</span><span class="o">/</span><span class="n">flow</span> <span class="n">linearization</span>
@@ -11292,35 +11278,28 @@ END_METHOD
     <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">eValveControl</span> <span class="o">:=</span> <span class="n">E_VCN_VAT590</span><span class="o">.</span><span class="n">CloseValve</span><span class="p">;</span>
 <span class="n">END_IF</span>
 
-<span class="p">(</span><span class="o">*</span><span class="n">Requested</span> <span class="n">Position</span> <span class="n">calculation</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Position</span> <span class="n">SP</span> <span class="n">calculation</span><span class="o">*</span><span class="p">)</span>
 <span class="n">fReqPos</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">fReqPos</span><span class="p">,</span> <span class="n">fUpperLimit</span><span class="p">);</span>
 <span class="n">fCalcPosSP</span> <span class="o">:=</span> <span class="n">fReqPos</span> <span class="o">*</span> <span class="p">(</span><span class="n">cOpenPosition</span><span class="o">-</span><span class="n">cClosePosition</span><span class="p">)</span><span class="o">/</span><span class="mi">100</span> <span class="o">+</span> <span class="n">cClosePosition</span><span class="p">;</span>
 <span class="n">fCalcPosSP</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">cClosePosition</span><span class="p">,</span> <span class="n">fCalcPosSP</span><span class="p">,</span> <span class="n">cOpenPosition</span><span class="p">);</span> <span class="o">//</span><span class="n">The</span> <span class="n">requested</span> <span class="n">position</span> <span class="n">SP</span> <span class="n">should</span> <span class="n">remain</span> <span class="n">within</span> <span class="n">this</span> <span class="nb">range</span>
 
-<span class="p">(</span><span class="o">*</span><span class="n">Pressure</span> <span class="n">calculation</span><span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Pressure</span> <span class="n">SP</span> <span class="n">calculation</span><span class="o">*</span><span class="p">)</span>
 <span class="o">//</span><span class="n">Limit</span> <span class="n">the</span> <span class="nb">input</span> <span class="kn">from</span> <span class="nn">EPICS</span> <span class="n">between</span> <span class="n">upper</span> <span class="ow">and</span> <span class="n">lower</span> <span class="n">limit</span> <span class="n">defined</span> <span class="k">for</span> <span class="n">seleceted</span> <span class="n">pressure</span> <span class="n">sensor</span>
-<span class="n">fReqPres</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">fPresLowLim</span><span class="p">,</span> <span class="n">fReqPres</span><span class="p">,</span> <span class="n">fPresMaxLim</span><span class="p">);</span>
+<span class="n">fReqPres</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">cMinPress</span><span class="p">,</span> <span class="n">fReqPres</span><span class="p">,</span> <span class="n">fPresMaxLim</span><span class="p">);</span>
+<span class="o">//</span><span class="n">Calcuate</span> <span class="n">pressure</span> <span class="n">setpoint</span>
+<span class="n">fCalcPresSP</span> <span class="o">:=</span> <span class="n">cPressRawSlope</span> <span class="o">*</span> <span class="n">LOG</span><span class="p">(</span><span class="n">fReqPres</span><span class="o">/</span><span class="n">cBasePress</span><span class="p">)</span> <span class="o">+</span> <span class="n">cPressRawBase</span><span class="p">;</span>
+<span class="n">fCalcPresSP</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">cPresSPLowLim</span><span class="p">,</span> <span class="n">fCalcPresSP</span><span class="p">,</span> <span class="n">cPresSPUpLim</span><span class="p">);</span> <span class="o">//</span><span class="n">The</span> <span class="n">requested</span> <span class="n">pressure</span> <span class="n">SP</span> <span class="n">should</span> <span class="n">remain</span> <span class="n">within</span> <span class="n">this</span> <span class="nb">range</span>
 
-<span class="o">//</span> <span class="n">Calculate</span> <span class="n">pressure</span> <span class="n">readback</span> <span class="ow">and</span> <span class="n">pressure</span> <span class="n">setpoint</span> <span class="n">according</span> <span class="n">to</span> <span class="n">selected</span> <span class="n">pressure</span> <span class="n">gauge</span>
-<span class="n">CASE</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">ePressureSensor</span> <span class="n">OF</span>
-    <span class="n">E_VAT590_PressureSensor</span><span class="o">.</span><span class="n">MKS500</span><span class="p">:</span>
-            <span class="n">fPresLowLim</span> <span class="o">:=</span> <span class="mf">1.0E-10</span><span class="p">;</span>
-            <span class="n">fSlope</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>
-            <span class="n">fVbase</span> <span class="o">:=</span> <span class="mf">1E+5</span><span class="p">;</span>
-            <span class="o">//</span><span class="n">Calcuate</span> <span class="n">pressure</span> <span class="n">setpoint</span>
-            <span class="n">fCalcPresSP</span> <span class="o">:=</span> <span class="n">fSlope</span> <span class="o">*</span> <span class="n">LOG</span><span class="p">(</span><span class="n">fReqPres</span><span class="o">/</span><span class="n">fPresLowLim</span><span class="p">)</span> <span class="o">+</span> <span class="n">fVbase</span><span class="p">;</span>
-            <span class="n">fCalcPresSP</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">cPresSPLowLim</span><span class="p">,</span> <span class="n">fCalcPresSP</span><span class="p">,</span> <span class="n">cPresSPUpLim</span><span class="p">);</span> <span class="o">//</span><span class="n">The</span> <span class="n">requested</span> <span class="n">pressure</span> <span class="n">SP</span> <span class="n">should</span> <span class="n">remain</span> <span class="n">within</span> <span class="n">this</span> <span class="nb">range</span>
-            <span class="o">//</span><span class="n">Calculate</span> <span class="n">pressure</span> <span class="n">readback</span> <span class="ow">in</span> <span class="n">Torr</span> <span class="n">units</span>
-            <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPressure</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,((</span><span class="n">DINT_TO_REAL</span><span class="p">(</span><span class="n">stVcnVat590</span><span class="o">.</span><span class="n">nRawPressure</span><span class="p">)</span><span class="o">-</span><span class="n">fVbase</span><span class="p">)</span><span class="o">/</span><span class="n">fSlope</span> <span class="o">+</span> <span class="n">LOG</span><span class="p">(</span><span class="n">fPresLowLim</span><span class="p">))));</span>
-    <span class="n">ELSE</span>
-            <span class="n">fCalcPresSP</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPressure</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="n">END_CASE</span>
-
-<span class="p">(</span><span class="o">*</span><span class="n">Calculated</span> <span class="n">Pressure</span> <span class="n">SP</span> <span class="ow">and</span> <span class="n">Pressure</span> <span class="n">readback</span> <span class="ow">is</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">Pressure</span> <span class="n">sensor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">working</span><span class="o">*</span><span class="p">)</span>
-<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">AND</span> <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;</span> <span class="n">fPresRbMaxLim</span> <span class="p">)</span> <span class="n">THEN</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Calculated</span> <span class="n">Pressure</span> <span class="n">SP</span><span class="p">,</span> <span class="n">Pressure</span> <span class="n">readback</span> <span class="ow">and</span> <span class="n">PressureRaw</span> <span class="n">output</span> <span class="n">value</span> <span class="n">are</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">Pressure</span> <span class="n">sensor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">working</span><span class="o">*</span><span class="p">)</span>
+<span class="o">//</span><span class="n">Calculate</span> <span class="n">PressureRaw</span> <span class="n">value</span> <span class="n">linked</span> <span class="n">to</span> <span class="n">the</span> <span class="n">Valve</span><span class="s1">&#39;s External Digital pressure sensor 1 input</span>
+<span class="o">//</span><span class="n">Pressure</span> <span class="n">information</span> <span class="kn">from</span> <span class="nn">IG</span> <span class="nb">input</span> <span class="ow">is</span> <span class="n">linked</span> <span class="n">to</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPressure</span>
+<span class="n">IF</span> <span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">THEN</span>
+    <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPressure</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span><span class="p">;</span>
+    <span class="n">fPressRaw</span> <span class="o">:=</span> <span class="n">cPressRawSlope</span> <span class="o">*</span> <span class="n">LOG</span><span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span><span class="o">/</span><span class="n">cBasePress</span><span class="p">)</span> <span class="o">+</span> <span class="n">cPressRawBase</span><span class="p">;</span>
+<span class="n">ELSE</span>
     <span class="n">fCalcPresSP</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPressure</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">fPressRaw</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="n">END_IF</span>
 
 <span class="p">(</span><span class="o">*</span><span class="n">Zero</span> <span class="n">function</span><span class="o">*</span><span class="p">)</span>
@@ -11561,10 +11540,10 @@ END_METHOD
 <span class="n">ACTION</span> <span class="n">ReadFromInput</span><span class="p">:</span>
 <span class="p">(</span><span class="o">*</span><span class="n">Read</span> <span class="kn">from</span> <span class="nn">EPICS</span><span class="o">*</span><span class="p">)</span>
 <span class="n">fUpperLimit</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPosSetLimit</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
-<span class="n">fPresMaxLim</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mf">1.0E-10</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPresSetLimit</span><span class="p">,</span> <span class="mf">1.0E-2</span><span class="p">);</span>
-<span class="n">fPresRbMaxLim</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mf">1.0E-10</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPresRdbkLimit</span><span class="p">,</span> <span class="mf">1.0E-2</span><span class="p">);</span>
+<span class="n">fPresMaxLim</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">cMinPress</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPresSetLimit</span><span class="p">,</span> <span class="n">cMaxPress</span><span class="p">);</span>
+<span class="n">fPresRbMaxLim</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">cMinPress</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fPresRdbkLimit</span><span class="p">,</span> <span class="n">cMaxPress</span><span class="p">);</span>
 <span class="n">fReqPos</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fReqPosition</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
-<span class="n">fReqPres</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="mf">1.0E-10</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fReqPressure</span><span class="p">,</span> <span class="mf">1.0E-2</span><span class="p">);</span>
+<span class="n">fReqPres</span> <span class="o">:=</span> <span class="n">LIMIT</span><span class="p">(</span><span class="n">cMinPress</span><span class="p">,</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">fReqPressure</span><span class="p">,</span> <span class="n">cMaxPress</span><span class="p">);</span>
 
 <span class="p">(</span><span class="o">*</span><span class="n">Read</span> <span class="kn">from</span> <span class="nn">VAT</span> <span class="n">valve</span><span class="o">*</span><span class="p">)</span>
 <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">stValveStatus</span><span class="o">.</span><span class="n">eControlMode</span> <span class="o">:=</span> <span class="n">i_eControlMode</span><span class="p">;</span>
@@ -11763,6 +11742,7 @@ END_METHOD
 <span class="n">o_eCtrlModeSP</span> <span class="o">:=</span> <span class="n">eValveModeSP</span><span class="p">;</span>
 <span class="n">o_nRawPositionSP</span> <span class="o">:=</span> <span class="n">REAL_TO_DINT</span><span class="p">(</span><span class="n">fCalcPosSP</span><span class="p">);</span>
 <span class="n">o_nRawPressureSP</span> <span class="o">:=</span> <span class="n">REAL_TO_DINT</span><span class="p">(</span><span class="n">fCalcPresSP</span><span class="p">);</span>
+<span class="n">o_nRawPressure</span> <span class="o">:=</span> <span class="n">REAL_TO_DINT</span><span class="p">(</span><span class="n">fPressRaw</span><span class="p">);</span>
 <span class="n">o_stGenCtrlSP</span><span class="o">.</span><span class="n">Bit0ExecuteZero</span> <span class="o">:=</span> <span class="n">stVcnVat590</span><span class="o">.</span><span class="n">bZero</span><span class="p">;</span>
 <span class="n">o_stGenCtrlSP</span><span class="o">.</span><span class="n">Bit4AccessMode</span> <span class="o">:=</span> <span class="n">bRemAcsToggle</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
@@ -11787,7 +11767,6 @@ END_METHOD
 <li><p><a class="reference internal" href="#e-controlmode">E_ControlMode</a></p></li>
 <li><p><a class="reference internal" href="#e-controlmodesp">E_ControlModeSP</a></p></li>
 <li><p><a class="reference internal" href="#e-fatalerrors">E_FatalErrors</a></p></li>
-<li><p><a class="reference internal" href="#e-vat590-pressuresensor">E_VAT590_PressureSensor</a></p></li>
 <li><p><a class="reference internal" href="#e-vcn-vat590">E_VCN_VAT590</a></p></li>
 <li><p><a class="reference internal" href="#fb-valve">FB_Valve</a></p></li>
 <li><p><a class="reference internal" href="#st-coeindsub">ST_CoEIndSub</a></p></li>

@@ -196,23 +196,6 @@ E_VAT590_PID_CTRL
 
 
 
-E_VAT590_PressureSensor
-^^^^^^^^^^^^^^^^^^^^^^^
-
-::
-
-    {attribute 'qualified_only'}
-    {attribute 'strict'}
-    TYPE E_VAT590_PressureSensor :
-    (
-    	NOT_DEFINED := 0,
-    	MKS500 := 1
-    ) USINT := MKS500;
-    END_TYPE
-
-
-
-
 E_VCN
 ^^^^^
 
@@ -2129,11 +2112,6 @@ ST_VCN_VAT590
     	'}
     	stValveStatus : ST_VAT590_STATUS; //All Valve status readbacks
     	{attribute 'pytmc' :=  ' 
-    	pv: PRES_SENS
-    	io: io
-    	'}
-    	ePressureSensor : E_VAT590_PressureSensor; //Select pressure sensor
-    	{attribute 'pytmc' :=  ' 
     	pv: REM_CTRL
     	io: io
     	'}
@@ -2176,7 +2154,6 @@ ST_VCN_VAT590
 
 Related:
     * `E_VAT590_AccessMode`_
-    * `E_VAT590_PressureSensor`_
     * `E_VCN_VAT590`_
     * `ST_VAT590_COE`_
     * `ST_VAT590_STATUS`_
@@ -11019,6 +10996,12 @@ FB_VCN_VAT590
     	cClosePosition : REAL := 0.0;      // Default position setpoint lower scale value
     	cPresSPUpLim : REAL := 1E+6;       // Default pressure setpoint upper scale value
     	cPresSPLowLim : REAL := 0;         // Default pressure setpoint lower scale value
+    	cMinPress : REAL := 1e-11;         // Default Min. pressure in Torr that can be used and requested
+    	cMaxPress : REAL := 1e-2;          // Default Max. pressure in Torr that can be used and requested
+    	cBasePress : REAL := 1E-11;        // Pressure sensor base value
+    	cPressRawSlope : REAL := 1E+5;     // Slope (in Units per decade) used for conversion of pressure in Torr to valve External Digital pressure sensor 1 input raw value (0-1000000)
+    	cPressRawBase : REAL := 1E+5;      // Valve analog output base(in Units per decade) defined for how much the curve is shifted
+
     	cPressCtrl : ST_CoEIndSub := (nIndex := 16#2199, nSubIndex := 0); // Selected pressure controller CoE register
     	cSensorDelay_AD : ST_CoEIndSub := (nIndex := 16#219A, nSubIndex := 0); // Adaptive DS controller Sensor Delay CoE register
     	cRampTime_AD : ST_CoEIndSub := (nIndex := 16#219B, nSubIndex := 0); // Adaptive DS controller Ramp Time CoE register
@@ -11043,12 +11026,11 @@ FB_VCN_VAT590
     VAR
     	fCalcPosSP : REAL := 0;
     	fCalcPresSP : REAL := 0;
-    	eValveModeSP : E_ControlModeSP;
+    	fPressRaw : REAL := 0;             // Ranges 0 to 1000000 (or 0.0 to 10V) (1E-12 to 1E-2)
+    	eValveModeSP : E_ControlModeSP;    // Control Mode setpoint internal variable
     	fReqPos : REAL;                    // Requested position internal variable
     	fReqPres : REAL;                   // Requested pressure internal variable
-    	fPresLowLim : REAL := 1E-10;       // Pressure sensor lower scale value
-    	fSlope : REAL := 1E+5;             // Slope (Units per decade) used for conversion from Torr units
-    	fVbase : REAL := 1E+5;             // Vbase (Units per decade) defined for how much the curve is shifted
+
     	bRemAcsToggle : BOOL;              // Remote access control bit
     	//timer for zero function 
     	tZeroTogg : TON := (PT := T#1S);
@@ -11086,6 +11068,7 @@ FB_VCN_VAT590
     	// Ethercat Interface Outputs
     	o_nRawPositionSP     AT %Q* : DINT;               // Position setpoint
     	o_nRawPressureSP     AT %Q* : DINT;               // Pressure setpoint
+    	o_nRawPressure       AT %Q* : DINT;               // Raw pressure output, eliminate need for external connection of AI, ranges 0 to 1000000 (or 0.0 to 10V) (1E-12 Torr to 1E-2 Torr)
     	o_eCtrlModeSP        AT %Q* : E_ControlModeSP;    // Valve control mode setpoint
     	o_stGenCtrlSP        AT %Q* : ST_GeneralControlSP;// General Control setpoint
     	(*Ethercat Interface Status Check*)
@@ -11105,7 +11088,7 @@ FB_VCN_VAT590
     It provides:
     Valve position ceiling
     Interlock
-    CoE Interface
+    CoE Interface R/W
 
     It could be used for:
     Valve position/flow linearization
@@ -11157,35 +11140,28 @@ FB_VCN_VAT590
     	stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
     END_IF
 
-    (*Requested Position calculation*)
+    (*Position SP calculation*)
     fReqPos := LIMIT(0, fReqPos, fUpperLimit);
     fCalcPosSP := fReqPos * (cOpenPosition-cClosePosition)/100 + cClosePosition;
     fCalcPosSP := LIMIT(cClosePosition, fCalcPosSP, cOpenPosition); //The requested position SP should remain within this range
 
-    (*Pressure calculation*)
+    (*Pressure SP calculation*)
     //Limit the input from EPICS between upper and lower limit defined for seleceted pressure sensor
-    fReqPres := LIMIT(fPresLowLim, fReqPres, fPresMaxLim);
+    fReqPres := LIMIT(cMinPress, fReqPres, fPresMaxLim);
+    //Calcuate pressure setpoint
+    fCalcPresSP := cPressRawSlope * LOG(fReqPres/cBasePress) + cPressRawBase;
+    fCalcPresSP := LIMIT(cPresSPLowLim, fCalcPresSP, cPresSPUpLim); //The requested pressure SP should remain within this range
 
-    // Calculate pressure readback and pressure setpoint according to selected pressure gauge
-    CASE stVcnVat590.ePressureSensor OF
-    	E_VAT590_PressureSensor.MKS500:
-    		fPresLowLim := 1.0E-10;
-    		fSlope := 1E+5;
-    		fVbase := 1E+5;
-    		//Calcuate pressure setpoint
-    		fCalcPresSP := fSlope * LOG(fReqPres/fPresLowLim) + fVbase;
-    		fCalcPresSP := LIMIT(cPresSPLowLim, fCalcPresSP, cPresSPUpLim); //The requested pressure SP should remain within this range
-    		//Calculate pressure readback in Torr units
-    		stVcnVat590.fPressure := LREAL_TO_REAL(EXPT(10,((DINT_TO_REAL(stVcnVat590.nRawPressure)-fVbase)/fSlope + LOG(fPresLowLim))));
-    	ELSE
-    		fCalcPresSP := 0;
-    		stVcnVat590.fPressure := 0;
-    END_CASE
-
-    (*Calculated Pressure SP and Pressure readback is 0 if Pressure sensor is not working*) 
-    IF NOT (IG.xPRESS_OK AND IG.rPRESS < fPresRbMaxLim ) THEN
+    (*Calculated Pressure SP, Pressure readback and PressureRaw output value are 0 if Pressure sensor is not working*)
+    //Calculate PressureRaw value linked to the Valve's External Digital pressure sensor 1 input
+    //Pressure information from IG input is linked to stVcnVat590.fPressure
+    IF IG.xPRESS_OK THEN
+    	stVcnVat590.fPressure := IG.rPRESS;
+    	fPressRaw := cPressRawSlope * LOG(IG.rPRESS/cBasePress) + cPressRawBase;
+    ELSE
     	fCalcPresSP := 0;
     	stVcnVat590.fPressure := 0;
+    	fPressRaw := 0;
     END_IF
 
     (*Zero function*)
@@ -11426,10 +11402,10 @@ FB_VCN_VAT590
     ACTION ReadFromInput:
     (*Read from EPICS*)
     fUpperLimit := LIMIT(0, stVcnVat590.fPosSetLimit, 100);
-    fPresMaxLim := LIMIT(1.0E-10, stVcnVat590.fPresSetLimit, 1.0E-2);
-    fPresRbMaxLim := LIMIT(1.0E-10, stVcnVat590.fPresRdbkLimit, 1.0E-2);
+    fPresMaxLim := LIMIT(cMinPress, stVcnVat590.fPresSetLimit, cMaxPress);
+    fPresRbMaxLim := LIMIT(cMinPress, stVcnVat590.fPresRdbkLimit, cMaxPress);
     fReqPos := LIMIT(0, stVcnVat590.fReqPosition, 100);
-    fReqPres := LIMIT(1.0E-10, stVcnVat590.fReqPressure, 1.0E-2);
+    fReqPres := LIMIT(cMinPress, stVcnVat590.fReqPressure, cMaxPress);
 
     (*Read from VAT valve*)
     stVcnVat590.stValveStatus.eControlMode := i_eControlMode;
@@ -11628,6 +11604,7 @@ FB_VCN_VAT590
     o_eCtrlModeSP := eValveModeSP;
     o_nRawPositionSP := REAL_TO_DINT(fCalcPosSP);
     o_nRawPressureSP := REAL_TO_DINT(fCalcPresSP);
+    o_nRawPressure := REAL_TO_DINT(fPressRaw);
     o_stGenCtrlSP.Bit0ExecuteZero := stVcnVat590.bZero;
     o_stGenCtrlSP.Bit4AccessMode := bRemAcsToggle;
     END_ACTION
@@ -11651,7 +11628,6 @@ Related:
     * `E_ControlMode`_
     * `E_ControlModeSP`_
     * `E_FatalErrors`_
-    * `E_VAT590_PressureSensor`_
     * `E_VCN_VAT590`_
     * `FB_Valve`_
     * `ST_CoEIndSub`_
