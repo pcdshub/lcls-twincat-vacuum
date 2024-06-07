@@ -1,90 +1,90 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_VFS_2OO3Interface" Id="{289d35ca-42e8-4943-8216-657a27c694cb}" SpecialFunc="None">
-    <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo valve to communicate over two task on the same PLC.*) 
+    <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo valve to communicate over two task on the same PLC.*)
 (*NOTE: All 3 gauge cards with fast TTL output need to be installed in the same gauge controller*)
 (*For FAST shutter control*)
 FUNCTION_BLOCK FB_VFS_2OO3Interface EXTENDS FB_Valve
 VAR_INPUT
-	(*Make sure all three CC gauge cards are in the same controller*)
-	IG1 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 1
-	IG2 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 2
-	IG3 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 3
-	Veto_Valve : ST_VGC; // The VGC structure for the Veto Valve
-	{attribute 'pytmc' := '
-		pv: VFS_2OO3_MODE
-		io: io
-	'}
-	i_e2OO3_MODE : E_2OO3_MODE; //2oo3 mode selector as EPICS Command or Input for global variable
-	{attribute 'pytmc' := '
-		pv: VFS_RESET_FAULT_COUNTER
-		io: io
-	'}
-	i_ResetFaultCounter : BOOL; //Reset Fault counter as EPCIS Command or Input for global reset button
+    (*Make sure all three CC gauge cards are in the same controller*)
+    IG1 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 1
+    IG2 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 2
+    IG3 : ST_VG; // The MKS422 Cold Cathode Data Structure for CC gauge 3
+    Veto_Valve : ST_VGC; // The VGC structure for the Veto Valve
+    {attribute 'pytmc' := '
+        pv: VFS_2OO3_MODE
+        io: io
+    '}
+    i_e2OO3_MODE : E_2OO3_MODE; //2oo3 mode selector as EPICS Command or Input for global variable
+    {attribute 'pytmc' := '
+        pv: VFS_RESET_FAULT_COUNTER
+        io: io
+    '}
+    i_ResetFaultCounter : BOOL; //Reset Fault counter as EPCIS Command or Input for global reset button
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-		pv: ;
-	'}
-	iq_stValve : ST_VFS; (* All valve data and states will be in this struct*)
-	i_xVAC_FAULT_OK AT%I* : BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+    {attribute 'pytmc' := '
+        pv: ;
+    '}
+    iq_stValve : ST_VFS; (* All valve data and states will be in this struct*)
+    i_xVAC_FAULT_OK AT%I* : BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 END_VAR
 VAR
-	rtTriggerVetoed : R_TRIG;
-	rtTriggered : R_TRIG;
-	tonOvrd	: TON;
-	tOvrd : TIME := T#10s;
-	rtOK : R_TRIG;
-	tonDelOK : TON;
-	xOPN_OK : BOOL;
-	tDelOK	: TIME := T#60S;
-	xPress_OK : BOOL; //internal signal indicating if at gauges are connected and OK
+    rtTriggerVetoed : R_TRIG;
+    rtTriggered : R_TRIG;
+    tonOvrd	: TON;
+    tOvrd : TIME := T#10s;
+    rtOK : R_TRIG;
+    tonDelOK : TON;
+    xOPN_OK : BOOL;
+    tDelOK	: TIME := T#60S;
+    xPress_OK : BOOL; //internal signal indicating if at gauges are connected and OK
 
-	//Reset Fault counter trigger
-	rtResetFaultCounter : R_TRIG;
+    //Reset Fault counter trigger
+    rtResetFaultCounter : R_TRIG;
 
-	(*outputs*)
-	q_e2OO3_MODE AT%Q* : E_2OO3_MODE; //2oo3 mode selector, connect to FB_VFS_2OO3 mode selector input
-	q_ResetFaultCounter AT%Q* : BOOL; //Reset Fault counter, connect to FB_VFS_2OO3 reset fault counter input
-	q_xPRESS_OK_IG1 AT%Q* : BOOL;
-	q_xPRESS_OK_IG2 AT%Q* : BOOL;
-	q_xPRESS_OK_IG3 AT%Q* : BOOL;
-	q_xOPN_SW AT%Q* : BOOL;
-	q_xCLS_SW AT%Q* : BOOL; (*external open signal e.g epics*)
-	q_xVAC_FAULT_Reset AT%Q* : BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
-	q_xOverrideMode AT%Q* : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
-	q_xOverrideOpen AT%Q* : BOOL;
-	
-	(*VETO Devices*)
-	q_xVetoValveOpenDO AT%Q* : BOOL;
-	q_xVetoValveClosed AT%Q* : BOOL;
-	(*inputs*)
-	i_xTrigger AT%I* : BOOL;
-	i_xVFS_Open AT%I* : BOOL;
-	i_xVFS_Closed AT%I* : BOOL;
-	{attribute 'pytmc' := '
-		pv: MPS_FAULT_OK
-		field: ZNAM MPS FAULT ;
-		field: ONAM MPS OK ;
-		io: i ;
-	'}
-	i_xMPS_OK AT%I* : BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
-	i_eVFS_State AT%I* : E_VGC; (*Interface*)
-	{attribute 'pytmc' := '
-		pv: FLT_COUNT_IG1
-		io: i
-	'}
-	i_nFltCount_IG1 AT%I* : UINT;      //Fault counter for IG1
-	{attribute 'pytmc' := '
-		pv: FLT_COUNT_IG2
-		io: i
-	'}
-	i_nFltCount_IG2 AT%I* : UINT;      //Fault counter for IG2
-	{attribute 'pytmc' := '
-		pv: FLT_COUNT_IG3
-		io: i
-	'}
-	i_nFltCount_IG3 AT%I* : UINT;      //Fault counter for IG3
+    (*outputs*)
+    q_e2OO3_MODE AT%Q* : E_2OO3_MODE; //2oo3 mode selector, connect to FB_VFS_2OO3 mode selector input
+    q_ResetFaultCounter AT%Q* : BOOL; //Reset Fault counter, connect to FB_VFS_2OO3 reset fault counter input
+    q_xPRESS_OK_IG1 AT%Q* : BOOL;
+    q_xPRESS_OK_IG2 AT%Q* : BOOL;
+    q_xPRESS_OK_IG3 AT%Q* : BOOL;
+    q_xOPN_SW AT%Q* : BOOL;
+    q_xCLS_SW AT%Q* : BOOL; (*external open signal e.g epics*)
+    q_xVAC_FAULT_Reset AT%Q* : BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+    q_xOverrideMode AT%Q* : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+    q_xOverrideOpen AT%Q* : BOOL;
+
+    (*VETO Devices*)
+    q_xVetoValveOpenDO AT%Q* : BOOL;
+    q_xVetoValveClosed AT%Q* : BOOL;
+    (*inputs*)
+    i_xTrigger AT%I* : BOOL;
+    i_xVFS_Open AT%I* : BOOL;
+    i_xVFS_Closed AT%I* : BOOL;
+    {attribute 'pytmc' := '
+        pv: MPS_FAULT_OK
+        field: ZNAM MPS FAULT ;
+        field: ONAM MPS OK ;
+        io: i ;
+    '}
+    i_xMPS_OK AT%I* : BOOL;(*MPS Fault OK, is set when the Valve is Open and there is no trigger*)
+    i_eVFS_State AT%I* : E_VGC; (*Interface*)
+    {attribute 'pytmc' := '
+        pv: FLT_COUNT_IG1
+        io: i
+    '}
+    i_nFltCount_IG1 AT%I* : UINT;      //Fault counter for IG1
+    {attribute 'pytmc' := '
+        pv: FLT_COUNT_IG2
+        io: i
+    '}
+    i_nFltCount_IG2 AT%I* : UINT;      //Fault counter for IG2
+    {attribute 'pytmc' := '
+        pv: FLT_COUNT_IG3
+        io: i
+    '}
+    i_nFltCount_IG3 AT%I* : UINT;      //Fault counter for IG3
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*Soft IO Mapping*)
@@ -97,23 +97,23 @@ IO();
 
 //Check valve postion
 IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
-	iq_stValve.eState:=INVALID;
-ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN 
-	iq_stValve.eState:=OPEN;
-ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
-	iq_stValve.eState:=CLOSED;
-ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
-	iq_stValve.eState:=MOVING;
+    iq_stValve.eState:=INVALID;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN
+    iq_stValve.eState:=OPEN;
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN
+    iq_stValve.eState:=CLOSED;
+ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN
+    iq_stValve.eState:=MOVING;
 ELSE
-	iq_stValve.eState:=INVALID;
+    iq_stValve.eState:=INVALID;
 END_IF
 //Override timer
 tonOvrd(IN:=q_xOverrideOpen, PT:=tOvrd);
 tonDelOK(IN:=xOPN_OK, PT:=tDelOK);
 rtOK(CLK:=tonDelOK.Q);
-IF rtOK.Q AND q_xOverrideOpen THEN 
-	q_xOverrideOpen :=FALSE;
-	//if (i_xOpnLS) AND (i_xOverrideMode) THEN i_xOPN_SW := TRUE; END_IF //for seamless transition   
+IF rtOK.Q AND q_xOverrideOpen THEN
+    q_xOverrideOpen :=FALSE;
+    //if (i_xOpnLS) AND (i_xOverrideMode) THEN i_xOPN_SW := TRUE; END_IF //for seamless transition
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
@@ -139,22 +139,22 @@ ACT_Logger();]]></ST>
       <Implementation>
         <ST><![CDATA[//ILK logger
 IF i_xTrigger AND ePrevState = OPEN THEN
- 		fbLogger(sMsg:='Fast valve triggered to close', eSevr:=TcEventSeverity.Critical);  	
+         fbLogger(sMsg:='Fast valve triggered to close', eSevr:=TcEventSeverity.Critical);
 END_IF
 
-//STATE Logger  
+//STATE Logger
 IF ePrevState <> iq_stValve.eState THEN
-	  CASE iq_stValve.eState OF
-		INVALID:
-			fbLogger(sMsg:='Valve invalid position.', eSevr:=TcEventSeverity.Critical);
-  		MOVING:
-			fbLogger(sMsg:='Valve moving', eSevr:=TcEventSeverity.Warning);
-		OPEN:
-			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
-		CLOSED:
-			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := iq_stValve.eState;  
+      CASE iq_stValve.eState OF
+        INVALID:
+            fbLogger(sMsg:='Valve invalid position.', eSevr:=TcEventSeverity.Critical);
+          MOVING:
+            fbLogger(sMsg:='Valve moving', eSevr:=TcEventSeverity.Warning);
+        OPEN:
+            fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+        CLOSED:
+            fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := iq_stValve.eState;
   END_IF
 
 //Log valve timeouts
@@ -193,12 +193,15 @@ q_xOverrideMode :=iq_stValve.xOverrideMode;
 q_xOverrideOpen := iq_stValve.pv_xOvrdOpn ;
 iq_stValve.sGFS := CONCAT(CONCAT(CONCAT(IG1.sPath,','),CONCAT(IG2.sPath,',')),IG3.sPath);
 
+(*update values*)
+iq_stValve.xOPN_OK := xOPN_OK;
+
 (*Veto*)
 (*VETO Devices*)
 q_xVetoValveOpenDO := Veto_Valve.q_xOPN_DO;
 q_xVetoValveClosed := Veto_Valve.i_xClsLS;
 
-//reset the commands 
+//reset the commands
 IF ( iq_stValve.i_xOpnLS) THEN iq_stValve.pv_xOPN_SW := FALSE; END_IF
 IF ( iq_stValve.i_xClsLS) THEN iq_stValve.xCLS_SW := FALSE; END_IF
 
