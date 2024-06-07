@@ -12385,19 +12385,19 @@ END_METHOD
     <span class="n">IG3</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">MKS422</span> <span class="n">Cold</span> <span class="n">Cathode</span> <span class="n">Data</span> <span class="n">Structure</span> <span class="k">for</span> <span class="n">CC</span> <span class="n">gauge</span> <span class="mi">3</span>
     <span class="n">Veto_Valve</span> <span class="p">:</span> <span class="n">ST_VGC</span><span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">VGC</span> <span class="n">structure</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Veto</span> <span class="n">Valve</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-            <span class="n">pv</span><span class="p">:</span> <span class="n">VFS_2OO3_MODE</span>
-            <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+        <span class="n">pv</span><span class="p">:</span> <span class="n">VFS_2OO3_MODE</span>
+        <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
     <span class="s1">&#39;}</span>
     <span class="n">i_e2OO3_MODE</span> <span class="p">:</span> <span class="n">E_2OO3_MODE</span><span class="p">;</span> <span class="o">//</span><span class="mi">2</span><span class="n">oo3</span> <span class="n">mode</span> <span class="n">selector</span> <span class="k">as</span> <span class="n">EPICS</span> <span class="n">Command</span> <span class="ow">or</span> <span class="n">Input</span> <span class="k">for</span> <span class="k">global</span> <span class="n">variable</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-            <span class="n">pv</span><span class="p">:</span> <span class="n">VFS_RESET_FAULT_COUNTER</span>
-            <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+        <span class="n">pv</span><span class="p">:</span> <span class="n">VFS_RESET_FAULT_COUNTER</span>
+        <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
     <span class="s1">&#39;}</span>
     <span class="n">i_ResetFaultCounter</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span><span class="n">Reset</span> <span class="n">Fault</span> <span class="n">counter</span> <span class="k">as</span> <span class="n">EPCIS</span> <span class="n">Command</span> <span class="ow">or</span> <span class="n">Input</span> <span class="k">for</span> <span class="k">global</span> <span class="n">reset</span> <span class="n">button</span>
 <span class="n">END_VAR</span>
 <span class="n">VAR_OUTPUT</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-            <span class="n">pv</span><span class="p">:</span> <span class="p">;</span>
+        <span class="n">pv</span><span class="p">:</span> <span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">iq_stValve</span> <span class="p">:</span> <span class="n">ST_VFS</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span> <span class="n">All</span> <span class="n">valve</span> <span class="n">data</span> <span class="ow">and</span> <span class="n">states</span> <span class="n">will</span> <span class="n">be</span> <span class="ow">in</span> <span class="n">this</span> <span class="n">struct</span><span class="o">*</span><span class="p">)</span>
     <span class="n">i_xVAC_FAULT_OK</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">Valve</span> <span class="n">Vacuum</span> <span class="n">OK</span><span class="p">,</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">to</span> <span class="kc">False</span> <span class="n">when</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">Vacuum</span> <span class="n">Fault</span><span class="o">*</span><span class="p">)</span>
@@ -12436,26 +12436,26 @@ END_METHOD
     <span class="n">i_xVFS_Open</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xVFS_Closed</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-            <span class="n">pv</span><span class="p">:</span> <span class="n">MPS_FAULT_OK</span>
-            <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">MPS</span> <span class="n">FAULT</span> <span class="p">;</span>
-            <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">MPS</span> <span class="n">OK</span> <span class="p">;</span>
-            <span class="n">io</span><span class="p">:</span> <span class="n">i</span> <span class="p">;</span>
+        <span class="n">pv</span><span class="p">:</span> <span class="n">MPS_FAULT_OK</span>
+        <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">MPS</span> <span class="n">FAULT</span> <span class="p">;</span>
+        <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">MPS</span> <span class="n">OK</span> <span class="p">;</span>
+        <span class="n">io</span><span class="p">:</span> <span class="n">i</span> <span class="p">;</span>
     <span class="s1">&#39;}</span>
     <span class="n">i_xMPS_OK</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;(</span><span class="o">*</span><span class="n">MPS</span> <span class="n">Fault</span> <span class="n">OK</span><span class="p">,</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">when</span> <span class="n">the</span> <span class="n">Valve</span> <span class="ow">is</span> <span class="n">Open</span> <span class="ow">and</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">trigger</span><span class="o">*</span><span class="p">)</span>
     <span class="n">i_eVFS_State</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">E_VGC</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">Interface</span><span class="o">*</span><span class="p">)</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-            <span class="n">pv</span><span class="p">:</span> <span class="n">FLT_COUNT_IG1</span>
-            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+        <span class="n">pv</span><span class="p">:</span> <span class="n">FLT_COUNT_IG1</span>
+        <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
     <span class="s1">&#39;}</span>
     <span class="n">i_nFltCount_IG1</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">UINT</span><span class="p">;</span>      <span class="o">//</span><span class="n">Fault</span> <span class="n">counter</span> <span class="k">for</span> <span class="n">IG1</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-            <span class="n">pv</span><span class="p">:</span> <span class="n">FLT_COUNT_IG2</span>
-            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+        <span class="n">pv</span><span class="p">:</span> <span class="n">FLT_COUNT_IG2</span>
+        <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
     <span class="s1">&#39;}</span>
     <span class="n">i_nFltCount_IG2</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">UINT</span><span class="p">;</span>      <span class="o">//</span><span class="n">Fault</span> <span class="n">counter</span> <span class="k">for</span> <span class="n">IG2</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
-            <span class="n">pv</span><span class="p">:</span> <span class="n">FLT_COUNT_IG3</span>
-            <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+        <span class="n">pv</span><span class="p">:</span> <span class="n">FLT_COUNT_IG3</span>
+        <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
     <span class="s1">&#39;}</span>
     <span class="n">i_nFltCount_IG3</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">UINT</span><span class="p">;</span>      <span class="o">//</span><span class="n">Fault</span> <span class="n">counter</span> <span class="k">for</span> <span class="n">IG3</span>
 <span class="n">END_VAR</span>
@@ -12512,20 +12512,20 @@ END_METHOD
 <span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
 <span class="o">//</span><span class="n">ILK</span> <span class="n">logger</span>
 <span class="n">IF</span> <span class="n">i_xTrigger</span> <span class="n">AND</span> <span class="n">ePrevState</span> <span class="o">=</span> <span class="n">OPEN</span> <span class="n">THEN</span>
-            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Fast valve triggered to close&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+         <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Fast valve triggered to close&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
 <span class="n">END_IF</span>
 
 <span class="o">//</span><span class="n">STATE</span> <span class="n">Logger</span>
 <span class="n">IF</span> <span class="n">ePrevState</span> <span class="o">&lt;&gt;</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span> <span class="n">THEN</span>
       <span class="n">CASE</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span> <span class="n">OF</span>
-            <span class="n">INVALID</span><span class="p">:</span>
-                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve invalid position.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
-            <span class="n">MOVING</span><span class="p">:</span>
-                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve moving&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
-            <span class="n">OPEN</span><span class="p">:</span>
-                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve Open.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
-            <span class="n">CLOSED</span><span class="p">:</span>
-                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve closed.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+        <span class="n">INVALID</span><span class="p">:</span>
+            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve invalid position.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+          <span class="n">MOVING</span><span class="p">:</span>
+            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve moving&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+        <span class="n">OPEN</span><span class="p">:</span>
+            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve Open.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+        <span class="n">CLOSED</span><span class="p">:</span>
+            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve closed.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
       <span class="n">END_CASE</span>
       <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
   <span class="n">END_IF</span>
@@ -12564,6 +12564,9 @@ END_METHOD
 <span class="n">q_xOverrideMode</span> <span class="o">:=</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">xOverrideMode</span><span class="p">;</span>
 <span class="n">q_xOverrideOpen</span> <span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOvrdOpn</span> <span class="p">;</span>
 <span class="n">iq_stValve</span><span class="o">.</span><span class="n">sGFS</span> <span class="o">:=</span> <span class="n">CONCAT</span><span class="p">(</span><span class="n">CONCAT</span><span class="p">(</span><span class="n">CONCAT</span><span class="p">(</span><span class="n">IG1</span><span class="o">.</span><span class="n">sPath</span><span class="p">,</span><span class="s1">&#39;,&#39;</span><span class="p">),</span><span class="n">CONCAT</span><span class="p">(</span><span class="n">IG2</span><span class="o">.</span><span class="n">sPath</span><span class="p">,</span><span class="s1">&#39;,&#39;</span><span class="p">)),</span><span class="n">IG3</span><span class="o">.</span><span class="n">sPath</span><span class="p">);</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">update</span> <span class="n">values</span><span class="o">*</span><span class="p">)</span>
+<span class="n">iq_stValve</span><span class="o">.</span><span class="n">xOPN_OK</span> <span class="o">:=</span> <span class="n">xOPN_OK</span><span class="p">;</span>
 
 <span class="p">(</span><span class="o">*</span><span class="n">Veto</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span><span class="n">VETO</span> <span class="n">Devices</span><span class="o">*</span><span class="p">)</span>
@@ -12689,7 +12692,7 @@ END_METHOD
 <span class="o">//</span> <span class="n">ILK</span> <span class="n">logger</span>
 
 <span class="n">IF</span> <span class="n">i_xTrigger</span> <span class="n">AND</span> <span class="n">ePrevState</span> <span class="o">=</span> <span class="n">OPEN</span> <span class="n">THEN</span>
-            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Fast valve triggered to close&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+         <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Fast valve triggered to close&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
 <span class="n">END_IF</span>
 
 
@@ -12697,14 +12700,14 @@ END_METHOD
 
 <span class="n">IF</span> <span class="n">ePrevState</span> <span class="o">&lt;&gt;</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span> <span class="n">THEN</span>
       <span class="n">CASE</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span> <span class="n">OF</span>
-            <span class="n">INVALID</span><span class="p">:</span>
-                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve invalid position.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
-            <span class="n">MOVING</span><span class="p">:</span>
-                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve moving&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
-            <span class="n">OPEN</span><span class="p">:</span>
-                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve Open.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
-            <span class="n">CLOSED</span><span class="p">:</span>
-                    <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve closed.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+        <span class="n">INVALID</span><span class="p">:</span>
+            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve invalid position.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+          <span class="n">MOVING</span><span class="p">:</span>
+            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve moving&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+        <span class="n">OPEN</span><span class="p">:</span>
+            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve Open.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+        <span class="n">CLOSED</span><span class="p">:</span>
+            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Valve closed.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
       <span class="n">END_CASE</span>
       <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
   <span class="n">END_IF</span>
@@ -12745,6 +12748,9 @@ END_METHOD
 <span class="n">q_xOverrideMode</span> <span class="o">:=</span><span class="n">iq_stValve</span><span class="o">.</span><span class="n">xOverrideMode</span><span class="p">;</span>
 <span class="n">q_xOverrideOpen</span> <span class="o">:=</span> <span class="n">iq_stValve</span><span class="o">.</span><span class="n">pv_xOvrdOpn</span> <span class="p">;</span>
 <span class="n">iq_stValve</span><span class="o">.</span><span class="n">sGFS</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">sPath</span><span class="p">;</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">update</span> <span class="n">values</span><span class="o">*</span><span class="p">)</span>
+<span class="n">iq_stValve</span><span class="o">.</span><span class="n">xOPN_OK</span> <span class="o">:=</span> <span class="n">xOPN_OK</span><span class="p">;</span>
 
 <span class="p">(</span><span class="o">*</span><span class="n">Veto</span><span class="o">*</span><span class="p">)</span>
 <span class="p">(</span><span class="o">*</span><span class="n">VETO</span> <span class="n">Devices</span><span class="o">*</span><span class="p">)</span>
