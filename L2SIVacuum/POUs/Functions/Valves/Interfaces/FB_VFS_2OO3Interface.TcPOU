@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_VFS_2OO3Interface" Id="{289d35ca-42e8-4943-8216-657a27c694cb}" SpecialFunc="None">
     <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo valve to communicate over two task on the same PLC.*) 
 (*NOTE: All 3 gauge cards with fast TTL output need to be installed in the same gauge controller*)
@@ -192,6 +192,9 @@ q_xVAC_FAULT_Reset :=  iq_stValve.pv_xAlmRst;
 q_xOverrideMode :=iq_stValve.xOverrideMode;
 q_xOverrideOpen := iq_stValve.pv_xOvrdOpn ;
 iq_stValve.sGFS := CONCAT(CONCAT(CONCAT(IG1.sPath,','),CONCAT(IG2.sPath,',')),IG3.sPath);
+
+(*update values*)
+iq_stValve.xOPN_OK := xOPN_OK;
 
 (*Veto*)
 (*VETO Devices*)
