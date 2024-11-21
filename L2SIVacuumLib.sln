@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
+# TcXaeShell Solution File, Format Version 11.00
 VisualStudioVersion = 15.0.28307.960
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{B1E792BE-AA5F-4E3C-8C82-674BF9C0715B}") = "L2SIVacuumLib", "L2SIVacuumLib.tsproj", "{8307B492-8F76-4774-8A19-E2DE13DD96C6}"
