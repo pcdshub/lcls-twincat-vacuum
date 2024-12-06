@@ -1,0 +1,433 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_IE514" Id="{a97e2217-150d-4da1-935e-7cd0aee79bd0}" SpecialFunc="None">
+    <Declaration><![CDATA[(*This function is for the IE514 connected to controller IM540*)
+(*This function provides ILK and Set Point Protection for the IE514*)
+FUNCTION_BLOCK FB_IE514 EXTENDS FB_GaugeBase
+VAR_IN_OUT
+END_VAR
+VAR_INPUT
+    PG : ST_VG;
+END_VAR
+VAR_OUTPUT
+    {attribute 'pytmc' := '
+        pv:01
+    '}
+    IG_CH1 : ST_VG;
+    {attribute 'pytmc' := '
+        pv:02
+    '}
+    IG_CH2 : ST_VG;
+END_VAR
+VAR
+    rV_CH1 : REAL; //Raw value in volts for CH1 calculated from iTermBits
+    rV_CH2 : REAL; //Raw value in volts for CH2 calculated from iTermBits
+
+    tHvDis_CH1 : TON := (PT := T#20S); //HV turn on timer
+    tHvDis_CH2 : TON := (PT := T#20S); //HV turn on timer
+
+    rtHvSw_CH1 : R_TRIG;
+    rtHvSw_CH2 : R_TRIG;
+
+    tAction_CH1 : R_TRIG;
+    tAction_CH2 : R_TRIG;
+
+    ePrevStateIG_CH1 : E_PressureState;
+    ePrevStateIG_CH2 : E_PressureState;
+
+    //rDefaultVAC_SP: REAL := 9E-3; // as per manual
+
+    iTermBits : UINT := 30518; // The terminal's maximum value in bits default el3174 as per vacuum architecture
+    binit : BOOL := TRUE;  // Do something at startup
+
+    (*IOs to be linked*)
+    /// Controls and I/Os
+    i_iPRESS_R_CH1 AT %I* : INT; // input raw pressure in bits CH1 (ADC) // 'TcLinkTo' (EL3174) ^Input
+    i_iPRESS_R_CH2 AT %I* : INT; // input raw pressure in bits CH2 (ADC) // 'TcLinkTo' (EL3174) ^Input
+    q_xHV_DIS_CH1 AT %Q* : BOOL; // Enable Gauge High Voltage on CH1 when True // 'TcLinkTo' (EL2124) ^Output
+    q_xHV_DIS_CH2 AT %Q* : BOOL; // Enable Gauge High Voltage on CH2 when True // 'TcLinkTo' (EL2124) ^Output
+    i_xHV_ON AT %I*	: BOOL; // True when EMI is on  // 'TcLinkTo' (EL1004 or EL1008) ^Input
+    i_xERR_CH1 AT %I* : BOOL; // TRUE when NO error is present on assigned channel
+    i_xERR_CH2 AT %I* : BOOL; // TRUE when NO error is present on assigned channel
+    i_xCH2_SEL AT %I* : BOOL; // TRUE when CH2 selected, FALSE when CH1 selected
+END_VAR
+VAR CONSTANT
+    cMaxPressure : REAL := 7.5E-5; //Torr
+    cMinPressure : REAL := 7.5E-14; //Torr
+    cGaugeMinVoltage : REAL := 1.111; //minimum voltage corresponds to 7.5E-13 (7.498E-13)Torr which should be the minimum pressure IE514 can read.
+    cGaugeMaxVoltage : REAL := 10.0; //maximum voltage corresponds 7.5E-5 Torr which should be the maximum pressure IE514 can read.
+    cGaugeDisconnected : REAL := 10.2; //voltage when gauge is disconnected.
+    cGaugeOff : REAL := 10.2; //voltage when gauge is turned off
+    cDeadband : REAL := 0.05; //deadband in voltage
+END_VAR
+VAR PERSISTENT
+    //Persistent variables for CH1
+    rVAC_SP_CH1 : REAL;
+    rPRO_SP_CH1 : REAL;
+    rHYS_PR_CH1 : REAL;
+    //Persistent variables for CH2
+    rVAC_SP_CH2 : REAL;
+    rPRO_SP_CH2 : REAL;
+    rHYS_PR_CH2 : REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 2-6-2023, Janez Govednik *)
+(* This function will read the pressure from an IE514 gauge on an IM540. *)
+
+(*Only ONE channel can be turned ON at the same time*)
+rtHvSw_CH1(CLK := IG_CH1.xHV_SW);
+rtHvSw_CH2(CLK := IG_CH2.xHV_SW);
+IF rtHvSw_CH1.Q THEN
+    IG_CH2.xHV_SW := FALSE;
+    IG_CH2.q_xHV_DIS := FALSE;
+END_IF
+
+IF rtHvSw_CH2.Q THEN
+    IG_CH1.xHV_SW := FALSE;
+    IG_CH1.q_xHV_DIS := FALSE;
+END_IF
+
+//Start timers when HV ON signal triggered
+tHvDis_CH1(IN := IG_CH1.q_xHV_DIS, Q => IG_CH1.xTurnOnTime);
+tHvDis_CH2(IN := IG_CH2.q_xHV_DIS, Q => IG_CH2.xTurnOnTime);
+
+(*Raw voltage conversion*)
+//check no div by zero
+IF (iTermBits = 0) THEN iTermBits := 30518; END_IF
+rV_CH1 := 10*INT_TO_REAL(i_iPRESS_R_CH1)/iTermBits;
+rV_CH2 := 10*INT_TO_REAL(i_iPRESS_R_CH2)/iTermBits;
+
+(*RAW voltage to Pressure conversion*)
+IG_CH1.rPRESS := LREAL_TO_REAL(EXPT(10, rV_CH1/10*LOG(cMaxPressure/cMinPressure) + LOG(cMinPressure))); //manual page 70 IM540 (Mode Full), (Scale) = Log
+IG_CH2.rPRESS := LREAL_TO_REAL(EXPT(10, rV_CH2/10*LOG(cMaxPressure/cMinPressure) + LOG(cMinPressure))); //manual page 70 IM540 (Mode Full), (Scale) = Log
+
+(*Pressure gauge State checks*)
+//CH1
+IF NOT i_xCH2_SEL AND IG_CH1.xHV_SW THEN
+    IF NOT i_xERR_CH1 THEN
+        IG_CH1.eState := GaugeDisconnected;
+        IG_CH1.rPRESS := 0;
+    ELSIF rV_CH1 <= cGaugeMaxVoltage AND rV_CH1 >= cGaugeMinVoltage AND IG_CH1.i_xHV_ON THEN
+        IG_CH1.eState := Valid; // NORMAL
+    ELSIF rV_CH1 >= 0.0 AND rV_CH1 < cGaugeMinVoltage AND IG_CH1.i_xHV_ON THEN
+        IG_CH1.eState := OoR; //Out of range according to manual
+    ELSIF rV_CH1 > cGaugeMaxVoltage AND rV_CH1 < (cGaugeMaxVoltage + cDeadband) AND IG_CH1.i_xHV_ON THEN
+        IG_CH1.eState := OoR; //Out of range according to manual
+    ELSIF rV_CH1 > (cGaugeMaxVoltage + cDeadband) AND tHvDis_CH1.Q THEN
+        IG_CH1.eState := GaugeDisconnected; //gauge disconnected
+        IG_CH1.rPRESS := 0;
+    ELSIF rV_CH1 > (cGaugeMaxVoltage + cDeadband) AND NOT tHvDis_CH1.Q THEN
+        IG_CH1.eState := Starting; //gauge is starting
+        IG_CH1.rPRESS := 0;
+    ELSE
+        IG_CH1.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc.
+        IG_CH1.rPRESS := 0;
+    END_IF
+ELSE
+    IG_CH1.eState := Off; // Gauge turned OFF
+    IG_CH1.rPRESS := 0;
+END_IF
+
+//CH2
+IF i_xCH2_SEL AND IG_CH2.xHV_SW THEN
+    IF NOT i_xERR_CH2 THEN
+        IG_CH2.eState := GaugeDisconnected;
+        IG_CH2.rPRESS := 0;
+    ELSIF rV_CH2 <= cGaugeMaxVoltage AND rV_CH2 >= cGaugeMinVoltage AND IG_CH2.i_xHV_ON THEN
+        IG_CH2.eState := Valid; // NORMAL
+    ELSIF rV_CH2 >= 0.0 AND rV_CH2 < cGaugeMinVoltage AND IG_CH2.i_xHV_ON THEN
+        IG_CH2.eState := OoR; //Out of range according to manual
+    ELSIF rV_CH2 > cGaugeMaxVoltage AND rV_CH2 < (cGaugeMaxVoltage + cDeadband) AND IG_CH2.i_xHV_ON THEN
+        IG_CH2.eState := OoR; //Out of range according to manual
+    ELSIF rV_CH2 > (cGaugeMaxVoltage + cDeadband) AND tHvDis_CH2.Q THEN
+        IG_CH2.eState := GaugeDisconnected; //gauge disconnected
+        IG_CH2.rPRESS := 0;
+    ELSIF rV_CH2 > (cGaugeMaxVoltage + cDeadband) AND NOT tHvDis_CH2.Q THEN
+        IG_CH2.eState := Starting; //gauge is starting
+        IG_CH2.rPRESS := 0;
+    ELSE
+        IG_CH2.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc.
+        IG_CH2.rPRESS := 0;
+    END_IF
+ELSE
+    IG_CH2.eState := Off; // Gauge turned OFF
+    IG_CH2.rPRESS := 0;
+END_IF
+
+(* Ion Gauge Protection Functions *)
+(* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
+(* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
+(* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+
+//CH1
+IF (PG.rPRESS <= IG_CH1.rPRO_SP) AND PG.xPRESS_OK THEN
+    IG_CH1.q_xHV_DIS := IG_CH1.xHV_SW;
+    IG_CH1.xILKOk := TRUE;
+ELSIF IG_CH1.q_xHV_DIS AND tHvDis_CH1.Q THEN
+    IF IG_CH1.rPRESS > (IG_CH1.rPRO_SP + IG_CH1.rHYS_PR) OR PG.rPRESS > (IG_CH1.rPRO_SP + IG_CH1.rHYS_PR) THEN
+        IG_CH1.q_xHV_DIS := FALSE;
+        IG_CH1.xHV_SW := FALSE;
+    END_IF
+    //Adding this line because in case of interlocking gauge with another GCC or GHC PG.rPRESS value become 0 when turning it off
+    IF PG.rPRESS = 0 AND NOT PG.xPRESS_OK THEN
+        IG_CH1.q_xHV_DIS := FALSE;
+        IG_CH1.xHV_SW := FALSE;
+    END_IF
+ELSE
+    IG_CH1.q_xHV_DIS := FALSE;
+    IG_CH1.xHV_SW := FALSE;
+    IG_CH1.xILKOk := FALSE;
+END_IF
+
+//CH2
+IF (PG.rPRESS <= IG_CH2.rPRO_SP) AND PG.xPRESS_OK THEN
+    IG_CH2.q_xHV_DIS := IG_CH2.xHV_SW;
+    IG_CH2.xILKOk := TRUE;
+ELSIF IG_CH2.q_xHV_DIS AND tHvDis_CH2.Q THEN
+    IF IG_CH2.rPRESS > (IG_CH2.rPRO_SP + IG_CH2.rHYS_PR) OR PG.rPRESS > (IG_CH2.rPRO_SP + IG_CH2.rHYS_PR) THEN
+        IG_CH2.q_xHV_DIS := FALSE;
+        IG_CH2.xHV_SW := FALSE;
+    END_IF
+    //Adding this line because in case of interlocking gauge with another GCC or GHC PG.rPRESS value become 0 when turning it off
+    IF PG.rPRESS = 0 AND NOT PG.xPRESS_OK THEN
+        IG_CH2.q_xHV_DIS := FALSE;
+        IG_CH2.xHV_SW := FALSE;
+    END_IF
+ELSE
+    IG_CH2.q_xHV_DIS := FALSE;
+    IG_CH2.xHV_SW := FALSE;
+    IG_CH2.xILKOk := FALSE;
+END_IF
+
+
+(*Pressure gauge OK checks, Backwards compatibility*)
+IG_CH1.xPRESS_OK := ((IG_CH1.eState = Valid) OR IG_CH1.xBAKEOUT);
+IG_CH2.xPRESS_OK := ((IG_CH2.eState = Valid) OR IG_CH2.xBAKEOUT);
+
+(*Setpoint evaluation*)
+IG_CH1.xAT_VAC := IG_CH1.xPRESS_OK AND IG_CH1.rPRESS < IG_CH1.rVAC_SP;
+IG_CH2.xAT_VAC := IG_CH2.xPRESS_OK AND IG_CH2.rPRESS < IG_CH2.rVAC_SP;
+
+(*Logger*)
+ACT_Logger();
+
+(*Soft IO Linking*)
+IO();
+
+(*Load or save the persistent variables*)
+ACT_Persistent();
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_Logger" Id="{93c0ffae-3d88-4f57-bcab-883e3369b4b7}">
+      <Implementation>
+        <ST><![CDATA[// ILK logger
+(*CH1 of IM540 Controller*)
+IF (IG_CH1.xLog) THEN
+    IF NOT IG_CH1.xILKOk AND IG_CH1.q_xHV_DIS THEN
+            fbLogger(sMsg:='Lost external interlock while gauge(CH1) was on.', eSevr:=TcEventSeverity.Critical);
+    END_IF
+
+    // Log Action
+    tAction_CH1(CLK := IG_CH1.xHV_SW);
+    IF tAction_CH1.Q THEN fbLogger(sMsg:='Ion gauge(CH1) commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+
+    //STATE Logger
+    IF ePrevStateIG_CH1 <> IG_CH1.eState THEN
+          CASE IG_CH1.eState OF
+            ValidHi:
+                fbLogger(sMsg:='Gauge(CH1) pressure valid high.', eSevr:=TcEventSeverity.Info);
+            ValidLo:
+                fbLogger(sMsg:='Gauge(CH1) pressure valid low.', eSevr:=TcEventSeverity.Info);
+            Valid:
+                fbLogger(sMsg:='Gauge(CH1) pressure valid.', eSevr:=TcEventSeverity.Info);
+            GaugeDisconnected:
+                fbLogger(sMsg:='Gauge(CH1) Disconnected.', eSevr:=TcEventSeverity.Critical);
+            PressInvalid:
+                fbLogger(sMsg:='Gauge(CH1) pressure invalid.', eSevr:=TcEventSeverity.Warning);
+            OoR:
+                fbLogger(sMsg:='Gauge(CH1) pressure out of range.', eSevr:=TcEventSeverity.Warning);
+            Starting:
+                fbLogger(sMsg:='Gauge(CH1) starting.', eSevr:=TcEventSeverity.Info);
+          END_CASE
+          ePrevStateIG_CH1 := IG_CH1.eState;
+      END_IF
+END_IF
+
+(*CH2 of IM540 Controller*)
+IF (IG_CH2.xLog) THEN
+    IF NOT IG_CH2.xILKOk AND IG_CH2.q_xHV_DIS THEN
+            fbLogger(sMsg:='Lost external interlock while gauge(CH2) was on.', eSevr:=TcEventSeverity.Critical);
+    END_IF
+
+    // Log Action
+    tAction_CH2(CLK := IG_CH2.xHV_SW);
+    IF tAction_CH2.Q THEN fbLogger(sMsg:='Ion gauge(CH2) commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+
+    //STATE Logger
+    IF ePrevStateIG_CH2 <> IG_CH2.eState THEN
+          CASE IG_CH2.eState OF
+            ValidHi:
+                fbLogger(sMsg:='Gauge(CH2) pressure valid high.', eSevr:=TcEventSeverity.Info);
+            ValidLo:
+                fbLogger(sMsg:='Gauge(CH2) pressure valid low.', eSevr:=TcEventSeverity.Info);
+            Valid:
+                fbLogger(sMsg:='Gauge(CH2) pressure valid.', eSevr:=TcEventSeverity.Info);
+            GaugeDisconnected:
+                fbLogger(sMsg:='Gauge(CH2) Disconnected.', eSevr:=TcEventSeverity.Critical);
+            PressInvalid:
+                fbLogger(sMsg:='Gauge(CH2) pressure invalid.', eSevr:=TcEventSeverity.Warning);
+            OoR:
+                fbLogger(sMsg:='Gauge(CH2) pressure out of range.', eSevr:=TcEventSeverity.Warning);
+            Starting:
+                fbLogger(sMsg:='Gauge(CH2) starting.', eSevr:=TcEventSeverity.Info);
+          END_CASE
+          ePrevStateIG_CH2 := IG_CH2.eState;
+      END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Persistent" Id="{2a66a9ff-01b8-49fb-871d-7ce35c93e94a}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+    SUPER^.bRestorePersistentData := FALSE;
+    //CH1
+    IF (rVAC_SP_CH1 <> 0) THEN
+        IG_CH1.rVAC_SP := rVAC_SP_CH1;
+    END_IF;
+    IF (rPRO_SP_CH1 <> 0) THEN
+        IG_CH1.rPRO_SP := rPRO_SP_CH1;
+    END_IF;
+    IF (rHYS_PR_CH1 <> 0) THEN
+        IG_CH1.rHYS_PR := rHYS_PR_CH1;
+    END_IF;
+    //CH2
+    IF (rVAC_SP_CH2 <> 0) THEN
+        IG_CH2.rVAC_SP := rVAC_SP_CH2;
+    END_IF;
+    IF (rPRO_SP_CH2 <> 0) THEN
+        IG_CH2.rPRO_SP := rPRO_SP_CH2;
+    END_IF;
+    IF (rHYS_PR_CH2 <> 0) THEN
+        IG_CH2.rHYS_PR := rHYS_PR_CH2;
+    END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+//CH1
+IF NOT (IG_CH1.rVAC_SP = rVAC_SP_CH1)  THEN
+    rVAC_SP_CH1 := IG_CH1.rVAC_SP;
+END_IF;
+
+IF NOT (IG_CH1.rPRO_SP = rPRO_SP_CH1) THEN
+    rPRO_SP_CH1 := IG_CH1.rPRO_SP;
+END_IF;
+
+IF NOT (IG_CH1.rHYS_PR = rHYS_PR_CH1) THEN
+    rHYS_PR_CH1 := IG_CH1.rHYS_PR;
+END_IF;
+
+//CH2
+IF NOT (IG_CH2.rVAC_SP = rVAC_SP_CH2)  THEN
+    rVAC_SP_CH2 := IG_CH2.rVAC_SP;
+END_IF;
+
+IF NOT (IG_CH2.rPRO_SP = rPRO_SP_CH2) THEN
+    rPRO_SP_CH2 := IG_CH2.rPRO_SP;
+END_IF;
+
+IF NOT (IG_CH2.rHYS_PR = rHYS_PR_CH2) THEN
+    rHYS_PR_CH2 := IG_CH2.rHYS_PR;
+END_IF;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="IO" Id="{4897bdd3-d08c-4a6b-97a4-93b4dfae5b6f}">
+      <Implementation>
+        <ST><![CDATA[(*soft link inputs*)
+IF NOT i_xCH2_SEL THEN
+    IG_CH1.i_xHV_ON := i_xHV_ON;
+    IG_CH2.i_xHV_ON := FALSE;
+ELSE
+    IG_CH1.i_xHV_ON := FALSE;
+    IG_CH2.i_xHV_ON := i_xHV_ON;
+END_IF
+
+IG_CH1.i_iPRESS_R := i_iPRESS_R_CH1;
+IG_CH2.i_iPRESS_R := i_iPRESS_R_CH2;
+
+(*soft link outputs*)
+q_xHV_DIS_CH1 := IG_CH1.q_xHV_DIS;
+q_xHV_DIS_CH2 := IG_CH2.q_xHV_DIS;
+
+IG_CH1.sPath := sPath;
+IG_CH2.sPath := sPath;]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_AutoOnCh1" Id="{cc08bfe3-bd1c-4a23-9af8-d5b33250dccb}">
+      <Declaration><![CDATA[METHOD M_AutoOnCh1 : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.IG_CH1.q_xHV_DIS := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_AutoOnCh2" Id="{e66c9081-16fb-400d-bd72-f596b2bf0443}">
+      <Declaration><![CDATA[METHOD M_AutoOnCh2 : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.IG_CH2.q_xHV_DIS := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_HVECh1" Id="{d8f6dfee-09b7-477a-9cc9-e4597a79fa5d}">
+      <Declaration><![CDATA[METHOD M_HVECh1 : BOOL
+VAR_INPUT
+        enable : BOOL; // set to true to enable, false to disable;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.IG_CH1.xHV_SW := (enable);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_HVECh2" Id="{b2f825d0-4c8a-4ba5-8ef1-aa7342b4536a}">
+      <Declaration><![CDATA[METHOD M_HVECh2 : BOOL
+VAR_INPUT
+        enable : BOOL; // set to true to enable, false to disable;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.IG_CH2.xHV_SW := (enable);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsCh1Selected" Id="{6d55c84d-b54c-4f51-bcc2-90e51f24cab4}">
+      <Declaration><![CDATA[METHOD M_IsCh1Selected : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsCh1Selected := NOT i_xCH2_SEL;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsCh2Selected" Id="{2f02a31d-e3cd-4ec2-8aba-24b46a8cc8de}">
+      <Declaration><![CDATA[METHOD M_IsCh2Selected : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_IsCh2Selected := i_xCH2_SEL;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetBits" Id="{d32833b4-0f03-4965-9023-0b701048176d}">
+      <Declaration><![CDATA[METHOD M_SetBits
+VAR_INPUT
+    TermBits : UINT; // The beckhoff terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[this^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
