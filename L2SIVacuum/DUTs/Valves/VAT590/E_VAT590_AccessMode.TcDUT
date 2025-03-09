@@ -5,9 +5,9 @@
 {attribute 'strict'}
 TYPE E_VAT590_AccessMode :
 (
-	LOCAL := 0,
-	REMOTE := 1,
-	LOCKED := 2
+    LOCAL := 0,
+    REMOTE := 1,
+    LOCKED := 2
 ) USINT := REMOTE;
 END_TYPE
 ]]></Declaration>

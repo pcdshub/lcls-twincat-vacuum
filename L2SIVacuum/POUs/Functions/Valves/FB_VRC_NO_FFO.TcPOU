@@ -4,30 +4,30 @@
     <Declaration><![CDATA[(* This function block is different from the regular VRC in that CLOSING must be permitted. *)
 FUNCTION_BLOCK FB_VRC_NO_FFO EXTENDS FB_VRC_NO
 VAR_IN_OUT
-	io_fbFFHWO    :    FB_HardwareFFOutput;
-	fbArbiter: FB_Arbiter();
+    io_fbFFHWO    :    FB_HardwareFFOutput;
+    fbArbiter: FB_Arbiter();
 END_VAR
 VAR_INPUT
-	i_xPMPS_OK:	BOOL	; (*Set to True To switch off the bptm and PMPS Arbiter*)
-	i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
-	i_sDevName : T_MaxString :=  'VGC_NO'; // Device name for diagnostic
-	i_nTransitionRootID: UDINT; //A unique transition Root ID that is equal to or greater than 1000i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
+    i_xPMPS_OK:	BOOL	; (*Set to True To switch off the bptm and PMPS Arbiter*)
+    i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
+    i_sDevName : T_MaxString :=  'VGC_NO'; // Device name for diagnostic
+    i_nTransitionRootID: UDINT; //A unique transition Root ID that is equal to or greater than 1000i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
 END_VAR
 VAR_OUTPUT
-	
+
 END_VAR
 VAR
 
-	xPMPS_OK:	BOOL	; (*PMPS interlock*)
-	bMoving : BOOL;
-	bDone :BOOL;
-	tBPTMtimeout:TON;
-	bptm: BeamParameterTransitionManager;  
-	FFO    :    FB_FastFault :=(
+    xPMPS_OK:	BOOL	; (*PMPS interlock*)
+    bMoving : BOOL;
+    bDone :BOOL;
+    tBPTMtimeout:TON;
+    bptm: BeamParameterTransitionManager;
+    FFO    :    FB_FastFault :=(
         i_DevName := 'VGC',
         i_Desc := 'Fault occurs when the valve is not in safe state',
         i_TypeCode := 16#1010);
-	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
+    xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
 
 END_VAR]]></Declaration>
     <Implementation>
@@ -38,7 +38,7 @@ END_VAR]]></Declaration>
 (* On first PLC pass, put valve into vented state, which implies a closed valve *)
 fbFSInit( CLK := TRUE, Q => xFirstPass);
 IF xFirstPass THEN
-	iq_stValve.pv_xCLS_SW := FALSE;
+    iq_stValve.pv_xCLS_SW := FALSE;
 END_IF
 
 
@@ -46,22 +46,22 @@ END_IF
 
 ///Check valve position
 IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
-	iq_stValve.eState:=INVALID;
-ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xCLS_DO THEN 
-	iq_stValve.eState:=OPEN;
-ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND iq_stValve.q_xCLS_DO THEN 
-	iq_stValve.eState:=CLOSED;
-ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
-	iq_stValve.eState:=MOVING;
+    iq_stValve.eState:=INVALID;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xCLS_DO THEN
+    iq_stValve.eState:=OPEN;
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND iq_stValve.q_xCLS_DO THEN
+    iq_stValve.eState:=CLOSED;
+ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN
+    iq_stValve.eState:=MOVING;
 ELSE
-	iq_stValve.eState:=INVALID;
+    iq_stValve.eState:=INVALID;
 END_IF
 
 
 (*evaluate Valve CLose external interlock*)
 iq_stValve.xCLS_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xCLS_OK and NOT tonOvrd.Q THEN
-	iq_stValve.pv_xCLS_SW := FALSE;
+    iq_stValve.pv_xCLS_SW := FALSE;
 END_IF
 
 
@@ -73,9 +73,9 @@ when the valve permission goes true for more than ten seconds consistently, remo
 
 tonDelOK(IN:=iq_stValve.xCLS_OK, PT:=T#10S);
 rtOK(CLK:=tonDelOK.Q);
-IF rtOK.Q AND iq_stValve.pv_xOvrdCls THEN 
-	iq_stValve.pv_xOvrdCls :=FALSE; 
-	if (iq_stValve.eState=CLOSED) AND (i_xOverrideMode) THEN iq_stValve.pv_xCLS_SW := TRUE; END_IF
+IF rtOK.Q AND iq_stValve.pv_xOvrdCls THEN
+    iq_stValve.pv_xOvrdCls :=FALSE;
+    if (iq_stValve.eState=CLOSED) AND (i_xOverrideMode) THEN iq_stValve.pv_xCLS_SW := TRUE; END_IF
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
@@ -90,16 +90,16 @@ iq_stValve.q_xOPN_DO := NOT q_xCLS_DO;
 
 
 ///Check valve moving position timout
-IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
-	iq_stValve.bErrorPresent := TRUE;
-	//iq_stValve.sErrorMessage := ' Close Timeout';
-ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
-	iq_stValve.bErrorPresent := TRUE; 
-	//iq_stValve.sErrorMessage := ' Open Timeout';
+IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN
+    iq_stValve.bErrorPresent := TRUE;
+    //iq_stValve.sErrorMessage := ' Close Timeout';
+ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN
+    iq_stValve.bErrorPresent := TRUE;
+    //iq_stValve.sErrorMessage := ' Open Timeout';
 END_IF
 IF (iq_stValve.eState=INVALID) THEN
-	iq_stValve.bErrorPresent := TRUE; 
-	//iq_stValve.sErrorMessage := CONCAT(sPath,' Invalid Valve Position');
+    iq_stValve.bErrorPresent := TRUE;
+    //iq_stValve.sErrorMessage := CONCAT(sPath,' Invalid Valve Position');
 END_IF
 
 (*Timers*)
@@ -118,33 +118,33 @@ ACT_Logger();
 
 (*PMPS*)
 IF NOT(i_xPMPS_OK) THEN
-	ACT_PMPS();
+    ACT_PMPS();
 END_IF
 (*when interlock is lost the Valve closes regardless of the status of the PMPS and EPS*)
 xPMPS_OK := i_xPMPS_OK OR (bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q);
 IF NOT (iq_stValve.xCLS_OK) THEN
-	iq_stValve.pv_xCLS_SW:= FALSE; // Reset switch after inlk is lost
-	iq_stValve.q_xCLS_DO := (iq_stValve.pv_xCLS_SW  AND iq_stValve.xCLS_OK) OR (tonOvrd.Q AND i_xOverrideMode);
-ELSIF xPMPS_OK THEN 
-	iq_stValve.q_xCLS_DO := (iq_stValve.pv_xCLS_SW  AND iq_stValve.xCLS_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+    iq_stValve.pv_xCLS_SW:= FALSE; // Reset switch after inlk is lost
+    iq_stValve.q_xCLS_DO := (iq_stValve.pv_xCLS_SW  AND iq_stValve.xCLS_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+ELSIF xPMPS_OK THEN
+    iq_stValve.q_xCLS_DO := (iq_stValve.pv_xCLS_SW  AND iq_stValve.xCLS_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 //ELSIF NOT (i_xPMPS_OK) THEN
-	// Only override mode
-	//iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
+    // Only override mode
+    //iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
 END_IF
 
 (*MPS Fault setting*)
-If (i_xIsAperture ) THEN 
-	(* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
-	xMPS_OK := (i_xOpnLS  AND NOT q_xCLS_DO) XOR (i_xClsLS  AND q_xCLS_DO); 
+If (i_xIsAperture ) THEN
+    (* When the valve  is open or in Closed position MPS is OK, Fault while moving*)
+    xMPS_OK := (i_xOpnLS  AND NOT q_xCLS_DO) XOR (i_xClsLS  AND q_xCLS_DO);
 ELSE
-	(* When the valve  is open MPS is OK*)
-	xMPS_OK := i_xOpnLS AND NOT i_xClsLS AND q_xCLS_DO; 
+    (* When the valve  is open MPS is OK*)
+    xMPS_OK := i_xOpnLS AND NOT i_xClsLS AND q_xCLS_DO;
 END_IF
 
 (*FAST FAULT*)
 FFO(i_xOK := xMPS_OK,
     i_xReset := ,
-	i_xAutoReset :=TRUE,
+    i_xAutoReset :=TRUE,
     io_fbFFHWO := io_fbFFHWO);
 ]]></ST>
     </Implementation>
@@ -166,7 +166,7 @@ iq_stValve.q_xCLS_DO:= q_xCLS_DO;
         <ST><![CDATA[bMoving := (iq_stValve.pv_xCLS_SW AND NOT iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xCLS_SW AND NOT i_xOpnLS);
 bDone := (NOT iq_stValve.pv_xCLS_SW AND iq_stValve.i_xOpnLS) XOR ( iq_stValve.pv_xCLS_SW AND i_xClsLS);
 If (i_xIsAperture ) OR NOT (iq_stValve.pv_xCLS_SW )THEN
-	bptm.i_stRequestedAssertion := PMPS_GVL.cstFullBeam;
+    bptm.i_stRequestedAssertion := PMPS_GVL.cstFullBeam;
 ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cst0RateBeam;
 END_IF
 bptm(fbArbiter:=fbArbiter,
@@ -184,8 +184,8 @@ tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
 
 //Timeout and clear request
 IF (tBPTMtimeout.Q) THEN
-	fbArbiter.RemoveRequest(bptm.i_TransitionAssertionID);
-	fbArbiter.RemoveRequest(bptm.i_nRequestedAssertionID);
+    fbArbiter.RemoveRequest(bptm.i_TransitionAssertionID);
+    fbArbiter.RemoveRequest(bptm.i_nRequestedAssertionID);
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -211,7 +211,7 @@ END_VAR
       <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
 METHOD PUBLIC M_Set_CLS_SW : BOOL
 VAR_INPUT
-		value:BOOL;
+        value:BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>

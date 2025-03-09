@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TD400Status" Id="{60e77eec-6dbf-48b3-82d0-72d44ea60113}">
+    <Declaration><![CDATA[TYPE ST_TD400Status :  (* Serial communication defined in Oerlikon Leybold Manual 17200048 *)
+STRUCT
+    /// Received Status Word
+    wStatusWord: WORD;
+    /// Current stator frequency
+    {attribute 'pytmc' := '
+    pv: Frequency;
+    io: i;
+    '}
+    wFrequency_P3: WORD;
+    /// Current intermediate circuit voltage
+    {attribute 'pytmc' := '
+    pv: Voltage;
+    io: i;
+    '}
+    wVoltage_P4: WORD;
+    /// Current motor current
+    {attribute 'pytmc' := '
+    pv: MotorCurrent;
+    io: i;
+    '}
+    wMotorCurrent_P5: WORD;
+    /// Current frequency converter temperature
+    {attribute 'pytmc' := '
+    pv: Temperature;
+    io: i;
+    '}
+    wConverterTemp_P11: WORD;
+    /// Maximum setpoint frequency
+    {attribute 'pytmc' := '
+    pv: MaxSetpoinFreq;
+    io: i;
+    '}
+    wMaxSetpointFreq_P18: WORD;
+    /// Minimum setpoint frequency
+    {attribute 'pytmc' := '
+    pv: MinSetpoinFreq;
+    io: i;
+    '}
+    wMinSetpointFreq_P19: WORD;
+    /// Critical frequency
+    {attribute 'pytmc' := '
+    pv: CriticalFrequency;
+    io: i;
+    '}
+    wCriticalFreq_P20: WORD;
+    /// Setpoint Frequecy
+    {attribute 'pytmc' := '
+    pv: SetPointFreq;
+    io: i;
+    '}
+    wSetpointFreq_P24: WORD;
+    /// Max. run up time
+    {attribute 'pytmc' := '
+    pv: MaxRunUpTime;
+    io: i;
+    '}
+    wMaxRunUpTime_P32: WORD;
+    /// Current pump temperature
+    {attribute 'pytmc' := '
+    pv: PumpTemp;
+    io: i;
+    '}
+    wPumpTemp_P127: WORD;
+    /// most recent error code
+    {attribute 'pytmc' := '
+    pv: ErrorCode;
+    io: i;
+    '}
+    wErrorCode_P171: WORD;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -9,15 +9,12 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	{attribute 'pytmc' := 'pv: VFS_FAULT_OK'}
-	xVFS_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to Flase when there is Vacuum Fault*)
+    {attribute 'pytmc' := 'pv: VFS_FAULT_OK'}
+    xVFS_FAULT_OK AT%Q*: BOOL; (*Valve Vacuum OK, is set to Flase when there is Vacuum Fault*)
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <LineIds Name="FB_FSV_Interface">
-      <LineId Id="9" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

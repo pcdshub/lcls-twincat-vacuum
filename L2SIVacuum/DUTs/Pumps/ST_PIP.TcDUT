@@ -4,155 +4,155 @@
     <Declaration><![CDATA[TYPE ST_PIP :
 STRUCT
 (* Read back *)
-// 	i_xHVisON : BOOL; 
-	
+// 	i_xHVisON : BOOL;
+
 (* Interlock *)
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv: ILK_OK;
-	field: ZNAM NOT OK ;
-	field: ONAM OK ;
-	io: i;
-	'}
-   	xILKOk : BOOL; 
-	
-	{attribute 'pytmc' := '
+    field: ZNAM NOT OK ;
+    field: ONAM OK ;
+    io: i;
+    '}
+       xILKOk : BOOL;
+
+    {attribute 'pytmc' := '
     pv: ERROR;
-	field: ZNAM FALSE ;
-	field: ONAM TRUE ;
-	io: i;
-	'}
-   	xError : BOOL; 
-	
-	{attribute 'pytmc' := '
-	pv: AT_VAC_SP;
-	io: io;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	autosave_pass1: VAL DESC
-	'}
-	rHVEna_SP : REAL := 1.0E-4;	
-	
-	{attribute 'pytmc' := '
+    field: ZNAM FALSE ;
+    field: ONAM TRUE ;
+    io: i;
+    '}
+       xError : BOOL;
+
+    {attribute 'pytmc' := '
+    pv: AT_VAC_SP;
+    io: io;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    rHVEna_SP : REAL := 1.0E-4;
+
+    {attribute 'pytmc' := '
     pv: ILK_DEVICE;
-	io: i;
+    io: i;
     '}
-	sIlkDeviceName: STRING;
-	//Required for other devices using this gauge as interlock
-	sPath: STRING;
-	
-(* EPICS Controls *)	
-	{attribute 'pytmc' := '
+    sIlkDeviceName: STRING;
+    //Required for other devices using this gauge as interlock
+    sPath: STRING;
+
+(* EPICS Controls *)
+    {attribute 'pytmc' := '
     pv: HV_SW;
-	io: io;
-	field: ZNAM OFF; 
-	field: ONAM ON;
+    io: io;
+    field: ZNAM OFF;
+    field: ONAM ON;
     '}
-	xHVEna_SW : BOOL; 
-	{attribute 'pytmc' := '
+    xHVEna_SW : BOOL;
+    {attribute 'pytmc' := '
     pv: Auto_On;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io:io;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io:io;
     '}
-	xAutoOn : BOOL:=TRUE;
+    xAutoOn : BOOL:=TRUE;
 
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv: AutoOn_timer;
-	io:i;
+    io:i;
     '}
-	iAutoOnTimer : INT;
-	
-	{attribute 'pytmc' := '
-	pv: OVRD_ON ;
-	field: ZNAM Override OFF ;
-	field: ONAM Override ON;
-	io: io;
-	'}
-	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
-	
-	{attribute 'pytmc' := '
+    iAutoOnTimer : INT;
+
+    {attribute 'pytmc' := '
+    pv: OVRD_ON ;
+    field: ZNAM Override OFF ;
+    field: ONAM Override ON;
+    io: io;
+    '}
+    xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
+
+    {attribute 'pytmc' := '
     pv: FORCE_START;
-	io: io;
-	field: ZNAM FALSE;
-	field: ONAM FORCE START;
+    io: io;
+    field: ZNAM FALSE;
+    field: ONAM FORCE START;
     '}
-	pv_xOvrdStart	:	BOOL;
-	
+    pv_xOvrdStart	:	BOOL;
 
-	{attribute 'pytmc' := '
+
+    {attribute 'pytmc' := '
     pv: SP_HYS;
-	io: io;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	autosave_pass1: VAL DESC
-	'}
-	/// Protection setpoint hysteresis 
-	rHYS_PR: REAL := 0.001; 
-	{attribute 'pytmc' := '
+    io: io;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    /// Protection setpoint hysteresis
+    rHYS_PR: REAL := 0.001;
+    {attribute 'pytmc' := '
     pv: AI_Offset;
-	io: io;
+    io: io;
     '}
-	iOffset: INT:=13;
-	{attribute 'pytmc' := '
+    iOffset: INT:=13;
+    {attribute 'pytmc' := '
     pv: Inverted;
-	field: ZNAM NORMAL; 
-	field: ONAM INVERTED;
-	io: io;
+    field: ZNAM NORMAL;
+    field: ONAM INVERTED;
+    io: io;
     '}
-	bOutputInverted : BOOL;
+    bOutputInverted : BOOL;
 (* IO Controls *)
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv: HV_DO;
-	field: ZNAM OFF; 
-	field: ONAM ON;
-	io: i;
+    field: ZNAM OFF;
+    field: ONAM ON;
+    io: i;
     '}
-	q_xHVEna_DO : BOOL;	// Enable High Voltage when True // 'TcLinkTo' (EL1124) ^Input
-	{attribute 'pytmc' := '
+    q_xHVEna_DO : BOOL;	// Enable High Voltage when True // 'TcLinkTo' (EL1124) ^Input
+    {attribute 'pytmc' := '
     pv: PRESS;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	io: i;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    io: i;
     '}
-	rPRESS: REAL;  //
-	{attribute 'pytmc' := '
+    rPRESS: REAL;  //
+    {attribute 'pytmc' := '
     pv: PRESS_AI;
-	io: i;
+    io: i;
     '}
-	i_iPRESS: REAL;  //
-	{attribute 'pytmc' := '
+    i_iPRESS: REAL;  //
+    {attribute 'pytmc' := '
     pv: HV_DI;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io:i;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io:i;
     '}
-	i_xHV_DI : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
+    i_xHV_DI : BOOL; // NO contact // 'TcLinkTo' (EL1004) ^Input
 
-	{attribute 'pytmc' := '
-	pv: STATE;
-	field: ZRST STOPPED;
-	field: ONST STARTING;
-	field: TWST RUNNING;
-	field: THST FAULT;
-	field: FRST STOPPING;
-	io: i;
-	'}
+    {attribute 'pytmc' := '
+    pv: STATE;
+    field: ZRST STOPPED;
+    field: ONST STARTING;
+    field: TWST RUNNING;
+    field: THST FAULT;
+    field: FRST STOPPING;
+    io: i;
+    '}
 
-	eState	:	E_PumpState;
-	
-	{attribute 'pytmc' := '
+    eState	:	E_PumpState;
+
+    {attribute 'pytmc' := '
     pv: LOGGER;
-	io: io;
-	field: ZNAM OFF ;
-	field: ONAM ON ;
+    io: io;
+    field: ZNAM OFF ;
+    field: ONAM ON ;
     '}
-	xLog : BOOL:=TRUE;
+    xLog : BOOL:=TRUE;
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

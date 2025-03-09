@@ -1,30 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_GaugeBase" Id="{7a1f28cc-0783-4ebe-9457-6569085eece6}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'reflection'} 
+    <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK FB_GaugeBase
 VAR
-	//Logging 
+    //Logging
     fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
     ePrevState : E_PressureState;
     tErrorPresent : R_TRIG;
     tAction : R_TRIG; // Primary action of this device (OPN_DO, etc.)
     tOverrideActivated : R_TRIG;
-	 tState : R_TRIG;
-	{attribute 'instance-path'}
-	{attribute 'noinit'}
-	sPath: STRING;
-	// For Persistent Data
-	bRestorePersistentData	:	BOOL:=TRUE;
-	stateTimer:TON;
-	fbGetCurTaskIdx  : GETCURTASKINDEX;
-	fbWritePersistentData           : WritePersistentData;
-	tRecover: TON;
+     tState : R_TRIG;
+    {attribute 'instance-path'}
+    {attribute 'noinit'}
+    sPath: STRING;
+    // For Persistent Data
+    bRestorePersistentData	:	BOOL:=TRUE;
+    stateTimer:TON;
+    fbGetCurTaskIdx  : GETCURTASKINDEX;
+    fbWritePersistentData           : WritePersistentData;
+    tRecover: TON;
 END_VAR
 VAR PERSISTENT
     rVAC_SP	:	REAL;
-	rPRO_SP	:	REAL;
-	rHYS_PR: REAL;
+    rPRO_SP	:	REAL;
+    rHYS_PR: REAL;
 END_VAR
 ]]></Declaration>
     <Implementation>

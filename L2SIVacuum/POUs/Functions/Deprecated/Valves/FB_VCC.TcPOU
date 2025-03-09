@@ -10,23 +10,23 @@ VAR_IN_OUT
 
 END_VAR
 VAR_INPUT
-	i_xExtILK_OK:BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
-	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only*)
+    i_xExtILK_OK:BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
+    i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only*)
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv:
-	'}
-	iq_stValve : ST_VVC;
+    '}
+    iq_stValve : ST_VVC;
 END_VAR
 VAR
 
-	tonOvrd	:	TON;
-	tonDelOK : TON;
-	rtOK	:	R_TRIG;
+    tonOvrd	:	TON;
+    tonDelOK : TON;
+    rtOK	:	R_TRIG;
 
-	(*IO*)
-	q_xOPN_DO	AT%Q*: BOOL;
+    (*IO*)
+    q_xOPN_DO	AT%Q*: BOOL;
 
 END_VAR]]></Declaration>
     <Implementation>
@@ -86,29 +86,12 @@ END_VAR
       <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
 METHOD PUBLIC M_Set_OPN_SW : BOOL
 VAR_INPUT
-		value:BOOL;  //True to SET, False to RESET
+        value:BOOL;  //True to SET, False to RESET
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VCC">
-      <LineId Id="3" Count="23" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCC.ACT_IO">
-      <LineId Id="2" Count="2" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCC.M_IsClosed">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCC.M_IsOpen">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCC.M_Set_OPN_SW">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

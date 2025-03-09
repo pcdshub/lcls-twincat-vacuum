@@ -3,24 +3,24 @@
   <POU Name="FB_PTM_Ebara" Id="{db9fdbdf-85bb-4e58-96cc-808f2a65a0e5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_PTM_Ebara
 VAR_IN_OUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	iq_stPTM : ST_EbaraPTM;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    iq_stPTM : ST_EbaraPTM;
 END_VAR
 VAR_INPUT
-	i_iADCBits : UINT := 15;
-	i_iRawSpeed: INT; //Should come from PLC Soft IO.
+    i_iADCBits : UINT := 15;
+    i_iRawSpeed: INT; //Should come from PLC Soft IO.
 END_VAR
 VAR_OUTPUT
 
 END_VAR
 VAR
-	TOF_START: TOF := (PT:=T#0.5S); //Manual states momentary switches need to be closed for >= 0.3s
-	TOF_STOP: TOF := (PT:=T#0.5S);
-	TOF_RESET: TOF :=(PT:=T#0.5S);
-	
-	(*IO*)
+    TOF_START: TOF := (PT:=T#0.5S); //Manual states momentary switches need to be closed for >= 0.3s
+    TOF_STOP: TOF := (PT:=T#0.5S);
+    TOF_RESET: TOF :=(PT:=T#0.5S);
+
+    (*IO*)
 
 END_VAR]]></Declaration>
     <Implementation>
@@ -41,35 +41,35 @@ iq_stPTM.i_xFault := NOT iq_stPTM.i_xNCFault;
 
 (* Simple protection reset *)
 IF iq_stPTM.xExtRunOk THEN
-	iq_stPTM.q_xProtection:=TRUE;
+    iq_stPTM.q_xProtection:=TRUE;
 END_IF
 
 (* Basic pump supervisory section *)
-	(* If override mode, ignore everything else *)
+    (* If override mode, ignore everything else *)
 IF iq_stPTM.i_xOverride THEN
-	IF TOF_START.Q THEN
-	iq_stPTM.q_RunDO:=TRUE;
-	ELSIF TOF_STOP.Q THEN
-		iq_stPTM.q_RunDO:=FALSE;
-	END_IF
-	//Handle faults - the way the Ebara cable is done, xFault is normally closed
+    IF TOF_START.Q THEN
+    iq_stPTM.q_RunDO:=TRUE;
+    ELSIF TOF_STOP.Q THEN
+        iq_stPTM.q_RunDO:=FALSE;
+    END_IF
+    //Handle faults - the way the Ebara cable is done, xFault is normally closed
 ELSIF iq_stPTM.i_xFault OR (iq_stPTM.q_RunDO AND NOT iq_stPTM.xExtRunOk) THEN
-	iq_stPTM.q_RunDO:=FALSE;
-	iq_stPTM.q_xProtection:=FALSE;
-	//And one for when we need to start the pump normally. Only allows pump to be started if ILK ok.
+    iq_stPTM.q_RunDO:=FALSE;
+    iq_stPTM.q_xProtection:=FALSE;
+    //And one for when we need to start the pump normally. Only allows pump to be started if ILK ok.
 ELSIF TOF_START.Q AND iq_stPTM.xExtRunOk THEN
-	iq_stPTM.q_RunDO:=TRUE;
-	iq_stPTM.q_xStart:=TOF_START.Q;
+    iq_stPTM.q_RunDO:=TRUE;
+    iq_stPTM.q_xStart:=TOF_START.Q;
 //One section for when pump is told to stop
 ELSIF TOF_STOP.Q THEN
-		iq_stPTM.q_RunDO:=FALSE;
-END_IF 
+        iq_stPTM.q_RunDO:=FALSE;
+END_IF
 
 iq_stPTM.q_xReset:=TOF_RESET.Q; //No need for a conditional on these, code below takes care of it
 iq_stPTM.q_xStop:=TOF_STOP.Q;
 //Reset the start switch after processing
 IF iq_stPTM.q_RunDO THEN
-	iq_stPTM.q_xStart := TOF_START.Q;
+    iq_stPTM.q_xStart := TOF_START.Q;
 END_IF
 
 (* Pump speed calculation *)
@@ -77,7 +77,7 @@ IF iq_stPTM.i_iRawSpeed / (EXPT(2,i_iADCBits)-1) * 10 >= 0.2 THEN //Speed readin
 iq_stPTM.i_diCurSpd := LREAL_TO_DINT(iq_stPTM.i_iRawSpeed/(EXPT(2,i_iADCBits)-1)*67000);
 //V (AI/(2^{# ADC bits} -1 ) * 10[ADC 10V scaling]) * (33600 [Max RPM] - 100) / 5
 ELSE
-	iq_stPTM.i_diCurSpd := 0;
+    iq_stPTM.i_diCurSpd := 0;
 END_IF]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{75fa05c8-b87a-4b36-93fe-dc680536a088}">
@@ -85,12 +85,5 @@ END_IF]]></ST>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_PTM_Ebara">
-      <LineId Id="3" Count="53" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Ebara.ACT_IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -11,142 +11,142 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 *)
 
 (* Controls *)
-	{attribute 'pytmc' := '
-	pv: RUN_SW;
-	field: ZNAM STOP; 
-	field: ONAM RUN;
-	io: io;
-	'}
-	xRunSW	:	BOOL;
-	{attribute 'pytmc' := '
-	pv: RST_SW;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: io;
-	'}
-	xResetSW	:	BOOL; //For resetting faults
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
+    pv: RUN_SW;
+    field: ZNAM STOP;
+    field: ONAM RUN;
+    io: io;
+    '}
+    xRunSW	:	BOOL;
+    {attribute 'pytmc' := '
+    pv: RST_SW;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: io;
+    '}
+    xResetSW	:	BOOL; //For resetting faults
+    {attribute 'pytmc' := '
     pv: RUN_DO;
-	io: i;
-	'}
-	q_RunDO 	:	BOOL;
+    io: i;
+    '}
+    q_RunDO 	:	BOOL;
 
 (* Readbacks *)
     {attribute 'pytmc' := '
-	pv: ILK_OK;
-	field: ZNAM ILK ACTIVE;
-	field: ONAM ILK OK;
-	io: i;
-	'}
-	xExtRunOk	:	BOOL; (* also a control *)
-	{attribute 'pytmc' := '
-    pv: ACCEL;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	i_xAccel	:	BOOL;
-	{attribute 'pytmc' := '
-    pv: AT_SPD;
-	field: ZNAM FALSE; 
-	field: ONAM AT SPEED;
-	io: i;
-	'}
-	i_xAtSpd	:	BOOL;
-	{attribute 'pytmc' := '
-	pv: SPEED;
-	io: i;
-	field: EGU "Hz"
-	'}
-	i_diCurSpd	:	DINT;
-	
-	xCommTimeout	:	BOOL := TRUE;  (* Initialized true since we haven't talked to pump yet *)
-(* Alarm Outputs *)
-	{attribute 'pytmc' := '
-    pv: FAULT;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	i_xFault		:	BOOL; (*FAULT*)
-	{attribute 'pytmc' := '
-    pv: WARN;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	i_xWarn		:	BOOL; (* warning *)
-	{attribute 'pytmc' := '
-    pv: ALARM;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	i_xALARM	:	BOOL; (* ALARM *)
-	
-(* IWS instructions *)
-	xActive	:	BOOL; // this bit is set to add the pump to the system
-	iPumpGrp 	:	INT; // all members of a pump group start at the same time
-	
-(* Operational Setpoints *)
-	rForelineSP	:	REAL := 0.5;
-	
-	{attribute 'pytmc' := '
-    pv: BP_SP;
-	io: io;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	autosave_pass1: VAL DESC
-	'}
-	rBackingPressureSP : REAL := 0.01;
-	{attribute 'pytmc' := '
-    pv: IP_SP;
-	io: io;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	autosave_pass1: VAL DESC
-	'}
-	rInletPressureSP : REAL := 0.02; //20mTorr
-(*State*)	
-	{attribute 'pytmc' := '
-	pv: STATE;
-	field: ZRST STOPPED;
-	field: ONST STARTING;
-	field: TWST RUNNING;
-	field: THST FAULT;
-	field: FRST STOPPING;
-	io: i;
-	'}
-
-	eState	:	E_PumpState;
-	
-	{attribute 'pytmc' := '
-	pv: CURR_MON;
-	io: i;
-	field: PREC 2
-	field: EGU "A";
-	'}
-	i_rCurrentMon : REAL;
-
-	{attribute 'pytmc' := '
-    pv: TEMP_MON;
-	io: i;
-	field: PREC 2;
-	field: EGU "C";
-	'}
-	i_rTempMon	:	REAL;
- 
-	{attribute 'pytmc' := '
-    pv: LOGGER;
-	io: i;
-	field: ZNAM OFF ;
-	field: ONAM ON ;
+    pv: ILK_OK;
+    field: ZNAM ILK ACTIVE;
+    field: ONAM ILK OK;
+    io: i;
     '}
-	xLog : BOOL:=TRUE;
+    xExtRunOk	:	BOOL; (* also a control *)
+    {attribute 'pytmc' := '
+    pv: ACCEL;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    i_xAccel	:	BOOL;
+    {attribute 'pytmc' := '
+    pv: AT_SPD;
+    field: ZNAM FALSE;
+    field: ONAM AT SPEED;
+    io: i;
+    '}
+    i_xAtSpd	:	BOOL;
+    {attribute 'pytmc' := '
+    pv: SPEED;
+    io: i;
+    field: EGU "Hz"
+    '}
+    i_diCurSpd	:	DINT;
+
+    xCommTimeout	:	BOOL := TRUE;  (* Initialized true since we haven't talked to pump yet *)
+(* Alarm Outputs *)
+    {attribute 'pytmc' := '
+    pv: FAULT;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    i_xFault		:	BOOL; (*FAULT*)
+    {attribute 'pytmc' := '
+    pv: WARN;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    i_xWarn		:	BOOL; (* warning *)
+    {attribute 'pytmc' := '
+    pv: ALARM;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    i_xALARM	:	BOOL; (* ALARM *)
+
+(* IWS instructions *)
+    xActive	:	BOOL; // this bit is set to add the pump to the system
+    iPumpGrp 	:	INT; // all members of a pump group start at the same time
+
+(* Operational Setpoints *)
+    rForelineSP	:	REAL := 0.5;
+
+    {attribute 'pytmc' := '
+    pv: BP_SP;
+    io: io;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    rBackingPressureSP : REAL := 0.01;
+    {attribute 'pytmc' := '
+    pv: IP_SP;
+    io: io;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    rInletPressureSP : REAL := 0.02; //20mTorr
+(*State*)
+    {attribute 'pytmc' := '
+    pv: STATE;
+    field: ZRST STOPPED;
+    field: ONST STARTING;
+    field: TWST RUNNING;
+    field: THST FAULT;
+    field: FRST STOPPING;
+    io: i;
+    '}
+
+    eState	:	E_PumpState;
+
+    {attribute 'pytmc' := '
+    pv: CURR_MON;
+    io: i;
+    field: PREC 2
+    field: EGU "A";
+    '}
+    i_rCurrentMon : REAL;
+
+    {attribute 'pytmc' := '
+    pv: TEMP_MON;
+    io: i;
+    field: PREC 2;
+    field: EGU "C";
+    '}
+    i_rTempMon	:	REAL;
+
+    {attribute 'pytmc' := '
+    pv: LOGGER;
+    io: i;
+    field: ZNAM OFF ;
+    field: ONAM ON ;
+    '}
+    xLog : BOOL:=TRUE;
 
 
 END_STRUCT

@@ -5,28 +5,28 @@
 in the event of errors/ warnings. Provides interlocking interface.*)
 FUNCTION_BLOCK FB_EbaraEVA EXTENDS FB_Pump
 VAR_INPUT
-	i_xExtIlkOK	:	BOOL;
+    i_xExtIlkOK	:	BOOL;
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	stPump	:	ST_EbaraEVA; //Ebara dry pump structure 
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    stPump	:	ST_EbaraEVA; //Ebara dry pump structure
 END_VAR
 VAR
   // For logging
   (*  fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
     ePrevState : E_PumpState;
     tErrorPresent : R_TRIG;
-    tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)	
-	tFault : F_TRIG;*)
+    tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
+    tFault : F_TRIG;*)
 
 (*IO*)
-	q_xRunDo AT%Q* : BOOL; // Output signal
-	q_xRemote At%Q* :BOOL;// Remote/Local Control
-	q_xResetAlarm At%Q* :BOOL;// Remote/Local Control
-	i_xAlarmOK AT%I* :BOOL; // Normally closed Alarm bit
-	i_xIsRun   AT%I*:BOOL; // Input status
+    q_xRunDo AT%Q* : BOOL; // Output signal
+    q_xRemote At%Q* :BOOL;// Remote/Local Control
+    q_xResetAlarm At%Q* :BOOL;// Remote/Local Control
+    i_xAlarmOK AT%I* :BOOL; // Normally closed Alarm bit
+    i_xIsRun   AT%I*:BOOL; // Input status
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -36,25 +36,25 @@ stPump.xIlkOK := i_xExtIlkOK AND stPump.i_xAlarmOK ;
 //stPump.q_xRemote := stPump.xIlkOK;
 
 IF stPump.xIlkOK THEN
-	stPump.q_xRunDO := stPump.pv_xRunSW;
-	stPump.q_xRemote := stPump.pv_xRunSW;
+    stPump.q_xRunDO := stPump.pv_xRunSW;
+    stPump.q_xRemote := stPump.pv_xRunSW;
 ELSE
-		stPump.PV_xRunSW := FALSE;
+        stPump.PV_xRunSW := FALSE;
         stPump.q_xRunDO := FALSE;
 END_IF
 
 (*State evaluation*)
 IF NOT(stPump.i_xAlarmOK ) THEN
-	 ePrevState := stpump.eState;
-	stpump.eState := pumpFAULT;
+     ePrevState := stpump.eState;
+    stpump.eState := pumpFAULT;
 ELSIF NOT stpump.q_xRunDo AND stPump.i_xAlarmOK THEN
-		stpump.eState := pumpSTOPPED;	
+        stpump.eState := pumpSTOPPED;
 ELSIF NOT stpump.q_xRunDo AND NOT stPump.i_xIsRun THEN
-		stpump.eState := pumpSTARTING;	
+        stpump.eState := pumpSTARTING;
 ELSIF stPump.i_xIsRun THEN
-		stpump.eState := pumpRUNNING;
+        stpump.eState := pumpRUNNING;
 ELSE
-	stpump.eState := pumpFAULT;
+    stpump.eState := pumpFAULT;
 END_IF
 
 
@@ -79,24 +79,24 @@ q_xResetAlarm:=stPump.q_xReset;]]></ST>
       <Implementation>
         <ST><![CDATA[// ILK logger
 IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
- 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+         fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);
 END_IF
 
-//STATE Logger  
+//STATE Logger
 IF ePrevState <> stpump.eState THEN
-	  CASE stpump.eState OF
-		pumpFAULT:
-			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
-  		pumpSTOPPED:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
-		pumpSTARTING:
-			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
-		pumpRUNNING:
-			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := stpump.eState;  
+      CASE stpump.eState OF
+        pumpFAULT:
+            fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+          pumpSTOPPED:
+            fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+        pumpSTARTING:
+            fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+        pumpRUNNING:
+            fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := stpump.eState;
   END_IF
-  
+
 // Log Action
 tAction(CLK:=  stPump.q_xRunDo);
 IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF

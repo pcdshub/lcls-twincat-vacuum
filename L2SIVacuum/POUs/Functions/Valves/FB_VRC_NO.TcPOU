@@ -8,36 +8,36 @@ VAR_IN_OUT
 END_VAR
 VAR_INPUT
 
-	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
-	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+    i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
+    i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv:
-	'}
-		iq_stValve : ST_VRC_NO;
+    '}
+        iq_stValve : ST_VRC_NO;
 END_VAR
 VAR
 
-	{attribute 'noinit'}
-	sPath: STRING;
-	xFirstPass	:	BOOL;
-	fbFSInit		:	R_TRIG;
-	tonOvrd	:	TON;
-	tonDelOK : TON;
-	rtOK	:	R_TRIG;
-	tOvrd	:	TIME := T#10s;
-	(* Timeouts*)
-	tTimeOutDuration: TIME:= T#30S;
-	tOPNtimeout: TON;
-	tCLStimeout:TON;
-	
+    {attribute 'noinit'}
+    sPath: STRING;
+    xFirstPass	:	BOOL;
+    fbFSInit		:	R_TRIG;
+    tonOvrd	:	TON;
+    tonDelOK : TON;
+    rtOK	:	R_TRIG;
+    tOvrd	:	TIME := T#10s;
+    (* Timeouts*)
+    tTimeOutDuration: TIME:= T#30S;
+    tOPNtimeout: TON;
+    tCLStimeout:TON;
+
 
 (*IO*)
-	i_xOpnLS	AT%I*: BOOL;
-	i_xClsLS	AT%I*: BOOL;
-	q_xCLS_DO	AT%Q*: BOOL;
+    i_xOpnLS	AT%I*: BOOL;
+    i_xClsLS	AT%I*: BOOL;
+    q_xCLS_DO	AT%Q*: BOOL;
 
 END_VAR]]></Declaration>
     <Implementation>
@@ -46,7 +46,7 @@ END_VAR]]></Declaration>
 (* On first PLC pass, put valve into vented state, which implies a closed valve *)
 fbFSInit( CLK := TRUE, Q => xFirstPass);
 IF xFirstPass THEN
-	iq_stValve.pv_xCLS_SW := FALSE;
+    iq_stValve.pv_xCLS_SW := FALSE;
 END_IF
 
 
@@ -54,22 +54,22 @@ END_IF
 
 ///Check valve position
 IF iq_stValve.i_xClsLS AND  iq_stValve.i_xOpnLS THEN
-	iq_stValve.eState:=INVALID;
-ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xCLS_DO THEN 
-	iq_stValve.eState:=OPEN;
-ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND iq_stValve.q_xCLS_DO THEN 
-	iq_stValve.eState:=CLOSED;
-ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN 
-	iq_stValve.eState:=MOVING;
+    iq_stValve.eState:=INVALID;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS AND NOT iq_stValve.q_xCLS_DO THEN
+    iq_stValve.eState:=OPEN;
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS AND iq_stValve.q_xCLS_DO THEN
+    iq_stValve.eState:=CLOSED;
+ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN
+    iq_stValve.eState:=MOVING;
 ELSE
-	iq_stValve.eState:=INVALID;
+    iq_stValve.eState:=INVALID;
 END_IF
 
 
 (*evaluate Valve CLose external interlock*)
 iq_stValve.xCLS_OK := i_xExtILK_OK;
 IF NOT iq_stValve.xCLS_OK and NOT tonOvrd.Q THEN
-	iq_stValve.pv_xCLS_SW := FALSE;
+    iq_stValve.pv_xCLS_SW := FALSE;
 END_IF
 
 
@@ -81,9 +81,9 @@ when the valve permission goes true for more than ten seconds consistently, remo
 
 tonDelOK(IN:=iq_stValve.xCLS_OK, PT:=T#10S);
 rtOK(CLK:=tonDelOK.Q);
-IF rtOK.Q AND iq_stValve.pv_xOvrdCls THEN 
-	iq_stValve.pv_xOvrdCls :=FALSE; 
-	if (iq_stValve.eState=CLOSED) AND (i_xOverrideMode) THEN iq_stValve.pv_xCLS_SW := TRUE; END_IF
+IF rtOK.Q AND iq_stValve.pv_xOvrdCls THEN
+    iq_stValve.pv_xOvrdCls :=FALSE;
+    if (iq_stValve.eState=CLOSED) AND (i_xOverrideMode) THEN iq_stValve.pv_xCLS_SW := TRUE; END_IF
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
@@ -98,16 +98,16 @@ iq_stValve.q_xOPN_DO := NOT q_xCLS_DO;
 
 
 ///Check valve moving position timout
-IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN 
-	iq_stValve.bErrorPresent := TRUE;
-	//iq_stValve.sErrorMessage := ' Close Timeout';
-ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN 
-	iq_stValve.bErrorPresent := TRUE; 
-	//iq_stValve.sErrorMessage := ' Open Timeout';
+IF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN
+    iq_stValve.bErrorPresent := TRUE;
+    //iq_stValve.sErrorMessage := ' Close Timeout';
+ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN
+    iq_stValve.bErrorPresent := TRUE;
+    //iq_stValve.sErrorMessage := ' Open Timeout';
 END_IF
 IF (iq_stValve.eState=INVALID) THEN
-	iq_stValve.bErrorPresent := TRUE; 
-	//iq_stValve.sErrorMessage := CONCAT(sPath,' Invalid Valve Position');
+    iq_stValve.bErrorPresent := TRUE;
+    //iq_stValve.sErrorMessage := CONCAT(sPath,' Invalid Valve Position');
 END_IF
 
 (*Timers*)
@@ -155,7 +155,7 @@ END_VAR
       <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
 METHOD PUBLIC M_Set_CLS_SW : BOOL
 VAR_INPUT
-		value:BOOL;
+        value:BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>

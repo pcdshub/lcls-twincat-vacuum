@@ -3,159 +3,159 @@
   <DUT Name="ST_VG" Id="{e8999049-eca7-4ca1-9a7c-26918f6aba1e}">
     <Declaration><![CDATA[TYPE ST_VG :
 STRUCT
-	/// A general gauge structure is used to make the rest of the interlocking simpler. There are some parameters for cold cathodes that are not used by pirani.
-	///These features aren't disabled, they just aren't used, think child/parent classes. 
-	/// 
-	{attribute 'pytmc' := '
+    /// A general gauge structure is used to make the rest of the interlocking simpler. There are some parameters for cold cathodes that are not used by pirani.
+    ///These features aren't disabled, they just aren't used, think child/parent classes.
+    ///
+    {attribute 'pytmc' := '
     pv: PRESS;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	io: i;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    io: i;
     '}
-	rPRESS: REAL;  //This is the human-readable pressure
-	{attribute 'pytmc' := '
+    rPRESS: REAL;  //This is the human-readable pressure
+    {attribute 'pytmc' := '
     pv: AT_VAC;
-	io: i;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
+    io: i;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
     '}
-	xAT_VAC: BOOL;
-	{attribute 'pytmc' := '
+    xAT_VAC: BOOL;
+    {attribute 'pytmc' := '
     pv: PRESS_OK;
-	field: ZNAM OFF; 
-	field: ONAM ON;
-	io: i;
+    field: ZNAM OFF;
+    field: ONAM ON;
+    io: i;
     '}
-	xPRESS_OK: BOOL;
-	{attribute 'pytmc' := '
+    xPRESS_OK: BOOL;
+    {attribute 'pytmc' := '
     pv: STATE;
-	field: ZRST Off;
-	field: ONST GaugeDisconnected;
-	field: TWST OoR;
-	field: THST PressInvalid;
-	field: FRST Starting;
-	field: FVST Valid;
-	field: SXST ValidHi;
-	field: SVST ValidLo;
-	io: i;
+    field: ZRST Off;
+    field: ONST GaugeDisconnected;
+    field: TWST OoR;
+    field: THST PressInvalid;
+    field: FRST Starting;
+    field: FVST Valid;
+    field: SXST ValidHi;
+    field: SVST ValidLo;
+    io: i;
     '}
-	eState	:	E_PressureState;
-	(* EPICS Controls *)	
-	{attribute 'pytmc' := '
+    eState	:	E_PressureState;
+    (* EPICS Controls *)
+    {attribute 'pytmc' := '
     pv: HV_SW;
-	io: io;
-	field: ZNAM OFF; 
-	field: ONAM ON;
+    io: io;
+    field: ZNAM OFF;
+    field: ONAM ON;
     '}
-	xHV_SW: BOOL; // High Voltage Switch from epics
-	{attribute 'pytmc' := '
+    xHV_SW: BOOL; // High Voltage Switch from epics
+    {attribute 'pytmc' := '
     pv: Auto_On;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io:io;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io:io;
     '}
-	xAutoOn : BOOL := TRUE;
-	{attribute 'pytmc' := '
+    xAutoOn : BOOL := TRUE;
+    {attribute 'pytmc' := '
     pv: AutoOn_timer;
-	io:i;
+    io:i;
     '}
-	iAutoOnTimer : INT;
-	/// Controls and I/Os
-	{attribute 'pytmc' := '
+    iAutoOnTimer : INT;
+    /// Controls and I/Os
+    {attribute 'pytmc' := '
     pv: PRESS_AI;
-	io: i;
+    io: i;
     '}
-	i_iPRESS_R  :INT; // input Pressure // Link to analog Input
-	{attribute 'pytmc' := '
+    i_iPRESS_R  :INT; // input Pressure // Link to analog Input
+    {attribute 'pytmc' := '
     pv: HV_ON;
-	io: i;
+    io: i;
     '}
-	i_xHV_ON	: BOOL; //  True when High Voltage is on  
-	{attribute 'pytmc' := '
+    i_xHV_ON	: BOOL; //  True when High Voltage is on
+    {attribute 'pytmc' := '
     pv: DISC_ACTIVE;
-	field: ZNAM NO DISC; 
-	field: ONAM DISC ACTIVE;
-	io: i;
+    field: ZNAM NO DISC;
+    field: ONAM DISC ACTIVE;
+    io: i;
     '}
-	i_xDisc_Active : BOOL;// Discharge Current Active 
-	{attribute 'pytmc' := '
+    i_xDisc_Active : BOOL;// Discharge Current Active
+    {attribute 'pytmc' := '
     pv: HV_DIS_DO;
-	io: i;
-	field: ZNAM FALSE ;
-	field: ONAM TRUE ;
+    io: i;
+    field: ZNAM FALSE ;
+    field: ONAM TRUE ;
     '}
-	q_xHV_DIS : BOOL; // Enable High Voltage when True 
-	//
-	wHV_RO: WORD;
-		
-	/// Bakeout bit 
-	xBAKEOUT: BOOL;
-	
-	//enum for gauge type - will replace iType
-	eTYPE: Gauge_Type := PG907; 
-	//Gauge type, deprecated (default to pirani)
-	iTYPE: INT := 2;
-	// Index location of the associated Pirani Gauge
-	wPG: WORD;
-	
-	 
-	xTurnOnTime: BOOL;/// Turn on Timers for cold cathode warmup
-	
-	iVacSp	:	INT;/// At vacuum setpoint for all gauges
-	{attribute 'pytmc' := '
-    pv: VAC_SP;
-	io:io;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	autosave_pass1: VAL DESC
-    '}
-	rVAC_SP: REAL := 0.001; /// At vacuum setpoint for all gauges
-	/// Protection setpoint for ion gauges at which the gauge turns off, not used for pirani 
-	{attribute 'pytmc' := '
-    pv: PRO_SP;
-	io: io;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	autosave_pass1: VAL DESC
-    '}
-	rPRO_SP: REAL := 0.001;
-	{attribute 'pytmc' := '
-    pv: SP_HYS;
-	io: io;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	autosave_pass1: VAL DESC
-	'}
-	/// Protection setpoint hysteresis 
-	rHYS_PR: REAL := 0.001; 
-	{attribute 'pytmc' := '
-    pv: ILK_OK;
-	field: ZNAM NOT OK ;
-	field: ONAM OK ;
-	io: i;
-	'}
-	xILKOk	:	BOOL; (* also a control *)
-	{attribute 'pytmc' := '
-    pv: LOGGER;
-	io: io;
-	field: ZNAM OFF ;
-	field: ONAM ON ;
-    '}
-	xLog : BOOL:=TRUE;
-	//Required for other devices using this gauge as interlock
-	sPath: STRING;
+    q_xHV_DIS : BOOL; // Enable High Voltage when True
+    //
+    wHV_RO: WORD;
 
-	/// Full scale pressure in Torr for baratron pressure conversion 
-	rFULL_SCALE: REAL := 1000;
-	
+    /// Bakeout bit
+    xBAKEOUT: BOOL;
+
+    //enum for gauge type - will replace iType
+    eTYPE: Gauge_Type := PG907;
+    //Gauge type, deprecated (default to pirani)
+    iTYPE: INT := 2;
+    // Index location of the associated Pirani Gauge
+    wPG: WORD;
+
+
+    xTurnOnTime: BOOL;/// Turn on Timers for cold cathode warmup
+
+    iVacSp	:	INT;/// At vacuum setpoint for all gauges
+    {attribute 'pytmc' := '
+    pv: VAC_SP;
+    io:io;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    rVAC_SP: REAL := 0.001; /// At vacuum setpoint for all gauges
+    /// Protection setpoint for ion gauges at which the gauge turns off, not used for pirani
+    {attribute 'pytmc' := '
+    pv: PRO_SP;
+    io: io;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    rPRO_SP: REAL := 0.001;
+    {attribute 'pytmc' := '
+    pv: SP_HYS;
+    io: io;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    /// Protection setpoint hysteresis
+    rHYS_PR: REAL := 0.001;
+    {attribute 'pytmc' := '
+    pv: ILK_OK;
+    field: ZNAM NOT OK ;
+    field: ONAM OK ;
+    io: i;
+    '}
+    xILKOk	:	BOOL; (* also a control *)
+    {attribute 'pytmc' := '
+    pv: LOGGER;
+    io: io;
+    field: ZNAM OFF ;
+    field: ONAM ON ;
+    '}
+    xLog : BOOL:=TRUE;
+    //Required for other devices using this gauge as interlock
+    sPath: STRING;
+
+    /// Full scale pressure in Torr for baratron pressure conversion
+    rFULL_SCALE: REAL := 1000;
+
 END_STRUCT
 END_TYPE
 ]]></Declaration>

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="FB_OERLIKON_TD20_COM" Id="{ae5a89f1-436f-4c56-95f2-ee343a4a170c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_OERLIKON_TD20_COM
+VAR
+    tTimeOut: TIME := TIME#1S0MS;
+    fbTD20SerialDriver: FB_TD20SerialDriver;
+
+END_VAR
+VAR_IN_OUT
+    SerialRXBuffer : ComBuffer;
+    SerialTXBuffer : ComBuffer;
+END_VAR
+VAR_OUTPUT
+    astTD20Status: ST_TD20Status;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This program is called from Serial PTM IO *)
+
+(* scan the pumps one at a time *)//MG???
+fbTD20SerialDriver(
+    i_xExecute:= TRUE,
+    i_tTimeOut:= tTimeOut,
+    i_wControlWord:= 16#0000,
+    iq_stSerialRXBuffer:= SerialRXBuffer,
+    iq_stSerialTXBuffer:= SerialTXBuffer,
+    q_xDone=> ,
+    q_xError=> ,
+    q_xTimeout=> ,
+    q_sResult=> ,
+    q_stStatus=> astTD20Status);
+
+IF fbTD20SerialDriver.q_xDone
+    OR fbTD20SerialDriver.q_xError
+    OR fbTD20SerialDriver.q_xTimeout THEN
+        (* reset for next time *)
+        fbTD20SerialDriver(i_xExecute:= FALSE, iq_stSerialRXBuffer:= SerialRXBuffer, iq_stSerialTXBuffer:= SerialTXBuffer);
+END_IF
+
+
+
+    ]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
