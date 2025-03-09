@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4018.5">
+  <GVL Name="GVL_PfeifferParameters" Id="{7ae349b1-f7bb-4dc5-88f6-6016367034c2}">
+    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
+    gcMaxPfeifferPumps	:	INT := 20; //maximum size of the Pfeiffer turbo pump array for a single port
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_TD400Control" Id="{1be82e89-db71-431e-815d-0070384e019c}">
+    <Declaration><![CDATA[TYPE ST_TD400Control :  (* Serial communication defined in Oerlikon Leybold Manual GA05281_002_C0 *)
+STRUCT
+    {attribute 'pytmc' := '
+    pv: SetPumpSpeed;
+    io: i;
+    '}
+    wSetSetpointFreq_P24: WORD; // speed setting in Hz
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

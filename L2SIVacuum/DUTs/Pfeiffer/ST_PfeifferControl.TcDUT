@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_PfeifferControl" Id="{731036f1-36a4-4d41-854c-61674db7f8df}">
+    <Declaration><![CDATA[TYPE ST_PfeifferControl :
+STRUCT
+    /// enables communication
+    {attribute 'pytmc' := '
+    pv: COMM_EN;
+    io: io;
+    '}
+    xEnableComm: BOOL;
+    /// RS-485 Address
+    {attribute 'pytmc' := '
+    pv: ADDR;
+    io: io;
+    '}
+    iSerialAddress: INT;
+    {attribute 'pytmc' := '
+    pv: EXT_ILK_OK;
+    field: ZNAM ILK ACTIVE;
+    field: ONAM ILK OK;
+    io: i;
+    '}
+    /// pumping station (equivalent to ilk bit for varian)
+    xPumpingStation_010: BOOL;
+    {attribute 'pytmc' := '
+    pv: SetPumpSpeed;
+    io: i;
+    '}
+    iSetRotationSpeed_707: INT :=100; /// speed setting in % (normally 100%)
+    /// RUN_DO bit
+    {attribute 'pytmc' := '
+    pv: RUN_DO;
+    io: i;
+    '}
+    xMotorPump_023: BOOL;
+    {attribute 'pytmc' := '
+    pv: GAS_MODE;
+    io: io;
+    '}
+    iGasMode_027: INT;
+    /// interlock bit
+     {attribute 'pytmc' := '
+    pv: ILK_OK;
+    field: ZNAM ILK ACTIVE;
+    field: ONAM ILK OK;
+    io: i;
+    '}
+    xIlk: BOOL;
+    /// run/start bit
+    {attribute 'pytmc' := '
+    pv: RUN_SW;
+    io: io;
+    '}
+    xRunSW: BOOL;
+    /// error acknowledgement/reset bit
+    {attribute 'pytmc' := '
+    pv: ERR_RST;
+    io: io;
+    '}
+    xErrorAck_009: BOOL;
+    /// power consumption setting in % (normally 100%)
+    uiPowerPct_708: UINT;
+    xSetSpdMode_026: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
