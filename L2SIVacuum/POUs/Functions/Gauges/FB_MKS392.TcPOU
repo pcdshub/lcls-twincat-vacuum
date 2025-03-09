@@ -6,34 +6,34 @@ FUNCTION_BLOCK FB_MKS392
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	PG : ST_VG;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    PG : ST_VG;
 END_VAR
 VAR
-	rV : REAL;	// input voltage
-	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    rV : REAL;	// input voltage
+    iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Real-value calculation *)
-rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;	
+rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 PG.rPRESS := (LREAL_TO_REAL(EXPT(10,(2*rV)-11)));
 
 
 (* Pressure gauge State checks *)
 
 IF rV >= 0.5 AND rV <= 3.5 THEN
-	PG.eState := ValidLo; //LO
+    PG.eState := ValidLo; //LO
 ELSIF rV > 3.5 AND rV<= 6.5 THEN
-	PG.eState := ValidHi; //HIGH
+    PG.eState := ValidHi; //HIGH
 ELSIF rV < 0.5 THEN
-	PG.eState := GaugeDisconnected; //not on
+    PG.eState := GaugeDisconnected; //not on
 ELSE
-	PG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+    PG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
 END_IF
 
 
@@ -57,16 +57,5 @@ ACT_IO();
 ]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_MKS392">
-      <LineId Id="24" Count="0" />
-      <LineId Id="26" Count="4" />
-      <LineId Id="33" Count="22" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS392.ACT_IO">
-      <LineId Id="1" Count="0" />
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

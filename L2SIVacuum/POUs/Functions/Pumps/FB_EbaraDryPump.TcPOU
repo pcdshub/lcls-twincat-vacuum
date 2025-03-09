@@ -5,30 +5,30 @@
 in the event of errors/ warnings. Provides interlocking interface.*)
 FUNCTION_BLOCK FB_EbaraDryPump EXTENDS FB_Pump
 VAR_INPUT
-	i_stBPGauge	:	ST_VG; //booster pump interlock gauge
-	i_xVlvOpn	:	BOOL; //valve(s) to main system load are open
-	i_xExtIlkOK	:	BOOL;
-	
+    i_stBPGauge	:	ST_VG; //booster pump interlock gauge
+    i_xVlvOpn	:	BOOL; //valve(s) to main system load are open
+    i_xExtIlkOK	:	BOOL;
+
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	stPump	:	ST_EbaraDryPump; //Ebara dry pump structure
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    stPump	:	ST_EbaraDryPump; //Ebara dry pump structure
 END_VAR
 VAR_IN_OUT
-	
+
 END_VAR
 VAR
-	(*IO*)
-	q_xMPStart	AT%Q*:	BOOL; //Main Pump start
-	q_xBPStart	AT%Q*:	BOOL; // Booster Pump start (this can be started by the pump automatically)
-	//Readbacks
-	i_xMPStatus	AT%I*:	BOOL; //MP status
-	i_xBPStatus	AT%I*:	BOOL; //BP status
-	i_xWarning	AT%I*:	BOOL; //Warning status
-	i_xAlarmOK	AT%I*:	BOOL; //Alarm, maps to error
-	i_xRemote	AT%I*:	BOOL; //Remote control status
+    (*IO*)
+    q_xMPStart	AT%Q*:	BOOL; //Main Pump start
+    q_xBPStart	AT%Q*:	BOOL; // Booster Pump start (this can be started by the pump automatically)
+    //Readbacks
+    i_xMPStatus	AT%I*:	BOOL; //MP status
+    i_xBPStatus	AT%I*:	BOOL; //BP status
+    i_xWarning	AT%I*:	BOOL; //Warning status
+    i_xAlarmOK	AT%I*:	BOOL; //Alarm, maps to error
+    i_xRemote	AT%I*:	BOOL; //Remote control status
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -63,9 +63,9 @@ stPump.xIlkOK :=  NOT stPump.xExtIlk AND NOT (stpump.xErr);// OR stpump.xWrn);
 
 //Start/ Stop the pump
 IF stpump.xIlkOK THEN
-	stpump.q_xMPStart := stpump.pv_xRunSW;
+    stpump.q_xMPStart := stpump.pv_xRunSW;
 ELSE
-	stpump.q_xMPStart := stpump.pv_xRunSW := FALSE;
+    stpump.q_xMPStart := stpump.pv_xRunSW := FALSE;
 END_IF
 
 //Booster pump
@@ -75,17 +75,17 @@ stpump.q_xBPStart := stpump.tonBP.Q;
 
 (*State evaluation*)
 IF stPump.i_xAlarm THEN
-	stpump.eState := pumpFAULT;
+    stpump.eState := pumpFAULT;
 ELSIF NOT stpump.q_xMPStart AND stPump.i_xAlarm THEN
-		stpump.eState := pumpSTOPPED;	
+        stpump.eState := pumpSTOPPED;
 ELSIF stpump.q_xMPStart AND NOT stPump.i_xMPStatus THEN
-		stpump.eState := pumpSTARTING;	
+        stpump.eState := pumpSTARTING;
 ELSIF stPump.i_xMPStatus OR stPump.i_xBPStatus THEN
-		stpump.eState := pumpRUNNING;
+        stpump.eState := pumpRUNNING;
 ELSIF NOT stPump.i_xMPStatus AND NOT stPump.i_xBPStatus THEN
-		stpump.eState := pumpSTOPPED;
+        stpump.eState := pumpSTOPPED;
 ELSE
-	stpump.eState := pumpFAULT;
+    stpump.eState := pumpFAULT;
 END_IF
 
 
@@ -115,24 +115,24 @@ stPump.i_xRemote:= i_xRemote;]]></ST>
       <Implementation>
         <ST><![CDATA[// ILK logger
 IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
- 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+         fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);
 END_IF
-//STATE Logger  
+//STATE Logger
 
 IF ePrevState <> stpump.eState THEN
-	  CASE stpump.eState OF
-		pumpFAULT:
-			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
-  		pumpSTOPPED:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
-		pumpSTARTING:
-			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
-		pumpRUNNING:
-			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := stpump.eState;  
+      CASE stpump.eState OF
+        pumpFAULT:
+            fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+          pumpSTOPPED:
+            fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+        pumpSTARTING:
+            fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+        pumpRUNNING:
+            fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := stpump.eState;
   END_IF
-  
+
 
 // Log Action
 tAction(CLK:=  stPump.q_xRunDo);
@@ -146,53 +146,5 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
 ]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_EbaraDryPump">
-      <LineId Id="3" Count="23" />
-      <LineId Id="70" Count="0" />
-      <LineId Id="31" Count="13" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="103" Count="8" />
-      <LineId Id="178" Count="1" />
-      <LineId Id="112" Count="2" />
-      <LineId Id="144" Count="2" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="147" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_EbaraDryPump.ACT_IO">
-      <LineId Id="2" Count="2" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="5" Count="3" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_EbaraDryPump.ACT_Logger">
-      <LineId Id="52" Count="0" />
-      <LineId Id="54" Count="1" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="5" Count="1" />
-      <LineId Id="3" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="30" Count="1" />
-      <LineId Id="33" Count="2" />
-      <LineId Id="47" Count="4" />
-      <LineId Id="22" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

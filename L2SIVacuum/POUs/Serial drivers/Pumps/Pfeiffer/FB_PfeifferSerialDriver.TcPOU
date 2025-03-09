@@ -559,17 +559,5 @@ fbPfeifferTransaction.i_iDataLength:= 0;
 fbPfeifferTransaction.i_sSendData:= '';]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_PfeifferSerialDriver">
-      <LineId Id="3" Count="501" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PfeifferSerialDriver._A_ClearStatus">
-      <LineId Id="2" Count="7" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PfeifferSerialDriver.a_ClearTrans">
-      <LineId Id="2" Count="3" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

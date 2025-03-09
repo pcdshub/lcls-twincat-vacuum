@@ -5,28 +5,24 @@
 FUNCTION F_TURBO_VRC_ILK : BOOL
 VAR_INPUT
 
-	i_xHiVac 	: BOOL;
-	i_xRunPTM	: BOOL;
-	i_xFLVac	: BOOL;
+    i_xHiVac 	: BOOL;
+    i_xRunPTM	: BOOL;
+    i_xFLVac	: BOOL;
 
 END_VAR
 VAR
 
-	rHysterisis : REAL := 0;
+    rHysterisis : REAL := 0;
 
-	xInterlock: BOOL;
-	rTolerance: REAL := 20;
+    xInterlock: BOOL;
+    rTolerance: REAL := 20;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Close the vic if the roughing pump pirani loses its at-vac setpoint while the turbo is pumping *)
 F_TURBO_VRC_ILK := (NOT i_xHiVac AND NOT i_xRunPTM AND NOT i_xFLVac) OR
-					(NOT i_xRunPTM AND i_xFLVac) OR
-					(i_xRunPTM AND i_xFLVac);
+                    (NOT i_xRunPTM AND i_xFLVac) OR
+                    (i_xRunPTM AND i_xFLVac);
 ]]></ST>
     </Implementation>
-    <LineIds Name="F_TURBO_VRC_ILK">
-      <LineId Id="3" Count="3" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

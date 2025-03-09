@@ -10,39 +10,39 @@ boxes do not natively support the 5v IO signals on the MKS500 gauge.*)
 {attribute 'obsolete' := 'FB_MKS500_EP has been deprecated and is not valid!'}
 FUNCTION_BLOCK FB_MKS500_EP EXTENDS FB_GaugeBase
 VAR_IN_OUT
-		
+
 END_VAR
 VAR_INPUT
-	
-	PG	:	ST_VG;
+
+    PG	:	ST_VG;
 END_VAR
 VAR_OUTPUT
 {attribute 'pytmc' := '
-    pv: 
-	'}
-	IG : ST_VG;
+    pv:
+    '}
+    IG : ST_VG;
 END_VAR
 VAR
-	rV : REAL;
-	GaugeTurnOnTmr : TON;
+    rV : REAL;
+    GaugeTurnOnTmr : TON;
 
-	(*IOs to be linked*)
-	/// Controls and I/Os
-	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
-	q_xHV_DIS AT %Q* : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EP2624) ^Output
-	//
+    (*IOs to be linked*)
+    /// Controls and I/Os
+    i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
+    q_xHV_DIS AT %Q* : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EP2624) ^Output
+    //
 END_VAR
 
 VAR CONSTANT
-	// Ranges has to match the configurator software
-	pBase : REAL :=1.0E-10;//default curve base pressure is 1E-10. Confusing since can't actually read that low using analog out.
-	vBase : REAL := 1;
-	vDisconnected : REAL:= 0.5;
-	vSlope : REAL := 1.0; 
-	vGaugeOff: REAL := 9.8;
-	vNoDischarge: REAL := 9.3;
-	MinPressure: REAL := 1E-10;
-	cDefaultPressure : REAL := 0;
+    // Ranges has to match the configurator software
+    pBase : REAL :=1.0E-10;//default curve base pressure is 1E-10. Confusing since can't actually read that low using analog out.
+    vBase : REAL := 1;
+    vDisconnected : REAL:= 0.5;
+    vSlope : REAL := 1.0;
+    vGaugeOff: REAL := 9.8;
+    vNoDischarge: REAL := 9.3;
+    MinPressure: REAL := 1E-10;
+    cDefaultPressure : REAL := 0;
 END_VAR
 
 
@@ -54,20 +54,20 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/32767;
 
 (* Set Guage State based on the Analog voltage*)
 IF rV < vDisconnected THEN
-	IG.eState := GaugeDisconnected;
-	IG.rPRESS := cDefaultPressure;
+    IG.eState := GaugeDisconnected;
+    IG.rPRESS := cDefaultPressure;
 ELSIF rV >= vDisconnected AND rV < (vNoDischarge -0.3)  THEN
-	IG.eState := Valid;
-	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    IG.eState := Valid;
+    IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 ELSIF rV >= (vNoDischarge -0.3) AND rV <(vGaugeOff -0.3)   THEN
-	IG.eState := Starting;
-	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    IG.eState := Starting;
+    IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 ELSIF rV >= (vGaugeOff -0.3) THEN
-	IG.eState := Off;
-	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    IG.eState := Off;
+    IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 ELSE
-	IG.eState := OoR;
-	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    IG.eState := OoR;
+    IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 END_IF
 
 
@@ -79,17 +79,17 @@ END_IF
 
 IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
 
-	IG.q_xHV_DIS := IG.xHV_SW;
-	IG.xILKOk := TRUE;
+    IG.q_xHV_DIS := IG.xHV_SW;
+    IG.xILKOk := TRUE;
 ELSIF IG.q_xHV_DIS THEN
-	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
-		IG.q_xHV_DIS := FALSE;
-		IG.xHV_SW := FALSE;
-	END_IF
+    IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+        IG.q_xHV_DIS := FALSE;
+        IG.xHV_SW := FALSE;
+    END_IF
 ELSE
-	IG.q_xHV_DIS := FALSE;
-	IG.xHV_SW := FALSE;
-	IG.xILKOk := FALSE;
+    IG.q_xHV_DIS := FALSE;
+    IG.xHV_SW := FALSE;
+    IG.xILKOk := FALSE;
 END_IF
 
 (* Pressure gauge OK checks *)
@@ -114,7 +114,7 @@ IO();
         <ST><![CDATA[IF (IG.xLog) THEN
 // ILK logger
 IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
- 		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+         fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);
 END_IF
 
 
@@ -124,25 +124,25 @@ IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEv
 
 
 
-//STATE Logger  
+//STATE Logger
 IF ePrevState <> IG.eState THEN
-	  CASE IG.eState OF
-		ValidHi:
-			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
-		ValidLo:
-			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
-		Valid:
-			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-  		GaugeDisconnected:
-			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-		PressInvalid:
-			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-		OoR:
-			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-		Starting:
-			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := IG.eState;  
+      CASE IG.eState OF
+        ValidHi:
+            fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+        ValidLo:
+            fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+        Valid:
+            fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+          GaugeDisconnected:
+            fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+        PressInvalid:
+            fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+        OoR:
+            fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+        Starting:
+            fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := IG.eState;
   END_IF
 END_IF
 
@@ -152,7 +152,7 @@ END_IF
     <Action Name="IO" Id="{0bf159f9-a7d2-430c-8956-9768de2be438}">
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
-IG.i_iPRESS_R:=	i_iPRESS_R; 
+IG.i_iPRESS_R:=	i_iPRESS_R;
 (*soft link outputs*)
 q_xHV_DIS := IG.q_xHV_DIS;
 
@@ -162,7 +162,7 @@ IG.sPath := sPath;]]></ST>
     <Method Name="M_HVE" Id="{3b7edf43-649d-4d24-a7e7-a350c866a258}">
       <Declaration><![CDATA[METHOD M_HVE : BOOL
 VAR_INPUT
-		enable:bool; // set to true to enable, false to disable;
+        enable:bool; // set to true to enable, false to disable;
 END_VAR
 ]]></Declaration>
       <Implementation>
