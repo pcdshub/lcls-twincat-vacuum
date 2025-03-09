@@ -8,26 +8,26 @@ VAR_IN_OUT
 
 END_VAR
 VAR_INPUT
-	
+
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := 'pv:'}
-	q_stPump : ST_KashiyamaDryPump;
+    {attribute 'pytmc' := 'pv:'}
+    q_stPump : ST_KashiyamaDryPump;
 END_VAR
 VAR
-	TONtmr : TON;
-	resetTmr : TON;
-	
-	(* Output *)	
-	q_xRunDO 	AT%Q*:	BOOL;
-	q_xResetDo	AT%Q*: 	BOOL;
-	q_xLspdDo	AT%Q*: 	BOOL;
-	
+    TONtmr : TON;
+    resetTmr : TON;
+
+    (* Output *)
+    q_xRunDO 	AT%Q*:	BOOL;
+    q_xResetDo	AT%Q*: 	BOOL;
+    q_xLspdDo	AT%Q*: 	BOOL;
+
 (* Input *)
-	i_xRemote	AT%I*:	BOOL;
-	i_xAlarm	AT%I*:	BOOL;
-	i_xWarning	AT%I*:	BOOL;
-	i_xIsRun	AT%I*:	BOOL;
+    i_xRemote	AT%I*:	BOOL;
+    i_xAlarm	AT%I*:	BOOL;
+    i_xWarning	AT%I*:	BOOL;
+    i_xIsRun	AT%I*:	BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -36,19 +36,19 @@ END_VAR
 q_stPump.xIlkOK := q_stPump.i_xRemote AND q_stPump.i_xWarningOK AND q_stPump.i_xAlarmOK;
 
 IF q_stPump.xIlkOK THEN
-	q_stPump.q_xRunDO := q_stPump.pv_xRunSW;
-	ELSE
-		q_stPump.PV_xRunSW := FALSE;
-        q_stPump.q_xRunDO := FALSE;	
+    q_stPump.q_xRunDO := q_stPump.pv_xRunSW;
+    ELSE
+        q_stPump.PV_xRunSW := FALSE;
+        q_stPump.q_xRunDO := FALSE;
 END_IF
- 
+
 q_stPump.xLspd_IlkENA := q_stPump.q_xRunDO;
 
 IF q_stPump.xLspd_IlkENA THEN
-	q_stPump.q_xLspdDo := q_stPump.xLspdSW;
-	ELSE
-		q_stPump.xLspdSW := FALSE;
-        q_stPump.q_xLspdDo := FALSE;	
+    q_stPump.q_xLspdDo := q_stPump.xLspdSW;
+    ELSE
+        q_stPump.xLspdSW := FALSE;
+        q_stPump.q_xLspdDo := FALSE;
 END_IF
 
 //resetTmr (In := iq_stPump.xResetSW, PT := T#2S);
@@ -64,15 +64,15 @@ q_stPump.RdyTmr := TO_REAL(TONtmr.PT) - TO_REAL(TONtmr.ET);
 
 (*State evaluation*)
 IF NOT q_stPump.i_xAlarmOK THEN
-	q_stPump.eState := pumpFAULT;
+    q_stPump.eState := pumpFAULT;
 ELSIF NOT q_stPump.q_xRunDo AND q_stPump.i_xAlarmOK THEN
-		q_stPump.eState := pumpSTOPPED;	
+        q_stPump.eState := pumpSTOPPED;
 ELSIF NOT q_stPump.q_xRunDo AND NOT q_stPump.i_xIsRun THEN
-		q_stPump.eState := pumpSTARTING;	
+        q_stPump.eState := pumpSTARTING;
 ELSIF q_stPump.i_xIsRun THEN
-		q_stPump.eState := pumpRUNNING;
+        q_stPump.eState := pumpRUNNING;
 ELSE
-	q_stPump.eState := pumpFAULT;
+    q_stPump.eState := pumpFAULT;
 END_IF
 
 //Mapping
@@ -80,22 +80,22 @@ ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{03052d11-e75b-497b-a08a-11e5ae7ae948}">
       <Implementation>
-        <ST><![CDATA[(* Output *)	
-	q_xRunDO 	:= q_stPump.q_xRunDO;
-	q_xResetDo := q_stPump.q_xResetDo;;
-	q_xLspdDo := q_stPump.q_xLspdDo;;
-	
+        <ST><![CDATA[(* Output *)
+    q_xRunDO 	:= q_stPump.q_xRunDO;
+    q_xResetDo := q_stPump.q_xResetDo;;
+    q_xLspdDo := q_stPump.q_xLspdDo;;
+
 (* Input *)
-	q_stPump.i_xRemote := i_xRemote;
-	q_stPump.i_xAlarmOK :=	i_xAlarm;
-	q_stPump.i_xWarningOK :=	i_xWarning;
-	q_stPump.i_xIsRun :=	i_xIsRun;]]></ST>
+    q_stPump.i_xRemote := i_xRemote;
+    q_stPump.i_xAlarmOK :=	i_xAlarm;
+    q_stPump.i_xWarningOK :=	i_xWarning;
+    q_stPump.i_xIsRun :=	i_xIsRun;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_Run" Id="{56315e99-177b-4dfb-94ee-8835f17aed2f}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
-	run:bool; // set to true to run, false to stop;
+    run:bool; // set to true to run, false to stop;
 END_VAR
 ]]></Declaration>
       <Implementation>

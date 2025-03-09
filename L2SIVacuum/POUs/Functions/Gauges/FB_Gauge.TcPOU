@@ -7,7 +7,7 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	
+
 // For logging
     fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
     ePrevState : E_PressureState;

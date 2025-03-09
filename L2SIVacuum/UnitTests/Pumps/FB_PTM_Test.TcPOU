@@ -7,18 +7,18 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	fb_TwisTorr: FB_PTM_TwisTorr;
-	fb_PTM_Ebara_010M:FB_PTM_Ebara_010M;
-	
-	cycle:INT :=0;
-	(*IO*)
-	q_iSpeedSet AT %I* :INT;
-	i_diCurSpd AT %Q* :INT;
-	
-	i_iRawSpeed AT %Q* : INT; // Link to Analog input
-	i_iTempMon AT %Q* : INT; // Link to Analog input -- input Voltage according to the pump temprature 0->5V 0->100C
-	i_iCurrentMon AT %Q* : INT; //Link to Analog -- input Voltage to the output current of motor 0->5V 0->10A
-	
+    fb_TwisTorr: FB_PTM_TwisTorr;
+    fb_PTM_Ebara_010M:FB_PTM_Ebara_010M;
+
+    cycle:INT :=0;
+    (*IO*)
+    q_iSpeedSet AT %I* :INT;
+    i_diCurSpd AT %Q* :INT;
+
+    i_iRawSpeed AT %Q* : INT; // Link to Analog input
+    i_iTempMon AT %Q* : INT; // Link to Analog input -- input Voltage according to the pump temprature 0->5V 0->100C
+    i_iCurrentMon AT %Q* : INT; //Link to Analog -- input Voltage to the output current of motor 0->5V 0->10A
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -36,19 +36,19 @@ END_VAR
         <ST><![CDATA[TEST('PTM_Twistorr_Startup');
 fb_TwisTorr(i_xExtILKOk:= TRUE , iq_stPtm=> );
 IF( cycle = 3) THEN
-	AssertFalse(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to true');	
-	AssertFalse(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to true');
-	TEST_FINISHED_NAMED('PTM_Twistorr_Startup');
+    AssertFalse(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to true');
+    AssertFalse(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to true');
+    TEST_FINISHED_NAMED('PTM_Twistorr_Startup');
 END_IF
 
 
 TEST('PTM_Ebara011M_Startup');
 fb_PTM_Ebara_010M(i_xExtILKOk:= TRUE , iq_stPtm=> );
 IF( cycle = 3) THEN
-	AssertFalse(fb_PTM_Ebara_010M.iq_stPtm.xRunSW ,'PTM Ebara011M xRunSW is set to true');	
-	AssertFalse(fb_PTM_Ebara_010M.iq_stPtm.q_RunDO ,'PTM Ebara011M q_RunDO is set to true');
-	AssertFalse(fb_PTM_Ebara_010M.iq_stPtm.q_xProtection ,'PTM Ebara011M q_xProtection is set to True');
-	TEST_FINISHED_NAMED('PTM_Ebara011M_Startup');
+    AssertFalse(fb_PTM_Ebara_010M.iq_stPtm.xRunSW ,'PTM Ebara011M xRunSW is set to true');
+    AssertFalse(fb_PTM_Ebara_010M.iq_stPtm.q_RunDO ,'PTM Ebara011M q_RunDO is set to true');
+    AssertFalse(fb_PTM_Ebara_010M.iq_stPtm.q_xProtection ,'PTM Ebara011M q_xProtection is set to True');
+    TEST_FINISHED_NAMED('PTM_Ebara011M_Startup');
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -62,40 +62,40 @@ END_VAR
 fb_TwisTorr.M_Run(TRUE);
 fb_TwisTorr(i_xExtILKOk:= FALSE , iq_stPtm=> );
 IF( cycle = 3) THEN
-	AssertFalse(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to true');	
-	AssertFalse(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to true');
-	TEST_FINISHED_NAMED('PTM_Twistorr_Interlock_Active');
+    AssertFalse(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to true');
+    AssertFalse(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to true');
+    TEST_FINISHED_NAMED('PTM_Twistorr_Interlock_Active');
 END_IF
 
 TEST('PTM_Twistorr_Interlock_OK');
 fb_TwisTorr.M_Run(TRUE);
 fb_TwisTorr(i_xExtILKOk:= TRUE , iq_stPtm=> );
 IF( cycle = 3) THEN
-	AssertTrue(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to False');	
-	AssertTrue(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to False');
-	TEST_FINISHED_NAMED('PTM_Twistorr_Interlock_OK');
+    AssertTrue(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to False');
+    AssertTrue(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to False');
+    TEST_FINISHED_NAMED('PTM_Twistorr_Interlock_OK');
 END_IF
 
 TEST('PTM_Twistorr_Interlock_Lost');
 fb_TwisTorr(i_xExtILKOk:= FALSE , iq_stPtm=> );
 IF( cycle = 3) THEN
-	AssertFalse(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to true');	
-	AssertFalse(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to true');
-	TEST_FINISHED_NAMED('PTM_Twistorr_Interlock_Lost');
+    AssertFalse(fb_TwisTorr.iq_stPtm.xRunSW ,'PTM Twistorr xRunSW is set to true');
+    AssertFalse(fb_TwisTorr.iq_stPtm.q_RunDO ,'PTM Twistorr q_RunDO is set to true');
+    TEST_FINISHED_NAMED('PTM_Twistorr_Interlock_Lost');
 END_IF
 
 
-	
+
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_PTM_EBARA" Id="{d178c7fc-5b19-4193-b89d-ca84328bf708}">
       <Declaration><![CDATA[METHOD M_PTM_EBARA
 VAR
-	Expected:REAL;
-	Actual:REAL;
-	diExpected:DINT;
-	diActual: DINT;
+    Expected:REAL;
+    Actual:REAL;
+    diExpected:DINT;
+    diActual: DINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -106,45 +106,29 @@ THIS^.i_iCurrentMon := v_to_int(2.5);
 //THIS^.q_iSpeedSet := 560;
 
 fb_PTM_Ebara_010M(
-	i_xExtILKOk:= TRUE , 
-	i_rMaxBackingPressure:= 1, 
-	iq_stPTM=> );
+    i_xExtILKOk:= TRUE ,
+    i_rMaxBackingPressure:= 1,
+    iq_stPTM=> );
 
 
 IF( cycle = 10) THEN
-	Expected := 5;
-	Actual := (fb_PTM_Ebara_010M.iq_stPTM.i_rCurrentMon);
-	AssertEquals_REAL(Expected, Actual,0.1, 'PTM EBARA010 i_iCurrentMon Fail');
-	Expected := 50;
-	Actual := (fb_PTM_Ebara_010M.iq_stPTM.i_rTempMon);
-	AssertEquals_REAL(Expected, Actual,0.1, 'PTM EBARA010 i_iTempMon Fail');
-	diExpected := 0;
-	diActual := fb_PTM_Ebara_010M.iq_stPTM.q_iSpeedSet;
-	AssertEquals(diExpected, diActual, 'PTM EBARA010 q_iSpeedSet Fail');
-	diExpected := 560;
-	diActual :=  fb_PTM_Ebara_010M.iq_stPTM.i_diCurSpd;
-	AssertEquals(diExpected, diActual, 'PTM EBARA010 i_diCurSpd Fail');
-	TEST_FINISHED_NAMED('PTM_EBARA_AI');
-	
-	
+    Expected := 5;
+    Actual := (fb_PTM_Ebara_010M.iq_stPTM.i_rCurrentMon);
+    AssertEquals_REAL(Expected, Actual,0.1, 'PTM EBARA010 i_iCurrentMon Fail');
+    Expected := 50;
+    Actual := (fb_PTM_Ebara_010M.iq_stPTM.i_rTempMon);
+    AssertEquals_REAL(Expected, Actual,0.1, 'PTM EBARA010 i_iTempMon Fail');
+    diExpected := 0;
+    diActual := fb_PTM_Ebara_010M.iq_stPTM.q_iSpeedSet;
+    AssertEquals(diExpected, diActual, 'PTM EBARA010 q_iSpeedSet Fail');
+    diExpected := 560;
+    diActual :=  fb_PTM_Ebara_010M.iq_stPTM.i_diCurSpd;
+    AssertEquals(diExpected, diActual, 'PTM EBARA010 i_diCurSpd Fail');
+    TEST_FINISHED_NAMED('PTM_EBARA_AI');
+
+
 End_IF;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Test">
-      <LineId Id="3" Count="2" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Test.M_INIT">
-      <LineId Id="3" Count="15" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Test.M_Interlock">
-      <LineId Id="3" Count="27" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Test.M_PTM_EBARA">
-      <LineId Id="3" Count="27" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

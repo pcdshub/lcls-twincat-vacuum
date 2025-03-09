@@ -300,21 +300,5 @@ a_ClearStatus();
 q_xTimeout := fbTD400Transaction.q_xTimeout;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_TD400SerialDriver">
-      <LineId Id="3" Count="219" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_TD400SerialDriver.a_ClearStatus">
-      <LineId Id="2" Count="11" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_TD400SerialDriver.a_DriverErrorMesg">
-      <LineId Id="2" Count="4" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_TD400SerialDriver.a_TransactionErrorMesg">
-      <LineId Id="2" Count="5" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -2,68 +2,68 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <POU Name="FB_Kashiyama_VRC" Id="{9bd36eef-72c0-4327-b6e1-2554c928689a}" SpecialFunc="None">
     <Declaration><![CDATA[(* Main Kashiyama gate valve permit to be open when:
-		1. pump is NORMAL operating status, and
-	    2. chamber pressure is below HighSP or pump is at LowSpeed state.
-	it will close if chamber pressure is below than lowSP for 180s.	
+        1. pump is NORMAL operating status, and
+        2. chamber pressure is below HighSP or pump is at LowSpeed state.
+    it will close if chamber pressure is below than lowSP for 180s.
 *)
 FUNCTION_BLOCK FB_Kashiyama_VRC
 VAR_IN_OUT
-	
+
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := ' pv:'}
-	q_stValve : ST_VRC;
+    {attribute 'pytmc' := ' pv:'}
+    q_stValve : ST_VRC;
 END_VAR
 VAR_INPUT
-	Pump : ST_KashiyamaDryPump;//Kashyiama pump
-	i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
-	Gauge : ST_VG;// Pressure Gauge	
-	i_xOverrideMode : BOOL;
+    Pump : ST_KashiyamaDryPump;//Kashyiama pump
+    i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
+    Gauge : ST_VG;// Pressure Gauge
+    i_xOverrideMode : BOOL;
 END_VAR
 VAR
-	At_HiVac : BOOL;
-	tmrTP : TP;
-	tmrPT: TIME := T#180S;
-	v1: BOOL;
-	tonOvrd	:	TON;
-	tonDelOK : TON;
-	rtOK	:	R_TRIG;
-	
-	(*IO*)
-	i_xOpnLS	AT%I*: BOOL;
-	i_xClsLS	AT%I*: BOOL;
-	q_xOPN_DO	AT%Q*: BOOL;
-	
+    At_HiVac : BOOL;
+    tmrTP : TP;
+    tmrPT: TIME := T#180S;
+    v1: BOOL;
+    tonOvrd	:	TON;
+    tonDelOK : TON;
+    rtOK	:	R_TRIG;
+
+    (*IO*)
+    i_xOpnLS	AT%I*: BOOL;
+    i_xClsLS	AT%I*: BOOL;
+    q_xOPN_DO	AT%Q*: BOOL;
+
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Main Kashiyama gate valve permit to be open when:
-		1. pump is NORMAL operating status, and
-	    2. chamber pressure is below HighSP or pump is at LowSpeed state.
-	it will close if chamber pressure is below than lowSP for 60s.	
+        1. pump is NORMAL operating status, and
+        2. chamber pressure is below HighSP or pump is at LowSpeed state.
+    it will close if chamber pressure is below than lowSP for 60s.
 *)
-(* 
+(*
       For main Kayshiyama pump's gate valve:
-		Pump LowSP is MU100 base pressure (20 mTorr) 
-		Pump HighSP is 600 Torr;
-	  Second Kayshiyama pump allow Gas Attenuator operating at higher pressure, 
-      it's gate valve is to be open when Gas Attenuator chamber pressure is above lowSP.  
+        Pump LowSP is MU100 base pressure (20 mTorr)
+        Pump HighSP is 600 Torr;
+      Second Kayshiyama pump allow Gas Attenuator operating at higher pressure,
+      it's gate valve is to be open when Gas Attenuator chamber pressure is above lowSP.
 *)
 
 
 ///Check valve postion
-IF NOT q_stValve.i_xClsLS AND q_stValve.i_xOpnLS THEN 
-	q_stValve.eState:=OPEN;
-ELSIF q_stValve.i_xClsLS AND NOT q_stValve.i_xOpnLS THEN 
-	q_stValve.eState:=CLOSED;
-ELSIF NOT q_stValve.i_xClsLS AND NOT q_stValve.i_xOpnLS THEN 
-	q_stValve.eState:=MOVING;
+IF NOT q_stValve.i_xClsLS AND q_stValve.i_xOpnLS THEN
+    q_stValve.eState:=OPEN;
+ELSIF q_stValve.i_xClsLS AND NOT q_stValve.i_xOpnLS THEN
+    q_stValve.eState:=CLOSED;
+ELSIF NOT q_stValve.i_xClsLS AND NOT q_stValve.i_xOpnLS THEN
+    q_stValve.eState:=MOVING;
 ELSE
-	q_stValve.eState:=INVALID;
+    q_stValve.eState:=INVALID;
 END_IF
 
 //valve open interlock
 q_stValve.xOPN_OK := Pump.i_xIsRun AND Pump.RdyTmr <= 0.0 AND (Gauge.rPRESS < Pump.HighSP OR Pump.q_xLspdDo) AND i_xExtILK_OK;
- 
+
 
 (* Override logic *)
 (* Goal: give ability to override, but do so in a way that people won't forget it.
@@ -88,11 +88,11 @@ At_HiVac := Gauge.xPRESS_OK AND Gauge.rPRESS < Pump.LowSP;
 tmrTP (IN := At_HiVac AND q_stValve.q_xOPN_DO , PT := tmrPT);
 
 IF At_HiVac AND q_stValve.q_xOPN_DO AND NOT tmrTP.Q THEN
-	q_stValve.pv_xOPN_SW := FALSE ;
+    q_stValve.pv_xOPN_SW := FALSE ;
 END_IF
 
 (* Here's where the valve opens *)
-q_stValve.q_xOPN_DO := (q_stValve.pv_xOPN_SW AND q_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode); 
+q_stValve.q_xOPN_DO := (q_stValve.pv_xOPN_SW AND q_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
 (*Soft IO Mapping*)
 ACT_IO();]]></ST>
@@ -106,19 +106,5 @@ q_stValve.i_xClsLS:=	i_xClsLS;
 q_xOPN_DO:= q_stValve.q_xOPN_DO;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_Kashiyama_VRC">
-      <LineId Id="26" Count="24" />
-      <LineId Id="97" Count="0" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="51" Count="14" />
-      <LineId Id="69" Count="1" />
-      <LineId Id="72" Count="13" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_Kashiyama_VRC.ACT_IO">
-      <LineId Id="2" Count="3" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

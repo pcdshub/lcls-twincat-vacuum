@@ -6,19 +6,19 @@ FUNCTION_BLOCK FB_972  EXTENDS FB_GaugeBase
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	PG	: ST_VG;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    PG	: ST_VG;
 END_VAR
 VAR_IN_OUT
-	
+
 END_VAR
 VAR
-	rV : REAL;
-	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    rV : REAL;
+    iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -29,14 +29,14 @@ If (iTermBits=0) THEN iTermBits := 32767;END_IF
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
 IF (rV > 1) AND (rV <= 7) THEN
-	PG.rPRESS := LREAL_TO_REAL(EXPT(10, 2*rV-11));
-	PG.xPRESS_OK := TRUE;
-	PG.eState := Valid; //Press OK
+    PG.rPRESS := LREAL_TO_REAL(EXPT(10, 2*rV-11));
+    PG.xPRESS_OK := TRUE;
+    PG.eState := Valid; //Press OK
 ELSE
-	PG.xPRESS_OK := FALSE;
-	IF (rV <= 1) THEN PG.eState := GaugeDisconnected;
-		ELSE PG.eState := OoR;
-	END_IF
+    PG.xPRESS_OK := FALSE;
+    IF (rV <= 1) THEN PG.eState := GaugeDisconnected;
+        ELSE PG.eState := OoR;
+    END_IF
 END_IF
 
 (* Setpoint evaluation *)
@@ -56,27 +56,27 @@ PG.sPath := sPath;]]></ST>
     <Action Name="ACT_Logger" Id="{e27f7c5d-a6a0-44f8-9f5b-d0a5d2ac0c45}">
       <Implementation>
         <ST><![CDATA[
-//STATE Logger  
+//STATE Logger
 IF ePrevState <> PG.eState THEN
-	  CASE PG.eState OF
-		ValidHi:
-			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
-		ValidLo:
-			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
-		Valid:
-			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-  		GaugeDisconnected:
-			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-		PressInvalid:
-			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-		OoR:
-			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-		Starting:
-			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := PG.eState;  
+      CASE PG.eState OF
+        ValidHi:
+            fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+        ValidLo:
+            fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+        Valid:
+            fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+          GaugeDisconnected:
+            fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+        PressInvalid:
+            fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+        OoR:
+            fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+        Starting:
+            fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := PG.eState;
   END_IF
-  
+
 
 ]]></ST>
       </Implementation>
@@ -84,26 +84,12 @@ IF ePrevState <> PG.eState THEN
     <Method Name="M_SetBits" Id="{c873eda2-ce3a-4d08-a1f9-e53b8f43dbd9}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
-	TermBits : UINT; // The terminal's maximum value in bits
+    TermBits : UINT; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_972">
-      <LineId Id="3" Count="22" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_972.ACT_IO">
-      <LineId Id="1" Count="1" />
-    </LineIds>
-    <LineIds Name="FB_972.ACT_Logger">
-      <LineId Id="2" Count="22" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_972.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

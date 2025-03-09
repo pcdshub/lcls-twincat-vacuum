@@ -6,16 +6,16 @@ FUNCTION_BLOCK FB_CMR362
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
-		{attribute 'pytmc' := 'pv:'}
-		PG : ST_VG;
+        {attribute 'pytmc' := 'pv:'}
+        PG : ST_VG;
 END_VAR
 VAR
-	MinPressure: REAL := 7.5E-3; //Torr
-	FullScale : REAL := 75.0 ; //Torr
-	V : REAL;
-	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    MinPressure: REAL := 7.5E-3; //Torr
+    FullScale : REAL := 75.0 ; //Torr
+    V : REAL;
+    iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -27,23 +27,23 @@ ACT_IO();
 (* Real-value calculation *)
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
 V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
-	
+
 
 IF V < 0.4 THEN
 
-	PG.eState := GaugeDisconnected; //Most likely not connected
+    PG.eState := GaugeDisconnected; //Most likely not connected
 
 ELSIF V >= 0.4 AND V <= 1.0 THEN
-	PG.rPRESS := MinPressure;
-	PG.eState := ValidLo;
+    PG.rPRESS := MinPressure;
+    PG.eState := ValidLo;
 
 ELSIF V > 1 AND V <= 9.8 THEN
 
-	PG.rPRESS := LREAL_TO_REAL((V-1)*0.125*FullScale);
-	PG.eState := Valid;
+    PG.rPRESS := LREAL_TO_REAL((V-1)*0.125*FullScale);
+    PG.eState := Valid;
 
 ELSE
-	
+
 PG.eState := OoR; //Larger voltage, probably out of range?
 
 END_IF
@@ -65,29 +65,12 @@ ACT_IO();
     <Method Name="M_SetBits" Id="{945a4b7c-0383-4407-a003-10a045f5720a}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
-	TermBits : UINT; // The terminal's maximum value in bits
+    TermBits : UINT; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_CMR362">
-      <LineId Id="10" Count="1" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="12" Count="27" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CMR362.ACT_IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CMR362.M_SetBits">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

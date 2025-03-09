@@ -3,28 +3,28 @@
   <POU Name="FB_ScrollPump" Id="{95800034-a8e9-430e-af6e-1fa7a649fe90}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function block provides basic  control for Scroll Pumps *)
 (* Turn on scroll pump if the Turbo Vent Valve is closed. *)
-(* Cannot turn off scroll pump if turb is running. delay scroll off 150s.*)  
+(* Cannot turn off scroll pump if turb is running. delay scroll off 150s.*)
 
 FUNCTION_BLOCK FB_ScrollPump
 VAR_IN_OUT
 
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv:
-	'}
-	iq_stPFO	:	ST_RoughPump;
+    '}
+    iq_stPFO	:	ST_RoughPump;
 END_VAR
 VAR_INPUT
-	TurboIsON : BOOL;
-	xExtIlk : BOOL;
+    TurboIsON : BOOL;
+    xExtIlk : BOOL;
 END_VAR
 VAR
-	Tmr_TOF : TOF;
-	tTimerDuration : Time:= T#150S;
-	//Previous_RunSW : BOOL;
-	// Digital Output to be linked
-	q_xRunDo AT%Q*	:   BOOL; 
+    Tmr_TOF : TOF;
+    tTimerDuration : Time:= T#150S;
+    //Previous_RunSW : BOOL;
+    // Digital Output to be linked
+    q_xRunDo AT%Q*	:   BOOL;
 END_VAR
 
 ]]></Declaration>
@@ -32,31 +32,31 @@ END_VAR
       <ST><![CDATA[//Turn on scroll pump if the Turbo Vent Valve is closed. So you are not just
 // pumping air and accomplishing nothing
 
-// cannot turn off scroll pump if turb is running. delay scroll off 150s.  
+// cannot turn off scroll pump if turb is running. delay scroll off 150s.
 iq_stPFO.xIlkOK := xExtIlk;// and NOT Tmr_TOF.Q;
 
 Tmr_TOF(IN:=TurboIsON, PT := tTimerDuration);
 
 IF iq_stPFO.xIlkOK THEN
-	iq_stPFO.q_xRunDo := (Tmr_TOF.Q OR iq_stPFO.pv_xRunSW);
+    iq_stPFO.q_xRunDo := (Tmr_TOF.Q OR iq_stPFO.pv_xRunSW);
 ELSE
-	iq_stPFO.q_xRunDo := FALSE;
+    iq_stPFO.q_xRunDo := FALSE;
 END_IF
 
 iq_stPFO.pv_xRunSW := iq_stPFO.q_xRunDo;
 
 (*State evaluation*)
 IF NOT iq_stPFO.q_xRunDo THEN
-	iq_stPFO.eState := pumpSTOPPED;	
+    iq_stPFO.eState := pumpSTOPPED;
 ELSE
-	iq_stPFO.eState := pumpRUNNING;
+    iq_stPFO.eState := pumpRUNNING;
 END_IF
 
 (*soft io Mapping*)
 IO();
 
 
- 
+
  ]]></ST>
     </Implementation>
     <Action Name="IO" Id="{47ae7053-5350-4e8f-94b2-400e5380039f}">
@@ -67,7 +67,7 @@ IO();
     <Method Name="M_Run" Id="{eba797a4-1012-42f7-b194-fa0d2f89ba57}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
-	run:bool; // set to true to run, false to stop;
+    run:bool; // set to true to run, false to stop;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -75,36 +75,5 @@ END_VAR
 this^.iq_stPFO.pv_xRunSW := run;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_ScrollPump">
-      <LineId Id="26" Count="0" />
-      <LineId Id="22" Count="1" />
-      <LineId Id="3" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="42" Count="1" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="97" Count="1" />
-      <LineId Id="129" Count="0" />
-      <LineId Id="132" Count="1" />
-      <LineId Id="138" Count="0" />
-      <LineId Id="168" Count="0" />
-      <LineId Id="99" Count="1" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="5" Count="2" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_ScrollPump.IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_ScrollPump.M_Run">
-      <LineId Id="10" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

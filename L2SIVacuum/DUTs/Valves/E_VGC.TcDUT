@@ -4,16 +4,16 @@
     <Declaration><![CDATA[TYPE E_VGC :
 (
 
-	Vented,
-	AtVacuum,
-	ERR_DiffPress,
-	ERR_LostVac,
-	ERR_ExtFault,
-	At_Vac,
-	Triggered,
-	Vac_Fault,
-	Cls_Timeout,
-	Opn_Timeout
+    Vented,
+    AtVacuum,
+    ERR_DiffPress,
+    ERR_LostVac,
+    ERR_ExtFault,
+    At_Vac,
+    Triggered,
+    Vac_Fault,
+    Cls_Timeout,
+    Opn_Timeout
 
 
 );

@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="F_VRC_DIODE_ILK" Id="{0ea60bd7-e509-4e96-9cac-f7851bb32459}" SpecialFunc="None">
-    <Declaration><![CDATA[(* The principle is simple, a VRC should never open when B side pressure is greater than 
+    <Declaration><![CDATA[(* The principle is simple, a VRC should never open when B side pressure is greater than
 the A side pressure. *)
 
 FUNCTION F_VRC_DIODE_ILK : BOOL
 VAR_INPUT
 
-	i_stPGA : ST_VG; // A side pressure gauge
-	i_stPGB	: ST_VG; // B side pressure gauge
+    i_stPGA : ST_VG; // A side pressure gauge
+    i_stPGB	: ST_VG; // B side pressure gauge
 
 END_VAR
 VAR
 
-	rHysterisis : REAL := 0;
+    rHysterisis : REAL := 0;
 
-	xInterlock: BOOL;
-	rTolerance: REAL := 20;
+    xInterlock: BOOL;
+    rTolerance: REAL := 20;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* The principle is simple, a VRC should never open when B side pressure is greater than the A side pressure. *)
@@ -36,9 +36,5 @@ Hysterisis := 0;
 END_IF
 *)]]></ST>
     </Implementation>
-    <LineIds Name="F_VRC_DIODE_ILK">
-      <LineId Id="3" Count="14" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

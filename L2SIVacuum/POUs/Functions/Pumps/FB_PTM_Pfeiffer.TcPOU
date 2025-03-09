@@ -5,26 +5,26 @@
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
 FUNCTION_BLOCK FB_PTM_Pfeiffer EXTENDS FB_Pump
 VAR_INPUT
-	i_xExtIlkOK : BOOL; // Connect to external interlock logic, TRUE if not used.
+    i_xExtIlkOK : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	iq_stPTM : ST_PfeifferPTM;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    iq_stPTM : ST_PfeifferPTM;
 END_VAR
 VAR
-	TOF_RESET: TON :=(PT:=T#1S);
-	(*IO*)
-	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
-	i_xFaultNC AT%I*: BOOL; // Error
-	i_xWarn AT%I*: BOOL;
- 	i_xRemote AT%I*: BOOL;
-	
-	q_RunDO AT%Q*: BOOL; // Start/Stop for TC110 link this output to the Pumping station bit
-	q_PumpingStation AT%Q*: BOOL; // Start/Stop interlock
-	q_xRemote AT%Q*: BOOL;
-	q_xReset AT%Q*: BOOL;
+    TOF_RESET: TON :=(PT:=T#1S);
+    (*IO*)
+    i_xAtSpd AT%I*: BOOL; // Normaml operation when true
+    i_xFaultNC AT%I*: BOOL; // Error
+    i_xWarn AT%I*: BOOL;
+     i_xRemote AT%I*: BOOL;
+
+    q_RunDO AT%Q*: BOOL; // Start/Stop for TC110 link this output to the Pumping station bit
+    q_PumpingStation AT%Q*: BOOL; // Start/Stop interlock
+    q_xRemote AT%Q*: BOOL;
+    q_xReset AT%Q*: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -35,48 +35,48 @@ q_xRemote := TRUE;
 iq_stPtm.xExtRunOk:= i_xExtILKOk;
 //For compatability with TC110
 (*IF iq_stPTM.xExtRunOk THEN
-	q_PumpingStation:= TRUE;
-ELSE 
-	q_PumpingStation:= FALSE;
+    q_PumpingStation:= TRUE;
+ELSE
+    q_PumpingStation:= FALSE;
 END_IF*)
 
 IF iq_stPTM.xExtRunOk AND NOT (iq_stPTM.i_xFault) (*OR iq_stPTM.i_xTempFault)*) THEN
-	iq_stPTM.q_RunDO:=iq_stPTM.xRunSW;
-	q_PumpingStation:=iq_stPTM.xRunSW;
+    iq_stPTM.q_RunDO:=iq_stPTM.xRunSW;
+    q_PumpingStation:=iq_stPTM.xRunSW;
 ELSE
-	iq_stPTM.xRunSW:=FALSE;
-	iq_stPTM.q_RunDO:=FALSE;
-	q_PumpingStation:=FALSE;
+    iq_stPTM.xRunSW:=FALSE;
+    iq_stPTM.q_RunDO:=FALSE;
+    q_PumpingStation:=FALSE;
 END_IF
 
 
 (*Pump STATE*)
-IF iq_stPtm.i_xFault THEN 
-	iq_stPtm.eState := pumpFAULT;
+IF iq_stPtm.i_xFault THEN
+    iq_stPtm.eState := pumpFAULT;
 ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
-	iq_stPtm.eState := pumpSTOPPED;
+    iq_stPtm.eState := pumpSTOPPED;
 ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO THEN
-	iq_stPtm.eState := pumpSTARTING;
+    iq_stPtm.eState := pumpSTARTING;
 ELSIF iq_stPtm.i_xAtSpd AND iq_stPtm.q_RunDO THEN
-	iq_stPtm.eState := pumpRUNNING;
-ELSE 
-	iq_stPtm.eState := pumpFAULT;
+    iq_stPtm.eState := pumpRUNNING;
+ELSE
+    iq_stPtm.eState := pumpFAULT;
 END_IF
 
 (*Error Reset*)
 (* to reset the Reset Bit *)
- IF (iq_stPTM.xResetSW ) THEN  
-	iq_stPTM.q_xReset := TRUE; 
-	q_PumpingStation := TRUE;
+ IF (iq_stPTM.xResetSW ) THEN
+    iq_stPTM.q_xReset := TRUE;
+    q_PumpingStation := TRUE;
  END_IF
 
- IF (iq_stPTM.xResetSW) AND (iq_stPTM.i_xFault)  THEN  
-	q_PumpingStation := TRUE;
+ IF (iq_stPTM.xResetSW) AND (iq_stPTM.i_xFault)  THEN
+    q_PumpingStation := TRUE;
  END_IF
  TOF_RESET (IN:= iq_stPTM.q_xReset, Q => );
- IF TOF_RESET.Q THEN 
-	iq_stPTM.q_xReset:= FALSE;
-	iq_stPTM.xResetSW := FALSE; 
+ IF TOF_RESET.Q THEN
+    iq_stPTM.q_xReset:= FALSE;
+    iq_stPTM.xResetSW := FALSE;
  END_IF
 
 (*Soft IO Mapping*)
@@ -93,37 +93,37 @@ q_RunDO := iq_stPTM.q_RunDO;
 q_xReset := iq_stPTM.q_xReset;
 //q_xRemote := iq_stPTM.
 //q_PumpingStation AT%Q*: BOOL; // Start/Stop
-	
+
 (*inputs*)
 iq_stPTM.i_xAtSpd:= i_xAtSpd;
-iq_stPTM.i_xFault:= NOT i_xFaultNC; 
+iq_stPTM.i_xFault:= NOT i_xFaultNC;
 iq_stPTM.i_xWarn:=  	i_xWarn ;
-	
-	]]></ST>
+
+    ]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_Logger" Id="{2a4a55bb-5a82-4b5c-9d35-491701256bba}">
       <Implementation>
-        <ST><![CDATA[//STATE Logger  
+        <ST><![CDATA[//STATE Logger
 IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
- 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+         fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);
 END_IF
 
 
 IF ePrevState <> iq_stPTM.eState THEN
-	  CASE iq_stPTM.eState OF
-		pumpFAULT:
-			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
-  		pumpSTOPPED:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
-		pumpSTARTING:
-			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
-		pumpRUNNING:
-			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := iq_stPTM.eState;  
+      CASE iq_stPTM.eState OF
+        pumpFAULT:
+            fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+          pumpSTOPPED:
+            fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+        pumpSTARTING:
+            fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+        pumpRUNNING:
+            fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := iq_stPTM.eState;
   END_IF
-  
+
 // ILK logger
 
 
@@ -144,28 +144,28 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
-	SUPER^.bRestorePersistentData	:= FALSE;
-	IF (rBackingPressureSP <> 0) THEN
-		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
-	END_IF;
-	IF (rInletPressureSP <> 0) THEN
-		iq_stPTM.rInletPressureSP := rInletPressureSP;
-	END_IF;
+    SUPER^.bRestorePersistentData	:= FALSE;
+    IF (rBackingPressureSP <> 0) THEN
+        iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    END_IF;
+    IF (rInletPressureSP <> 0) THEN
+        iq_stPTM.rInletPressureSP := rInletPressureSP;
+    END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
-	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+    rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
 END_IF;
 
 IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
-	rInletPressureSP := iq_stPTM.rInletPressureSP;
+    rInletPressureSP := iq_stPTM.rInletPressureSP;
 END_IF;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_Run" Id="{2c4aa976-1aba-482a-991c-f510aadc9928}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
-	run:bool; // set to true to run, false to stop;
+    run:bool; // set to true to run, false to stop;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -176,10 +176,10 @@ this^.iq_stPtm.xRunSW := run;]]></ST>
     <Method Name="M_Serial_IO" Id="{69cf9593-e155-45fc-9159-3adef61e53cd}">
       <Declaration><![CDATA[METHOD PUBLIC M_Serial_IO : BOOL
 VAR_INPUT
-	st_Pfeiffer_RBK: ST_PfeifferStatus;
+    st_Pfeiffer_RBK: ST_PfeifferStatus;
 END_VAR
 VAR_IN_OUT
-	st_Pfeiffer_CTRL: ST_PfeifferControl;
+    st_Pfeiffer_CTRL: ST_PfeifferControl;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -187,8 +187,8 @@ END_VAR
 to the generic turbo structures *)
 (*
 if (bInit) Then
-	bInit := False;
-	st_Pfeiffer_CTRL.diSetRotationSpeed_309 := st_Pfeiffer_RBK.diActiveRotationSpeed_309;
+    bInit := False;
+    st_Pfeiffer_CTRL.diSetRotationSpeed_309 := st_Pfeiffer_RBK.diActiveRotationSpeed_309;
 END_IF*)
 
 (* Controls *) (* Controls is via DIO*)
@@ -216,13 +216,13 @@ iq_stPTM.i_iWarningCode := st_Pfeiffer_RBK.iWarningCode_303;
 
 (* Check that error acknowledgment is processed *)
 IF st_Pfeiffer_RBK.xErrorAcknowledged THEN
-	st_Pfeiffer_RBK.xErrorAcknowledged := FALSE;
-	st_Pfeiffer_CTRL.xErrorAck_009 := FALSE;
-	iq_stPTM.xResetSW := FALSE;
+    st_Pfeiffer_RBK.xErrorAcknowledged := FALSE;
+    st_Pfeiffer_CTRL.xErrorAck_009 := FALSE;
+    iq_stPTM.xResetSW := FALSE;
 END_IF
 
 IF st_Pfeiffer_RBK.sErrorCode_303 = '' THEN
-	;
+    ;
 ELSIF st_Pfeiffer_RBK.sErrorCode_303 <> '000000' THEN
 iq_stPTM.i_xFault := TRUE;
 ELSE
@@ -232,8 +232,8 @@ END_IF
 st_Pfeiffer_CTRL.xSetSpdMode_026:= iq_stPTM.q_bSetSpd;
 iq_stPTM.i_dSetSpd := LIMIT (0, iq_stPTM.i_dSetSpd, 1500); // 1500 nominal frequency
 IF ( iq_stPTM.i_dSetSpd <>0) THEN
-	st_Pfeiffer_CTRL.iSetRotationSpeed_707 := DINT_TO_INT(iq_stPTM.i_dSetSpd * 100/1500);
-	st_Pfeiffer_CTRL.iSetRotationSpeed_707 := LIMIT(20, st_Pfeiffer_CTRL.iSetRotationSpeed_707 ,100); // Manual Page 18
+    st_Pfeiffer_CTRL.iSetRotationSpeed_707 := DINT_TO_INT(iq_stPTM.i_dSetSpd * 100/1500);
+    st_Pfeiffer_CTRL.iSetRotationSpeed_707 := LIMIT(20, st_Pfeiffer_CTRL.iSetRotationSpeed_707 ,100); // Manual Page 18
 END_IF
 ]]></ST>
       </Implementation>

@@ -6,18 +6,18 @@ FUNCTION_BLOCK FB_ITR90
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	PG : ST_VG;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    PG : ST_VG;
 END_VAR
 VAR
-	rV : REAL;	// input voltage
-	rC: REAL := -0.125; // a constant in the manual (pressure unit dependent)
-	rK: REAL := 1.0;// Calibration factor C (gas type dependent)
-	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    rV : REAL;	// input voltage
+    rC: REAL := -0.125; // a constant in the manual (pressure unit dependent)
+    rK: REAL := 1.0;// Calibration factor C (gas type dependent)
+    iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -25,22 +25,22 @@ END_VAR
 
 (* Real-value calculation *)
 
-rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;	
+rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 PG.rPRESS := (LREAL_TO_REAL(EXPT(10,(rV-7.75)/0.75+rC))) * rK;
 
 
 (* Pressure gauge State checks *)
 
 //IF (rV <=9.7 ) AND (rV>=1) THEN
-	//PG.eState := Valid; // normal
+    //PG.eState := Valid; // normal
 IF rV >= 0.5 AND rV <= 4.5 THEN
-	PG.eState := ValidLo; //LO
+    PG.eState := ValidLo; //LO
 ELSIF rV > 4.5 AND rV<= 9.9 THEN
-	PG.eState := ValidHi; //HIGH
+    PG.eState := ValidHi; //HIGH
 ELSIF rV < 0.5 THEN
-	PG.eState := GaugeDisconnected; //not on
+    PG.eState := GaugeDisconnected; //not on
 ELSE
-	PG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+    PG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
 END_IF
 
 
@@ -65,7 +65,7 @@ ACT_IO();
     <Method Name="M_SetBits" Id="{2b56ae4c-1065-4c58-8da0-22d0f327520b}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
-	TermBits : UINT; // The terminal's maximum value in bits
+    TermBits : UINT; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -73,21 +73,5 @@ END_VAR
 This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_ITR90">
-      <LineId Id="9" Count="0" />
-      <LineId Id="18" Count="2" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="25" Count="26" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="24" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_ITR90.ACT_IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_ITR90.M_SetBits">
-      <LineId Id="10" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

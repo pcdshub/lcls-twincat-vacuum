@@ -7,15 +7,15 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	// For logging
+    // For logging
     fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM, nMinTimeViolationAcceptable:=10);
     ePrevState : E_ValvePositionState;
     tErrorPresent : R_TRIG;
     tAction : R_TRIG; // Primary action of this device (OPN_DO, etc.)
     tOverrideActivated : R_TRIG;
-	// For Persistent Data
-	bRestorePersistentData	:	BOOL:=TRUE;
-	//fbWritePersistentData           : WritePersistentData;
+    // For Persistent Data
+    bRestorePersistentData	:	BOOL:=TRUE;
+    //fbWritePersistentData           : WritePersistentData;
 END_VAR
 ]]></Declaration>
     <Implementation>

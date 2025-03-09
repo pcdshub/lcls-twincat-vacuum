@@ -3,10 +3,10 @@
   <DUT Name="IO_GCC" Id="{99df1f4e-2c23-47ef-9581-42fe333e225e}">
     <Declaration><![CDATA[TYPE IO_GCC :
 STRUCT
-	i_aPRESS: INT; //EL3174 or EP3174
-	q_xHVE : BOOL; //EL2624  or EP2624
-	i_xHV_ON : BOOL; //EL1124 
-	i_xDisc_Status : BOOL;	//EL1124
+    i_aPRESS: INT; //EL3174 or EP3174
+    q_xHVE : BOOL; //EL2624  or EP2624
+    i_xHV_ON : BOOL; //EL1124
+    i_xDisc_Status : BOOL;	//EL1124
 END_STRUCT
 END_TYPE
 ]]></Declaration>

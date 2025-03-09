@@ -4,22 +4,22 @@
     <Declaration><![CDATA[(* MKS248 valve using MKS1249 Drive Module *)
 FUNCTION_BLOCK FB_MKS248
 VAR_INPUT
-	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
-	i_rReqPos	:	REAL; //Requested position
+    i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
+    i_rReqPos	:	REAL; //Requested position
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := 'pv:'}
-	iq_stVFN	:	ST_VCN; //Needle valve structure
+    {attribute 'pytmc' := 'pv:'}
+    iq_stVFN	:	ST_VCN; //Needle valve structure
 END_VAR
 VAR CONSTANT
-	rOpenVoltage	:	REAL := 9.8; 
-	rCloseVoltage	:	REAL := 0;	
+    rOpenVoltage	:	REAL := 9.8;
+    rCloseVoltage	:	REAL := 0;
 END_VAR
 VAR
-	// Requested voltage
-	rReqVoltage: REAL := 0;
-	(*IO*)
-	q_iRawPosition AT%Q* :INT;
+    // Requested voltage
+    rReqVoltage: REAL := 0;
+    (*IO*)
+    q_iRawPosition AT%Q* :INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -30,25 +30,25 @@ END_VAR
 iq_stVFN.xIlkOK := i_xExtIlkOK;
 (*Checking which Control mode is selected*)
 IF iq_stVFN.xIlkOK THEN
-	IF iq_stVFN.eValveControl = OpenValve THEN
-		iq_stVFN.rReqPosition := iq_stVFN.rUpperLimit;(*Percentage*)// iq_stVCN.rUpperLimit;
-	ELSIF iq_stVFN.eValveControl = CloseValve THEN
-		iq_stVFN.rReqPosition := 0; (*Percentage*)
-	ELSIF iq_stVFN.eValveControl = ManualControl THEN
-		iq_stVFN.rReqPosition := LIMIT(0, iq_stVFN.rReqPosition, iq_stVFN.rUpperLimit);
-	ELSIF iq_stVFN.eValveControl = PressureControl THEN
-		iq_stVFN.rReqPosition := LIMIT(0, i_rReqPos, iq_stVFN.rUpperLimit); 
-	END_IF
+    IF iq_stVFN.eValveControl = OpenValve THEN
+        iq_stVFN.rReqPosition := iq_stVFN.rUpperLimit;(*Percentage*)// iq_stVCN.rUpperLimit;
+    ELSIF iq_stVFN.eValveControl = CloseValve THEN
+        iq_stVFN.rReqPosition := 0; (*Percentage*)
+    ELSIF iq_stVFN.eValveControl = ManualControl THEN
+        iq_stVFN.rReqPosition := LIMIT(0, iq_stVFN.rReqPosition, iq_stVFN.rUpperLimit);
+    ELSIF iq_stVFN.eValveControl = PressureControl THEN
+        iq_stVFN.rReqPosition := LIMIT(0, i_rReqPos, iq_stVFN.rUpperLimit);
+    END_IF
 ELSE
-	iq_stVFN.rReqPosition := 0;
-	iq_stVFN.eValveControl := CloseValve;
+    iq_stVFN.rReqPosition := 0;
+    iq_stVFN.eValveControl := CloseValve;
 END_IF
 
 // Requested Voltage calculation
 rReqVoltage := iq_stVFN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
 rReqVoltage := LIMIT(rCloseVoltage, rReqVoltage, rOpenVoltage); //The requested voltage should remain within this range
 //Raw position calc
-iq_stVFN.q_iRawPosition := REAL_TO_INT( 32767/10 * rReqVoltage);	
+iq_stVFN.q_iRawPosition := REAL_TO_INT( 32767/10 * rReqVoltage);
 (*IO Mapping*)
 ACT_IO();]]></ST>
     </Implementation>
@@ -58,17 +58,5 @@ ACT_IO();]]></ST>
 q_iRawPosition := iq_stVFN.q_iRawPosition;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_MKS248">
-      <LineId Id="9" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="93" Count="21" />
-      <LineId Id="70" Count="1" />
-      <LineId Id="69" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS248.ACT_IO">
-      <LineId Id="2" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
