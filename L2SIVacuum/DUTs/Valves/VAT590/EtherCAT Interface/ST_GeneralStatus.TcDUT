@@ -3,22 +3,22 @@
   <DUT Name="ST_GeneralStatus" Id="{9c22d4f5-1bbc-427a-b513-f8bf1db18bd2}">
     <Declaration><![CDATA[TYPE ST_GeneralStatus :
 STRUCT
-	Bit0FieldBusDatavalid: BIT;
-	Bit1ZeroExecuted : BIT;
-	Bit2PingPongRxBit : BIT;
-	Bit3PressureSimulation : BIT;
-	Bit4PressureSPReached : BIT;
-	Bit5Reserved : BIT;
-	Bit6Reserved : BIT;
-	Bit7AccessModeBit0 : BIT;
-	Bit8AccessModeBit1 : BIT;
-	Bit9WarningsActive : BIT;
-	Bit10Reserved : BIT;
-	Bit11Reserved : BIT;
-	Bit12Reserved : BIT;
-	Bit13Reserved : BIT;
-	Bit14Reserved : BIT;
-	Bit15Reserved : BIT;
+    Bit0FieldBusDatavalid: BIT;
+    Bit1ZeroExecuted : BIT;
+    Bit2PingPongRxBit : BIT;
+    Bit3PressureSimulation : BIT;
+    Bit4PressureSPReached : BIT;
+    Bit5Reserved : BIT;
+    Bit6Reserved : BIT;
+    Bit7AccessModeBit0 : BIT;
+    Bit8AccessModeBit1 : BIT;
+    Bit9WarningsActive : BIT;
+    Bit10Reserved : BIT;
+    Bit11Reserved : BIT;
+    Bit12Reserved : BIT;
+    Bit13Reserved : BIT;
+    Bit14Reserved : BIT;
+    Bit15Reserved : BIT;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

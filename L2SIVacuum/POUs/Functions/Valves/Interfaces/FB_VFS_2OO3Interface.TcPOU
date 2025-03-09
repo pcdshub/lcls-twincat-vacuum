@@ -213,17 +213,5 @@ q_e2OO3_MODE := i_e2OO3_MODE;
 ]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_VFS_2OO3Interface">
-      <LineId Id="3" Count="45" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VFS_2OO3Interface.ACT_Logger">
-      <LineId Id="2" Count="36" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VFS_2OO3Interface.IO">
-      <LineId Id="2" Count="30" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

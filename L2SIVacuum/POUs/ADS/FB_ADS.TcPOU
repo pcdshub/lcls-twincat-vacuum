@@ -7,15 +7,12 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	 fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.FIELDBUS);
-	tErrorPresent : R_TRIG;
+     fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.FIELDBUS);
+    tErrorPresent : R_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <LineIds Name="FB_ADS">
-      <LineId Id="9" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

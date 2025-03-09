@@ -5,11 +5,11 @@
 (* Mainly used in the FEE HXR GATT*)
 FUNCTION F_TurboExtILK_NO : BOOL
 VAR_INPUT
-	Turbo		:	ST_PTM;
-	BackingGauge:	ST_VG;
-	InletGauge	:	ST_VG;
-	VentValve	:	ST_VCC_NO; //NO type turbo valve
-	ScrollPump	:	ST_RoughPump;
+    Turbo		:	ST_PTM;
+    BackingGauge:	ST_VG;
+    InletGauge	:	ST_VG;
+    VentValve	:	ST_VCC_NO; //NO type turbo valve
+    ScrollPump	:	ST_RoughPump;
 END_VAR
 
 VAR

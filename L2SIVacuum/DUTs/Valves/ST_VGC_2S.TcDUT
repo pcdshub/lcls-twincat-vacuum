@@ -3,27 +3,27 @@
   <DUT Name="ST_VGC_2S" Id="{d40d8100-9381-4a07-9a91-635cbd71ed90}">
     <Declaration><![CDATA[TYPE ST_VGC_2S EXTENDS ST_VGC:
 STRUCT
-	{attribute 'pytmc' := ' 
-	pv: AT_VAC_SP_DS;
-	io: o;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	autosave_pass1: VAL DESC
-	'}
-	rAT_VAC_SP_DS	:	REAL := 0.000001;	// Interlock setpoint for gauges on the downstream side of the valve
-	{attribute 'pytmc' := '
-    pv: AT_VAC_HYS_DS;
-	io: o;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	autosave_pass1: VAL DESC
+    {attribute 'pytmc' := '
+    pv: AT_VAC_SP_DS;
+    io: o;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
     '}
-	rAT_VAC_HYS_DS	:	REAL :=0.000001;	// Hysteresis of the vacuum sp downstream
-	rAT_VAC_SP_LAST_DS :	REAL :=0.000001 ;
+    rAT_VAC_SP_DS	:	REAL := 0.000001;	// Interlock setpoint for gauges on the downstream side of the valve
+    {attribute 'pytmc' := '
+    pv: AT_VAC_HYS_DS;
+    io: o;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    rAT_VAC_HYS_DS	:	REAL :=0.000001;	// Hysteresis of the vacuum sp downstream
+    rAT_VAC_SP_LAST_DS :	REAL :=0.000001 ;
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

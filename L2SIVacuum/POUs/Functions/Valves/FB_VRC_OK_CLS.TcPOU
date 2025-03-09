@@ -4,10 +4,10 @@
     <Declaration><![CDATA[(* This function block is different from the regular VRC in that CLOSING must be permitted. *)
 FUNCTION_BLOCK FB_VRC_OK_CLS
 VAR_IN_OUT
-	iq_stValve : ST_VRC;
+    iq_stValve : ST_VRC;
 END_VAR
 VAR_INPUT
-	i_xOverrideMode : BOOL;
+    i_xOverrideMode : BOOL;
 END_VAR
 VAR_OUTPUT
 END_VAR
@@ -41,9 +41,5 @@ tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=T#10S);
 (* Here's where the valve opens *)
 iq_stValve.q_xOPN_DO := NOT iq_stValve.xCLS_OK OR ((iq_stValve.pv_xOPN_SW AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode));]]></ST>
     </Implementation>
-    <LineIds Name="FB_VRC_OK_CLS">
-      <LineId Id="3" Count="19" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

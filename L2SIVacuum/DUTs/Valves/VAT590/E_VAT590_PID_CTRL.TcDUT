@@ -5,10 +5,10 @@
 {attribute 'strict'}
 TYPE E_VAT590_PID_CTRL :
 (
-	ADAPTIVE_DS := 0,
-	FIXED_1 := 1,
-	FIXED_2 := 2,
-	SOFT_PUMP := 3
+    ADAPTIVE_DS := 0,
+    FIXED_1 := 1,
+    FIXED_2 := 2,
+    SOFT_PUMP := 3
 ) USINT := FIXED_1;
 END_TYPE
 ]]></Declaration>

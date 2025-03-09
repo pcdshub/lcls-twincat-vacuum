@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS500" Id="{4da1e942-f359-4f6e-ab12-d5a0031e68e6}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500. 
+    <Declaration><![CDATA[(* This function is for the Cold Cathode MKS 500.
 
-If connected to Beckhoff EP boxes. Set the EP bit to TRUE, this is necessary for the 
-MKS500-to-EP box interface because the EP boxes do not natively support the 5v IO 
+If connected to Beckhoff EP boxes. Set the EP bit to TRUE, this is necessary for the
+MKS500-to-EP box interface because the EP boxes do not natively support the 5v IO
 signals on the MKS500 gauge.
 
 A setup process is required for the MKS500 to be usable.
@@ -15,58 +15,58 @@ This function provides ILK and Set Point Protection for the Cold Cathode.
 
 FUNCTION_BLOCK FB_MKS500 EXTENDS FB_GaugeBase
 VAR_IN_OUT
-		
+
 END_VAR
 VAR_INPUT
-	PG	:	ST_VG;
-	bEP : BOOL :=FALSE; // Set to True if This Gauge is connected to EP BOX and not EL Terminals
-	tRecoverDelay:TIME:=T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
+    PG	:	ST_VG;
+    bEP : BOOL :=FALSE; // Set to True if This Gauge is connected to EP BOX and not EL Terminals
+    tRecoverDelay:TIME:=T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
 END_VAR
 VAR_OUTPUT
 {attribute 'pytmc' := '
-    pv: 
-	'}
-	IG : ST_VG;
+    pv:
+    '}
+    IG : ST_VG;
 END_VAR
 VAR
-	rV : REAL;
-	GaugeTurnOnTmr : TON;
-	tStartupTimer:TON;
-	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
-	(*IOs to be linked*)
-	/// Controls and I/Os
-	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
-	q_xHV_DIS AT %Q* : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EP2624) ^Output
-	// only for EL and ES terminal
-	i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1124) ^Input
-	i_xDisc_Active AT %I* : BOOL;// Discharge Current Active // 'TcLinkTo' (EL1124) ^Input
-	binit:BOOL:=TRUE;
+    rV : REAL;
+    GaugeTurnOnTmr : TON;
+    tStartupTimer:TON;
+    iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+    (*IOs to be linked*)
+    /// Controls and I/Os
+    i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
+    q_xHV_DIS AT %Q* : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EP2624) ^Output
+    // only for EL and ES terminal
+    i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1124) ^Input
+    i_xDisc_Active AT %I* : BOOL;// Discharge Current Active // 'TcLinkTo' (EL1124) ^Input
+    binit:BOOL:=TRUE;
 END_VAR
 
 VAR CONSTANT
-	// Ranges has to match the configurator software
-	pBase : REAL :=1.0E-10;//default curve base pressure is 1E-10. Confusing since can't actually read that low using analog out.
-	vBase : REAL := 1;
-	vDisconnected : REAL:= 0.5;
-	vSlope : REAL := 1.0; 
-	vGaugeOff: REAL := 9.8;
-	vNoDischarge: REAL := 9.3;
-	MinPressure: REAL := 1E-10;
-	cDefaultPressure : REAL := 0;
-	rDeadband : REAL :=0.3;
+    // Ranges has to match the configurator software
+    pBase : REAL :=1.0E-10;//default curve base pressure is 1E-10. Confusing since can't actually read that low using analog out.
+    vBase : REAL := 1;
+    vDisconnected : REAL:= 0.5;
+    vSlope : REAL := 1.0;
+    vGaugeOff: REAL := 9.8;
+    vNoDischarge: REAL := 9.3;
+    MinPressure: REAL := 1E-10;
+    cDefaultPressure : REAL := 0;
+    rDeadband : REAL :=0.3;
 END_VAR
 VAR PERSISTENT
-	bWasOn : BOOL;
-	bAutoRecover:BOOL;
-	bAutoRecoverWrite:BOOL;
+    bWasOn : BOOL;
+    bAutoRecover:BOOL;
+    bAutoRecoverWrite:BOOL;
 END_VAR
 
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*Startup time*)
 IF (bInit) THEN
-	tStartupTimer.IN:=TRUE;
-	bInit :=FALSE;
+    tStartupTimer.IN:=TRUE;
+    bInit :=FALSE;
 END_IF
 tStartupTimer(PT:=T#3S);
 
@@ -76,39 +76,39 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (* Set Guage State based on the Analog voltage*)
 IF  NOT (tStartupTimer.Q) THEN // Give time for the gauge controller to start
-	IG.eState := Off;
-	IG.rPRESS := cDefaultPressure;
+    IG.eState := Off;
+    IG.rPRESS := cDefaultPressure;
 ELSIF rV < vDisconnected THEN
-	IG.eState := GaugeDisconnected;
-	IG.rPRESS := cDefaultPressure;
+    IG.eState := GaugeDisconnected;
+    IG.rPRESS := cDefaultPressure;
 ELSIF rV >= vDisconnected AND rV < (vNoDischarge -rDeadband)  AND (IG.xHV_SW) THEN
-	IG.eState := Valid;
-	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    IG.eState := Valid;
+    IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 ELSIF rV >= (vNoDischarge -rDeadband) AND rV <(vGaugeOff -rDeadband) AND (IG.xHV_SW)  THEN
-	IG.eState := Starting;
-	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    IG.eState := Starting;
+    IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
 ELSIF rV >= (vGaugeOff -rDeadband) THEN
-	IG.eState := Off;
-	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-	IG.rPRESS := cDefaultPressure;
+    IG.eState := Off;
+    //IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    IG.rPRESS := cDefaultPressure;
 ELSIF IG.rPRESS < MinPressure THEN
-	IG.eState := PressInvalid;
-	//IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-	IG.rPRESS := cDefaultPressure;
+    IG.eState := PressInvalid;
+    //IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    IG.rPRESS := cDefaultPressure;
 END_IF
 
 (* Set Guage State based on the inputs HV ON and Discharge current*)
 If (NOT bEP) THEN
-	IF IG.i_xHV_ON AND NOT IG.i_xDisc_Active THEN
-		IG.eState := Starting;
-		IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-	ELSIF IG.i_xHV_ON AND IG.i_xDisc_Active THEN
-		IG.eState := Valid;
-		IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
-	ELSIF NOT IG.i_xHV_ON AND NOT IG.i_xDisc_Active THEN
-		IG.eState := Off;
-		IG.rPRESS := cDefaultPressure;
-	END_IF
+    IF IG.i_xHV_ON AND NOT IG.i_xDisc_Active THEN
+        IG.eState := Starting;
+        IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    ELSIF IG.i_xHV_ON AND IG.i_xDisc_Active THEN
+        IG.eState := Valid;
+        IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV-vBase)/vSlope+LOG(pBase))));
+    ELSIF NOT IG.i_xHV_ON AND NOT IG.i_xDisc_Active THEN
+        IG.eState := Off;
+        IG.rPRESS := cDefaultPressure;
+    END_IF
 END_IF
 
 (* Ion Gauge Protection Functions *)
@@ -118,17 +118,17 @@ END_IF
 
 
 IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
-	IG.q_xHV_DIS := IG.xHV_SW;
-	IG.xILKOk := TRUE;
+    IG.q_xHV_DIS := IG.xHV_SW;
+    IG.xILKOk := TRUE;
 ELSIF IG.q_xHV_DIS THEN
-	IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
-		IG.q_xHV_DIS := FALSE;
-		IG.xHV_SW := FALSE;
-	END_IF
+    IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+        IG.q_xHV_DIS := FALSE;
+        IG.xHV_SW := FALSE;
+    END_IF
 ELSE
-	IG.q_xHV_DIS := FALSE;
-	IG.xHV_SW := FALSE;
-	IG.xILKOk := FALSE;
+    IG.q_xHV_DIS := FALSE;
+    IG.xHV_SW := FALSE;
+    IG.xILKOk := FALSE;
 END_IF
 
 (* Pressure gauge OK checks *)
@@ -155,40 +155,40 @@ ACT_Recover();]]></ST>
       <Implementation>
         <ST><![CDATA[// ILK logger
 IF (IG.xLog) THEN
-	IF NOT IG.xILKOk AND IG.q_xHV_DIS THEN
-			fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
-	END_IF
-	
-	
-	// Log Action
-	tAction(CLK:=   IG.xHV_SW);
-	IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
-	
-	
-	
-	//STATE Logger  
-	tState(CLK:=  ePrevState <> IG.eState);
-	IF ePrevState <> IG.eState THEN
-		  CASE IG.eState OF
-			ValidHi:
-				fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
-			ValidLo:
-				fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
-			Valid:
-				fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-			GaugeDisconnected:
-				fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-			PressInvalid:
-				fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-			OoR:
-				fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-			Starting:
-				fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-		  END_CASE
-		  ePrevState := IG.eState;  
-		  stateTimer.IN := TRUE;
-	  END_IF
-END_IF  
+    IF NOT IG.xILKOk AND IG.q_xHV_DIS THEN
+            fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);
+    END_IF
+
+
+    // Log Action
+    tAction(CLK:=   IG.xHV_SW);
+    IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+
+
+
+    //STATE Logger
+    tState(CLK:=  ePrevState <> IG.eState);
+    IF ePrevState <> IG.eState THEN
+          CASE IG.eState OF
+            ValidHi:
+                fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+            ValidLo:
+                fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+            Valid:
+                fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+            GaugeDisconnected:
+                fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+            PressInvalid:
+                fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+            OoR:
+                fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+            Starting:
+                fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+          END_CASE
+          ePrevState := IG.eState;
+          stateTimer.IN := TRUE;
+      END_IF
+END_IF
 
 ]]></ST>
       </Implementation>
@@ -197,42 +197,42 @@ END_IF
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
-	SUPER^.bRestorePersistentData	:= FALSE;
-	IF ( rVAC_SP <> 0) THEN
-		IG.rVAC_SP := rVAC_SP;
-	END_IF;
-	IF ( rPRO_SP <> 0) THEN
-		IG.rPRO_SP := rPRO_SP;
-	END_IF;
-	IF ( rHYS_PR <> 0) THEN
-		IG.rHYS_PR := rHYS_PR;
-	END_IF;
-	IF ( bAutoRecoverWrite) THEN
-		IG.xAutoOn := bAutoRecover;
-	END_IF;
+    SUPER^.bRestorePersistentData	:= FALSE;
+    IF ( rVAC_SP <> 0) THEN
+        IG.rVAC_SP := rVAC_SP;
+    END_IF;
+    IF ( rPRO_SP <> 0) THEN
+        IG.rPRO_SP := rPRO_SP;
+    END_IF;
+    IF ( rHYS_PR <> 0) THEN
+        IG.rHYS_PR := rHYS_PR;
+    END_IF;
+    IF ( bAutoRecoverWrite) THEN
+        IG.xAutoOn := bAutoRecover;
+    END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
-	rVAC_SP := IG.rVAC_SP;
+    rVAC_SP := IG.rVAC_SP;
 END_IF;
 
 IF NOT (IG.rPRO_SP = rPRO_SP) THEN
-	rPRO_SP:= IG.rPRO_SP;
+    rPRO_SP:= IG.rPRO_SP;
 END_IF;
 
 IF NOT (IG.rHYS_PR = rHYS_PR) THEN
-	rHYS_PR:= IG.rHYS_PR;
+    rHYS_PR:= IG.rHYS_PR;
 END_IF;
 
 IF NOT(bAutoRecoverWrite) OR NOT (bAutoRecover = IG.xAutoOn) THEN
-	bAutoRecover := IG.xAutoOn;
-	bAutoRecoverWrite := TRUE;
+    bAutoRecover := IG.xAutoOn;
+    bAutoRecoverWrite := TRUE;
 END_IF;
 stateTimer(PT:=T#10S);
 IF (stateTimer.Q) THEN
-	bWasOn := (IG.eState >=Valid );
-	stateTimer.IN := FALSE;
-	fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
+    bWasOn := (IG.eState >=Valid );
+    stateTimer.IN := FALSE;
+    fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
 END_IF;]]></ST>
       </Implementation>
     </Action>
@@ -240,21 +240,21 @@ END_IF;]]></ST>
       <Implementation>
         <ST><![CDATA[fbGetCurTaskIdx();
 IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
-	tRecover.IN := TRUE;
+    tRecover.IN := TRUE;
 END_IF
 tRecover(IN:= , PT:=tRecoverDelay);
 IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
-	This^.M_Recover();
-	tRecover.IN := FALSE;
+    This^.M_Recover();
+    tRecover.IN := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Action>
     <Action Name="IO" Id="{8ad71ac6-f961-40c8-a3be-ad3367f81f67}">
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
-IG.i_iPRESS_R:=	i_iPRESS_R; 
+IG.i_iPRESS_R:=	i_iPRESS_R;
 IG.i_xHV_ON:= i_xHV_ON;
-IG.i_xDisc_Active:=i_xDisc_Active; 
+IG.i_xDisc_Active:=i_xDisc_Active;
 (*soft link outputs*)
 q_xHV_DIS := IG.q_xHV_DIS;
 
@@ -265,7 +265,7 @@ IG.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);]]></ST>
     <Method Name="M_HVE" Id="{5c5dd30f-1cf9-426d-9ab9-5103df771146}">
       <Declaration><![CDATA[METHOD M_HVE : BOOL
 VAR_INPUT
-		enable:bool; // set to true to enable, false to disable;
+        enable:bool; // set to true to enable, false to disable;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -287,7 +287,7 @@ IF (bWasOn) THEN fbLogger(sMsg:='Auto Recovery Initiated.', eSevr:=TcEventSeveri
     <Method Name="M_SetBits" Id="{9316bb83-f8e3-4030-bdca-94efd01af2a5}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
-	TermBits : UINT; // The terminal's maximum value in bits
+    TermBits : UINT; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
       <Implementation>

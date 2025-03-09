@@ -3,19 +3,19 @@
   <DUT Name="E_PressureState" Id="{c25a9601-e125-4f1e-8734-ed2a641d27b1}">
     <Declaration><![CDATA[TYPE E_PressureState :
 (
-	// Invalid states
-	Off,//	 //gc_GaugeValidState - 1,
-	GaugeDisconnected, //gc_GaugeValidState -2,
-	OoR, //gc_GaugeValidState -6,
-	// Ion gauges
-	PressInvalid, //gc_GaugeValidState - 3,
-	Starting, //gc_GaugeValidState - 4
-	
-	//Valid States (Positive)
-	Valid, // gc_GaugeValidState set in "Global Variable Folder: Constants"
-	ValidHi, //gc_GaugeValidState + 1,
-	ValidLo //gc_GaugeValidState + 2,
-	
+    // Invalid states
+    Off,//	 //gc_GaugeValidState - 1,
+    GaugeDisconnected, //gc_GaugeValidState -2,
+    OoR, //gc_GaugeValidState -6,
+    // Ion gauges
+    PressInvalid, //gc_GaugeValidState - 3,
+    Starting, //gc_GaugeValidState - 4
+
+    //Valid States (Positive)
+    Valid, // gc_GaugeValidState set in "Global Variable Folder: Constants"
+    ValidHi, //gc_GaugeValidState + 1,
+    ValidLo //gc_GaugeValidState + 2,
+
 ) INT;
 END_TYPE
 ]]></Declaration>

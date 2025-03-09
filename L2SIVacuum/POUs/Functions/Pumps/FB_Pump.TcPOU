@@ -3,19 +3,19 @@
   <POU Name="FB_Pump" Id="{00c4f02d-0992-44f0-9021-57d8126c2097}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Pump
 VAR
-	// For logging
+    // For logging
     fbLogger : FB_LogMessage := (eSubsystem:=E_SubSystem.VACUUM);
     ePrevState : E_PumpState;
     tErrorPresent : R_TRIG;
-    tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)	
-	tFault : F_TRIG;
-	tILK: TON;
-	// For Persistent Data
-	bRestorePersistentData	:	BOOL:=TRUE;
+    tAction : R_TRIG; // Primary action of this device (OPN_DO, PUMP_RUN, etc.)
+    tFault : F_TRIG;
+    tILK: TON;
+    // For Persistent Data
+    bRestorePersistentData	:	BOOL:=TRUE;
 END_VAR
 VAR PERSISTENT
     rBackingPressureSP	:	REAL;
-	rInletPressureSP	:	REAL;
+    rInletPressureSP	:	REAL;
 END_VAR
 ]]></Declaration>
     <Implementation>

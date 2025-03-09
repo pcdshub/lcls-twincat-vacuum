@@ -8,11 +8,11 @@
 (* are higher than the configured set point*)
 FUNCTION F_TurboExtILKLogic : BOOL
 VAR_INPUT
-	Turbo		:	ST_PTM;
-	BackingGauge:	ST_VG;
-	InletGauge	:	ST_VG;
-	VentValve	:	ST_VVC;
-	ScrollPump	:	ST_RoughPump;
+    Turbo		:	ST_PTM;
+    BackingGauge:	ST_VG;
+    InletGauge	:	ST_VG;
+    VentValve	:	ST_VVC;
+    ScrollPump	:	ST_RoughPump;
 END_VAR
 
 VAR

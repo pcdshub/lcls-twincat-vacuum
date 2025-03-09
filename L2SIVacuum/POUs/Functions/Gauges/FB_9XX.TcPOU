@@ -7,28 +7,28 @@ FUNCTION_BLOCK FB_9XX EXTENDS FB_GaugeBase
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	PG	: ST_VG;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    PG	: ST_VG;
 END_VAR
 VAR_IN_OUT
 END_VAR
 VAR
-	rV : REAL;
-	fbGaugeState : FB_PressureState;
-	rMaxPressure	:	REAL := 760; //Torr
-	rMinPressure	:	REAL := 1E-5; //Torr
-	rVMin : REAL:= 0.9;
+    rV : REAL;
+    fbGaugeState : FB_PressureState;
+    rMaxPressure	:	REAL := 760; //Torr
+    rMinPressure	:	REAL := 1E-5; //Torr
+    rVMin : REAL:= 0.9;
 
-	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 
 VAR CONSTANT
-	(*Default set point 50 mT*)
-	rDefaultVAC_SP: REAL := 5E-2;
+    (*Default set point 50 mT*)
+    rDefaultVAC_SP: REAL := 5E-2;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -36,27 +36,27 @@ END_VAR
 (* works for 972 and 925 *)
 
 
-//Default setpoint 
+//Default setpoint
 IF PG.rVAC_SP = 0 THEN
-	PG.rVAC_SP := rDefaultVAC_SP;
+    PG.rVAC_SP := rDefaultVAC_SP;
 END_IF
 // check no div by zero
 If (iTermBits=0) THEN iTermBits := 30518;END_IF
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
 IF rV >=rVMin THEN
-	IF rV >= rVMin AND rV <= 1 THEN
-		PG.rPRESS := 1E-5;
-	ELSE
-		PG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-6));
-	END_IF
-	PG.xPRESS_OK := TRUE;
-	PG.eState := Valid;
+    IF rV >= rVMin AND rV <= 1 THEN
+        PG.rPRESS := 1E-5;
+    ELSE
+        PG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-6));
+    END_IF
+    PG.xPRESS_OK := TRUE;
+    PG.eState := Valid;
 ELSE
-	PG.xPRESS_OK := FALSE;
-	IF (rV = 0) THEN PG.eState := GaugeDisconnected;
-		ELSE  PG.eState := PressInvalid;
-	END_IF
+    PG.xPRESS_OK := FALSE;
+    IF (rV = 0) THEN PG.eState := GaugeDisconnected;
+        ELSE  PG.eState := PressInvalid;
+    END_IF
 END_IF
 
 (* Setpoint evaluation *)
@@ -76,27 +76,27 @@ ACT_IO();]]></ST>
     <Action Name="ACT_Logger" Id="{8202116e-e944-4d2f-9609-fb14baf15925}">
       <Implementation>
         <ST><![CDATA[
-//STATE Logger  
+//STATE Logger
 IF ePrevState <> PG.eState THEN
-	  CASE PG.eState OF
-		ValidHi:
-			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
-		ValidLo:
-			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
-		Valid:
-			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-  		GaugeDisconnected:
-			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-		PressInvalid:
-			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-		OoR:
-			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-		Starting:
-			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := PG.eState;  
+      CASE PG.eState OF
+        ValidHi:
+            fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+        ValidLo:
+            fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+        Valid:
+            fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+          GaugeDisconnected:
+            fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+        PressInvalid:
+            fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+        OoR:
+            fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+        Starting:
+            fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := PG.eState;
   END_IF
-  
+
 
 ]]></ST>
       </Implementation>
@@ -104,7 +104,7 @@ IF ePrevState <> PG.eState THEN
     <Method Name="M_SetBits" Id="{c6390781-2f32-46e3-a37b-9fd31dd0725f}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
-	TermBits : UINT; // The terminal's maximum value in bits
+    TermBits : UINT; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
       <Implementation>
