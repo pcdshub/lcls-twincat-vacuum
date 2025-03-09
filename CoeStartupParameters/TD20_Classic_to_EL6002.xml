@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='utf-8'?>
+<EtherCATMailbox>
+  <CoE>
+    <InitCmds>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Baudrate</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32768</Index>
+        <SubIndex>17</SubIndex>
+        <Data>07</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Baudrate</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32784</Index>
+        <SubIndex>17</SubIndex>
+        <Data>07</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Enable RTS/CTS</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32768</Index>
+        <SubIndex>1</SubIndex>
+        <Data>00</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Data frame</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32768</Index>
+        <SubIndex>21</SubIndex>
+        <Data>04</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Enable RTS/CTS</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32784</Index>
+        <SubIndex>1</SubIndex>
+        <Data>00</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Data frame</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32784</Index>
+        <SubIndex>21</SubIndex>
+        <Data>04</Data>
+      </InitCmd>
+    </InitCmds>
+  </CoE>
+</EtherCATMailbox>

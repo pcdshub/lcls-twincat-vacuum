@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <POU Name="FB_TD400Transaction" Id="{b13d3f4b-702d-4036-a058-451e63b07b9c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TD400Transaction
+VAR_INPUT
+    /// rising edge execute
+    i_xExecute: BOOL;
+    /// RS-485 Addrress of Pump, 0 if RS-232
+    i_bAddress: BYTE;
+    /// PKE Parameter number and type of access
+    i_wPKE: WORD;
+    /// IND Parameter index
+    i_bIND: BYTE;
+    /// PWE Parameter value
+    i_dwPWE: DWORD;
+    /// Control Word
+    i_wControlWord: WORD;
+    /// Maximum wait time for reply
+    i_tTimeOut: TIME := TIME#1s0ms;
+END_VAR
+VAR_OUTPUT
+    q_xDone: BOOL;
+    q_xError: BOOL;
+    q_xTimeout: BOOL;
+    q_sResult: STRING(MAX_STRING_LENGTH);
+    /// Sent data
+    q_abSendData: ARRAY[0..23] OF BYTE;
+    /// Received Data data
+    q_abResponseData: ARRAY[0..23] OF BYTE;
+    /// Received PKE
+    q_wPKE: WORD;
+    /// Received PWE
+    q_dwPWE: DWORD;
+    /// Received Status Word
+    q_wStatusWord: WORD;
+    /// Current stator frequency
+    q_wFrequency_P3: WORD;
+    /// Current intermediate circuit voltage
+    q_wVoltage_P4: WORD;
+    /// Current motor current
+    q_wMotorCurrent_P5: WORD;
+    /// Current frequency converter temperature
+    q_wConverterTemp_P11: WORD;
+    /// Current pump temperature
+    q_wPumpTemp_P127: WORD;
+    /// Last Byte Sequence Sent to Serial Device - for debugging
+    q_abLastSentArray: ARRAY[0..23] OF BYTE;
+    /// Last Byte Sequence Received from Serial Device - for debugging
+    q_abLastReceivedArray: ARRAY[0..23] OF BYTE;
+END_VAR
+VAR_IN_OUT
+    iq_stSerialRXBuffer: ComBuffer;
+    iq_stSerialTXBuffer: ComBuffer;
+END_VAR
+VAR
+    rtExecute: R_TRIG;
+    iStep: INT;
+    fbClearComBuffer: ClearComBuffer;
+    tonTimeout: TON;
+    wTemp: WORD;
+    dwTemp: DWORD;
+    i: INT;
+    fbSendData: SendData;
+    fbReceiveData: ReceiveData;
+    bRXChecksum: BYTE;
+    bRXAddress: BYTE;
+    nPrefix : BYTE := 16#02;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This function block performs serial transactions with an Oerlikon TD20 *)
+
+(* rising edge trigger *)
+rtExecute(CLK:= i_xExecute);
+IF rtExecute.Q THEN
+    q_xDone	:= FALSE;
+    q_xError := FALSE;
+    q_xTimeout := FALSE;
+    q_sResult:= '';
+    MEMSET(destAddr:=ADR(q_abSendData), fillByte:=0, n:=SIZEOF(q_abSendData));
+    MEMSET(destAddr:=ADR(q_abResponseData), fillByte:=0, n:=SIZEOF(q_abResponseData));
+    iStep := 10;
+END_IF
+
+CASE iStep OF
+    0:
+        ; (* idle *)
+
+    10: (* clear com buffers *)
+        fbClearComBuffer(Buffer:= iq_stSerialRXBuffer);
+        fbClearComBuffer(Buffer:= iq_stSerialTXBuffer);
+
+        (* build the send data *)
+        (* byte 0 STX *)
+        q_abSendData[0] := 2; (* STX *)
+
+        (* byte 1 LGE - Length *)
+        q_abSendData[1] := 22;
+
+        (* byte 2 ADR - Address for RS-485, use 0 for RS-232 *)
+        q_abSendData[2] := i_bAddress;
+
+        (* bytes 3-4 PKE - Parameter Number and Type of Access *)
+        wTemp :=  HOST_TO_BE16(i_wPKE);
+        MEMCPY(destAddr:= ADR(q_abSendData[3]), srcAddr:=ADR(wTemp), n:=2);
+
+        (* byte 5 is reserved *)
+        (* byte 6 IND - Parameter index *)
+        q_abSendData[6] := i_bIND;
+
+        (* bytes 7-10 - Parameter Value *)
+        dwTemp := HOST_TO_BE32(i_dwPWE);
+        MEMCPY(destAddr:= ADR(q_abSendData[7]), srcAddr:=ADR(dwTemp), n:=4);
+
+        (* bytes 11-12 - control word *)
+        wTemp :=  HOST_TO_BE16(i_wControlWord);
+        MEMCPY(destAddr:= ADR(q_abSendData[11]), srcAddr:=ADR(wTemp), n:=2);
+
+        (* rest of the bytes for any read or write are 0 *)
+        (* generate checksum *)
+        q_abSendData[23] := F_CalcTD20Checksum(i_abData:=q_abSendData);
+
+        (* send the data *)
+        fbSendData(
+            pSendData:= ADR(q_abSendData),
+            Length:= 24,
+            TXbuffer:= iq_stSerialTXBuffer);
+
+
+        q_abLastSentArray := q_abSendData;
+        iStep := iStep + 10;
+
+    20: (* Finish sending the data *)
+        IF fbSendData.Busy THEN
+            fbSendData( TXbuffer:= iq_stSerialTXBuffer );
+        ELSIF fbSendData.Error <> 0 THEN
+            q_sResult := CONCAT('In step 20 fbSendData resulted in error: ', INT_TO_STRING(fbSendData.Error));
+            iStep := 9000;
+        ELSIF NOT fbSendData.Busy THEN
+            iStep := iStep + 10;
+        END_IF
+        (* Reset receive *)
+        fbReceiveData(
+            pReceiveData:= ADR(q_abResponseData),
+            Reset:= TRUE,
+            RXbuffer:= iq_stSerialRXBuffer);
+        tonTimeout(IN:= FALSE);
+
+    30: (* Get reply *)
+        fbReceiveData(
+            pReceiveData:= ADR(q_abResponseData),
+            SizeReceiveData:= 24,
+            Timeout:= i_tTimeOut,
+            Reset:= FALSE,
+            RXbuffer:= iq_stSerialRXBuffer,
+            pPrefix := ADR(nPrefix), LenPrefix:=1 );
+        tonTimeout(IN:= TRUE, PT:= i_tTimeOut);
+        IF fbReceiveData.Error <> 0 THEN
+            q_sResult := CONCAT('In step 30 fbReceiveData resulted in error: ', INT_TO_STRING(fbReceiveData.Error));
+            iStep := 9000;
+        ELSIF fbReceiveData.RxTimeout OR tonTimeout.Q THEN
+            q_sResult := 'Device failed to reply within timeout period';
+            q_xTimeout := TRUE;
+            iStep := 9000;
+        ELSIF fbReceiveData.DataReceived THEN
+            q_abLastReceivedArray := q_abResponseData;
+            bRXChecksum := F_CalcTD400Checksum(q_abResponseData);
+            bRXAddress := q_abResponseData[2];
+            MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[3]), n:=2);
+            q_wPKE := BE16_TO_HOST(wTemp);
+            MEMCPY(destAddr:=ADR(dwTemp) , srcAddr:=ADR(q_abResponseData[7]), n:=4);
+            q_dwPWE := BE32_TO_HOST(dwTemp);
+
+            IF bRXChecksum <> q_abResponseData[23] THEN
+                q_sResult := 'Invalid checksum on received data.';
+                iStep := 9000;
+            ELSIF i_bAddress <> bRXAddress THEN
+                q_sResult := 'Invalid unit address on received data.';
+                iStep := 9000;
+            ELSIF (q_wPKE AND 16#F000) = 2#0111000000000000 THEN
+                q_sResult := 'Frequency converter cannot run the command.';
+                iStep := 9000;
+            ELSIF (Q_wPKE AND 16#F000) = 2#1000000000000000 THEN
+                q_sResult := 'During write access: no permission to write.';
+                iStep := 9000;
+            ELSE
+                MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[11]), n:=2);
+                q_wStatusWord := BE16_TO_HOST(wTemp);
+                MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[13]), n:=2);
+                q_wFrequency_P3:= BE16_TO_HOST(wTemp);
+                MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[21]), n:=2);
+                q_wVoltage_P4:= BE16_TO_HOST(wTemp);
+                MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[17]), n:=2);
+                q_wMotorCurrent_P5:= BE16_TO_HOST(wTemp);
+                MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[15]), n:=2);
+                q_wConverterTemp_P11:= BE16_TO_HOST(wTemp);
+                MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[19]), n:=2);
+                q_wPumpTemp_P127:= BE16_TO_HOST(wTemp);
+                q_sResult := 'Success.';
+                q_xDone:= TRUE;
+                iStep := 100;
+            END_IF
+        END_IF
+
+    100: (* done *)
+        IF  i_xExecute = FALSE THEN
+            q_xDone:= FALSE;
+            iStep := 0;
+        END_IF
+
+    9000:
+        q_wPKE:= 0;
+        q_dwPWE:= 0;
+        q_wStatusWord:= 0;
+        q_wFrequency_P3:= 0;
+        q_wVoltage_P4:= 0;
+        q_wMotorCurrent_P5:= 0;
+        q_wConverterTemp_P11:= 0;
+        q_wPumpTemp_P127:= 0;
+        q_xError := TRUE;
+
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
