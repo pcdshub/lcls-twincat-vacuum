@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_MKS248" Id="{dcc23c7e-d235-4f95-baec-6ff95237a2bd}" SpecialFunc="None">
     <Declaration><![CDATA[(* MKS248 valve using MKS1249 Drive Module *)
 FUNCTION_BLOCK FB_MKS248
@@ -58,17 +58,25 @@ ACT_IO();]]></ST>
 q_iRawPosition := iq_stVFN.q_iRawPosition;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_MKS248">
-      <LineId Id="9" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="93" Count="21" />
-      <LineId Id="70" Count="1" />
-      <LineId Id="69" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS248.ACT_IO">
-      <LineId Id="2" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
+    <Method Name="M_SetControlMode" Id="{94c2fc45-3191-4410-8db4-8bf31f50a35d}">
+      <Declaration><![CDATA[METHOD PUBLIC M_SetControlMode
+VAR_INPUT
+	i_eValveControlMode	:	E_VCN;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stVFN.eValveControl := i_eValveControlMode;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetReqPosition" Id="{f3548ad6-1dd0-4cbe-94ae-ffaa7c334e0f}">
+      <Declaration><![CDATA[METHOD PUBLIC M_SetReqPosition
+VAR_INPUT
+	i_fReqPosition : REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stVFN.rReqPosition := i_fReqPosition;]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>

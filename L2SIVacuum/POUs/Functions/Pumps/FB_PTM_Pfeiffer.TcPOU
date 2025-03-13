@@ -162,6 +162,15 @@ IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
 END_IF;]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_ResetFault" Id="{b53775c9-95bb-4a89-ab47-0da91c45346e}">
+      <Declaration><![CDATA[METHOD PUBLIC M_ResetFault
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stPTM.xResetSW := TRUE;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Run" Id="{2c4aa976-1aba-482a-991c-f510aadc9928}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
@@ -236,6 +245,26 @@ IF ( iq_stPTM.i_dSetSpd <>0) THEN
 	st_Pfeiffer_CTRL.iSetRotationSpeed_707 := LIMIT(20, st_Pfeiffer_CTRL.iSetRotationSpeed_707 ,100); // Manual Page 18
 END_IF
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetBackingSP" Id="{a5df0061-e4fb-441a-a9e9-98e9e90ee6b0}">
+      <Declaration><![CDATA[METHOD PUBLIC M_SetBackingSP
+VAR_INPUT
+	i_fBackingPressureSP : REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stPTM.rBackingPressureSP := i_fBackingPressureSP;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetForelineSP" Id="{157f114f-64d3-46b9-ada2-19219f6cb020}">
+      <Declaration><![CDATA[METHOD PUBLIC M_SetForelineSP
+VAR_INPUT
+	i_fForelinePressureSP : REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stPTM.rForelineSP := i_fForelinePressureSP;]]></ST>
       </Implementation>
     </Method>
   </POU>

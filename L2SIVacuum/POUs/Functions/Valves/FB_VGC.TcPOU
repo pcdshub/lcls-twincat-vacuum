@@ -542,6 +542,15 @@ END_VAR
         <ST><![CDATA[M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_ResetError" Id="{9b051dc0-46e9-4a16-a643-de0183e01cae}">
+      <Declaration><![CDATA[METHOD PUBLIC M_ResetError
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stValve.pv_xAlmRst := TRUE;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_Set_OPN_SW" Id="{f6195612-456a-4d04-8760-e32635972cb2}">
       <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
 METHOD PUBLIC M_Set_OPN_SW : BOOL
@@ -551,6 +560,26 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetAtVacSP" Id="{fedb56ad-55c5-4e50-8a6a-abbe32a177c8}">
+      <Declaration><![CDATA[METHOD PUBLIC M_SetAtVacSP
+VAR_INPUT
+	i_fAtVacSP : REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stValve.rAT_VAC_SP := i_fAtVacSP;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SetAtVacSPHys" Id="{25169fe7-7e44-4802-8883-a3fa1b00ee79}">
+      <Declaration><![CDATA[METHOD PUBLIC M_SetAtVacSPHys
+VAR_INPUT
+	i_fAtVacSPHys : REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[iq_stValve.rAT_VAC_HYS := i_fAtVacSPHys;]]></ST>
       </Implementation>
     </Method>
   </POU>
