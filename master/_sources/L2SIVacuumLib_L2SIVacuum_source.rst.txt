@@ -5931,8 +5931,23 @@ FB_MKS248
     q_iRawPosition := iq_stVFN.q_iRawPosition;
     END_ACTION
 
+    METHOD PUBLIC M_SetControlMode
+    VAR_INPUT
+    	i_eValveControlMode	:	E_VCN;
+    END_VAR
+    iq_stVFN.eValveControl := i_eValveControlMode;
+    END_METHOD
+
+    METHOD PUBLIC M_SetReqPosition
+    VAR_INPUT
+    	i_fReqPosition : REAL;
+    END_VAR
+    iq_stVFN.rReqPosition := i_fReqPosition;
+    END_METHOD
+
 
 Related:
+    * `E_VCN`_
     * `ST_VCN`_
 
 
@@ -9907,6 +9922,20 @@ FB_PTM_Pfeiffer
     END_IF
     END_METHOD
 
+    METHOD PUBLIC M_SetBackingSP
+    VAR_INPUT
+    	i_fBackingPressureSP : REAL;
+    END_VAR
+    iq_stPTM.rBackingPressureSP := i_fBackingPressureSP;
+    END_METHOD
+
+    METHOD PUBLIC M_SetForelineSP
+    VAR_INPUT
+    	i_fForelinePressureSP : REAL;
+    END_VAR
+    iq_stPTM.rForelineSP := i_fForelinePressureSP;
+    END_METHOD
+
 
 Related:
     * `FB_Pump`_
@@ -10205,6 +10234,20 @@ FB_PTM_TurboDrive
     //iq_stPTM.i_xFault := i_st_TD20_RBK.wStatusWord.3;
     iq_stPTM.i_xTempFault := i_st_TD20_RBK.wStatusWord.7; (* specified as a temperature warning but it could be a fault *)
     iq_stPTM.i_xWarn := i_st_TD20_RBK.wStatusWord.14; (* warning summary bit *)
+    END_METHOD
+
+    METHOD PUBLIC M_SetBackingSP
+    VAR_INPUT
+    	i_fBackingPressureSP : REAL;
+    END_VAR
+    iq_stPtm.rBackingPressureSP := i_fBackingPressureSP;
+    END_METHOD
+
+    METHOD PUBLIC M_SetForelineSPS
+    VAR_INPUT
+    	i_fForelinePressureSP : REAL;
+    END_VAR
+    iq_stPtm.rForelineSP := i_fForelinePressureSP;
     END_METHOD
 
 
@@ -13586,6 +13629,20 @@ FB_VGC
     		value:BOOL;
     END_VAR
     This^.iq_stValve.pv_xOPN_SW := value;
+    END_METHOD
+
+    METHOD PUBLIC M_SetAtVacSP
+    VAR_INPUT
+    	i_fAtVacSP : REAL;
+    END_VAR
+    iq_stValve.rAT_VAC_SP := i_fAtVacSP;
+    END_METHOD
+
+    METHOD PUBLIC M_SetAtVacSPHys
+    VAR_INPUT
+    	i_fAtVacSPHys : REAL;
+    END_VAR
+    iq_stValve.rAT_VAC_HYS := i_fAtVacSPHys;
     END_METHOD
 
 
