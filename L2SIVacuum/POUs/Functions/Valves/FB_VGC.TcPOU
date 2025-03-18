@@ -542,15 +542,6 @@ END_VAR
         <ST><![CDATA[M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_ResetError" Id="{9b051dc0-46e9-4a16-a643-de0183e01cae}">
-      <Declaration><![CDATA[METHOD PUBLIC M_ResetError
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[iq_stValve.pv_xAlmRst := TRUE;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="M_Set_OPN_SW" Id="{f6195612-456a-4d04-8760-e32635972cb2}">
       <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
 METHOD PUBLIC M_Set_OPN_SW : BOOL

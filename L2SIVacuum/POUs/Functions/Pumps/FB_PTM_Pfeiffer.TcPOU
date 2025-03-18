@@ -162,15 +162,6 @@ IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
 END_IF;]]></ST>
       </Implementation>
     </Action>
-    <Method Name="M_ResetFault" Id="{b53775c9-95bb-4a89-ab47-0da91c45346e}">
-      <Declaration><![CDATA[METHOD PUBLIC M_ResetFault
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[iq_stPTM.xResetSW := TRUE;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="M_Run" Id="{2c4aa976-1aba-482a-991c-f510aadc9928}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
