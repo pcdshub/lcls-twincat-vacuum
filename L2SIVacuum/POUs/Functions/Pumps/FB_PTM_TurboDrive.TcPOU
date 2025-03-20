@@ -190,7 +190,7 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="M_SetForelineSP" Id="{f4ff84d2-f083-48f5-8918-754ad96e89ec}">
-      <Declaration><![CDATA[METHOD PUBLIC M_SetForelineSPS
+      <Declaration><![CDATA[METHOD PUBLIC M_SetForelineSP
 VAR_INPUT
 	i_fForelinePressureSP : REAL;
 END_VAR
