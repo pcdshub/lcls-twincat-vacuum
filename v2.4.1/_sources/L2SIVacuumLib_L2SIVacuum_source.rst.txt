@@ -10243,7 +10243,7 @@ FB_PTM_TurboDrive
     iq_stPtm.rBackingPressureSP := i_fBackingPressureSP;
     END_METHOD
 
-    METHOD PUBLIC M_SetForelineSPS
+    METHOD PUBLIC M_SetForelineSP
     VAR_INPUT
     	i_fForelinePressureSP : REAL;
     END_VAR
