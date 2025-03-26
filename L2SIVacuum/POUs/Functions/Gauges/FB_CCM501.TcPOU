@@ -66,18 +66,18 @@ If (iTermBits=0) THEN iTermBits := 30518;END_IF
 rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 
 (* Set Guage State based on the Analog voltage*)
-
-(* Set Guage State based on the Analog voltage*)
-
-IF rV <= vDisconnected AND IG.i_xHV_ON and IG.q_xHV_DIS THEN
+IF rV <= vDisconnected AND IG.i_xHV_ON AND IG.q_xHV_DIS THEN
 	IG.eState := ValidLo;
 	IG.rPRESS := rMinPressure;
-ELSIF rV <= vDisconnected AND Not IG.i_xHV_ON and IG.q_xHV_DIS THEN
+ELSIF rV <= vDisconnected AND NOT IG.i_xHV_ON AND IG.q_xHV_DIS THEN
 	IG.eState := GaugeDisconnected;
 	IG.rPRESS := cDefaultPressure;
-ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) AND IG.i_xHV_ON and IG.q_xHV_DIS   THEN
+ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) AND IG.i_xHV_ON AND IG.q_xHV_DIS THEN
 	IG.eState := Valid;
 	IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV*vBase)- vTorr)));
+ELSIF rV >= (vGaugeOff -rDeadband) AND IG.i_xHV_ON AND IG.q_xHV_DIS THEN
+	IG.eState := Starting;
+	IG.rPRESS := cDefaultPressure;
 ELSIF rV >= (vGaugeOff -rDeadband) THEN
 	IG.eState := Off;
 	IG.rPRESS := cDefaultPressure;
@@ -111,15 +111,13 @@ END_IF
 
 
 (* Pressure gauge OK checks *)
-
 GaugeTurnOnTmr(IN:=IG.q_xHV_DIS, PT:=T#10S, Q=>IG.xTurnOnTime);
 
-
 //Backwards compatibility
-IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
+IG.xPRESS_OK := (IG.eState = Valid) OR (IG.eState = ValidLo) OR IG.xBAKEOUT;
 
 (* Setpoint evaluation *)
-IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid) ;
+IG.xAT_VAC := IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP);
 
 ACT_Logger();
 (*Soft IO Linking*)
@@ -276,54 +274,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_CCM501">
-      <LineId Id="3" Count="0" />
-      <LineId Id="218" Count="4" />
-      <LineId Id="214" Count="3" />
-      <LineId Id="4" Count="3" />
-      <LineId Id="105" Count="0" />
-      <LineId Id="128" Count="0" />
-      <LineId Id="106" Count="0" />
-      <LineId Id="193" Count="2" />
-      <LineId Id="199" Count="14" />
-      <LineId Id="24" Count="16" />
-      <LineId Id="229" Count="0" />
-      <LineId Id="42" Count="2" />
-      <LineId Id="228" Count="0" />
-      <LineId Id="45" Count="17" />
-      <LineId Id="122" Count="0" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="225" Count="1" />
-      <LineId Id="224" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CCM501.ACT_Logger">
-      <LineId Id="2" Count="35" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CCM501.ACT_Persistent">
-      <LineId Id="2" Count="0" />
-      <LineId Id="28" Count="37" />
-      <LineId Id="26" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CCM501.ACT_Recover">
-      <LineId Id="2" Count="7" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CCM501.IO">
-      <LineId Id="2" Count="6" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CCM501.M_HVE">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CCM501.M_Recover">
-      <LineId Id="6" Count="1" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_CCM501.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
