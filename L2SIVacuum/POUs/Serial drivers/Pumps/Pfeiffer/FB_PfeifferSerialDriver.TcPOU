@@ -1,0 +1,563 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_PfeifferSerialDriver" Id="{ae4993b2-9a7a-48a9-a98a-cb5b06b3f43a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PfeifferSerialDriver
+VAR_INPUT
+    /// rising edge execute
+    i_xExecute: BOOL;
+    /// Maximum wait time for reply
+    i_tTimeOut: TIME := TIME#1s0ms;
+    i_stControl: ST_PfeifferControl;
+END_VAR
+VAR_OUTPUT
+    q_xDone: BOOL;
+    q_xError: BOOL;
+    q_xTimeout: BOOL;
+    q_sResult: STRING(255);
+    /// Last String Sent to Serial Device - for debugging
+    q_sLastSentString: STRING;
+    /// Last String Received from Serial Device - for debugging
+    q_sLastReceivedString: STRING;
+    q_stStatus: ST_PfeifferStatus;
+END_VAR
+VAR_IN_OUT
+    iq_stSerialRXBuffer: ComBuffer;
+    iq_stSerialTXBuffer: ComBuffer;
+END_VAR
+VAR
+    rtExecute: R_TRIG;
+    iStep: INT;
+    sSendData: STRING;
+    fbPfeifferTransaction: FB_PfeifferTransaction;
+    fbFormatString: FB_FormatString;
+    diOldSetRotationSpeed_707 :DINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This function block performs serial transactions with a Pfeiffer RC400 Pump controller *)
+
+IF NOT i_stControl.xEnableComm THEN
+    _A_ClearStatus();
+END_IF
+
+(* rising edge trigger *)
+rtExecute(CLK:= i_xExecute);
+IF rtExecute.Q  THEN
+    q_xDone	:= FALSE;
+    q_xError := FALSE;
+    q_sResult:= '';
+    IF  i_stControl.xEnableComm THEN
+        a_ClearTrans();  (* to provide rising edge for execute *)
+        iStep := 10;
+    ELSE
+        q_sResult := 'Communication not enabled';
+        iStep := 8000;
+    END_IF
+END_IF
+
+
+CASE iStep OF
+    0: (* idle *)
+        ;
+
+    (* Get all statuses *)
+    10: (* Pumping Station *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 10;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 10 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = '000000' OR fbPfeifferTransaction.q_sResponseData = '111111' THEN
+                q_stStatus.xPumpingStation_010 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 10;
+            ELSE
+                q_sResult := CONCAT('In step 10 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF
+
+    20: (* Gas Mode *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 27;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 20 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            q_stStatus.iGasMode_027 := STRING_TO_INT( fbPfeifferTransaction.q_sResponseData);
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := iStep + 10;
+        END_IF
+
+    30: (* Error Code *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 303;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 30 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            q_stStatus.sErrorCode_303 := fbPfeifferTransaction.q_sResponseData;
+            IF LEFT(q_stStatus.sErrorCode_303, 3) = 'Err' THEN
+                q_stStatus.iErrorCode_303 := STRING_TO_INT(	RIGHT(q_stStatus.sErrorCode_303, 3) );
+                q_stStatus.iWarningCode_303 := 0;
+            ELSIF LEFT(q_stStatus.sErrorCode_303, 3) = 'Wrn' THEN
+                q_stStatus.iWarningCode_303 := STRING_TO_INT(	RIGHT(q_stStatus.sErrorCode_303, 3) );
+                q_stStatus.iErrorCode_303 := 0;
+            ELSIF q_stStatus.sErrorCode_303 = '000000' THEN
+                q_stStatus.iErrorCode_303 := q_stStatus.iWarningCode_303 := 0;
+            END_IF
+
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := iStep + 10;
+        END_IF
+
+    40: (* Excess Temperature Pump *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 305;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 40 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = '000000' OR fbPfeifferTransaction.q_sResponseData = '111111' THEN
+                q_stStatus.xExcessTempPump_305 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 10;
+            ELSE
+                q_sResult := CONCAT('In step 40 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF
+
+    50: (* Rotation Speed Attained *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 306;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 50 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = '000000' OR fbPfeifferTransaction.q_sResponseData = '111111' THEN
+                q_stStatus.xRotationSpeedAttn_306 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 10;
+            ELSE
+                q_sResult := CONCAT('In step 50 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF
+
+    60: (* Pump Accelerating *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 307;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 60 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = '000000' OR fbPfeifferTransaction.q_sResponseData = '111111' THEN
+                q_stStatus.xPumpAccelerating_307 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 10;
+            ELSE
+                q_sResult := CONCAT('In step 60 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF
+
+    70: (* Acitve Rotation Speed *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 309;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 70 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            q_stStatus.diActiveRotationSpeed_309 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := iStep + 1;
+        END_IF
+
+    71: (* Electronics Temp *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 326;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 71 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            q_stStatus.diTempElec_326 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := iStep + 1;
+        END_IF
+
+    72: (* Bottom of Pump Temp *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 330;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 72 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            q_stStatus.diTempPmpBot_330 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := iStep + 1;
+        END_IF
+
+    73: (* Temp bearing *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 342;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 73 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            q_stStatus.diTempBearng_342 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := iStep + 1;
+        END_IF
+
+
+    74: (* Temp motor *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 346;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 74 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            q_stStatus.diTempMotor_346 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := 80;
+        END_IF
+
+    80: (* Drive Current *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 310;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 80 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            q_stStatus.lrDriveCurrent_310 := STRING_TO_LREAL( fbPfeifferTransaction.q_sResponseData)/100.0;
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := iStep + 10;
+        END_IF
+
+    90: (* Drive Power *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 316;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 90 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            q_stStatus.diDrivePower_316 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := 91;
+        END_IF
+
+    91: (* Check Power Consumption Limit *)
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= FALSE;
+            fbPfeifferTransaction.i_iParameterNum:= 708;
+            fbPfeifferTransaction.i_iDataLength:= 2;
+            fbPfeifferTransaction.i_sSendData:= '=?';
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 91 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            q_stStatus.uiPowerPct_708 := STRING_TO_UINT( fbPfeifferTransaction.q_sResponseData);
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := 8000;// this step not tested 110; // was 5000, but we don't want to control via serial but via PLC IO, just write the pump speed
+        END_IF
+
+    100:
+        (*IF (i_stControl.iSetRotationSpeed_707 <> diOldSetRotationSpeed_707) AND ( i_stControl.iSetRotationSpeed_707 <> 0)  THEN
+            diOldSetRotationSpeed_707 := i_stControl.iSetRotationSpeed_707;
+            iStep := 110;
+        ELSE
+            q_sResult := 'Success';
+            iStep := 8000;// maybe should be 5000
+        END_IF*)
+
+    110: (* Set  SpdSetMode: Rotation speed setting mode*)
+        IF i_stControl.xSetSpdMode_026 THEN
+            sSendData := '001';
+        ELSE
+            sSendData := '000';
+        END_IF
+            //i_stControl.iSetSpdMode_026:=1;
+            //fbFormatString( sFormat:= '%.3u', arg1:= F_INT(i_stControl.iSetSpdMode_026), sOut => sSendData);
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= TRUE;
+            fbPfeifferTransaction.i_iParameterNum:= 26;
+            fbPfeifferTransaction.i_iDataLength:= 3;
+            fbPfeifferTransaction.i_sSendData:= sSendData;
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 110 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                q_stStatus.iSetSpdMode_026 := STRING_TO_INT(fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 120;
+            ELSE
+                q_sResult := CONCAT('In step 110 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF
+
+    120:(* Update Pump Speed *) (* SpdSVal % Set value in rot. speed setting mode *)
+            i_stControl.iSetRotationSpeed_707 := i_stControl.iSetRotationSpeed_707 *100; //Datatype 2
+            fbFormatString( sFormat:= '%.6u', arg1:= F_INT(i_stControl.iSetRotationSpeed_707), sOut => sSendData);
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= TRUE;
+            fbPfeifferTransaction.i_iParameterNum:= 707;
+            fbPfeifferTransaction.i_iDataLength:= 6;
+            fbPfeifferTransaction.i_sSendData:= sSendData;
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 120 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+            q_stStatus.iSetRotationSpeed_707 := STRING_TO_INT( fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 8000;
+            ELSE
+                q_sResult := CONCAT('In step 120 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF
+
+
+    130: (* Set  SpdSetMode: Rotation speed setting mode Off*)
+        (*	i_stControl.iSetSpdMode_026:=0;
+            fbFormatString( sFormat:= '%.3u', arg1:= F_INT(i_stControl.iSetSpdMode_026), sOut => sSendData);
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= TRUE;
+            fbPfeifferTransaction.i_iParameterNum:= 26;
+            fbPfeifferTransaction.i_iDataLength:= 3;
+            fbPfeifferTransaction.i_sSendData:= sSendData;
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 110 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                q_stStatus.iSetSpdMode_026 := STRING_TO_INT(fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 100;
+            ELSE
+                q_sResult := CONCAT('In step 110 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF*)
+
+    5000:(* Check Status vs. requested parameters, set iff necessary *)
+        IF i_stControl.xErrorAck_009 THEN
+            iStep := 5030;
+        ELSIF i_stControl.xPumpingStation_010 <> q_stStatus.xPumpingStation_010 THEN
+            //iStep := 5010; Done through the PLC DIO
+        ELSIF  i_stControl.iGasMode_027 <> q_stStatus.iGasMode_027 THEN
+            iStep := 5020;
+        ELSIF i_stControl.xMotorPump_023 <> q_stStatus.xMotorPump_023 THEN
+            //iStep := 5011;  Done through the PLC DIO
+        ELSIF i_stControl.uiPowerPct_708 <> q_stStatus.uiPowerPct_708 THEN
+            iStep := 5012;
+        ELSE
+            q_sResult := 'Success';
+            iStep := 8000;
+        END_IF
+
+    5010: (* Update Pumping Station *)
+        IF i_stControl.xPumpingStation_010 THEN
+            sSendData := '111111';
+        ELSE
+            sSendData := '000000';
+        END_IF
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= TRUE;
+            fbPfeifferTransaction.i_iParameterNum:= 10;
+            fbPfeifferTransaction.i_iDataLength:= 6;
+            fbPfeifferTransaction.i_sSendData:= sSendData;
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 5010 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                q_stStatus.xPumpingStation_010 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 5000;
+            ELSE
+                q_sResult := CONCAT('In step 5010 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF
+
+    5011: (* Update Pump Motor *)
+        IF i_stControl.xMotorPump_023 THEN
+            sSendData := '111111';
+        ELSE
+            sSendData := '000000';
+        END_IF
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= TRUE;
+            fbPfeifferTransaction.i_iParameterNum:= 23;
+            fbPfeifferTransaction.i_iDataLength:= 6;
+            fbPfeifferTransaction.i_sSendData:= sSendData;
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 5011 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                q_stStatus.xMotorPump_023 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 5000;
+            ELSE
+                q_sResult := CONCAT('In step 5011 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF
+
+    5012: (* Update Power Consumption Percent *)
+        fbFormatString( sFormat:= '%.6u', arg1:= F_UINT(i_stControl.uiPowerPct_708), sOut => sSendData);
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= TRUE;
+            fbPfeifferTransaction.i_iParameterNum:= 708;
+            fbPfeifferTransaction.i_iDataLength:= 3;
+            fbPfeifferTransaction.i_sSendData:= sSendData;
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 5012 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                q_stStatus.uiPowerPct_708 := STRING_TO_UINT(fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 5000;
+            ELSE
+                q_sResult := CONCAT('In step 5012 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF
+
+    5020: (* Update Gas Mode *)
+        fbFormatString( sFormat:= '%.3u', arg1:= F_INT(i_stControl.iGasMode_027), sOut => sSendData);
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= TRUE;
+            fbPfeifferTransaction.i_iParameterNum:= 27;
+            fbPfeifferTransaction.i_iDataLength:= 3;
+            fbPfeifferTransaction.i_sSendData:= sSendData;
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 5020 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN
+            IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                q_stStatus.iGasMode_027 := STRING_TO_INT(fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 5000;
+            ELSE
+                q_sResult := CONCAT('In step 5020 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                iStep := 9000;
+            END_IF
+        END_IF
+
+    5030: (* Update Error Acknowledgement *)
+        IF i_stControl.xErrorAck_009 THEN
+            q_stStatus.xErrorAcknowledged := TRUE;
+            sSendData := '111111';
+        ELSE
+            sSendData := '000000';
+        END_IF
+            fbPfeifferTransaction.i_xExecute:= TRUE;
+            fbPfeifferTransaction.i_xActionCommand:= TRUE;
+            fbPfeifferTransaction.i_iParameterNum:= 9;
+            fbPfeifferTransaction.i_iDataLength:= 6;
+            fbPfeifferTransaction.i_sSendData:= sSendData;
+        IF fbPfeifferTransaction.q_xError THEN
+            q_sResult := CONCAT('in Step 5030 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+            iStep := 9000;
+        ELSIF fbPfeifferTransaction.q_xDone THEN (* Error Acknowledged *)
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 5000;
+        END_IF
+
+
+    8000: (* done *)
+        q_xDone := TRUE;
+        a_ClearTrans();  (* to provide rising edge for execute *)
+        IF  i_xExecute = FALSE THEN
+            q_xDone:= FALSE;
+            iStep := 0;
+        END_IF
+
+    9000:
+        _A_ClearStatus();
+        a_ClearTrans();  (* to provide rising edge for execute *)
+        q_xError := TRUE;
+
+END_CASE
+
+//call transaction
+fbPfeifferTransaction(
+    i_iAddress:= i_stControl.iSerialAddress,
+    i_tTimeOut:= i_tTimeOut,
+    iq_stSerialRXBuffer:= iq_stSerialRXBuffer,
+    iq_stSerialTXBuffer:= iq_stSerialTXBuffer );
+
+q_stStatus.xTimeout := fbPfeifferTransaction.q_xTimeout;
+q_sLastSentString := fbPfeifferTransaction.q_sLastSentString;
+q_sLastReceivedString := fbPfeifferTransaction.q_sLastReceivedString;]]></ST>
+    </Implementation>
+    <Action Name="_A_ClearStatus" Id="{ffd99f77-1f39-44cc-8551-4a2a6969757b}">
+      <Implementation>
+        <ST><![CDATA[q_stStatus.xPumpingStation_010 := FALSE;
+q_stStatus.iGasMode_027 := 0;
+q_stStatus.sErrorCode_303 := '';
+q_stStatus.xExcessTempPump_305 := FALSE;
+q_stStatus.xRotationSpeedAttn_306 := FALSE;
+q_stStatus.xPumpAccelerating_307 := FALSE;
+q_stStatus.diActiveRotationSpeed_309 := 0;
+q_stStatus.lrDriveCurrent_310 := 0;
+q_stStatus.diDrivePower_316 := 0;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="a_ClearTrans" Id="{d9db6876-f06d-4a00-9454-fd3e236d65de}">
+      <Implementation>
+        <ST><![CDATA[fbPfeifferTransaction.i_xExecute := FALSE;
+fbPfeifferTransaction.i_xActionCommand:= FALSE;
+fbPfeifferTransaction.i_iParameterNum:= 0;
+fbPfeifferTransaction.i_iDataLength:= 0;
+fbPfeifferTransaction.i_sSendData:= '';]]></ST>
+      </Implementation>
+    </Action>
+  </POU>
+</TcPlcObject>

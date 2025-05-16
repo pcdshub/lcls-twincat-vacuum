@@ -5,32 +5,32 @@
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
 FUNCTION_BLOCK FB_PTM_MagDriveDigital EXTENDS FB_Pump
 VAR_IN_OUT
-	
+
 END_VAR
 VAR_INPUT
-	
-	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
+
+    i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
 {attribute 'pytmc' := '
-    pv: 
-	'}
-	iq_stPtm	:	ST_LeyboldPTM;
+    pv:
+    '}
+    iq_stPtm	:	ST_LeyboldPTM;
 END_VAR
 VAR
-	xRunOk	:	BOOL;
-	tofRemoteDelay	:	TOF;
-	
-	
-	(*IO*)
-	i_xAtSpd AT%I*: BOOL; // Normaml operation when true
-	i_xFault AT%I*: BOOL; // Error NC
+    xRunOk	:	BOOL;
+    tofRemoteDelay	:	TOF;
+
+
+    (*IO*)
+    i_xAtSpd AT%I*: BOOL; // Normaml operation when true
+    i_xFault AT%I*: BOOL; // Error NC
     i_xAccel AT%I*: BOOL;
- 	i_xDecel AT%I*: BOOL;
- 	i_xWarn AT%I*: BOOL;
-	
-	q_RunDO AT%Q*: BOOL; // Start/Stop
-	q_xRemote AT%Q*: BOOL;
+     i_xDecel AT%I*: BOOL;
+     i_xWarn AT%I*: BOOL;
+
+    q_RunDO AT%Q*: BOOL; // Start/Stop
+    q_xRemote AT%Q*: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -47,25 +47,25 @@ xRunOk := iq_stPtm.xExtRunOk AND NOT iq_stPtm.i_xFault;
 
 (* Basic pump supervisory section *)
 IF xRunOk THEN
-	iq_stPtm.q_RunDO := iq_stPTM.xRunSW;
+    iq_stPtm.q_RunDO := iq_stPTM.xRunSW;
 ELSE
-	iq_stPtm.xRunSW:=FALSE;
-	iq_stPtm.q_RunDO:=FALSE;
+    iq_stPtm.xRunSW:=FALSE;
+    iq_stPtm.q_RunDO:=FALSE;
 END_IF
 
 (*Pump STATE*)
-IF iq_stPtm.i_xFault THEN 
-	iq_stPtm.eState := pumpFAULT;
+IF iq_stPtm.i_xFault THEN
+    iq_stPtm.eState := pumpFAULT;
 ELSIF iq_stPTM.i_xDecel AND NOT iq_stPtm.q_RunDO THEN
-	iq_stPtm.eState := pumpSTOPPING;
+    iq_stPtm.eState := pumpSTOPPING;
 ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
-	iq_stPtm.eState := pumpSTOPPED;
+    iq_stPtm.eState := pumpSTOPPED;
 ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO AND iq_stPTM.i_xAccel THEN
-	iq_stPtm.eState := pumpSTARTING;
+    iq_stPtm.eState := pumpSTARTING;
 ELSIF iq_stPtm.i_xAtSpd AND iq_stPtm.q_RunDO THEN
-	iq_stPtm.eState := pumpRUNNING;
-ELSE 
-	iq_stPtm.eState := pumpFAULT;
+    iq_stPtm.eState := pumpRUNNING;
+ELSE
+    iq_stPtm.eState := pumpFAULT;
 END_IF
 
 
@@ -94,26 +94,26 @@ q_xRemote := iq_stPtm.q_xRemote; // remote out]]></ST>
     </Action>
     <Action Name="ACT_Logger" Id="{9fc3f6eb-6b8f-4bd7-85d1-e8b023b1b9bf}">
       <Implementation>
-        <ST><![CDATA[//STATE Logger  
+        <ST><![CDATA[//STATE Logger
 IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
- 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+         fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);
 END_IF
 
 
 IF ePrevState <> iq_stPTM.eState THEN
-	  CASE iq_stPTM.eState OF
-		pumpFAULT:
-			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
-  		pumpSTOPPED:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
-		pumpSTARTING:
-			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
-		pumpRUNNING:
-			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := iq_stPTM.eState;  
+      CASE iq_stPTM.eState OF
+        pumpFAULT:
+            fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+          pumpSTOPPED:
+            fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+        pumpSTARTING:
+            fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+        pumpRUNNING:
+            fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := iq_stPTM.eState;
   END_IF
-  
+
 // ILK logger
 
 
@@ -134,28 +134,28 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
-	SUPER^.bRestorePersistentData	:= FALSE;
-	IF (rBackingPressureSP <> 0) THEN
-		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
-	END_IF;
-	IF (rInletPressureSP <> 0) THEN
-		iq_stPTM.rInletPressureSP := rInletPressureSP;
-	END_IF;
+    SUPER^.bRestorePersistentData	:= FALSE;
+    IF (rBackingPressureSP <> 0) THEN
+        iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    END_IF;
+    IF (rInletPressureSP <> 0) THEN
+        iq_stPTM.rInletPressureSP := rInletPressureSP;
+    END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
-	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+    rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
 END_IF;
 
 IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
-	rInletPressureSP := iq_stPTM.rInletPressureSP;
+    rInletPressureSP := iq_stPTM.rInletPressureSP;
 END_IF;]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_Run" Id="{4e6dd218-abd9-4d84-a501-462a869b0829}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
-	run:bool; // set to true to run, false to stop;
+    run:bool; // set to true to run, false to stop;
 END_VAR
 ]]></Declaration>
       <Implementation>

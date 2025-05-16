@@ -1,106 +1,106 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_VCN_VAT590" Id="{4758ecab-cc0c-4c37-8981-9d3a1c0c082a}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function implements the Basic functions for the VAT590 needle valve*)
 FUNCTION_BLOCK FB_VCN_VAT590 EXTENDS FB_Valve
 VAR_INPUT
-	bExtIlkOK : BOOL;        // External Interlock, SET to TRUE if not used
-	IG : ST_VG;              // Input from a cold cathode gauge used in control loop
+    bExtIlkOK : BOOL;        // External Interlock, SET to TRUE if not used
+    IG : ST_VG;              // Input from a cold cathode gauge used in control loop
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv:
-	'}
-	stVcnVat590	: ST_VCN_VAT590;       // Needle valve VAT590 structure
+    '}
+    stVcnVat590	: ST_VCN_VAT590;       // Needle valve VAT590 structure
 END_VAR
 VAR CONSTANT
-	cOpenPosition : REAL := 1E+5;      // Default position setpoint upper scale value
-	cClosePosition : REAL := 0.0;      // Default position setpoint lower scale value
-	cPresSPUpLim : REAL := 1E+6;       // Default pressure setpoint upper scale value
-	cPresSPLowLim : REAL := 0;         // Default pressure setpoint lower scale value
-	cMinPress : REAL := 1e-11;         // Default Min. pressure in Torr that can be used and requested
-	cMaxPress : REAL := 1e-2;          // Default Max. pressure in Torr that can be used and requested
-	cBasePress : REAL := 1E-11;        // Pressure sensor base value
-	cPressRawSlope : REAL := 1E+5;     // Slope (in Units per decade) used for conversion of pressure in Torr to valve External Digital pressure sensor 1 input raw value (0-1000000)
-	cPressRawBase : REAL := 1E+5;      // Valve analog output base(in Units per decade) defined for how much the curve is shifted
+    cOpenPosition : REAL := 1E+5;      // Default position setpoint upper scale value
+    cClosePosition : REAL := 0.0;      // Default position setpoint lower scale value
+    cPresSPUpLim : REAL := 1E+6;       // Default pressure setpoint upper scale value
+    cPresSPLowLim : REAL := 0;         // Default pressure setpoint lower scale value
+    cMinPress : REAL := 1e-11;         // Default Min. pressure in Torr that can be used and requested
+    cMaxPress : REAL := 1e-2;          // Default Max. pressure in Torr that can be used and requested
+    cBasePress : REAL := 1E-11;        // Pressure sensor base value
+    cPressRawSlope : REAL := 1E+5;     // Slope (in Units per decade) used for conversion of pressure in Torr to valve External Digital pressure sensor 1 input raw value (0-1000000)
+    cPressRawBase : REAL := 1E+5;      // Valve analog output base(in Units per decade) defined for how much the curve is shifted
 
-	cPressCtrl : ST_CoEIndSub := (nIndex := 16#2199, nSubIndex := 0); // Selected pressure controller CoE register
-	cSensorDelay_AD : ST_CoEIndSub := (nIndex := 16#219A, nSubIndex := 0); // Adaptive DS controller Sensor Delay CoE register
-	cRampTime_AD : ST_CoEIndSub := (nIndex := 16#219B, nSubIndex := 0); // Adaptive DS controller Ramp Time CoE register
-	cRampMode_AD : ST_CoEIndSub := (nIndex := 16#219C, nSubIndex := 0); // Adaptive DS controller Ramp Mode CoE register
-	cGainFactor_AD : ST_CoEIndSub := (nIndex := 16#219E, nSubIndex := 0); // Adaptive DS controller Gain factor CoE register
-	cRampTime_FIX1 : ST_CoEIndSub := (nIndex := 16#21A5, nSubIndex := 0); // Fixed 1 controller Ramp Time CoE register
-	cRampMode_FIX1 : ST_CoEIndSub := (nIndex := 16#21A6, nSubIndex := 0); // Fixed 1 controller Ramp Mode CoE register
-	cCtrlDir_FIX1 : ST_CoEIndSub := (nIndex := 16#21A7, nSubIndex := 0); // Fixed 1 controller Control Direction CoE register
-	cPGain_FIX1 : ST_CoEIndSub := (nIndex := 16#21A8, nSubIndex := 0); // Fixed 1 controller P Gain CoE register
-	cIGain_FIX1 : ST_CoEIndSub := (nIndex := 16#21A9, nSubIndex := 0); // Fixed 1 controller I Gain CoE register
-	cRampTime_FIX2 : ST_CoEIndSub := (nIndex := 16#21AF, nSubIndex := 0); // Fixed 2 controller Ramp Time CoE register
-	cRampMode_FIX2 : ST_CoEIndSub := (nIndex := 16#21B0, nSubIndex := 0); // Fixed 2 controller Ramp Mode CoE register
-	cCtrlDir_FIX2 : ST_CoEIndSub := (nIndex := 16#21B1, nSubIndex := 0); // Fixed 2 controller Control Direction CoE register
-	cPGain_FIX2 : ST_CoEIndSub := (nIndex := 16#21B2, nSubIndex := 0); // Fixed 2 controller P Gain CoE register
-	cIGain_FIX2 : ST_CoEIndSub := (nIndex := 16#21B3, nSubIndex := 0); // Fixed 2 controller I Gain CoE register
-	cRampTime_SP : ST_CoEIndSub := (nIndex := 16#21B9, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
-	cRampMode_SP : ST_CoEIndSub := (nIndex := 16#21BA, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
-	cPGain_SP : ST_CoEIndSub := (nIndex := 16#21BC, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
-	cPosLimitOpen : ST_CoEIndSub := (nIndex := 16#56B3, nSubIndex := 0); // General open limit. It overides the PosLimitOpenCtrl if SET lower
-	cPosLimitOpenCtrl : ST_CoEIndSub := (nIndex := 16#56B4, nSubIndex := 0); // Open limit active during pressure control only
+    cPressCtrl : ST_CoEIndSub := (nIndex := 16#2199, nSubIndex := 0); // Selected pressure controller CoE register
+    cSensorDelay_AD : ST_CoEIndSub := (nIndex := 16#219A, nSubIndex := 0); // Adaptive DS controller Sensor Delay CoE register
+    cRampTime_AD : ST_CoEIndSub := (nIndex := 16#219B, nSubIndex := 0); // Adaptive DS controller Ramp Time CoE register
+    cRampMode_AD : ST_CoEIndSub := (nIndex := 16#219C, nSubIndex := 0); // Adaptive DS controller Ramp Mode CoE register
+    cGainFactor_AD : ST_CoEIndSub := (nIndex := 16#219E, nSubIndex := 0); // Adaptive DS controller Gain factor CoE register
+    cRampTime_FIX1 : ST_CoEIndSub := (nIndex := 16#21A5, nSubIndex := 0); // Fixed 1 controller Ramp Time CoE register
+    cRampMode_FIX1 : ST_CoEIndSub := (nIndex := 16#21A6, nSubIndex := 0); // Fixed 1 controller Ramp Mode CoE register
+    cCtrlDir_FIX1 : ST_CoEIndSub := (nIndex := 16#21A7, nSubIndex := 0); // Fixed 1 controller Control Direction CoE register
+    cPGain_FIX1 : ST_CoEIndSub := (nIndex := 16#21A8, nSubIndex := 0); // Fixed 1 controller P Gain CoE register
+    cIGain_FIX1 : ST_CoEIndSub := (nIndex := 16#21A9, nSubIndex := 0); // Fixed 1 controller I Gain CoE register
+    cRampTime_FIX2 : ST_CoEIndSub := (nIndex := 16#21AF, nSubIndex := 0); // Fixed 2 controller Ramp Time CoE register
+    cRampMode_FIX2 : ST_CoEIndSub := (nIndex := 16#21B0, nSubIndex := 0); // Fixed 2 controller Ramp Mode CoE register
+    cCtrlDir_FIX2 : ST_CoEIndSub := (nIndex := 16#21B1, nSubIndex := 0); // Fixed 2 controller Control Direction CoE register
+    cPGain_FIX2 : ST_CoEIndSub := (nIndex := 16#21B2, nSubIndex := 0); // Fixed 2 controller P Gain CoE register
+    cIGain_FIX2 : ST_CoEIndSub := (nIndex := 16#21B3, nSubIndex := 0); // Fixed 2 controller I Gain CoE register
+    cRampTime_SP : ST_CoEIndSub := (nIndex := 16#21B9, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
+    cRampMode_SP : ST_CoEIndSub := (nIndex := 16#21BA, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
+    cPGain_SP : ST_CoEIndSub := (nIndex := 16#21BC, nSubIndex := 0); // Soft Pump controller Ramp Time CoE register
+    cPosLimitOpen : ST_CoEIndSub := (nIndex := 16#56B3, nSubIndex := 0); // General open limit. It overides the PosLimitOpenCtrl if SET lower
+    cPosLimitOpenCtrl : ST_CoEIndSub := (nIndex := 16#56B4, nSubIndex := 0); // Open limit active during pressure control only
 END_VAR
 VAR
-	fCalcPosSP : REAL := 0;
-	fCalcPresSP : REAL := 0;
-	fPressRaw : REAL := 0;             // Ranges 0 to 1000000 (or 0.0 to 10V) (1E-12 to 1E-2)
-	eValveModeSP : E_ControlModeSP;    // Control Mode setpoint internal variable
-	fReqPos : REAL;                    // Requested position internal variable
-	fReqPres : REAL;                   // Requested pressure internal variable
+    fCalcPosSP : REAL := 0;
+    fCalcPresSP : REAL := 0;
+    fPressRaw : REAL := 0;             // Ranges 0 to 1000000 (or 0.0 to 10V) (1E-12 to 1E-2)
+    eValveModeSP : E_ControlModeSP;    // Control Mode setpoint internal variable
+    fReqPos : REAL;                    // Requested position internal variable
+    fReqPres : REAL;                   // Requested pressure internal variable
 
-	bRemAcsToggle : BOOL;              // Remote access control bit
-	//timer for zero function 
-	tZeroTogg : TON := (PT := T#1S);
-	//timer for remote function
-	tRemAcsTogg : TON := (PT := T#500MS);
-	//used for logging
-	ePreviousState : E_VCN_VAT590;
-	
-	(*CoE Interface*)
-	(*Link this to your VAT590 reference variables under InfoData.*)
-	//Connect i_stVat590PlcDriveRef.aNetId to the VAT590 Valve InfoData^AdsAddr^netId
-	//Connect i_stVat590PlcDriveRef.nSlaveAddr to the VAT590 Valve InfoData^AdsAddr^port
-	i_stVat590PlcDriveRef AT %I*: ST_PlcDriveRef;
-	stVat590DriveRef : ST_DriveRef;
+    bRemAcsToggle : BOOL;              // Remote access control bit
+    //timer for zero function
+    tZeroTogg : TON := (PT := T#1S);
+    //timer for remote function
+    tRemAcsTogg : TON := (PT := T#500MS);
+    //used for logging
+    ePreviousState : E_VCN_VAT590;
 
-	fbCoeRead : FB_CoERead_ByDriveRef;   // CoE Read function block
-	fbCoeWrite : FB_CoEWrite_ByDriveRef; // CoE Write function block
-	
-	stCoeParamsInternal : ST_VAT590_COE;   // Internal storage of CoE parameters
-	nCaseReadCoe : UINT := 1;          // Iterator for going through all CoE parameters
-	rtCoeReset : R_TRIG;               // Rising edge trigger for reset CoE Interface error
-	ftCoeReadBusy : F_TRIG;            // Falling edge trigger for CoE read new data
-	ftCoeWriteBusy : F_TRIG;           // Falling edge trigger for CoE write data
-	bFirstRead : BOOL := TRUE;         // FALSE after succesfull first readout of all CoE parameters
-	
-	(*VAT590 Ethercat IO Interface*)
-	// Ethercat Interface Inputs
-	i_nRawPosition       AT %I* : DINT;               // Position readback from the valve
-	i_nRawPressure       AT %I* : DINT;               // Pressure readback from the valve
-	i_eControlMode       AT %I* : E_ControlMode;      // Valve control mode readback
-	i_eFatalError        AT %I* : E_FatalErrors;      // Valve Fatal Errors readback
-	i_stGenStatus        AT %I* : ST_GeneralStatus;   // Valve General Status readback
-	i_stGenWarnings      AT %I* : ST_GeneralWarnings; // Valve General Warnings readback
-	i_stExtnWarnings     AT %I* : ST_ExtendedWarnings;// Valve Extended Warnings readback
-	// Ethercat Interface Outputs
-	o_nRawPositionSP     AT %Q* : DINT;               // Position setpoint
-	o_nRawPressureSP     AT %Q* : DINT;               // Pressure setpoint
-	o_nRawPressure       AT %Q* : DINT;               // Raw pressure output, eliminate need for external connection of AI, ranges 0 to 1000000 (or 0.0 to 10V) (1E-12 Torr to 1E-2 Torr)
-	o_eCtrlModeSP        AT %Q* : E_ControlModeSP;    // Valve control mode setpoint
-	o_stGenCtrlSP        AT %Q* : ST_GeneralControlSP;// General Control setpoint
-	(*Ethercat Interface Status Check*)
-	(*Link this to your VAT590 WcState variable under WcState*)
-	i_bValveEthCatStatus AT %I* : BOOL := TRUE;
+    (*CoE Interface*)
+    (*Link this to your VAT590 reference variables under InfoData.*)
+    //Connect i_stVat590PlcDriveRef.aNetId to the VAT590 Valve InfoData^AdsAddr^netId
+    //Connect i_stVat590PlcDriveRef.nSlaveAddr to the VAT590 Valve InfoData^AdsAddr^port
+    i_stVat590PlcDriveRef AT %I*: ST_PlcDriveRef;
+    stVat590DriveRef : ST_DriveRef;
+
+    fbCoeRead : FB_CoERead_ByDriveRef;   // CoE Read function block
+    fbCoeWrite : FB_CoEWrite_ByDriveRef; // CoE Write function block
+
+    stCoeParamsInternal : ST_VAT590_COE;   // Internal storage of CoE parameters
+    nCaseReadCoe : UINT := 1;          // Iterator for going through all CoE parameters
+    rtCoeReset : R_TRIG;               // Rising edge trigger for reset CoE Interface error
+    ftCoeReadBusy : F_TRIG;            // Falling edge trigger for CoE read new data
+    ftCoeWriteBusy : F_TRIG;           // Falling edge trigger for CoE write data
+    bFirstRead : BOOL := TRUE;         // FALSE after succesfull first readout of all CoE parameters
+
+    (*VAT590 Ethercat IO Interface*)
+    // Ethercat Interface Inputs
+    i_nRawPosition       AT %I* : DINT;               // Position readback from the valve
+    i_nRawPressure       AT %I* : DINT;               // Pressure readback from the valve
+    i_eControlMode       AT %I* : E_ControlMode;      // Valve control mode readback
+    i_eFatalError        AT %I* : E_FatalErrors;      // Valve Fatal Errors readback
+    i_stGenStatus        AT %I* : ST_GeneralStatus;   // Valve General Status readback
+    i_stGenWarnings      AT %I* : ST_GeneralWarnings; // Valve General Warnings readback
+    i_stExtnWarnings     AT %I* : ST_ExtendedWarnings;// Valve Extended Warnings readback
+    // Ethercat Interface Outputs
+    o_nRawPositionSP     AT %Q* : DINT;               // Position setpoint
+    o_nRawPressureSP     AT %Q* : DINT;               // Pressure setpoint
+    o_nRawPressure       AT %Q* : DINT;               // Raw pressure output, eliminate need for external connection of AI, ranges 0 to 1000000 (or 0.0 to 10V) (1E-12 Torr to 1E-2 Torr)
+    o_eCtrlModeSP        AT %Q* : E_ControlModeSP;    // Valve control mode setpoint
+    o_stGenCtrlSP        AT %Q* : ST_GeneralControlSP;// General Control setpoint
+    (*Ethercat Interface Status Check*)
+    (*Link this to your VAT590 WcState variable under WcState*)
+    i_bValveEthCatStatus AT %I* : BOOL := TRUE;
 END_VAR
 VAR PERSISTENT
     fUpperLimit	: REAL;                // Max position in % that can be requested
-	fPresMaxLim : REAL;                // Max pressure in Torr that can be requested
-	fPresRbMaxLim : REAL;              // Max pressure in Torr read by chamber gauge, valve will close above the pressure.
+    fPresMaxLim : REAL;                // Max pressure in Torr that can be requested
+    fPresRbMaxLim : REAL;              // Max pressure in Torr read by chamber gauge, valve will close above the pressure.
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Needle valve control FB
@@ -125,42 +125,42 @@ ReadFromInput();
 
 (*Checking which Control mode is selected and if valve's communication is OK*)
 IF stVcnVat590.bValveEthCatStatus THEN //If valve is not connected or something is wrong with EtherCAT communication PLC will set this bit to 1
-	fReqPos := 0; //set req. position to 0
-	eValveModeSP := E_ControlModeSP.CloseValve; //set control mode of the valve to CLOSE VALVE 
-	stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve; //EPICS command hold in CloseValve state
-	stVcnVat590.stValveStatus.eControlMode := E_ControlMode.FatalError; //override the readback from the valve because when valve is disconnected the value remains
-	stVcnVat590.nRawPosition := 0; //override the readback from the valve because when valve is disconnected the value remains
-	stVcnVat590.nRawPressure := 0; //override the readback from the valve because when valve is disconnected the value remains
+    fReqPos := 0; //set req. position to 0
+    eValveModeSP := E_ControlModeSP.CloseValve; //set control mode of the valve to CLOSE VALVE
+    stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve; //EPICS command hold in CloseValve state
+    stVcnVat590.stValveStatus.eControlMode := E_ControlMode.FatalError; //override the readback from the valve because when valve is disconnected the value remains
+    stVcnVat590.nRawPosition := 0; //override the readback from the valve because when valve is disconnected the value remains
+    stVcnVat590.nRawPressure := 0; //override the readback from the valve because when valve is disconnected the value remains
 ELSIF bExtIlkOK THEN
-	CASE stVcnVat590.eValveControl OF
-		E_VCN_VAT590.OpenValve:
-			eValveModeSP := E_ControlModeSP.OpenValve;
-		E_VCN_VAT590.CloseValve:
-			eValveModeSP := E_ControlModeSP.CloseValve;
-		E_VCN_VAT590.ManualControl:
-		    IF IG.xPRESS_OK AND IG.rPRESS <= fPresRbMaxLim THEN
-				eValveModeSP := E_ControlModeSP.ManualControl;
-			ELSE
-				eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
-				stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
-			END_IF	
-		E_VCN_VAT590.PressureControl:
-			IF IG.xPRESS_OK AND IG.rPRESS <= fPresRbMaxLim THEN
-				eValveModeSP := E_ControlModeSP.PressureControl;
-			ELSE
-				eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
-				stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
-			END_IF
-		E_VCN_VAT590.HoldValve:
-			IF stVcnVat590.stValveStatus.eControlMode = E_ControlMode.ManualControl OR
-				stVcnVat590.stValveStatus.eControlMode = E_ControlMode.PressureControl THEN
-				eValveModeSP := E_ControlModeSP.HoldValve;
-			END_IF
-	END_CASE
+    CASE stVcnVat590.eValveControl OF
+        E_VCN_VAT590.OpenValve:
+            eValveModeSP := E_ControlModeSP.OpenValve;
+        E_VCN_VAT590.CloseValve:
+            eValveModeSP := E_ControlModeSP.CloseValve;
+        E_VCN_VAT590.ManualControl:
+            IF IG.xPRESS_OK AND IG.rPRESS <= fPresRbMaxLim THEN
+                eValveModeSP := E_ControlModeSP.ManualControl;
+            ELSE
+                eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
+                stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
+            END_IF
+        E_VCN_VAT590.PressureControl:
+            IF IG.xPRESS_OK AND IG.rPRESS <= fPresRbMaxLim THEN
+                eValveModeSP := E_ControlModeSP.PressureControl;
+            ELSE
+                eValveModeSP := E_ControlModeSP.CloseValve; // Close valve if something is wrong with the gauge
+                stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
+            END_IF
+        E_VCN_VAT590.HoldValve:
+            IF stVcnVat590.stValveStatus.eControlMode = E_ControlMode.ManualControl OR
+                stVcnVat590.stValveStatus.eControlMode = E_ControlMode.PressureControl THEN
+                eValveModeSP := E_ControlModeSP.HoldValve;
+            END_IF
+    END_CASE
 ELSE
-	fReqPos := 0;
-	eValveModeSP := E_ControlModeSP.CloseValve;
-	stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
+    fReqPos := 0;
+    eValveModeSP := E_ControlModeSP.CloseValve;
+    stVcnVat590.eValveControl := E_VCN_VAT590.CloseValve;
 END_IF
 
 (*Position SP calculation*)
@@ -179,35 +179,35 @@ fCalcPresSP := LIMIT(cPresSPLowLim, fCalcPresSP, cPresSPUpLim); //The requested 
 //Calculate PressureRaw value linked to the Valve's External Digital pressure sensor 1 input
 //Pressure information from IG input is linked to stVcnVat590.fPressure
 IF IG.xPRESS_OK THEN
-	stVcnVat590.fPressure := IG.rPRESS;
-	fPressRaw := cPressRawSlope * LOG(IG.rPRESS/cBasePress) + cPressRawBase;
+    stVcnVat590.fPressure := IG.rPRESS;
+    fPressRaw := cPressRawSlope * LOG(IG.rPRESS/cBasePress) + cPressRawBase;
 ELSE
-	fCalcPresSP := 0;
-	stVcnVat590.fPressure := 0;
-	fPressRaw := 0;
+    fCalcPresSP := 0;
+    stVcnVat590.fPressure := 0;
+    fPressRaw := 0;
 END_IF
 
 (*Zero function*)
 IF stVcnVat590.stValveStatus.bZeroDisabled OR tZeroTogg.Q THEN
-	stVcnVat590.bZero := FALSE;
+    stVcnVat590.bZero := FALSE;
 END_IF
 tZeroTogg.IN := stVcnVat590.bZero;
 tZeroTogg();
 
 (*Set Remote Access*)
 IF stVcnVat590.stValveStatus.eRemoteStatus <> stVcnVat590.eRemoteControl THEN
-	tRemAcsTogg.IN := TRUE;
-	IF tRemAcsTogg.Q THEN
-		bRemAcsToggle := NOT bRemAcsToggle;
-		tRemAcsTogg.IN := FALSE;
-	END_IF
+    tRemAcsTogg.IN := TRUE;
+    IF tRemAcsTogg.Q THEN
+        bRemAcsToggle := NOT bRemAcsToggle;
+        tRemAcsTogg.IN := FALSE;
+    END_IF
 END_IF
 tRemAcsTogg();
 
 (*Reset Coe Interface error*)
 rtCoeReset(CLK := stVcnVat590.bResetCoeError);
 IF rtCoeReset.Q THEN
-	stVcnVat590.bResetCoeError := FALSE;
+    stVcnVat590.bResetCoeError := FALSE;
 END_IF
 
 (*Write CoE Parameters*)
@@ -229,16 +229,16 @@ Logger();]]></ST>
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (bRestorePersistentData) THEN
-	bRestorePersistentData	:= FALSE;
-	IF (fUpperLimit <> 0) THEN
-		stVcnVat590.fPosSetLimit := fUpperLimit;
-	END_IF;
-	IF (fPresMaxLim <> 0) THEN
-		stVcnVat590.fPresSetLimit := fPresMaxLim;
-	END_IF;
-	IF (fPresRbMaxLim <> 0) THEN
-		stVcnVat590.fPresRdbkLimit := fPresRbMaxLim;
-	END_IF;    
+    bRestorePersistentData	:= FALSE;
+    IF (fUpperLimit <> 0) THEN
+        stVcnVat590.fPosSetLimit := fUpperLimit;
+    END_IF;
+    IF (fPresMaxLim <> 0) THEN
+        stVcnVat590.fPresSetLimit := fPresMaxLim;
+    END_IF;
+    IF (fPresRbMaxLim <> 0) THEN
+        stVcnVat590.fPresRdbkLimit := fPresRbMaxLim;
+    END_IF;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -246,27 +246,27 @@ END_IF]]></ST>
       <Implementation>
         <ST><![CDATA[// ILK logger
 IF NOT (stVcnVat590.bIlkOK ) AND NOT(ePreviousState = E_VCN_VAT590.CloseValve) THEN
- 		fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+         fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);
 END_IF
 
 
-//Control STATE Logger  
+//Control STATE Logger
 IF ePreviousState <> stVcnVat590.eValveControl THEN
-	  CASE stVcnVat590.eValveControl OF
-		E_VCN_VAT590.ManualControl:
-			fbLogger(sMsg:='Valve in manual control mode.', eSevr:=TcEventSeverity.Warning);
-		E_VCN_VAT590.HoldValve:
-			fbLogger(sMsg:='Valve in hold control mode.', eSevr:=TcEventSeverity.Warning);
-		E_VCN_VAT590.OpenValve:
-			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
-		E_VCN_VAT590.PressureControl:
-			fbLogger(sMsg:='Valve in pressure control mode.', eSevr:=TcEventSeverity.Info);
-		E_VCN_VAT590.CloseValve:
-			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePreviousState := stVcnVat590.eValveControl;  
+      CASE stVcnVat590.eValveControl OF
+        E_VCN_VAT590.ManualControl:
+            fbLogger(sMsg:='Valve in manual control mode.', eSevr:=TcEventSeverity.Warning);
+        E_VCN_VAT590.HoldValve:
+            fbLogger(sMsg:='Valve in hold control mode.', eSevr:=TcEventSeverity.Warning);
+        E_VCN_VAT590.OpenValve:
+            fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+        E_VCN_VAT590.PressureControl:
+            fbLogger(sMsg:='Valve in pressure control mode.', eSevr:=TcEventSeverity.Info);
+        E_VCN_VAT590.CloseValve:
+            fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePreviousState := stVcnVat590.eValveControl;
   END_IF
- 
+
 
 // Log valve open
 tAction(CLK:= (stVcnVat590.eValveControl = E_VCN_VAT590.OpenValve) );
@@ -277,147 +277,147 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEvent
     <Action Name="ReadCoeParameters" Id="{dceab739-9779-4d3e-8c12-eb434a1eb90a}">
       <Implementation>
         <ST><![CDATA[CASE nCaseReadCoe OF
-	0:
-		stVcnVat590.bCoeError := TRUE;
-		IF rtCoeReset.Q THEN
-			nCaseReadCoe := 1;
-			stVcnVat590.bCoeError := FALSE;
-			bFirstRead := TRUE; // Set bFirstRead after Coe interface reset
-		END_IF
-	1:
-		fbCoeRead.nIndex := cPressCtrl.nIndex;
-		fbCoeRead.nSubIndex := cPressCtrl.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.ePIDCtrl);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.ePIDCtrl);
-		fbCoeRead.bExecute := TRUE;
-	2:
-		fbCoeRead.nIndex := cSensorDelay_AD.nIndex;
-		fbCoeRead.nSubIndex := cSensorDelay_AD.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fSensorDelay_AD);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fSensorDelay_AD);
-		fbCoeRead.bExecute := TRUE;
-	3:
-		fbCoeRead.nIndex := cRampTime_AD.nIndex;
-		fbCoeRead.nSubIndex := cRampTime_AD.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_AD);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_AD);
-		fbCoeRead.bExecute := TRUE;
-	4:
-		fbCoeRead.nIndex := cRampMode_AD.nIndex;
-		fbCoeRead.nSubIndex := cRampMode_AD.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_AD);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_AD);
-		fbCoeRead.bExecute := TRUE;
-	5:
-		fbCoeRead.nIndex := cGainFactor_AD.nIndex;
-		fbCoeRead.nSubIndex := cGainFactor_AD.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fGainFactor_AD);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fGainFactor_AD);
-		fbCoeRead.bExecute := TRUE;
-	6:
-		fbCoeRead.nIndex := cRampTime_FIX1.nIndex;
-		fbCoeRead.nSubIndex := cRampTime_FIX1.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX1);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX1);
-		fbCoeRead.bExecute := TRUE;
-	7:
-		fbCoeRead.nIndex := cRampMode_FIX1.nIndex;
-		fbCoeRead.nSubIndex := cRampMode_FIX1.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX1);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX1);
-		fbCoeRead.bExecute := TRUE;
-	8:
-		fbCoeRead.nIndex := cCtrlDir_FIX1.nIndex;
-		fbCoeRead.nSubIndex := cCtrlDir_FIX1.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
-		fbCoeRead.bExecute := TRUE;
-	9:
-		fbCoeRead.nIndex := cPGain_FIX1.nIndex;
-		fbCoeRead.nSubIndex := cPGain_FIX1.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX1);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX1);
-		fbCoeRead.bExecute := TRUE;
-	10:
-		fbCoeRead.nIndex := cIGain_FIX1.nIndex;
-		fbCoeRead.nSubIndex := cIGain_FIX1.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX1);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX1);
-		fbCoeRead.bExecute := TRUE;
-	11:
-		fbCoeRead.nIndex := cRampTime_FIX2.nIndex;
-		fbCoeRead.nSubIndex := cRampTime_FIX2.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX2);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX2);
-		fbCoeRead.bExecute := TRUE;
-	12:
-		fbCoeRead.nIndex := cRampMode_FIX2.nIndex;
-		fbCoeRead.nSubIndex := cRampMode_FIX2.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX2);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX2);
-		fbCoeRead.bExecute := TRUE;
-	13:
-		fbCoeRead.nIndex := cCtrlDir_FIX2.nIndex;
-		fbCoeRead.nSubIndex := cCtrlDir_FIX2.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
-		fbCoeRead.bExecute := TRUE;
-	14:
-		fbCoeRead.nIndex := cPGain_FIX2.nIndex;
-		fbCoeRead.nSubIndex := cPGain_FIX2.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX2);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX2);
-		fbCoeRead.bExecute := TRUE;
-	15:
-		fbCoeRead.nIndex := cIGain_FIX2.nIndex;
-		fbCoeRead.nSubIndex := cIGain_FIX2.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX2);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX2);
-		fbCoeRead.bExecute := TRUE;
-	16:
-		fbCoeRead.nIndex := cRampTime_SP.nIndex;
-		fbCoeRead.nSubIndex := cRampTime_SP.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_SP);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_SP);
-		fbCoeRead.bExecute := TRUE;
-	17:
-		fbCoeRead.nIndex := cRampMode_SP.nIndex;
-		fbCoeRead.nSubIndex := cRampMode_SP.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_SP);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_SP);
-		fbCoeRead.bExecute := TRUE;
-	18:
-		fbCoeRead.nIndex := cPGain_SP.nIndex;
-		fbCoeRead.nSubIndex := cPGain_SP.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_SP);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_SP);
-		fbCoeRead.bExecute := TRUE;
-	19:
-		fbCoeRead.nIndex := cPosLimitOpen.nIndex;
-		fbCoeRead.nSubIndex := cPosLimitOpen.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpen);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpen);
-		fbCoeRead.bExecute := TRUE;
-	20:
-		fbCoeRead.nIndex := cPosLimitOpenCtrl.nIndex;
-		fbCoeRead.nSubIndex := cPosLimitOpenCtrl.nSubIndex;
-		fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
-		fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
-		fbCoeRead.bExecute := TRUE;
+    0:
+        stVcnVat590.bCoeError := TRUE;
+        IF rtCoeReset.Q THEN
+            nCaseReadCoe := 1;
+            stVcnVat590.bCoeError := FALSE;
+            bFirstRead := TRUE; // Set bFirstRead after Coe interface reset
+        END_IF
+    1:
+        fbCoeRead.nIndex := cPressCtrl.nIndex;
+        fbCoeRead.nSubIndex := cPressCtrl.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.ePIDCtrl);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.ePIDCtrl);
+        fbCoeRead.bExecute := TRUE;
+    2:
+        fbCoeRead.nIndex := cSensorDelay_AD.nIndex;
+        fbCoeRead.nSubIndex := cSensorDelay_AD.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fSensorDelay_AD);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fSensorDelay_AD);
+        fbCoeRead.bExecute := TRUE;
+    3:
+        fbCoeRead.nIndex := cRampTime_AD.nIndex;
+        fbCoeRead.nSubIndex := cRampTime_AD.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_AD);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_AD);
+        fbCoeRead.bExecute := TRUE;
+    4:
+        fbCoeRead.nIndex := cRampMode_AD.nIndex;
+        fbCoeRead.nSubIndex := cRampMode_AD.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_AD);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_AD);
+        fbCoeRead.bExecute := TRUE;
+    5:
+        fbCoeRead.nIndex := cGainFactor_AD.nIndex;
+        fbCoeRead.nSubIndex := cGainFactor_AD.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fGainFactor_AD);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fGainFactor_AD);
+        fbCoeRead.bExecute := TRUE;
+    6:
+        fbCoeRead.nIndex := cRampTime_FIX1.nIndex;
+        fbCoeRead.nSubIndex := cRampTime_FIX1.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX1);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX1);
+        fbCoeRead.bExecute := TRUE;
+    7:
+        fbCoeRead.nIndex := cRampMode_FIX1.nIndex;
+        fbCoeRead.nSubIndex := cRampMode_FIX1.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX1);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX1);
+        fbCoeRead.bExecute := TRUE;
+    8:
+        fbCoeRead.nIndex := cCtrlDir_FIX1.nIndex;
+        fbCoeRead.nSubIndex := cCtrlDir_FIX1.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
+        fbCoeRead.bExecute := TRUE;
+    9:
+        fbCoeRead.nIndex := cPGain_FIX1.nIndex;
+        fbCoeRead.nSubIndex := cPGain_FIX1.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX1);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX1);
+        fbCoeRead.bExecute := TRUE;
+    10:
+        fbCoeRead.nIndex := cIGain_FIX1.nIndex;
+        fbCoeRead.nSubIndex := cIGain_FIX1.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX1);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX1);
+        fbCoeRead.bExecute := TRUE;
+    11:
+        fbCoeRead.nIndex := cRampTime_FIX2.nIndex;
+        fbCoeRead.nSubIndex := cRampTime_FIX2.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX2);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX2);
+        fbCoeRead.bExecute := TRUE;
+    12:
+        fbCoeRead.nIndex := cRampMode_FIX2.nIndex;
+        fbCoeRead.nSubIndex := cRampMode_FIX2.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX2);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX2);
+        fbCoeRead.bExecute := TRUE;
+    13:
+        fbCoeRead.nIndex := cCtrlDir_FIX2.nIndex;
+        fbCoeRead.nSubIndex := cCtrlDir_FIX2.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
+        fbCoeRead.bExecute := TRUE;
+    14:
+        fbCoeRead.nIndex := cPGain_FIX2.nIndex;
+        fbCoeRead.nSubIndex := cPGain_FIX2.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX2);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX2);
+        fbCoeRead.bExecute := TRUE;
+    15:
+        fbCoeRead.nIndex := cIGain_FIX2.nIndex;
+        fbCoeRead.nSubIndex := cIGain_FIX2.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX2);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX2);
+        fbCoeRead.bExecute := TRUE;
+    16:
+        fbCoeRead.nIndex := cRampTime_SP.nIndex;
+        fbCoeRead.nSubIndex := cRampTime_SP.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_SP);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_SP);
+        fbCoeRead.bExecute := TRUE;
+    17:
+        fbCoeRead.nIndex := cRampMode_SP.nIndex;
+        fbCoeRead.nSubIndex := cRampMode_SP.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_SP);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_SP);
+        fbCoeRead.bExecute := TRUE;
+    18:
+        fbCoeRead.nIndex := cPGain_SP.nIndex;
+        fbCoeRead.nSubIndex := cPGain_SP.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPGain_SP);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_SP);
+        fbCoeRead.bExecute := TRUE;
+    19:
+        fbCoeRead.nIndex := cPosLimitOpen.nIndex;
+        fbCoeRead.nSubIndex := cPosLimitOpen.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+        fbCoeRead.bExecute := TRUE;
+    20:
+        fbCoeRead.nIndex := cPosLimitOpenCtrl.nIndex;
+        fbCoeRead.nSubIndex := cPosLimitOpenCtrl.nSubIndex;
+        fbCoeRead.pDstBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
+        fbCoeRead.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
+        fbCoeRead.bExecute := TRUE;
 END_CASE
 
 ftCoeReadBusy(CLK:=fbCoeRead.bBusy);
 IF ftCoeReadBusy.Q THEN
-	fbCoeRead.bExecute := FALSE;
-	IF NOT fbCoeRead.bError THEN
-		nCaseReadCoe := nCaseReadCoe + 1;
-		IF nCaseReadCoe > 20 THEN
-			nCaseReadCoe := 1;
-			bFirstRead := FALSE; // Reset bFirstRead after successfull readout of all parameters
-		END_IF
-	ELSE
-		nCaseReadCoe := 0; // Go to Error state
-	END_IF
+    fbCoeRead.bExecute := FALSE;
+    IF NOT fbCoeRead.bError THEN
+        nCaseReadCoe := nCaseReadCoe + 1;
+        IF nCaseReadCoe > 20 THEN
+            nCaseReadCoe := 1;
+            bFirstRead := FALSE; // Reset bFirstRead after successfull readout of all parameters
+        END_IF
+    ELSE
+        nCaseReadCoe := 0; // Go to Error state
+    END_IF
 END_IF
 
 fbCoeRead();
@@ -445,7 +445,7 @@ stVcnVat590.stValveStatus.bPingPongRxBit := i_stGenStatus.Bit2PingPongRxBit;
 stVcnVat590.stValveStatus.bPressureSimulation := i_stGenStatus.Bit3PressureSimulation;
 stVcnVat590.stValveStatus.bPressureSPReached := i_stGenStatus.Bit4PressureSPReached;
 stVcnVat590.stValveStatus.bWarningsActive := i_stGenStatus.Bit9WarningsActive;
-//Read Remote status 
+//Read Remote status
 stVcnVat590.stValveStatus.eRemoteStatus.0 := i_stGenStatus.Bit7AccessModeBit0;
 stVcnVat590.stValveStatus.eRemoteStatus.1 := i_stGenStatus.Bit8AccessModeBit1;
 //Mapping General warnings
@@ -479,7 +479,7 @@ fbCoeWrite.stDriveRef := stVat590DriveRef;]]></ST>
     <Method Name="SetThrottle" Id="{bc87ba94-efcb-4d7b-ace0-cb07482f478f}">
       <Declaration><![CDATA[METHOD SetThrottle : BOOL
 VAR_INPUT
-	rUpperLimit	:	REAL;
+    rUpperLimit	:	REAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -489,7 +489,7 @@ END_VAR
     <Method Name="ValveControl" Id="{25066385-eb5f-47fb-8ac4-a5fcdc50740f}">
       <Declaration><![CDATA[METHOD ValveControl : BOOL
 VAR_INPUT
-	state : E_VCN_VAT590; // Set Control modes
+    state : E_VCN_VAT590; // Set Control modes
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -500,139 +500,139 @@ END_VAR
       <Implementation>
         <ST><![CDATA[// User will change one parameter at a time so solution with ELSIF should work OK
 IF stVcnVat590.bCoeError THEN
-	IF rtCoeReset.Q THEN
-		stVcnVat590.bCoeError := FALSE;
-	END_IF;
+    IF rtCoeReset.Q THEN
+        stVcnVat590.bCoeError := FALSE;
+    END_IF;
 ELSIF bFirstRead THEN
-	;//Wait until first readout of all CoE parameters is completed
+    ;//Wait until first readout of all CoE parameters is completed
 ELSIF stVcnVat590.stCoeParameters.ePIDCtrl <> stCoeParamsInternal.ePIDCtrl THEN
-	fbCoeWrite.nIndex := cPressCtrl.nIndex;
-	fbCoeWrite.nSubIndex := cPressCtrl.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.ePIDCtrl);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.ePIDCtrl);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cPressCtrl.nIndex;
+    fbCoeWrite.nSubIndex := cPressCtrl.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.ePIDCtrl);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.ePIDCtrl);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fSensorDelay_AD <> stCoeParamsInternal.fSensorDelay_AD THEN
-	fbCoeWrite.nIndex := cSensorDelay_AD.nIndex;
-	fbCoeWrite.nSubIndex := cSensorDelay_AD.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fSensorDelay_AD);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fSensorDelay_AD);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cSensorDelay_AD.nIndex;
+    fbCoeWrite.nSubIndex := cSensorDelay_AD.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fSensorDelay_AD);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fSensorDelay_AD);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fRampTime_AD <> stCoeParamsInternal.fRampTime_AD THEN
-	fbCoeWrite.nIndex := cRampTime_AD.nIndex;
-	fbCoeWrite.nSubIndex := cRampTime_AD.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_AD);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_AD);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cRampTime_AD.nIndex;
+    fbCoeWrite.nSubIndex := cRampTime_AD.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_AD);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_AD);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.bRampMode_AD <> stCoeParamsInternal.bRampMode_AD THEN
-	fbCoeWrite.nIndex := cRampMode_AD.nIndex;
-	fbCoeWrite.nSubIndex := cRampMode_AD.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_AD);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_AD);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cRampMode_AD.nIndex;
+    fbCoeWrite.nSubIndex := cRampMode_AD.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_AD);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_AD);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fGainFactor_AD <> stCoeParamsInternal.fGainFactor_AD THEN
-	fbCoeWrite.nIndex := cGainFactor_AD.nIndex;
-	fbCoeWrite.nSubIndex := cGainFactor_AD.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fGainFactor_AD);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fGainFactor_AD);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cGainFactor_AD.nIndex;
+    fbCoeWrite.nSubIndex := cGainFactor_AD.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fGainFactor_AD);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fGainFactor_AD);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fRampTime_FIX1 <> stCoeParamsInternal.fRampTime_FIX1 THEN
-	fbCoeWrite.nIndex := cRampTime_FIX1.nIndex;
-	fbCoeWrite.nSubIndex := cRampTime_FIX1.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX1);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX1);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cRampTime_FIX1.nIndex;
+    fbCoeWrite.nSubIndex := cRampTime_FIX1.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX1);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX1);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.bRampMode_FIX1 <> stCoeParamsInternal.bRampMode_FIX1 THEN
-	fbCoeWrite.nIndex := cRampMode_FIX1.nIndex;
-	fbCoeWrite.nSubIndex := cRampMode_FIX1.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX1);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX1);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cRampMode_FIX1.nIndex;
+    fbCoeWrite.nSubIndex := cRampMode_FIX1.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX1);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX1);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.bCtrlDir_FIX1 <> stCoeParamsInternal.bCtrlDir_FIX1 THEN
-	fbCoeWrite.nIndex := cCtrlDir_FIX1.nIndex;
-	fbCoeWrite.nSubIndex := cCtrlDir_FIX1.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cCtrlDir_FIX1.nIndex;
+    fbCoeWrite.nSubIndex := cCtrlDir_FIX1.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX1);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fPGain_FIX1 <> stCoeParamsInternal.fPGain_FIX1 THEN
-	fbCoeWrite.nIndex := cPGain_FIX1.nIndex;
-	fbCoeWrite.nSubIndex := cPGain_FIX1.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX1);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX1);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cPGain_FIX1.nIndex;
+    fbCoeWrite.nSubIndex := cPGain_FIX1.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX1);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX1);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fIGain_FIX1 <> stCoeParamsInternal.fIGain_FIX1 THEN
-	fbCoeWrite.nIndex := cIGain_FIX1.nIndex;
-	fbCoeWrite.nSubIndex := cIGain_FIX1.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX1);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX1);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cIGain_FIX1.nIndex;
+    fbCoeWrite.nSubIndex := cIGain_FIX1.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX1);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX1);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fRampTime_FIX2 <> stCoeParamsInternal.fRampTime_FIX2 THEN
-	fbCoeWrite.nIndex := cRampTime_FIX2.nIndex;
-	fbCoeWrite.nSubIndex := cRampTime_FIX2.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX2);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX2);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cRampTime_FIX2.nIndex;
+    fbCoeWrite.nSubIndex := cRampTime_FIX2.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_FIX2);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_FIX2);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.bRampMode_FIX2 <> stCoeParamsInternal.bRampMode_FIX2 THEN
-	fbCoeWrite.nIndex := cRampMode_FIX2.nIndex;
-	fbCoeWrite.nSubIndex := cRampMode_FIX2.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX2);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX2);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cRampMode_FIX2.nIndex;
+    fbCoeWrite.nSubIndex := cRampMode_FIX2.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_FIX2);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_FIX2);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.bCtrlDir_FIX2 <> stCoeParamsInternal.bCtrlDir_FIX2 THEN
-	fbCoeWrite.nIndex := cCtrlDir_FIX2.nIndex;
-	fbCoeWrite.nSubIndex := cCtrlDir_FIX2.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cCtrlDir_FIX2.nIndex;
+    fbCoeWrite.nSubIndex := cCtrlDir_FIX2.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bCtrlDir_FIX2);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fPGain_FIX2 <> stCoeParamsInternal.fPGain_FIX2 THEN
-	fbCoeWrite.nIndex := cPGain_FIX2.nIndex;
-	fbCoeWrite.nSubIndex := cPGain_FIX2.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX2);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX2);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cPGain_FIX2.nIndex;
+    fbCoeWrite.nSubIndex := cPGain_FIX2.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_FIX2);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_FIX2);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fIGain_FIX2 <> stCoeParamsInternal.fIGain_FIX2 THEN
-	fbCoeWrite.nIndex := cIGain_FIX2.nIndex;
-	fbCoeWrite.nSubIndex := cIGain_FIX2.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX2);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX2);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cIGain_FIX2.nIndex;
+    fbCoeWrite.nSubIndex := cIGain_FIX2.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fIGain_FIX2);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fIGain_FIX2);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fRampTime_SP <> stCoeParamsInternal.fRampTime_SP THEN
-	fbCoeWrite.nIndex := cRampTime_SP.nIndex;
-	fbCoeWrite.nSubIndex := cRampTime_SP.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_SP);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_SP);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cRampTime_SP.nIndex;
+    fbCoeWrite.nSubIndex := cRampTime_SP.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fRampTime_SP);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fRampTime_SP);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.bRampMode_SP <> stCoeParamsInternal.bRampMode_SP THEN
-	fbCoeWrite.nIndex := cRampMode_SP.nIndex;
-	fbCoeWrite.nSubIndex := cRampMode_SP.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_SP);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_SP);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cRampMode_SP.nIndex;
+    fbCoeWrite.nSubIndex := cRampMode_SP.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.bRampMode_SP);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.bRampMode_SP);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fPGain_SP <> stCoeParamsInternal.fPGain_SP THEN
-	fbCoeWrite.nIndex := cPGain_SP.nIndex;
-	fbCoeWrite.nSubIndex := cPGain_SP.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_SP);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_SP);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cPGain_SP.nIndex;
+    fbCoeWrite.nSubIndex := cPGain_SP.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPGain_SP);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPGain_SP);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fPositionLimitOpen <> stCoeParamsInternal.fPositionLimitOpen THEN
-	fbCoeWrite.nIndex := cPosLimitOpen.nIndex;
-	fbCoeWrite.nSubIndex := cPosLimitOpen.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpen);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpen);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cPosLimitOpen.nIndex;
+    fbCoeWrite.nSubIndex := cPosLimitOpen.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpen);
+    fbCoeWrite.bExecute := TRUE;
 ELSIF stVcnVat590.stCoeParameters.fPositionLimitOpenControl <> stCoeParamsInternal.fPositionLimitOpenControl THEN
-	fbCoeWrite.nIndex := cPosLimitOpenCtrl.nIndex;
-	fbCoeWrite.nSubIndex := cPosLimitOpenCtrl.nSubIndex;
-	fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
-	fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
-	fbCoeWrite.bExecute := TRUE;
+    fbCoeWrite.nIndex := cPosLimitOpenCtrl.nIndex;
+    fbCoeWrite.nSubIndex := cPosLimitOpenCtrl.nSubIndex;
+    fbCoeWrite.pSrcBuf := ADR(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
+    fbCoeWrite.cbBufLen := SIZEOF(stVcnVat590.stCoeParameters.fPositionLimitOpenControl);
+    fbCoeWrite.bExecute := TRUE;
 END_IF
 
 ftCoeWriteBusy(CLK:=fbCoeWrite.bBusy);
 IF ftCoeWriteBusy.Q THEN
-	fbCoeWrite.bExecute := FALSE;
-	IF fbCoeWrite.bError THEN
-		stVcnVat590.bCoeError := TRUE;
-	END_IF
+    fbCoeWrite.bExecute := FALSE;
+    IF fbCoeWrite.bError THEN
+        stVcnVat590.bCoeError := TRUE;
+    END_IF
 END_IF
 
 fbCoeWrite();]]></ST>

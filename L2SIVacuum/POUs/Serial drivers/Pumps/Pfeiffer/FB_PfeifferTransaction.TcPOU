@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+  <POU Name="FB_PfeifferTransaction" Id="{c8e24379-37d7-4891-a7fb-678229f3d3cc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PfeifferTransaction
+VAR_INPUT
+    /// rising edge execute
+    i_xExecute: BOOL;
+    /// RS-485 Address of Pump
+    i_iAddress: INT;
+    /// False is data request, True is control command
+    i_xActionCommand: BOOL;
+    /// Parameter Number 1-999
+    i_iParameterNum: INT;
+    /// Send Data Length
+    i_iDataLength: INT;
+    /// Send Data
+    i_sSendData: STRING;
+    /// Maximum wait time for reply
+    i_tTimeOut: TIME := TIME#1s0ms;
+END_VAR
+VAR_OUTPUT
+    q_xDone: BOOL;
+    q_sResponseData: STRING;
+    q_xError: BOOL;
+    q_xTimeout: BOOL;
+    q_sResult: STRING;
+    /// Last String Sent to Serial Device - for debugging
+    q_sLastSentString: STRING;
+    /// Last String Received from Serial Device - for debugging
+    q_sLastReceivedString: STRING;
+END_VAR
+VAR_IN_OUT
+    iq_stSerialRXBuffer: ComBuffer;
+    iq_stSerialTXBuffer: ComBuffer;
+END_VAR
+VAR
+    rtExecute: R_TRIG;
+    iStep: INT;
+    fbClearComBuffer: ClearComBuffer;
+    sSendString: STRING;
+    fbFormatString: FB_FormatString;
+    iChecksum: INT;
+    fbSendString: SendString;
+    fbReceiveString: ReceiveString;
+    sReceivedString: STRING;
+    tonTimeout: TON;
+    sRXStringForChecksum: STRING;
+    sReceiveStringWOChecksum: STRING;
+    sRXCheckSum: STRING;
+    sRXAddress: STRING;
+    sRXParmNum: STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This function block performs serial transactions with a Pfeiffer RC400 Pump controller *)
+
+(* rising edge trigger *)
+rtExecute(CLK:= i_xExecute);
+IF rtExecute.Q THEN
+    q_xDone	:= FALSE;
+    q_sResponseData := '';
+    q_xError := FALSE;
+    //q_xTimeout := FALSE;
+    q_sResult:= '';
+    q_sLastSentString := '';
+    q_sLastReceivedString:= '';
+    iStep := 10;
+END_IF
+
+CASE iStep OF
+    0:
+        ; (* idle *)
+
+    10: (* clear com buffers *)
+        fbClearComBuffer(Buffer:= iq_stSerialRXBuffer);
+        fbClearComBuffer(Buffer:= iq_stSerialTXBuffer);
+
+        (* build the send string *)
+        fbFormatString( sFormat:= '%0.3d', arg1:= F_INT(i_iAddress), sOut=> sSendString); (* address *)
+        IF i_xActionCommand THEN (* action *)
+            sSendString := CONCAT(sSendString, '10');
+        ELSE
+            sSendString := CONCAT(sSendString, '00');
+        END_IF
+        fbFormatString( sFormat:= '%0.3u', arg1:= F_INT(i_iParameterNum)); (* parameter number *)
+        sSendString := CONCAT(sSendString, fbFormatString.sOut);
+        fbFormatString( sFormat:= '%0.2u', arg1:= F_INT(i_iDataLength)); (* data length *)
+        sSendString := CONCAT(sSendString, fbFormatString.sOut);
+        sSendString := CONCAT(sSendString, i_sSendData); (* data *)
+        iChecksum := F_CalcPfeifferChecksum(sSendString); (* checksum *)
+        fbFormatString( sFormat:= '%0.3u$R', arg1:= F_INT(iChecksum));
+        sSendString := CONCAT(sSendString, fbFormatString.sOut);
+        (* send it *)
+        fbSendString( SendString:= sSendString, TXbuffer:= iq_stSerialTXBuffer );
+        q_sLastSentString := sSendString;
+        iStep := iStep + 10;
+
+    20: (* Finish sending the String *)
+        IF fbSendString.Busy THEN
+            fbSendString( SendString:= sSendString, TXbuffer:= iq_stSerialTXBuffer );
+        ELSIF fbSendString.Error <> 0 THEN
+            q_sResult := CONCAT('In step 20 fbSendString resulted in error: ', INT_TO_STRING(fbSendString.Error));
+            iStep := 9000;
+        ELSIF NOT fbSendString.Busy THEN
+            iStep := iStep + 10;
+        END_IF
+        (* Reset receive *)
+        fbReceiveString(
+            Reset:= TRUE,
+            ReceivedString:= sReceivedString,
+            RXbuffer:= iq_stSerialRXBuffer );
+        tonTimeout(IN:= FALSE);
+
+    30: (* Get reply *)
+        fbReceiveString(
+            Prefix:= ,
+            Suffix:= '$R',
+            Timeout:= i_tTimeOut,
+            Reset:= FALSE,
+            ReceivedString:= sReceivedString,
+            RXbuffer:= iq_stSerialRXBuffer );
+        tonTimeout(IN:= TRUE, PT:= i_tTimeOut);
+        IF fbReceiveString.Error <> 0 AND fbReceiveString.Error <> 16#1008 THEN //16#1008 is timeout error
+            q_sResult := CONCAT('In step 30 fbReceiveString resulted in error: ', INT_TO_STRING(fbReceiveString.Error));
+            iStep := 9000;
+        ELSIF fbReceiveString.RxTimeout OR tonTimeout.Q THEN
+            q_sResult := 'Pfeiffer pump failed to reply within timeout period';
+            q_xTimeout := TRUE;
+            iStep := 9000;
+        ELSIF fbReceiveString.StringReceived THEN
+            q_xTimeout := FALSE; //no timeout
+            q_sLastReceivedString := sReceivedString;
+            (* check checksum *)
+            sReceiveStringWOChecksum := LEFT(sReceivedString, LEN(sReceivedString)-4);
+            iChecksum := F_CalcPfeifferChecksum(sReceiveStringWOChecksum);
+            sRXCheckSum := MID(sReceivedString,3,LEN(sReceivedString)-3);
+            sRXAddress := LEFT(sReceivedString,3);
+            sRXParmNum := MID(sReceivedString,3,6);
+            IF iChecksum <> STRING_TO_INT(sRXCheckSum) THEN
+                q_sResult := 'Invalid checksum on received string.';
+                iStep := 9000;
+            ELSIF i_iAddress <> STRING_TO_INT(sRXAddress) THEN
+                q_sResult := 'Invalid unit address on received string.';
+                iStep := 9000;
+            ELSIF i_iParameterNum <> STRING_TO_INT(sRXParmNum) THEN
+                q_sResult := 'Invalid parameter number on received string.';
+                iStep := 9000;
+            ELSE
+                q_sResponseData := MID(sReceivedString,LEN(sReceivedString)-14 ,11);
+                q_sResult := 'Success.';
+                q_xDone:= TRUE;
+                iStep := 100;
+            END_IF
+        END_IF
+
+    100: (* done *)
+        IF  i_xExecute = FALSE THEN
+            q_xDone:= FALSE;
+            iStep := 0;
+        END_IF
+
+    9000:
+        q_xError := TRUE;
+
+
+
+
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

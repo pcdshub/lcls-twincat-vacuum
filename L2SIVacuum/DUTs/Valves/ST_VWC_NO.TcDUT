@@ -4,28 +4,28 @@
     <Declaration><![CDATA[TYPE ST_VWC_NO EXTENDS ST_VGC:
 STRUCT
 (* Readbacks *)
-	//In case VRC is normally open
-	{attribute 'pytmc' := '
+    //In case VRC is normally open
+    {attribute 'pytmc' := '
     pv: CLS_OK;
-	field: ONAM CLOSE; 
-	field: ZNAM OPEN;
-	io: i;
+    field: ONAM CLOSE;
+    field: ZNAM OPEN;
+    io: i;
     '}
-	xCLS_OK : BOOL := TRUE;
-	{attribute 'pytmc' := '
-	pv: CLS_SW ;
-	field: ONAM CLOSE; 
-	field: ZNAM OPEN;
-	io: io ;
-	'}
-	pv_xCLS_SW	: BOOL;
-	{attribute 'pytmc' := '
+    xCLS_OK : BOOL := TRUE;
+    {attribute 'pytmc' := '
+    pv: CLS_SW ;
+    field: ONAM CLOSE;
+    field: ZNAM OPEN;
+    io: io ;
+    '}
+    pv_xCLS_SW	: BOOL;
+    {attribute 'pytmc' := '
     pv: FORCE_CLS;
-	field: ONAM FORCE CLOSE; 
-	field: ZNAM FALSE;
-	io: io;
-	'}
-	pv_xOvrdCls	:	BOOL;
+    field: ONAM FORCE CLOSE;
+    field: ZNAM FALSE;
+    io: io;
+    '}
+    pv_xOvrdCls	:	BOOL;
 
 END_STRUCT
 END_TYPE]]></Declaration>

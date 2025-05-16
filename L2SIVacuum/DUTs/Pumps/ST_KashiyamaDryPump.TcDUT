@@ -4,76 +4,76 @@
     <Declaration><![CDATA[TYPE ST_KashiyamaDryPump EXTENDS ST_RoughPump:
 STRUCT
 
-(* Output *)	
-	//q_xRunDO 	:	BOOL; in Rough PUMP
-	{attribute 'pytmc' := '
+(* Output *)
+    //q_xRunDO 	:	BOOL; in Rough PUMP
+    {attribute 'pytmc' := '
     pv: RESET_DO;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
-	'}
-	q_xResetDo	: 	BOOL;
-	{attribute 'pytmc' := '
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
+    '}
+    q_xResetDo	: 	BOOL;
+    {attribute 'pytmc' := '
     pv: LSPD_DO;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
-	'}
-	q_xLspdDo	: 	BOOL;
-	
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
+    '}
+    q_xLspdDo	: 	BOOL;
+
 (* Input *)
 {attribute 'pytmc' := '
     pv: REMOTE;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
     '}
-	i_xRemote	:	BOOL;
+    i_xRemote	:	BOOL;
 
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv: ALARM_OK;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
     '}
-	i_xAlarmOK	:	BOOL;
-	{attribute 'pytmc' := '
+    i_xAlarmOK	:	BOOL;
+    {attribute 'pytmc' := '
     pv: WARN_OK;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
     '}
-	i_xWarningOK	:	BOOL;
-	{attribute 'pytmc' := '
+    i_xWarningOK	:	BOOL;
+    {attribute 'pytmc' := '
     pv: RUN_DI;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
     '}
-	i_xIsRun		:	BOOL;
+    i_xIsRun		:	BOOL;
 
 (* Logic status *)
 
-	xLspd_IlkENA:   BOOL;
+    xLspd_IlkENA:   BOOL;
 
 (* EPICS *)
-	//xRunSW		:	BOOL; in Rough PUMP
-	{attribute 'pytmc' := '
+    //xRunSW		:	BOOL; in Rough PUMP
+    {attribute 'pytmc' := '
     pv: RESET_SW;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: io
-	'}
-	xResetSW	:	BOOL; //For resetting faults
-	{attribute 'pytmc' := '
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: io
+    '}
+    xResetSW	:	BOOL; //For resetting faults
+    {attribute 'pytmc' := '
     pv: LSPD_SW;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: io
-	'}
-	xLspdSW     :   BOOL;
-	LowSP  :   REAL := 0.02; //Torr
-	HighSP :   REAL; //Torr
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: io
+    '}
+    xLspdSW     :   BOOL;
+    LowSP  :   REAL := 0.02; //Torr
+    HighSP :   REAL; //Torr
     RdyTmr : REAL;
 END_STRUCT
 END_TYPE

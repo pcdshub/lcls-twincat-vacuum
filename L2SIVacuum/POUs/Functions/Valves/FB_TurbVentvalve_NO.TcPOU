@@ -4,17 +4,17 @@
     <Declaration><![CDATA[(* This function block impelemets Interlock for Agilent Turbo Vent Valve Normally Open*)
 FUNCTION_BLOCK FB_TurbVentvalve_NO
 VAR_OUTPUT
-	{attribute 'pytmc' :=' pv:'}
-	q_stValve : ST_VCC_NO;
+    {attribute 'pytmc' :=' pv:'}
+    q_stValve : ST_VCC_NO;
 END_VAR
 VAR_INPUT
-	i_stPTM	: ST_AgilentPTM; //Agilent Turbo Pump
+    i_stPTM	: ST_AgilentPTM; //Agilent Turbo Pump
 END_VAR
 VAR
-	tofTmr 		: 	TOF;
-	
-	(*Output*)
-	q_xCLS_DO AT%Q* : BOOL;
+    tofTmr 		: 	TOF;
+
+    (*Output*)
+    q_xCLS_DO AT%Q* : BOOL;
 END_VAR
 
 (*If the turbo is on, you cannot open the valve. In order to open the valve, you have to allow the turbopump
@@ -601,19 +601,12 @@ q_xCLS_DO:= q_stValve.xCLS_DO;]]></ST>
     <Method Name="M_Close" Id="{f952aee4-b56f-449f-acf0-34ee976bf562}">
       <Declaration><![CDATA[METHOD M_Close : BOOL
 VAR_INPUT
-		close:BOOL; //True to CLose, False to OPEN
+        close:BOOL; //True to CLose, False to OPEN
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[This^.q_stValve.pv_xCLS_SW :=Close;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_TurbVentvalve_NO.ACT_IO">
-      <LineId Id="2" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_TurbVentvalve_NO.M_Close">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

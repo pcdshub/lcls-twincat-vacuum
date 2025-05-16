@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+  <DUT Name="ST_PfeifferStatus" Id="{5940fef0-f9c3-48c7-ba29-0570add21519}">
+    <Declaration><![CDATA[TYPE ST_PfeifferStatus :
+STRUCT
+    {attribute 'pytmc' := '
+    pv: PumpingStation_RBV;
+    field: ZNAM ILK ACTIVE;
+    field: ONAM ILK OK;
+    io: i;
+    '}
+    xPumpingStation_010: BOOL;
+    {attribute 'pytmc' := '
+    pv: PumpingStation_RBV;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    xMotorPump_023: BOOL;
+    {attribute 'pytmc' := '
+    pv: GasMode_RBV;
+    io: i;
+    '}
+    iGasMode_027: INT;
+    {attribute 'pytmc' := '
+    pv: ErrorMessage_RBV;
+    io: i;
+    '}
+    sErrorCode_303: STRING;
+    {attribute 'pytmc' := '
+    pv: ErrorCode_RBV;
+    io: i;
+    '}
+    iErrorCode_303	:	INT;
+    {attribute 'pytmc' := '
+    pv: WarningCode_RBV;
+    io: i;
+    '}
+    iWarningCode_303	:	INT;
+    {attribute 'pytmc' := '
+    pv: ExcessPumpTemp_RBV;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    xExcessTempPump_305: BOOL;
+    {attribute 'pytmc' := '
+    pv: TotationSpeedAttn_RBV;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    xRotationSpeedAttn_306: BOOL;
+    {attribute 'pytmc' := '
+    pv: PumpAccelerating_RBV;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    xPumpAccelerating_307: BOOL;
+    {attribute 'pytmc' := '
+    pv: PumpSpeed_RBV;
+    io: i;
+    '}
+    diActiveRotationSpeed_309: DINT;
+    {attribute 'pytmc' := '
+    pv: DriveCurrent_RBV;
+    io: i;
+    '}
+    lrDriveCurrent_310: LREAL;
+    {attribute 'pytmc' := '
+    pv: DrivePower_RBV;
+    io: i;
+    '}
+    diDrivePower_316: DINT;
+    {attribute 'pytmc' := '
+    pv: TempElect_RBV;
+    io: i;
+    '}
+    diTempElec_326: DINT;
+    {attribute 'pytmc' := '
+    pv: TempPump_RBV;
+    io: i;
+    '}
+    diTempPmpBot_330: DINT;
+    {attribute 'pytmc' := '
+    pv: TempBearing_RBV;
+    io: i;
+    '}
+    diTempBearng_342: DINT;
+    {attribute 'pytmc' := '
+    pv: TempMotor_RBV;
+    io: i;
+    '}
+    diTempMotor_346: DINT;
+    {attribute 'pytmc' := '
+    pv: Power_RBV;
+    io: i;
+    '}
+    uiPowerPct_708: UINT;
+    {attribute 'pytmc' := '
+    pv: Timeout_RBV;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    xTimeout: BOOL;
+    iSetRotationSpeed_707 : INT;
+    iSetSpdMode_026: INT;
+    xErrorAcknowledged: BOOL; //Not actually read back from the pump, but tells us ErrAck has processed
+END_STRUCT
+END_TYPE
+
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

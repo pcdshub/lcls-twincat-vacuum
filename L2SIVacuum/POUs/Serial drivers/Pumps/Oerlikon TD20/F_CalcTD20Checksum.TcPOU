@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.6">
+  <POU Name="F_CalcTD20Checksum" Id="{59d21b56-e4d7-4723-a1de-95977cb48cdd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_CalcTD20Checksum : BYTE
+VAR_INPUT
+    i_abData: ARRAY[0..23] OF BYTE;
+END_VAR
+VAR
+    bChecksum: BYTE;
+    i: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bChecksum := i_abData[0];
+FOR i:=1 TO 22 DO
+    bChecksum := bChecksum XOR i_abData[i];
+END_FOR
+F_CalcTD20Checksum := bChecksum;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

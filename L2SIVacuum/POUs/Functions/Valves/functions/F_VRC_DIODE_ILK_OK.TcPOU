@@ -5,25 +5,20 @@
 FUNCTION F_VRC_DIODE_ILK_OK : BOOL
 VAR_INPUT
 
-	i_stPGA : ST_VG; // A side pressure gauge
-	i_stPGB	: ST_VG; // B side pressure gauge
+    i_stPGA : ST_VG; // A side pressure gauge
+    i_stPGB	: ST_VG; // B side pressure gauge
 
 END_VAR
 VAR
-	rHysterisis : REAL := 0;
+    rHysterisis : REAL := 0;
 
-	xInterlock: BOOL;
-	rTolerance: REAL := 0;
+    xInterlock: BOOL;
+    rTolerance: REAL := 0;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* The principle is simple, a VRC should never open when B side pressure is greater than the A side pressure. *)
 F_VRC_DIODE_ILK_OK := (i_stPGA.rPRESS + rTolerance >= i_stPGB.rPRESS + rHysterisis) AND i_stPGA.xPRESS_OK AND i_stPGB.xPRESS_OK;
 ]]></ST>
     </Implementation>
-    <LineIds Name="F_VRC_DIODE_ILK_OK">
-      <LineId Id="3" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

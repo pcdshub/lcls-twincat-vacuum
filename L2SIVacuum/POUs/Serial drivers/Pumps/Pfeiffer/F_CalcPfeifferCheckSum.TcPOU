@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.26">
+  <POU Name="F_CalcPfeifferCheckSum" Id="{16130ab7-d093-4369-b333-020b7bba7100}">
+    <Declaration><![CDATA[FUNCTION F_CalcPfeifferCheckSum : BYTE
+VAR_INPUT
+    sData: STRING;
+END_VAR
+VAR
+    bSum: BYTE;
+    i: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bSum := 0;
+
+FOR i := 1 TO LEN(sData) DO
+    bSum := bSum + F_ToASC(MID(sData,1,i));
+END_FOR
+
+F_CalcPfeifferChecksum := bSum;]]></ST>
+    </Implementation>
+    <ObjectProperties />
+  </POU>
+</TcPlcObject>

@@ -3,128 +3,128 @@
   <DUT Name="ST_ValveBase" Id="{7bb16a25-da4b-490d-be73-850b3bc57053}">
     <Declaration><![CDATA[TYPE ST_ValveBase :
 STRUCT
-	(* EPICS Controls *)
-	{attribute 'pytmc' := '
-	pv: OPN_SW; 
-	field: ZNAM CLOSE; 
-	field: ONAM OPEN;
-	io: io ;
-	'}
-	pv_xOPN_SW	: BOOL;
-	{attribute 'pytmc' := '
+    (* EPICS Controls *)
+    {attribute 'pytmc' := '
+    pv: OPN_SW;
+    field: ZNAM CLOSE;
+    field: ONAM OPEN;
+    io: io ;
+    '}
+    pv_xOPN_SW	: BOOL;
+    {attribute 'pytmc' := '
     pv: ALM_RST;
-	io: io;
+    io: io;
     '}
-	pv_xAlmRst	: BOOL;
-	{attribute 'pytmc' := '
+    pv_xAlmRst	: BOOL;
+    {attribute 'pytmc' := '
     pv: FORCE_OPN;
-	io: io;
-	field: ZNAM FALSE;
-	field: ONAM FORCE OPEN;
+    io: io;
+    field: ZNAM FALSE;
+    field: ONAM FORCE OPEN;
     '}
-	pv_xOvrdOpn	:	BOOL;
+    pv_xOvrdOpn	:	BOOL;
 
-	{attribute 'pytmc' := '
-	pv: OVRD_ON ;
-	field: ZNAM Override OFF ;
-	field: ONAM Override ON;
-	io: io;
-	'}
-	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
+    {attribute 'pytmc' := '
+    pv: OVRD_ON ;
+    field: ZNAM Override OFF ;
+    field: ONAM Override ON;
+    io: io;
+    '}
+    xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
 
 (* I/Os*)
 (* Readbacks *)
-	{attribute 'pytmc' := '
-	pv: OPN_DI;
-	io: i;
-	field: ZNAM FALSE;
-	field: ONAM OPEN;
-	'}
-	i_xOpnLS	: BOOL;
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
+    pv: OPN_DI;
+    io: i;
+    field: ZNAM FALSE;
+    field: ONAM OPEN;
+    '}
+    i_xOpnLS	: BOOL;
+    {attribute 'pytmc' := '
     pv: CLS_DI;
-	io: i;
-	field: ZNAM FALSE;
-	field: ONAM CLOSE;
+    io: i;
+    field: ZNAM FALSE;
+    field: ONAM CLOSE;
     '}
-	i_xClsLS	: BOOL;
+    i_xClsLS	: BOOL;
 (* Controls *)
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv: OPN_DO;
-	io: i;
-	field: ZNAM FALSE;
-	field: ONAM TRUE;
+    io: i;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
     '}
-	q_xOPN_DO	: BOOL;
+    q_xOPN_DO	: BOOL;
 (* Interlocks *)
-	{attribute 'pytmc' := '
-	pv: EXT_ILK_OK ;
-	field: ZNAM NOT OK ;
-	field: ONAM OK ;
-	io: i ;
-	'}
-	xEXT_OK	:	BOOL := FALSE;	(* External interlock for custom interlocking in addition to regular DP ilk, this must be set true, or the interlock condition before calling the FB_VGC *)
+    {attribute 'pytmc' := '
+    pv: EXT_ILK_OK ;
+    field: ZNAM NOT OK ;
+    field: ONAM OK ;
+    io: i ;
+    '}
+    xEXT_OK	:	BOOL := FALSE;	(* External interlock for custom interlocking in addition to regular DP ilk, this must be set true, or the interlock condition before calling the FB_VGC *)
 
-	
-	{attribute 'pytmc' := '
+
+    {attribute 'pytmc' := '
     pv: OPN_OK;
-	field: ZNAM OPN ILK NOT OK ;
-	field: ONAM OPN ILK OK ;
-	io: i;
- 	'}
-	xOPN_OK	:	BOOL;	(* Final SUM of DP_OK and EXT_OK, needed because it allows the DP ilk to be switched off, see FB_VGC.Dis_DPIlk *)
-	
-(* States *)	
-{attribute 'pytmc' := '
-	pv: POS_STATE;
-	type: mbbi ;
-	field: ZRST OPEN ;
-	field: ONST CLOSED ;
-	field: TWST MOVING ;
-	field: THST INVALID ;
-	field: FRST OPEN_F ;
-	io: i;
-	'}
-	eState	:	E_ValvePositionState := INVALID;
+    field: ZNAM OPN ILK NOT OK ;
+    field: ONAM OPN ILK OK ;
+    io: i;
+     '}
+    xOPN_OK	:	BOOL;	(* Final SUM of DP_OK and EXT_OK, needed because it allows the DP ilk to be switched off, see FB_VGC.Dis_DPIlk *)
 
-	{attribute 'pytmc' := '
-	pv: STATE;
-	field: ZRST Vented;
-	field: ONST At Vacuum;
-	field: TWST Differential Pressure;
-	field: THST Lost Vacuum;
-	field: FRST Ext Fault;
-	field: FVST AT Vacuum;
-	field: SXST Triggered;
-	field: SVST Vacuum Fault;
-	field: EIST Close Timeout;
-	field: NIST Open Timeout;
-	io: i;
-	'}
-	eVGC_State : E_VGC;
+(* States *)
+{attribute 'pytmc' := '
+    pv: POS_STATE;
+    type: mbbi ;
+    field: ZRST OPEN ;
+    field: ONST CLOSED ;
+    field: TWST MOVING ;
+    field: THST INVALID ;
+    field: FRST OPEN_F ;
+    io: i;
+    '}
+    eState	:	E_ValvePositionState := INVALID;
+
+    {attribute 'pytmc' := '
+    pv: STATE;
+    field: ZRST Vented;
+    field: ONST At Vacuum;
+    field: TWST Differential Pressure;
+    field: THST Lost Vacuum;
+    field: FRST Ext Fault;
+    field: FVST AT Vacuum;
+    field: SXST Triggered;
+    field: SVST Vacuum Fault;
+    field: EIST Close Timeout;
+    field: NIST Open Timeout;
+    io: i;
+    '}
+    eVGC_State : E_VGC;
 
 (* Error *)
-	
-	{attribute 'pytmc' := '
+
+    {attribute 'pytmc' := '
     pv: ERROR;
-	field: ZNAM NO ERROR ;
-	field: ONAM ERROR PRESENT ;
-	io: o;
+    field: ZNAM NO ERROR ;
+    field: ONAM ERROR PRESENT ;
+    io: o;
     '}
-	bErrorPresent : BOOL;
-	iErrorCode: INT;
-	{attribute 'pytmc' := '
+    bErrorPresent : BOOL;
+    iErrorCode: INT;
+    {attribute 'pytmc' := '
     pv: ErrMsg;
-	io: o;
+    io: o;
     '}
-	sErrorMessage: STRING;
-	{attribute 'pytmc' := '
+    sErrorMessage: STRING;
+    {attribute 'pytmc' := '
     pv: LOGGER;
-	io: io;
-	field: ZNAM OFF ;
-	field: ONAM ON ;
+    io: io;
+    field: ZNAM OFF ;
+    field: ONAM ON ;
     '}
-	xLog : BOOL:=TRUE;
+    xLog : BOOL:=TRUE;
 
 END_STRUCT
 END_TYPE

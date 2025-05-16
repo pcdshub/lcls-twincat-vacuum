@@ -5,30 +5,30 @@
 (* This function is for the Pirani MKS 317 connected to a 937A*)
 (* This function block is used to provide protection and automatic turn on of ion gauges,
  it also manages the turn on of the AT_VAC boolean, and checks to make sure the pressure is good *)
-{attribute 'obsolete' := 'FB_MKS317A has been deprecated and is not valid!'} 
+{attribute 'obsolete' := 'FB_MKS317A has been deprecated and is not valid!'}
 FUNCTION_BLOCK FB_MKS317A  Extends FB_GaugeBase
 VAR_IN_OUT
-	
+
 END_VAR
 VAR_INPUT
-	
+
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	PG : ST_VG;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    PG : ST_VG;
 END_VAR
 VAR
-	rV	:	REAL;
-	rMinPressure: REAL := 1E-3;
-	rDefaultVAC_SP: REAL :=5E-2; // Default 50 mT
-	rValidLoBoundary	:	REAL := 0.2;//Manual page 61
-	rValidHiBoundary	:	REAL := 9.7; //manual oage 61
-	rDisconnectedBoundary	:	REAL := 0.17;
-	rNoSensorBoundary	:	REAL := 10;
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    rV	:	REAL;
+    rMinPressure: REAL := 1E-3;
+    rDefaultVAC_SP: REAL :=5E-2; // Default 50 mT
+    rValidLoBoundary	:	REAL := 0.2;//Manual page 61
+    rValidHiBoundary	:	REAL := 9.7; //manual oage 61
+    rDisconnectedBoundary	:	REAL := 0.17;
+    rNoSensorBoundary	:	REAL := 10;
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -41,24 +41,24 @@ rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;
 PG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV)/0.6)-12)); //manual page 61 937A
 
 
-//Default setpoint 
+//Default setpoint
 IF PG.rVAC_SP = 0 THEN
-	PG.rVAC_SP := rDefaultVAC_SP;
+    PG.rVAC_SP := rDefaultVAC_SP;
 END_IF
 
 IF (rV <=9.7 ) AND (rV>=0.6) THEN
-	PG.eState := Valid; // normal
+    PG.eState := Valid; // normal
 ELSIF rV >= 0.18 AND rV <= 0.22 THEN
-	PG.eState := ValidLo; //LO
-	PG.rPRESS := rMinPressure;
+    PG.eState := ValidLo; //LO
+    PG.rPRESS := rMinPressure;
 ELSIF rV > 9.7 AND rV<= 9.9 THEN
-	PG.eState := ValidHi; //HIGH
+    PG.eState := ValidHi; //HIGH
 ELSIF rV < 0.18 THEN
-	PG.eState := GaugeDisconnected; //not on
-	PG.rPRESS := -1;
+    PG.eState := GaugeDisconnected; //not on
+    PG.rPRESS := -1;
 ELSE
-	PG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
-	PG.rPRESS := -1;
+    PG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+    PG.rPRESS := -1;
 END_IF
 
 (* Pressure OK check *)
@@ -78,28 +78,28 @@ IO();
     <Action Name="ACT_Logger" Id="{7344e8d9-43b6-410c-a80c-1b1f154041bf}">
       <Implementation>
         <ST><![CDATA[IF (PG.xLog) THEN
-//STATE Logger  
+//STATE Logger
 IF ePrevState <> PG.eState THEN
-	  CASE PG.eState OF
-		ValidHi:
-			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
-		ValidLo:
-			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
-		Valid:
-			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-  		GaugeDisconnected:
-			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-		PressInvalid:
-			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-		OoR:
-			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-		Starting:
-			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := PG.eState;  
+      CASE PG.eState OF
+        ValidHi:
+            fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+        ValidLo:
+            fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+        Valid:
+            fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+          GaugeDisconnected:
+            fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+        PressInvalid:
+            fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+        OoR:
+            fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+        Starting:
+            fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := PG.eState;
   END_IF
  END_IF
-  
+
 
 ]]></ST>
       </Implementation>

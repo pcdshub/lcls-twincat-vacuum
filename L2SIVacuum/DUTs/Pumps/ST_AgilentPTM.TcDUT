@@ -5,93 +5,93 @@
 STRUCT
 
 (* Inputs *)
-	(* 24V in Ramp state; 0V for others *)
-	{attribute 'pytmc' := '
+    (* 24V in Ramp state; 0V for others *)
+    {attribute 'pytmc' := '
     pv: START;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-    i_xSTART :	BOOL; 
-	
-	(* setpoint related to frequency *)
-	{attribute 'pytmc' := '
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    i_xSTART :	BOOL;
+
+    (* setpoint related to frequency *)
+    {attribute 'pytmc' := '
     pv: R1Status;
-	field: ZNAM FALSE; 
-	field: ONAM AT SPEED;
-	io: i;
-	'}
-	i_xR1	:  BOOL;
-	
-	(* setpoint related to Power *)
-	{attribute 'pytmc' := '
+    field: ZNAM FALSE;
+    field: ONAM AT SPEED;
+    io: i;
+    '}
+    i_xR1	:  BOOL;
+
+    (* setpoint related to Power *)
+    {attribute 'pytmc' := '
     pv: R2Status;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	i_xR2	:  BOOL;
-	
-	(* low speed mode *)
-	{attribute 'pytmc' := '
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    i_xR2	:  BOOL;
+
+    (* low speed mode *)
+    {attribute 'pytmc' := '
     pv: LSPD;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	i_xLSpd	:  BOOL;
-	
-	
-	(* Fault input*)
-	//i_xFault : BOOL;  Inherit ST_PTM.xFault
-	
-	
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    i_xLSpd	:  BOOL;
+
+
+    (* Fault input*)
+    //i_xFault : BOOL;  Inherit ST_PTM.xFault
+
+
 
 (* controls *)
-	(* Start/Stop - 
-		q_RunDo ;   Inherit ST_PTM.
-	 *)
-	
-	(* Low speed control *)
-	{attribute 'pytmc' := '
+    (* Start/Stop -
+        q_RunDo ;   Inherit ST_PTM.
+     *)
+
+    (* Low speed control *)
+    {attribute 'pytmc' := '
     pv: LSPD_DO;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	q_xLSpd		:  BOOL; 
-	
-	(*Soft start *)
-	{attribute 'pytmc' := '
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    q_xLSpd		:  BOOL;
+
+    (*Soft start *)
+    {attribute 'pytmc' := '
     pv: XSS_DO;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	q_xSS   	:  BOOL; 
-		
-	(*pump Lock*)
-	{attribute 'pytmc' := '
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    q_xSS   	:  BOOL;
+
+    (*pump Lock*)
+    {attribute 'pytmc' := '
     pv: FaultLock;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	xPumpFaultLock : BOOL := FALSE;
-	// i_xPumpLockReset: BOOL := FALSE; Inherit ST_PTM.xReset
-	// Error messages
-	{attribute 'pytmc' := '
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    xPumpFaultLock : BOOL := FALSE;
+    // i_xPumpLockReset: BOOL := FALSE; Inherit ST_PTM.xReset
+    // Error messages
+    {attribute 'pytmc' := '
     pv: ErrorMessage;
-	io: i;
-	'}
-	sError : STRING;
-	{attribute 'pytmc' := '
-	pv: Power_MON;
-	io: i;
-	field: PREC 2
-	field: EGU "W";
-	'}
-	i_rPowerMon : REAL;
+    io: i;
+    '}
+    sError : STRING;
+    {attribute 'pytmc' := '
+    pv: Power_MON;
+    io: i;
+    field: PREC 2
+    field: EGU "W";
+    '}
+    i_rPowerMon : REAL;
 
 END_STRUCT
 END_TYPE

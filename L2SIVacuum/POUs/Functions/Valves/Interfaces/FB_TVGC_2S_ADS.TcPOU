@@ -6,21 +6,21 @@
 (*Use with FB_ADS_WATCHDOG on remotePLC*)
 FUNCTION_BLOCK FB_TVGC_2S_ADS extends FB_ADS
 VAR_INPUT
-	sNetId : String; //NetID of the Destination PLC controller
-	nPort : UINT; // port number
-	sVarName : string;// the variable name of the (device) declared function block.
-	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
+    sNetId : String; //NetID of the Destination PLC controller
+    nPort : UINT; // port number
+    sVarName : string;// the variable name of the (device) declared function block.
+    iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := 'pv: '}
-	VGC:ST_VGC_2S;
-	bError:BOOL;
+    {attribute 'pytmc' := 'pv: '}
+    VGC:ST_VGC_2S;
+    bError:BOOL;
 END_VAR
 VAR
-	fb_CheckWatchdog: FB_CheckWatchdog;
-	fb_Read_VGC: FB_ReadAdsSymByName;
-	ftReset: F_TRIG;
-	xFirstPass: bool:= true;
+    fb_CheckWatchdog: FB_CheckWatchdog;
+    fb_Read_VGC: FB_ReadAdsSymByName;
+    ftReset: F_TRIG;
+    xFirstPass: bool:= true;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -28,26 +28,26 @@ END_VAR
 xFirstPass:=false;
 (*calling ADS read function*)
 fb_Read_VGC(
-	bRead:= ftReset.Q, 
-	sNetId:= sNetId, 
-	nPort:= nPort, 
-	sVarName:= CONCAT(sVarName,'.iq_stValve'), 
-	nDestAddr:= ADR(VGC), 
-	nLen:= SIZEOF(VGC), 
-	tTimeout:= , 
-	eComMode:= eAdsComModeFastCom, 
-	bBusy=> , 
-	bError=> , 
-	nErrorId=> );
-	
+    bRead:= ftReset.Q,
+    sNetId:= sNetId,
+    nPort:= nPort,
+    sVarName:= CONCAT(sVarName,'.iq_stValve'),
+    nDestAddr:= ADR(VGC),
+    nLen:= SIZEOF(VGC),
+    tTimeout:= ,
+    eComMode:= eAdsComModeFastCom,
+    bBusy=> ,
+    bError=> ,
+    nErrorId=> );
+
 
 (*Error*)
 fb_CheckWatchdog(
-	bEnable:= TRUE, 
-	tWatchdogTime:= T#900ms, 
-	nCnt:= iWatchdog , 
-	bWatchdog=> , 
-	nLastCnt=> );
+    bEnable:= TRUE,
+    tWatchdogTime:= T#900ms,
+    nCnt:= iWatchdog ,
+    bWatchdog=> ,
+    nLastCnt=> );
 bError:= fb_Read_VGC.bError OR fb_CheckWatchdog.bWatchdog;
 
 ACT_Logger();]]></ST>

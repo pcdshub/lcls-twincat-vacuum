@@ -4,13 +4,13 @@
     <Declaration><![CDATA[(*deprecated*)
 FUNCTION_BLOCK FB_TurboExtLogic
 VAR_IN_OUT
-	Turbo		:	ST_AgilentPTM;
+    Turbo		:	ST_AgilentPTM;
 END_VAR
 VAR_INPUT
-	BackingGauge:	ST_VG;
-	InletGauge	:	ST_VG;
-	VentValve	:	ST_VCC_NO;
-	ScrollPump	:	ST_RoughPump;
+    BackingGauge:	ST_VG;
+    InletGauge	:	ST_VG;
+    VentValve	:	ST_VCC_NO;
+    ScrollPump	:	ST_RoughPump;
 END_VAR
 VAR_OUTPUT
 END_VAR

@@ -8,39 +8,39 @@ FUNCTION_BLOCK FB_PTM_Ebara_011M EXTENDS FB_Pump
 VAR_IN_OUT
 END_VAR
 VAR_INPUT
-	i_rMaxBackingPressure : REAL := 3;
-	i_iMinSpeed : DINT := 100; //check pump manual for setting
-	i_iMaxSpeed : DINT := 560; // check pump manual for setting
-	i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
+    i_rMaxBackingPressure : REAL := 3;
+    i_iMinSpeed : DINT := 100; //check pump manual for setting
+    i_iMaxSpeed : DINT := 560; // check pump manual for setting
+    i_xExtILKOk : BOOL; // Connect to external interlock logic, TRUE if not used.
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	iq_stPTM : ST_EbaraPTM;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    iq_stPTM : ST_EbaraPTM;
 END_VAR
 VAR
-	TOF_SetSpeed: TON := (PT:=T#1S);
-	TOF_RESET: TON :=(PT:=T#1S);
-	i_iADCBits : UINT := 12;
-	(*IO*)
-	(*inputs*)
-	i_xDecel AT %I* : BOOL; //Link to brake input
-	i_xAccel AT %I* : BOOL;
-	i_xRotate AT %I* : BOOL;
-	i_xFaultNC AT %I* : BOOL;// remove?
-	i_xAtSpd AT %I* : BOOL;
-	i_iRawSpeed AT %I* : INT; // Link to Analog input
-	
-	(*output*)
-	q_xStart AT %Q* : BOOL; // link to output
-	q_xStop AT %Q* : BOOL; //Link to output
-	q_xReset AT %Q* : BOOL;
-	q_xProtection AT %Q* : BOOL;
-	q_xSetSpeed AT %Q* : BOOL;
-	q_iSpeedSet AT %Q* :INT;	//Link to analog Output
-	
-	
+    TOF_SetSpeed: TON := (PT:=T#1S);
+    TOF_RESET: TON :=(PT:=T#1S);
+    i_iADCBits : UINT := 12;
+    (*IO*)
+    (*inputs*)
+    i_xDecel AT %I* : BOOL; //Link to brake input
+    i_xAccel AT %I* : BOOL;
+    i_xRotate AT %I* : BOOL;
+    i_xFaultNC AT %I* : BOOL;// remove?
+    i_xAtSpd AT %I* : BOOL;
+    i_iRawSpeed AT %I* : INT; // Link to Analog input
+
+    (*output*)
+    q_xStart AT %Q* : BOOL; // link to output
+    q_xStop AT %Q* : BOOL; //Link to output
+    q_xReset AT %Q* : BOOL;
+    q_xProtection AT %Q* : BOOL;
+    q_xSetSpeed AT %Q* : BOOL;
+    q_iSpeedSet AT %Q* :INT;	//Link to analog Output
+
+
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Ebara ETC control FB
@@ -64,58 +64,58 @@ iq_stPTM.q_xProtection := TRUE;//iq_stPTM.xExtRunOk;
 ACT_IO();
 
 (* Basic pump supervisory section *)
-	(* If override mode, ignore everything else *)
+    (* If override mode, ignore everything else *)
 IF iq_stPTM.i_xOverride THEN
-	IF iq_stPTM.xRunSW THEN
-		iq_stPTM.q_RunDO:=TRUE;
-	ELSE
-		iq_stPTM.q_RunDO:=FALSE;
-	END_IF
-	//Handle faults - the way the Ebara cable is done, xFault is normally closed
+    IF iq_stPTM.xRunSW THEN
+        iq_stPTM.q_RunDO:=TRUE;
+    ELSE
+        iq_stPTM.q_RunDO:=FALSE;
+    END_IF
+    //Handle faults - the way the Ebara cable is done, xFault is normally closed
 ELSIF iq_stPTM.i_xFault OR (iq_stPTM.q_RunDO AND NOT iq_stPTM.xExtRunOk) THEN
-	iq_stPTM.q_RunDO:=FALSE;
-	//iq_stPTM.q_xProtection:=FALSE;
-	iq_stPTM.xRunSW:=FALSE;
-	//And one for when we need to start the pump normally. Only allows pump to be started if ILK ok.
+    iq_stPTM.q_RunDO:=FALSE;
+    //iq_stPTM.q_xProtection:=FALSE;
+    iq_stPTM.xRunSW:=FALSE;
+    //And one for when we need to start the pump normally. Only allows pump to be started if ILK ok.
 ELSIF iq_stPTM.xRunSW AND iq_stPTM.xExtRunOk THEN
-	iq_stPTM.q_RunDO:=TRUE;
+    iq_stPTM.q_RunDO:=TRUE;
 END_IF
 //One section for when pump is told to stop
 IF NOT iq_stPTM.xRunSW THEN
-		iq_stPTM.q_RunDO:=FALSE;
-		IF (NOT iq_stPTM.i_xFault) AND (NOT iq_stPTM.i_xALARM) THEN iq_stPTM.eState := pumpSTOPPED; END_IF;
-END_IF 
+        iq_stPTM.q_RunDO:=FALSE;
+        IF (NOT iq_stPTM.i_xFault) AND (NOT iq_stPTM.i_xALARM) THEN iq_stPTM.eState := pumpSTOPPED; END_IF;
+END_IF
 
 //Set the Start and Stop outputs to Run do . check manual.
 iq_stPTM.q_xStart := iq_stPTM.q_xStop := iq_stPTM.q_RunDO;
 
 (* to reset the Input speed OK bit *)
  TOF_SetSpeed (IN:= iq_stPTM.iq_xSpeedSet, Q => );
- IF TOF_SetSpeed.Q THEN iq_stPTM.iq_xSpeedSet:= FALSE; 
+ IF TOF_SetSpeed.Q THEN iq_stPTM.iq_xSpeedSet:= FALSE;
  END_IF
  (* to reset the Reset Bit *)
- IF (iq_stPTM.xResetSW ) THEN  iq_stPTM.q_xReset := TRUE; 
+ IF (iq_stPTM.xResetSW ) THEN  iq_stPTM.q_xReset := TRUE;
  END_IF
  TOF_RESET (IN:= iq_stPTM.q_xReset, Q => );
- IF TOF_RESET.Q THEN 
-	iq_stPTM.q_xReset:= FALSE;
-	iq_stPTM.xResetSW := FALSE; 
+ IF TOF_RESET.Q THEN
+    iq_stPTM.q_xReset:= FALSE;
+    iq_stPTM.xResetSW := FALSE;
  END_IF
- 
- 
+
+
  (*Pump STATE*)
-IF iq_stPtm.i_xFault THEN 
-	iq_stPtm.eState := pumpFAULT;
+IF iq_stPtm.i_xFault THEN
+    iq_stPtm.eState := pumpFAULT;
 ELSIF iq_stPTM.i_xDecel AND NOT iq_stPtm.q_RunDO THEN
-	iq_stPtm.eState := pumpSTOPPING;
+    iq_stPtm.eState := pumpSTOPPING;
 ELSIF NOT iq_stPtm.q_RunDO AND NOT iq_stPTM.i_xFault THEN
-	iq_stPtm.eState := pumpSTOPPED;
+    iq_stPtm.eState := pumpSTOPPED;
 ELSIF NOT iq_stPtm.i_xAtSpd  AND iq_stPtm.q_RunDO THEN
-	iq_stPtm.eState := pumpSTARTING;
+    iq_stPtm.eState := pumpSTARTING;
 ELSIF iq_stPtm.i_xAtSpd AND iq_stPtm.q_RunDO THEN
-	iq_stPtm.eState := pumpRUNNING;
-ELSE 
-	iq_stPtm.eState := pumpFAULT;
+    iq_stPtm.eState := pumpRUNNING;
+ELSE
+    iq_stPtm.eState := pumpFAULT;
 END_IF
 
 (*Validate Backing Pressure set point doesn't exceed the Maximum backingPressure*)
@@ -134,23 +134,23 @@ ACT_Persistent();
       <Implementation>
         <ST><![CDATA[(*soft io mapping*)
 (*inputs*)
-	iq_stPTM.i_xDecel := i_xDecel ;
-	iq_stPTM.i_xAccel :=	i_xAccel ;
-	iq_stPTM.i_xRotate :=	i_xRotate;
-	iq_stPTM.i_xNCFault :=	i_xFaultNC ;
-	iq_stPTM.i_xAtSpd := i_xAtSpd;
-	//iq_stPTM.i_iRawSpeed :=	i_iRawSpeed;
+    iq_stPTM.i_xDecel := i_xDecel ;
+    iq_stPTM.i_xAccel :=	i_xAccel ;
+    iq_stPTM.i_xRotate :=	i_xRotate;
+    iq_stPTM.i_xNCFault :=	i_xFaultNC ;
+    iq_stPTM.i_xAtSpd := i_xAtSpd;
+    //iq_stPTM.i_iRawSpeed :=	i_iRawSpeed;
 //V (AI/32767*10) * (33600 {Max RPM} - 100) / 5
 (*outputs*)
-	q_xStart:= iq_stPTM.q_xStart;
-	q_xStop := iq_stPTM.q_xStop;
-	q_xReset := iq_stPTM.q_xReset;
-	q_xProtection := iq_stPTM.q_xProtection;
-	q_xSetSpeed := iq_stPTM.iq_xSpeedSet;
-(*Validate Set Speed within range *) 
-IF iq_stPTM.q_iSpeedSet  >= i_iMinSpeed AND iq_stPTM.q_iSpeedSet  <=i_iMaxSpeed THEN 
-	q_iSpeedSet  := LIMIT(0, DINT_TO_INT((iq_stPTM.q_iSpeedSet - i_iMinSpeed) / i_iMaxSpeed *16383/5),16383); //Max output 5V
-	//:= DINT_TO_INT((iq_stPTM.q_iSpeedSet-100) / 33600 *32767/2); //Max 5V
+    q_xStart:= iq_stPTM.q_xStart;
+    q_xStop := iq_stPTM.q_xStop;
+    q_xReset := iq_stPTM.q_xReset;
+    q_xProtection := iq_stPTM.q_xProtection;
+    q_xSetSpeed := iq_stPTM.iq_xSpeedSet;
+(*Validate Set Speed within range *)
+IF iq_stPTM.q_iSpeedSet  >= i_iMinSpeed AND iq_stPTM.q_iSpeedSet  <=i_iMaxSpeed THEN
+    q_iSpeedSet  := LIMIT(0, DINT_TO_INT((iq_stPTM.q_iSpeedSet - i_iMinSpeed) / i_iMaxSpeed *16383/5),16383); //Max output 5V
+    //:= DINT_TO_INT((iq_stPTM.q_iSpeedSet-100) / 33600 *32767/2); //Max 5V
 END_IF
 
 (* Pump speed calculation *)
@@ -160,7 +160,7 @@ iq_stPTM.i_diCurSpd := LREAL_TO_DINT(560*LREAL_TO_DINT(i_iRawSpeed)/16383);
 //iq_stPTM.i_diCurSpd := LREAL_TO_DINT(i_iRawSpeed/(EXPT(2,i_iADCBits)-1)*67000);
 //V (AI/(2^{# ADC bits} -1 ) * 10[ADC 10V scaling]) * (33600 [Max RPM] - 100) / 5
 ELSE
-	iq_stPTM.i_diCurSpd := 0;
+    iq_stPTM.i_diCurSpd := 0;
 END_IF*)
 
 //Normally closed fault handling
@@ -169,28 +169,28 @@ iq_stPTM.i_xFault := NOT iq_stPTM.i_xNCFault; //??]]></ST>
     </Action>
     <Action Name="ACT_Logger" Id="{f7305e4c-a374-4ba3-b968-9b8625615ceb}">
       <Implementation>
-        <ST><![CDATA[//STATE Logger  
+        <ST><![CDATA[//STATE Logger
 IF NOT i_xExtIlkOK AND ePrevState = pumpRUNNING THEN
- 		fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);  	
+         fbLogger(sMsg:='Lost external interlock while pump was running.', eSevr:=TcEventSeverity.Critical);
 END_IF
 
 
 IF ePrevState <> iq_stPTM.eState THEN
-	  CASE iq_stPTM.eState OF
-		pumpFAULT:
-			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
-  		pumpSTOPPED:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
-		pumpSTARTING:
-			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
-		pumpRUNNING:
-			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
-		pumpSTOPPING:
-			fbLogger(sMsg:='Pump decelerating.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := iq_stPTM.eState;  
+      CASE iq_stPTM.eState OF
+        pumpFAULT:
+            fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+          pumpSTOPPED:
+            fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+        pumpSTARTING:
+            fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+        pumpRUNNING:
+            fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+        pumpSTOPPING:
+            fbLogger(sMsg:='Pump decelerating.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := iq_stPTM.eState;
   END_IF
-  
+
 // ILK logger
 
 
@@ -211,29 +211,29 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Lost Alarm OK bit', eSevr:=TcEventSeverity
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
-	SUPER^.bRestorePersistentData	:= FALSE;
-	IF (rBackingPressureSP <> 0) THEN
-		iq_stPTM.rBackingPressureSP := rBackingPressureSP;
-	END_IF;
-	IF (rInletPressureSP <> 0) THEN
-		iq_stPTM.rInletPressureSP := rInletPressureSP;
-	END_IF;
+    SUPER^.bRestorePersistentData	:= FALSE;
+    IF (rBackingPressureSP <> 0) THEN
+        iq_stPTM.rBackingPressureSP := rBackingPressureSP;
+    END_IF;
+    IF (rInletPressureSP <> 0) THEN
+        iq_stPTM.rInletPressureSP := rInletPressureSP;
+    END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (iq_stPTM.rBackingPressureSP = rBackingPressureSP) THEN
-	rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
+    rBackingPressureSP:= iq_stPTM.rBackingPressureSP;
 END_IF;
 
 IF NOT (iq_stPTM.rInletPressureSP = rInletPressureSP) THEN
-	rInletPressureSP := iq_stPTM.rInletPressureSP;
+    rInletPressureSP := iq_stPTM.rInletPressureSP;
 END_IF;]]></ST>
       </Implementation>
     </Action>
     <Method Name="BackingPressureSetPoint" Id="{6ea1b85b-ed19-4997-8749-4c558b12344a}">
       <Declaration><![CDATA[METHOD PUBLIC BackingPressureSetPoint : REAL
 VAR_INPUT
-	i_SetPoint : REAL;
-	rMaxBackingPressure: REAL;
+    i_SetPoint : REAL;
+    rMaxBackingPressure: REAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -243,7 +243,7 @@ END_VAR
     <Method Name="M_Run" Id="{c9c0a6c1-7b74-40d6-9159-49ad78962e29}">
       <Declaration><![CDATA[METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
-	run:bool; // set to true to run, false to stop;
+    run:bool; // set to true to run, false to stop;
 END_VAR
 ]]></Declaration>
       <Implementation>

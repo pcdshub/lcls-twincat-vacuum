@@ -3,72 +3,72 @@
   <DUT Name="ST_VCN" Id="{09a4fd4d-af49-4c30-8fb9-576bd4a65636}">
     <Declaration><![CDATA[TYPE ST_VCN :
 STRUCT
-	(* VCN - Valve Controlled Needle
-	Used for Pfeiffer EVR 116 needle valves *)
-	{attribute 'pytmc' := '
-	pv: OPN_SW; 
-	field: ZNAM CLOSE; 
-	field: ONAM OPEN;
-	io: io ;
-	'}
-	xOPN_SW	: BOOL;
-	{attribute 'pytmc' := '
+    (* VCN - Valve Controlled Needle
+    Used for Pfeiffer EVR 116 needle valves *)
+    {attribute 'pytmc' := '
+    pv: OPN_SW;
+    field: ZNAM CLOSE;
+    field: ONAM OPEN;
+    io: io ;
+    '}
+    xOPN_SW	: BOOL;
+    {attribute 'pytmc' := '
     pv: POS_RDBK;
-	io: i;
+    io: i;
     '}
-	// Inputs
-	i_iPosition	:	REAL; //Position readback (if it exists)
-	
-	// Outputs
-	{attribute 'pytmc' := '
-	pv: POS_AO_R;
-	io: i ;
-	'}
-	q_iRawPosition	:	INT; //Position control 
-	//For the EVR 116 this is 0-10V analog 0.4 closed to 9.1 Closed
-	
-	//Softvariables
-	{attribute 'pytmc' := '
-    pv: ILK_OK;
-	field: ZNAM NOT OK ;
-	field: ONAM OK ;
-	io: i;
-    '}
-	xIlkOK	:	BOOL := FALSE; // Interlock Bit
-	
-	{attribute 'pytmc' := ' 
-	pv: ILK_SP;
-	io: o;
-	field: HOPR 1000
-	field: LOPR 0
-	field: PREC 2
-	field: EGU "TORR"
-	autosave_pass1: VAL DESC
-	'}
-	rIlk_SP	:	REAL := 0.0005;	// Interlock setpoint for gauges on both sides of valve
-	
-	{attribute 'pytmc' := '
-    pv: Limit;
-	io: io;
-	autosave_pass1: VAL DESC
-    '}
-	rUpperLimit	:	REAL:=100; // Percentage//Upper limit on valve open
-	{attribute 'pytmc' := '
-	pv: POS_REQ;
-	io: io;
-	'}
-	rReqPosition	:	REAL; //Requested position (0.0-100.0%)
-	{attribute 'pytmc' :=  ' 
-	pv: STATE ;
-	field: ZRST Close ;
-	field: ONST Open;
-	field: TWST PressureControl ;
-	field: THST ManualControl ;
-	io: io
-	'}
-	eValveControl	:	E_VCN := CloseValve; // Valve control state
+    // Inputs
+    i_iPosition	:	REAL; //Position readback (if it exists)
 
-	ftIlk	:	F_TRIG;	
+    // Outputs
+    {attribute 'pytmc' := '
+    pv: POS_AO_R;
+    io: i ;
+    '}
+    q_iRawPosition	:	INT; //Position control
+    //For the EVR 116 this is 0-10V analog 0.4 closed to 9.1 Closed
+
+    //Softvariables
+    {attribute 'pytmc' := '
+    pv: ILK_OK;
+    field: ZNAM NOT OK ;
+    field: ONAM OK ;
+    io: i;
+    '}
+    xIlkOK	:	BOOL := FALSE; // Interlock Bit
+
+    {attribute 'pytmc' := '
+    pv: ILK_SP;
+    io: o;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    rIlk_SP	:	REAL := 0.0005;	// Interlock setpoint for gauges on both sides of valve
+
+    {attribute 'pytmc' := '
+    pv: Limit;
+    io: io;
+    autosave_pass1: VAL DESC
+    '}
+    rUpperLimit	:	REAL:=100; // Percentage//Upper limit on valve open
+    {attribute 'pytmc' := '
+    pv: POS_REQ;
+    io: io;
+    '}
+    rReqPosition	:	REAL; //Requested position (0.0-100.0%)
+    {attribute 'pytmc' :=  '
+    pv: STATE ;
+    field: ZRST Close ;
+    field: ONST Open;
+    field: TWST PressureControl ;
+    field: THST ManualControl ;
+    io: io
+    '}
+    eValveControl	:	E_VCN := CloseValve; // Valve control state
+
+    ftIlk	:	F_TRIG;
 
 END_STRUCT
 END_TYPE
