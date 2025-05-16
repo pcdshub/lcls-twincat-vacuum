@@ -6,7 +6,7 @@
     <ProjectGuid>{19f43c40-aa59-45d4-a14d-cfb75472aebc}</ProjectGuid>
     <SubObjectsSortedByName>True</SubObjectsSortedByName>
     <Name>L2SIVacuum</Name>
-    <ProgramVersion>3.1.4020.5</ProgramVersion>
+    <ProgramVersion>3.1.4026.15</ProgramVersion>
     <Application>{ec2c8f51-7353-4d04-b987-61112033694a}</Application>
     <TypeSystem>{01172995-117a-4a34-b9ae-68487ff7e1d8}</TypeSystem>
     <Implicit_Task_Info>{6bca474a-79f2-4149-8428-db181c5ee816}</Implicit_Task_Info>
