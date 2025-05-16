@@ -16266,7 +16266,7 @@ FB_VRC_NO_FFO
     	tBPTMtimeout:TON;
     	bptm: BeamParameterTransitionManager;  
     	FFO    :    FB_FastFault :=(
-            i_DevName := 'VGC',
+            i_DevName := i_sDevName,
             i_Desc := 'Fault occurs when the valve is not in safe state',
             i_TypeCode := 16#1010);
     	xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
@@ -16416,6 +16416,7 @@ FB_VRC_NO_FFO
          i_xMoving:=bMoving,
          i_xDoneMoving:= bDone,
          stCurrentBeamParameters:=PMPS_GVL.stCurrentBeamParameters,
+         sDeviceName:=i_sDevName,
          q_xTransitionAuthorized=>);
     // Timeout
     tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);

@@ -16403,7 +16403,7 @@ END_METHOD
     <span class="n">tBPTMtimeout</span><span class="p">:</span><span class="n">TON</span><span class="p">;</span>
     <span class="n">bptm</span><span class="p">:</span> <span class="n">BeamParameterTransitionManager</span><span class="p">;</span>
     <span class="n">FFO</span>    <span class="p">:</span>    <span class="n">FB_FastFault</span> <span class="o">:=</span><span class="p">(</span>
-        <span class="n">i_DevName</span> <span class="o">:=</span> <span class="s1">&#39;VGC&#39;</span><span class="p">,</span>
+        <span class="n">i_DevName</span> <span class="o">:=</span> <span class="n">i_sDevName</span><span class="p">,</span>
         <span class="n">i_Desc</span> <span class="o">:=</span> <span class="s1">&#39;Fault occurs when the valve is not in safe state&#39;</span><span class="p">,</span>
         <span class="n">i_TypeCode</span> <span class="o">:=</span> <span class="mi">16</span><span class="c1">#1010);</span>
     <span class="n">xMPS_OK</span><span class="p">:</span>        <span class="n">BOOL</span><span class="p">;</span> <span class="p">(</span><span class="o">*</span><span class="n">MPS</span> <span class="n">Fast</span> <span class="n">OK</span><span class="p">,</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">when</span> <span class="n">the</span> <span class="n">Valve</span> <span class="ow">is</span> <span class="n">Open</span><span class="o">*</span><span class="p">)</span>
@@ -16553,6 +16553,7 @@ END_METHOD
      <span class="n">i_xMoving</span><span class="o">:=</span><span class="n">bMoving</span><span class="p">,</span>
      <span class="n">i_xDoneMoving</span><span class="o">:=</span> <span class="n">bDone</span><span class="p">,</span>
      <span class="n">stCurrentBeamParameters</span><span class="o">:=</span><span class="n">PMPS_GVL</span><span class="o">.</span><span class="n">stCurrentBeamParameters</span><span class="p">,</span>
+     <span class="n">sDeviceName</span><span class="o">:=</span><span class="n">i_sDevName</span><span class="p">,</span>
      <span class="n">q_xTransitionAuthorized</span><span class="o">=&gt;</span><span class="p">);</span>
 <span class="o">//</span> <span class="n">Timeout</span>
 <span class="n">tBPTMtimeout</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="n">bMoving</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">bptm</span><span class="o">.</span><span class="n">q_xTransitionAuthorized</span> <span class="p">,</span> <span class="n">PT</span><span class="o">:=</span><span class="n">T</span><span class="c1">#1S);</span>
