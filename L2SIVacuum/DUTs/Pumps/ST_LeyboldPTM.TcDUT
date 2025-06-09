@@ -3,44 +3,44 @@
   <DUT Name="ST_LeyboldPTM" Id="{928359f7-41f5-4b97-ac89-aed21155294b}">
     <Declaration><![CDATA[TYPE ST_LeyboldPTM EXTENDS ST_PTM :
 STRUCT
-(* Extension of the PTM archetype for Oerlikon turbo controllers 
-Applicable to: 
+(* Extension of the PTM archetype for Oerlikon turbo controllers
+Applicable to:
 Mag Drive Digital
 Mag Drive S
 More?
 *)
 //Readbacks
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv: DECEL;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	i_xDecel	:	BOOL;
-	{attribute 'pytmc' := '
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    i_xDecel	:	BOOL;
+    {attribute 'pytmc' := '
     pv: PWR_RBV;
-	io: i;
-	'}
-	i_diPwr   	:   DINT;
-	i_diElecTemp:	DINT;
-	{attribute 'pytmc' := '
+    io: i;
+    '}
+    i_diPwr   	:   DINT;
+    i_diElecTemp:	DINT;
+    {attribute 'pytmc' := '
     pv: OVR_TEMP;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	i_xTempFault:	BOOL;
-	i_xNCError	:	BOOL; //Using normally closed wiring
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    i_xTempFault:	BOOL;
+    i_xNCError	:	BOOL; //Using normally closed wiring
 
 //Controls
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv: REMOTE;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: io;
-	'}
-	q_xRemote :BOOL;
-	i_xRemote : BOOL; (* Remote control enabled *)
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: io;
+    '}
+    q_xRemote :BOOL;
+    i_xRemote : BOOL; (* Remote control enabled *)
 END_STRUCT
 END_TYPE
 ]]></Declaration>

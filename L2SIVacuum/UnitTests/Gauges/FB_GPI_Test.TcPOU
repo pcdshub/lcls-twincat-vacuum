@@ -7,10 +7,10 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	fb_MKS275: FB_MKS275;
-	fb_MKS317: FB_MKS317;
-	i_iPRESS_R AT %Q* :INT;
-	cycle:INT :=0;
+    fb_MKS275: FB_MKS275;
+    fb_MKS317: FB_MKS317;
+    i_iPRESS_R AT %Q* :INT;
+    cycle:INT :=0;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -21,76 +21,76 @@ cycle:=cycle+1;]]></ST>
     <Method Name="M_CheckRange" Id="{f9925fbb-0a4e-4266-90b0-bed226f828a8}">
       <Declaration><![CDATA[METHOD M_CheckRange
 VAR
-	Expected:REAL;
-	Actual:REAL;
-	eStateExpected: E_PressureState;
-	eStateActual: E_PressureState;
+    Expected:REAL;
+    Actual:REAL;
+    eStateExpected: E_PressureState;
+    eStateActual: E_PressureState;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
 TEST('MKS275_Check_Range');
 Case cycle of
-	4:
-	This^.i_iPRESS_R := V_TO_INT(3.674);
-	Expected :=5 ;
-	eStateExpected := Valid;
-	
-	7:
-	TEST('MKS275_Range_R2');
-	Actual := This^.fb_MKS275.PG.rPRESS;
-	eStateActual := This^.fb_MKS275.PG.eState;
-	AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
-	AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
-	AssertEquals_REAL(Expected, Actual,0.1, 'MKS275 rPress Fail');
-	TEST_FINISHED_NAMED('MKS275_Range_R2');
-	
-	8:
-	This^.i_iPRESS_R := V_TO_INT(5.614);
-	Expected :=900 ;
-	eStateExpected := Valid;
-	
-	
-	12:
-	TEST('MKS275_Range_R3');
-	Actual := This^.fb_MKS275.PG.rPRESS;
-	eStateActual := This^.fb_MKS275.PG.eState;
-	AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
-	AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
-	AssertEquals_REAL(Expected, Actual,1, 'MKS275 rPress Fail');
-	TEST_FINISHED_NAMED('MKS275_Range_R3');
+    4:
+    This^.i_iPRESS_R := V_TO_INT(3.674);
+    Expected :=5 ;
+    eStateExpected := Valid;
 
-	
-	13:
-	This^.i_iPRESS_R := V_TO_INT(0.3);
-	Expected :=-1 ;
-	eStateExpected := GaugeDisconnected;
-	
-	17:
-	TEST('MKS275_Range_Off');
-	Actual := This^.fb_MKS275.PG.rPRESS;
-	eStateActual := This^.fb_MKS275.PG.eState;
-	AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
-	AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
-	AssertEquals_REAL(Expected, Actual,1, 'MKS275 rPress Fail');
-	TEST_FINISHED_NAMED('MKS275_Range_Off');
+    7:
+    TEST('MKS275_Range_R2');
+    Actual := This^.fb_MKS275.PG.rPRESS;
+    eStateActual := This^.fb_MKS275.PG.eState;
+    AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
+    AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
+    AssertEquals_REAL(Expected, Actual,0.1, 'MKS275 rPress Fail');
+    TEST_FINISHED_NAMED('MKS275_Range_R2');
 
-	
-	18:
-	This^.i_iPRESS_R := V_TO_INT(5.66);
-	Expected :=-1 ;
-	eStateExpected := OoR;
-	
-	22:
-	TEST('MKS275_Range_OoR');
-	Actual := This^.fb_MKS275.PG.rPRESS;
-	eStateActual := This^.fb_MKS275.PG.eState;
-	AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
-	AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
-	AssertEquals_REAL(Expected, Actual,1, 'MKS275 rPress Fail');
-	TEST_FINISHED_NAMED('MKS275_Range_OoR');
-	TEST_FINISHED_NAMED('MKS275_Check_Range');
-	
+    8:
+    This^.i_iPRESS_R := V_TO_INT(5.614);
+    Expected :=900 ;
+    eStateExpected := Valid;
+
+
+    12:
+    TEST('MKS275_Range_R3');
+    Actual := This^.fb_MKS275.PG.rPRESS;
+    eStateActual := This^.fb_MKS275.PG.eState;
+    AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
+    AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
+    AssertEquals_REAL(Expected, Actual,1, 'MKS275 rPress Fail');
+    TEST_FINISHED_NAMED('MKS275_Range_R3');
+
+
+    13:
+    This^.i_iPRESS_R := V_TO_INT(0.3);
+    Expected :=-1 ;
+    eStateExpected := GaugeDisconnected;
+
+    17:
+    TEST('MKS275_Range_Off');
+    Actual := This^.fb_MKS275.PG.rPRESS;
+    eStateActual := This^.fb_MKS275.PG.eState;
+    AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
+    AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
+    AssertEquals_REAL(Expected, Actual,1, 'MKS275 rPress Fail');
+    TEST_FINISHED_NAMED('MKS275_Range_Off');
+
+
+    18:
+    This^.i_iPRESS_R := V_TO_INT(5.66);
+    Expected :=-1 ;
+    eStateExpected := OoR;
+
+    22:
+    TEST('MKS275_Range_OoR');
+    Actual := This^.fb_MKS275.PG.rPRESS;
+    eStateActual := This^.fb_MKS275.PG.eState;
+    AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
+    AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
+    AssertEquals_REAL(Expected, Actual,1, 'MKS275 rPress Fail');
+    TEST_FINISHED_NAMED('MKS275_Range_OoR');
+    TEST_FINISHED_NAMED('MKS275_Check_Range');
+
 END_CASE
 
 This^.fb_MKS275(PG=>);
@@ -103,10 +103,10 @@ This^.fb_MKS317(PG=>);
     <Method Name="M_INIT" Id="{e96acaf5-8f1a-41ed-9baa-3496cc1ec916}">
       <Declaration><![CDATA[METHOD M_INIT
 VAR
-	Expected:REAL;
-	Actual:REAL;
-	eStateExpected: E_PressureState;
-	eStateActual: E_PressureState;
+    Expected:REAL;
+    Actual:REAL;
+    eStateExpected: E_PressureState;
+    eStateActual: E_PressureState;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -119,31 +119,19 @@ Expected :=0.001 ;
 eStateExpected := Valid;
 //Instantiate the function block
 This^.fb_MKS275(PG=>);
-// Wait for few cycles 
+// Wait for few cycles
 IF( cycle = 3) THEN
-	// Check the results
-	Actual := This^.fb_MKS275.PG.rPRESS;
-	eStateActual := This^.fb_MKS275.PG.eState;
-	AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
-	AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
-	AssertEquals_REAL(Expected, Actual,0.0001, 'MKS275 rPress Fail');
-	TEST_FINISHED_NAMED('MKS275_Startup');
+    // Check the results
+    Actual := This^.fb_MKS275.PG.rPRESS;
+    eStateActual := This^.fb_MKS275.PG.eState;
+    AssertTrue(This^.fb_MKS275.PG.xPRESS_OK, 'MKS275 xPRESS_OK is set to False');
+    AssertEquals(eStateExpected,eStateActual,'MKS275 eState Fail');
+    AssertEquals_REAL(Expected, Actual,0.0001, 'MKS275 rPress Fail');
+    TEST_FINISHED_NAMED('MKS275_Startup');
 END_IF
 
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_GPI_Test">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GPI_Test.M_CheckRange">
-      <LineId Id="3" Count="68" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GPI_Test.M_INIT">
-      <LineId Id="3" Count="19" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

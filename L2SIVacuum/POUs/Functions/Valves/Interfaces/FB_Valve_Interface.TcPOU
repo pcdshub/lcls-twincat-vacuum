@@ -9,12 +9,12 @@ FUNCTION_BLOCK FB_Valve_Interface
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := 'pv: '}
-	VGC:ST_VGC;
+    {attribute 'pytmc' := 'pv: '}
+    VGC:ST_VGC;
 END_VAR
 VAR
-	i_xOpnLS AT%I*	: BOOL;
-	i_xClsLS AT%I*	: BOOL;
+    i_xOpnLS AT%I*	: BOOL;
+    i_xClsLS AT%I*	: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -28,13 +28,5 @@ VGC.i_xOpnLS := i_xOpnLS;
 
 ]]></ST>
     </Implementation>
-    <LineIds Name="FB_Valve_Interface">
-      <LineId Id="10" Count="2" />
-      <LineId Id="24" Count="1" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="42" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

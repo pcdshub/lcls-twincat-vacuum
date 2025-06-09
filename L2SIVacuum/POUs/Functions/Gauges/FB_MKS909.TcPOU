@@ -7,29 +7,29 @@
 FUNCTION_BLOCK FB_MKS909 EXTENDS FB_GaugeBase
 
 VAR_INPUT
-	PG	: ST_VG;
+    PG	: ST_VG;
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	IG	: ST_VG;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    IG	: ST_VG;
 END_VAR
 VAR_IN_OUT
-	
+
 END_VAR
 VAR
-	rV : REAL;
-	rMaxPressure	:	REAL := 5E-2; //Torr
-	rMinPressure	:	REAL := 1E-10; //Torr
-	timer:TON;
-	(*Default set point 50 mT*)
-	rDefaultVAC_SP: REAL := 9E-3; // as per manual
-	iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
-	q_xHV_DIS AT %Q* : BOOL := True; // Active Low 
-	
+    rV : REAL;
+    rMaxPressure	:	REAL := 5E-2; //Torr
+    rMinPressure	:	REAL := 1E-10; //Torr
+    timer:TON;
+    (*Default set point 50 mT*)
+    rDefaultVAC_SP: REAL := 9E-3; // as per manual
+    iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    q_xHV_DIS AT %Q* : BOOL := True; // Active Low
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -38,7 +38,7 @@ END_VAR
 
 //Default setpoint 50 mT
 IF PG.rVAC_SP = 0 THEN
-	PG.rVAC_SP := rDefaultVAC_SP;
+    PG.rVAC_SP := rDefaultVAC_SP;
 END_IF
 // check no div by zero
 If (iTermBits=0) THEN iTermBits := 30518;END_IF
@@ -48,33 +48,33 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 // Gauge state
 // Is the gauge plugged in, and within a reasonable range?
 IF  (rV >= 0.1 and rV <=8.7) THEN // as per manual
-	IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
-	IG.eState := Valid;
-	IG.xPRESS_OK := TRUE; //Backwards compatibility
+    IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
+    IG.eState := Valid;
+    IG.xPRESS_OK := TRUE; //Backwards compatibility
 ELSIF rV > 8.7 AND rV < 10 THEN
-	IG.rPRESS :=rMaxPressure;
-	IG.xPRESS_OK := FALSE;
-	IG.eState := Off;
-ELSE 
-	IG.xPRESS_OK := FALSE;
-	IG.eState := GaugeDisconnected;
+    IG.rPRESS :=rMaxPressure;
+    IG.xPRESS_OK := FALSE;
+    IG.eState := Off;
+ELSE
+    IG.xPRESS_OK := FALSE;
+    IG.eState := GaugeDisconnected;
 END_IF
 
 
 IF (PG.rPRESS <= IG.rPRO_SP)  AND (PG.xPRESS_OK) THEN
-		 IG.q_xHV_DIS := IG.xHV_SW;
-		 IG.xILKOk := TRUE;
-	ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
-		IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
-		IG.q_xHV_DIS := FALSE;
-		IG.xHV_SW := FALSE;
-		END_IF
-	ELSE 
-		IG.q_xHV_DIS := FALSE;
-		IG.xHV_SW := FALSE;
-		IG.xILKOk := FALSE;
- 	END_IF
- 
+         IG.q_xHV_DIS := IG.xHV_SW;
+         IG.xILKOk := TRUE;
+    ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
+        IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+        IG.q_xHV_DIS := FALSE;
+        IG.xHV_SW := FALSE;
+        END_IF
+    ELSE
+        IG.q_xHV_DIS := FALSE;
+        IG.xHV_SW := FALSE;
+        IG.xILKOk := FALSE;
+     END_IF
+
 
 timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
 
@@ -96,7 +96,7 @@ ACT_Persistent();
     <Action Name="ACT_IO" Id="{89c7028d-3190-45b7-aaec-73bdcb00e265}">
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
-IG.i_iPRESS_R:=	i_iPRESS_R; 
+IG.i_iPRESS_R:=	i_iPRESS_R;
 
 (*soft link outputs*)
 q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
@@ -106,7 +106,7 @@ q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       <Implementation>
         <ST><![CDATA[// ILK logger
 IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
- 		fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);  	
+         fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);
 END_IF
 
 
@@ -116,25 +116,25 @@ IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEv
 
 
 
-//STATE Logger  
+//STATE Logger
 IF ePrevState <> IG.eState THEN
-	  CASE IG.eState OF
-		ValidHi:
-		ValidLo:
-		Valid:
-			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-  		GaugeDisconnected:
-			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-		PressInvalid:
-			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-		OoR:
-			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-		Starting:
-			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := IG.eState;  
+      CASE IG.eState OF
+        ValidHi:
+        ValidLo:
+        Valid:
+            fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+          GaugeDisconnected:
+            fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+        PressInvalid:
+            fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+        OoR:
+            fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+        Starting:
+            fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := IG.eState;
   END_IF
-  
+
 
 ]]></ST>
       </Implementation>
@@ -143,28 +143,28 @@ IF ePrevState <> IG.eState THEN
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
-	SUPER^.bRestorePersistentData	:= FALSE;
-	IF ( rVAC_SP <> 0) THEN
-		IG.rVAC_SP := rVAC_SP;
-	END_IF;
-	IF ( rPRO_SP <> 0) THEN
-		IG.rPRO_SP := rPRO_SP;
-	END_IF;
-	IF ( rHYS_PR <> 0) THEN
-		IG.rHYS_PR := rHYS_PR;
-	END_IF;
+    SUPER^.bRestorePersistentData	:= FALSE;
+    IF ( rVAC_SP <> 0) THEN
+        IG.rVAC_SP := rVAC_SP;
+    END_IF;
+    IF ( rPRO_SP <> 0) THEN
+        IG.rPRO_SP := rPRO_SP;
+    END_IF;
+    IF ( rHYS_PR <> 0) THEN
+        IG.rHYS_PR := rHYS_PR;
+    END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
-	rVAC_SP := IG.rVAC_SP;
+    rVAC_SP := IG.rVAC_SP;
 END_IF;
 
 IF NOT (IG.rPRO_SP = rPRO_SP) THEN
-	rPRO_SP:= IG.rPRO_SP;
+    rPRO_SP:= IG.rPRO_SP;
 END_IF;
 
 IF NOT (IG.rHYS_PR = rHYS_PR) THEN
-	rHYS_PR:= IG.rHYS_PR;
+    rHYS_PR:= IG.rHYS_PR;
 END_IF;]]></ST>
       </Implementation>
     </Action>
@@ -180,7 +180,7 @@ END_VAR
     <Method Name="M_SetBits" Id="{a0b5c519-56d7-42f9-be00-fe9985112627}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
-	TermBits : UINT; // The terminal's maximum value in bits
+    TermBits : UINT; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
       <Implementation>

@@ -5,27 +5,27 @@
 
 FUNCTION_BLOCK FB_MKS722
 VAR_IN_OUT
-	
+
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	VG	:	ST_VG;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    VG	:	ST_VG;
 END_VAR
 VAR_INPUT
-	i_rMinPressure	:	REAL;
-	i_rMaxPressure	:	REAL;
+    i_rMinPressure	:	REAL;
+    i_rMaxPressure	:	REAL;
 END_VAR
 VAR
-	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
-	rMinPressure: REAL;
-	rVMin	:	REAL := 0.01; // Anything less than this voltage is considered disconnected
-	rVMax :	REAL := 10.5; // Anything more than this is considered invalid
-	rV	:REAL;
-	
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+    rMinPressure: REAL;
+    rVMin	:	REAL := 0.01; // Anything less than this voltage is considered disconnected
+    rVMax :	REAL := 10.5; // Anything more than this is considered invalid
+    rV	:REAL;
+
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 
 ]]></Declaration>
@@ -34,22 +34,22 @@ END_VAR
 
 (* Real-value calculation *)
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
-rV := 10*INT_TO_REAL(VG.i_iPRESS_R)/iTermBits;	
+rV := 10*INT_TO_REAL(VG.i_iPRESS_R)/iTermBits;
 
 
 // Is the gauge plugged in, and within a reasonable range?
 IF rV < rVMin THEN
-	VG.eState := GaugeDisconnected;
+    VG.eState := GaugeDisconnected;
 ELSIF rV > rVMax THEN
-	VG.eState := PressInvalid;
+    VG.eState := PressInvalid;
 ELSIF VG.rPRESS >= rMinPressure AND VG.rPRESS <= i_rMaxPressure THEN
-				VG.eState := Valid;
+                VG.eState := Valid;
 ELSIF VG.rPRESS < i_rMinPressure THEN
-				VG.eState := ValidLo;
+                VG.eState := ValidLo;
 ELSE
-				VG.eState := ValidHi;
+                VG.eState := ValidHi;
 END_IF
-			
+
 // Legacy Press OK boolean eval
 VG.xPRESS_OK := VG.eState >= gc_GaugeValidState;
 
@@ -61,12 +61,5 @@ ACT_IO();]]></ST>
         <ST><![CDATA[VG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_MKS722">
-      <LineId Id="3" Count="23" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS722.ACT_IO">
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

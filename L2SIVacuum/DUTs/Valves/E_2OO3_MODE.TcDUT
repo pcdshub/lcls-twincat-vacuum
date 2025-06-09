@@ -3,10 +3,10 @@
   <DUT Name="E_2OO3_MODE" Id="{7da80cf0-4fde-4ce3-82c4-7c1c74badc27}">
     <Declaration><![CDATA[TYPE E_2OO3_MODE :
 (
-	MODE_2OO3 := 0,
-	IG1 := 1,
-	IG2 := 2,
-	IG3 := 3
+    MODE_2OO3 := 0,
+    IG1 := 1,
+    IG2 := 2,
+    IG3 := 3
 );
 END_TYPE
 ]]></Declaration>

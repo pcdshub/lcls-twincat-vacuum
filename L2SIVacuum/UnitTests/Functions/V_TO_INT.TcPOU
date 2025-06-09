@@ -4,20 +4,16 @@
     <Declaration><![CDATA[{attribute 'no_check'}
 FUNCTION V_TO_INT : INT
 VAR_INPUT
-	analog : REAL;
+    analog : REAL;
 END_VAR
 VAR
-	iBits :INT := 32767;
-	iFullRange:INT := 10;
+    iBits :INT := 32767;
+    iFullRange:INT := 10;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[if ( iFullRange = 0 ) THEN iFullRange := 10;END_IF
 V_TO_INT := REAL_TO_INT(analog * 32767 /iFullRange);]]></ST>
     </Implementation>
-    <LineIds Name="V_TO_INT">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

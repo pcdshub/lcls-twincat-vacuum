@@ -1,54 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="FB_GFS_Interface" Id="{781a56cb-c763-46ed-9ac5-b2e690be9ff4}" SpecialFunc="None">
-    <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo gague to communicate over two taks on the same PLC.*) 
+    <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo gague to communicate over two taks on the same PLC.*)
 (*for FAST shutter control*)
 FUNCTION_BLOCK FB_GFS_Interface
 VAR_INPUT
-	IG : ST_VG; // The Cold Cathode Data Structure
+    IG : ST_VG; // The Cold Cathode Data Structure
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	(*outputs*)
-	q_xPRESS_OK AT%Q*: BOOL;	
+    (*outputs*)
+    q_xPRESS_OK AT%Q*: BOOL;
 
-	{attribute 'pytmc' := '
-	pv: FAULT_RESET; 
-	io: io ;
-	'}
-	q_xVAC_FAULT_Reset AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+    {attribute 'pytmc' := '
+    pv: FAULT_RESET;
+    io: io ;
+    '}
+    q_xVAC_FAULT_Reset AT%Q*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 
-	
-	(*inputs*)
-	{attribute 'pytmc' := '
-	pv: TRIG; 
-	field: ZNAM TRIG_OFF; 
-	field: ONAM TRIG_ON;
-	io: io ;
-	'}
-	i_xTrigger AT %I* : BOOL;
-	{attribute 'pytmc' := '
-	pv: OPEN; 
-	field: ZNAM NOT OPEN; 
-	field: ONAM OPEN;
-	io: io ;
-	'}
-	i_xVFS_Open AT %I* : BOOL;
-	{attribute 'pytmc' := '
-	pv: CLS; 
-	field: ZNAM NOT CLOSED; 
-	field: ONAM CLOSE;
-	io: io ;
-	'}
-	i_xVFS_Closed AT %I* : BOOL;
-	{attribute 'pytmc' := '
-	pv: FAULT_OK; 
-	field: ZNAM FAULT ; 
-	field: ONAM FAULT OK;
-	io: io ;
-	'}
-	i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+
+    (*inputs*)
+    {attribute 'pytmc' := '
+    pv: TRIG;
+    field: ZNAM TRIG_OFF;
+    field: ONAM TRIG_ON;
+    io: io ;
+    '}
+    i_xTrigger AT %I* : BOOL;
+    {attribute 'pytmc' := '
+    pv: OPEN;
+    field: ZNAM NOT OPEN;
+    field: ONAM OPEN;
+    io: io ;
+    '}
+    i_xVFS_Open AT %I* : BOOL;
+    {attribute 'pytmc' := '
+    pv: CLS;
+    field: ZNAM NOT CLOSED;
+    field: ONAM CLOSE;
+    io: io ;
+    '}
+    i_xVFS_Closed AT %I* : BOOL;
+    {attribute 'pytmc' := '
+    pv: FAULT_OK;
+    field: ZNAM FAULT ;
+    field: ONAM FAULT OK;
+    io: io ;
+    '}
+    i_xVAC_FAULT_OK AT%I*: BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
 
 
 END_VAR
@@ -59,11 +59,5 @@ END_VAR
 
 q_xPRESS_OK := IG.xPRESS_OK;]]></ST>
     </Implementation>
-    <LineIds Name="FB_GFS_Interface">
-      <LineId Id="15" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="23" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

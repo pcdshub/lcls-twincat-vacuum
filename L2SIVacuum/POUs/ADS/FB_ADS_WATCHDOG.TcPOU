@@ -6,19 +6,19 @@
 (*that the ADS read function expects to keep checking*)
 FUNCTION_BLOCK FB_ADS_WATCHDOG
 VAR_INPUT
-	sNetId : String; //NetID of the Destination PLC controller
-	nPort : uint; // port number
-	sVarName : string;// the variable name of the watchdog on the remote plc.
+    sNetId : String; //NetID of the Destination PLC controller
+    nPort : uint; // port number
+    sVarName : string;// the variable name of the watchdog on the remote plc.
 END_VAR
 VAR_OUTPUT
-	bError:BOOL;
+    bError:BOOL;
 END_VAR
 VAR
-	
-	fb_WriteWatchdog:FB_WriteWatchdog;
-	ftReset_Watchdog: F_TRIG;
-	xFirstPass: BOOL:= true;
-	
+
+    fb_WriteWatchdog:FB_WriteWatchdog;
+    ftReset_Watchdog: F_TRIG;
+    xFirstPass: BOOL:= true;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -29,29 +29,24 @@ xFirstPass := false;
 
 (*calling ADS Watchdog function*)
 fb_WriteWatchdog(
-	bEnable:= TRUE , 
-	sNetId:= sNetId, 
-	nPort:= nPort, 
-	nIdxGrp:= , 
-	nIdxOffs:= , 
-	sVarName:= sVarName, 
-	tWatchdogTime:= t#30ms, 
-	bSendNow:= ftReset_Watchdog.Q , 
-	bBusy=> , 
-	nLastCnt=>  , 
-	bError=> bError, 
-	nErrorId=> );
+    bEnable:= TRUE ,
+    sNetId:= sNetId,
+    nPort:= nPort,
+    nIdxGrp:= ,
+    nIdxOffs:= ,
+    sVarName:= sVarName,
+    tWatchdogTime:= t#30ms,
+    bSendNow:= ftReset_Watchdog.Q ,
+    bBusy=> ,
+    nLastCnt=>  ,
+    bError=> bError,
+    nErrorId=> );
 
-	
+
 (*Error*)
 
 
 ]]></ST>
     </Implementation>
-    <LineIds Name="FB_ADS_WATCHDOG">
-      <LineId Id="26" Count="19" />
-      <LineId Id="48" Count="3" />
-      <LineId Id="9" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -7,22 +7,22 @@
 (* To be used when the specific device function block is not available *)
 FUNCTION_BLOCK FB_MKS_937A
 VAR_IN_OUT
-	
+
 END_VAR
 VAR_INPUT
-	PG	:	ST_VG := g_DummyVG; // Gauge Structure used to Interlock the ion gauges
+    PG	:	ST_VG := g_DummyVG; // Gauge Structure used to Interlock the ion gauges
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := 'pv: '}
-	VG : ST_VG; // Vacuum Gauge Data Structure
+    {attribute 'pytmc' := 'pv: '}
+    VG : ST_VG; // Vacuum Gauge Data Structure
 END_VAR
 VAR
-	rV	:	REAL;
-		(*IOs to be linked*)
-	/// Controls and I/Os
-	i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
-	q_xHV_DIS AT %Q* : BOOL; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
-	
+    rV	:	REAL;
+        (*IOs to be linked*)
+    /// Controls and I/Os
+    i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
+    q_xHV_DIS AT %Q* : BOOL; // Disable Gauge High Voltage when True // 'TcLinkTo' (EL2794) ^Output
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -44,11 +44,11 @@ IF PG.rPRESS < VG.rPRO_SP THEN
 VG.q_xHV_DIS :=  NOT VG.xHV_SW;
 
 ELSIF NOT VG.q_xHV_DIS THEN
-	IF VG.rPRESS > VG.rPRO_SP + VG.rHYS_PR OR PG.rPRESS > VG.rPRO_SP + VG.rHYS_PR THEN
-		VG.q_xHV_DIS := TRUE;
-	END_IF
+    IF VG.rPRESS > VG.rPRO_SP + VG.rHYS_PR OR PG.rPRESS > VG.rPRO_SP + VG.rHYS_PR THEN
+        VG.q_xHV_DIS := TRUE;
+    END_IF
 ELSE
-	VG.q_xHV_DIS := TRUE;
+    VG.q_xHV_DIS := TRUE;
 END_IF
 
 
@@ -56,15 +56,15 @@ END_IF
 VG.xPRESS_OK := (rV <=9.6 ) AND (rV>=0.6); //legacy
 
 IF (rV <=9.6 ) AND (rV>=0.6) THEN
-	VG.eState := Valid; // normal
+    VG.eState := Valid; // normal
 ELSIF rV >= 0.18 AND rV <= 0.22 THEN
-	VG.eState := ValidLo; //LO
+    VG.eState := ValidLo; //LO
 ELSIF rV >= 9.7 AND rV<= 9.9 THEN
-	VG.eState := ValidHi; //HIGH
+    VG.eState := ValidHi; //HIGH
 ELSIF rV < 0.18 THEN
-	VG.eState := GaugeDisconnected; //not on
+    VG.eState := GaugeDisconnected; //not on
 ELSE
-	VG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+    VG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
 END_IF
 
 (* Setpoint evaluation *)
@@ -78,21 +78,11 @@ ACT_IO();
     <Action Name="ACT_IO" Id="{0ba951d1-68de-4487-b7f2-e7fe9da02dd1}">
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
-VG.i_iPRESS_R:=	i_iPRESS_R; 
+VG.i_iPRESS_R:=	i_iPRESS_R;
 
 (*soft link outputs*)
 q_xHV_DIS := VG.q_xHV_DIS;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_MKS_937A">
-      <LineId Id="3" Count="43" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="47" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS_937A.ACT_IO">
-      <LineId Id="2" Count="3" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

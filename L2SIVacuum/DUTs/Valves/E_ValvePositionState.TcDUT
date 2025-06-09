@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <DUT Name="E_ValvePositionState" Id="{ee9a7a6c-9059-4c91-b3c1-682d95993122}">
     <Declaration><![CDATA[TYPE E_ValvePositionState :
-	(
+    (
 OPEN	:= 0,
 CLOSED	:= 1,
 MOVING	:= 2,

@@ -3,85 +3,85 @@
   <DUT Name="ST_PfeifferPTM" Id="{5258f2ac-d965-4bdd-8c4b-be7691cce5d3}">
     <Declaration><![CDATA[TYPE ST_PfeifferPTM EXTENDS ST_PTM :
 STRUCT
-(* Extension of the PTM archetype for Pfeiffer turbos 
-Applicable to: 
+(* Extension of the PTM archetype for Pfeiffer turbos
+Applicable to:
 HiPace series w/ onboard controllers
 More?
 *)
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv: RESET;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i;
-	'}
-	q_xReset   : BOOL;
-	//Readbacks
-	{attribute 'pytmc' := '
-	pv: PWR_RBV;
-	io: i;
-	'}
-	i_diPwr		:	DINT;
-	{attribute 'pytmc' := '
-	pv: TempElec_RBV;
-	io: i;
-	'}
-	i_diElecTemp	:	DINT;
-	{attribute 'pytmc' := '
-	pv: TempPump_RBV;
-	io: i;
-	'}
-	i_diBtmTemp:	DINT;
-	{attribute 'pytmc' := '
-	pv: TempBearing_RBV;
-	io: i;
-	'}
-	i_diBrngTemp:	DINT;
-	{attribute 'pytmc' := '
-	pv: TempMotor_RBV;
-	io: i;
-	'}
-	i_diMtrTemp:	DINT;
-	{attribute 'pytmc' := '
-	pv: ErrorCode_RBV;
-	io: i;
-	'}
-	i_iErrorCode	:	INT; //might change these to enumeration someday
-	{attribute 'pytmc' := '
-	pv: WarningCode_RBV;
-	io: i;
-	'}
-	i_iWarningCode	:	INT;
-	{attribute 'pytmc' := '
-	pv: TempFault_RBV;
-	field: ZNAM FALSE;
-	field: ONAM TRUE;
-	io: i;
-	'}
-	i_xTempFault	:	BOOL;
-	{attribute 'pytmc' := '
-	pv: Power_RBV;
-	io: i;
-	'}
-	i_uiPowerPctRbk :   UINT;
-	
-	{attribute 'pytmc' := '
-	pv: SET_SPEED;
-	io: io;
-	field: EGU "Hz"
-	'}
-	i_dSetSpd	:	DINT;
-	
-	{attribute 'pytmc' := '
-	pv: SET_SPEED_MODE;
-	io: io;
-	field: ZNAM FALSE;
-	field: ONAM TRUE;
-	'}
-	q_bSetSpd	:	BOOL;
-	
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    q_xReset   : BOOL;
+    //Readbacks
+    {attribute 'pytmc' := '
+    pv: PWR_RBV;
+    io: i;
+    '}
+    i_diPwr		:	DINT;
+    {attribute 'pytmc' := '
+    pv: TempElec_RBV;
+    io: i;
+    '}
+    i_diElecTemp	:	DINT;
+    {attribute 'pytmc' := '
+    pv: TempPump_RBV;
+    io: i;
+    '}
+    i_diBtmTemp:	DINT;
+    {attribute 'pytmc' := '
+    pv: TempBearing_RBV;
+    io: i;
+    '}
+    i_diBrngTemp:	DINT;
+    {attribute 'pytmc' := '
+    pv: TempMotor_RBV;
+    io: i;
+    '}
+    i_diMtrTemp:	DINT;
+    {attribute 'pytmc' := '
+    pv: ErrorCode_RBV;
+    io: i;
+    '}
+    i_iErrorCode	:	INT; //might change these to enumeration someday
+    {attribute 'pytmc' := '
+    pv: WarningCode_RBV;
+    io: i;
+    '}
+    i_iWarningCode	:	INT;
+    {attribute 'pytmc' := '
+    pv: TempFault_RBV;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i;
+    '}
+    i_xTempFault	:	BOOL;
+    {attribute 'pytmc' := '
+    pv: Power_RBV;
+    io: i;
+    '}
+    i_uiPowerPctRbk :   UINT;
+
+    {attribute 'pytmc' := '
+    pv: SET_SPEED;
+    io: io;
+    field: EGU "Hz"
+    '}
+    i_dSetSpd	:	DINT;
+
+    {attribute 'pytmc' := '
+    pv: SET_SPEED_MODE;
+    io: io;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    '}
+    q_bSetSpd	:	BOOL;
+
 //Controls
-	q_uiPowerPct : UINT := 100; //Should normally be 100
-	
+    q_uiPowerPct : UINT := 100; //Should normally be 100
+
 END_STRUCT
 END_TYPE
 ]]></Declaration>

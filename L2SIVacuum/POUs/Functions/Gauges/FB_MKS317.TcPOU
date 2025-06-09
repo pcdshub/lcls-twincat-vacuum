@@ -9,30 +9,30 @@ FUNCTION_BLOCK FB_MKS317 Extends FB_GaugeBase
 VAR_IN_OUT
 END_VAR
 VAR_INPUT
-	b937A :BOOL := FALSE; // True if this gauge is connected to MKS937A controller, False if connected to MKS937B controller
+    b937A :BOOL := FALSE; // True if this gauge is connected to MKS937A controller, False if connected to MKS937B controller
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	PG : ST_VG;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    PG : ST_VG;
 END_VAR
 VAR
-	rV	:	REAL;
+    rV	:	REAL;
 
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 
 VAR CONSTANT
-	rMinPressure: REAL := 1E-4;
-	rDefaultVAC_SP: REAL :=5E-2; // Default 50 mT
-	rDisconnectedBoundary	:	REAL := 0.10;
-	rValidLoBoundary	:	REAL := 0.22;
-	rValidBoundaryMin	:	REAL := 0.6;
-	rValidHiBoundary	:	REAL := 9.7;
-	rValidHiBoundaryMax	:	REAL := 9.9; 
-	rNoSensorBoundary	:	REAL := 10;
+    rMinPressure: REAL := 1E-4;
+    rDefaultVAC_SP: REAL :=5E-2; // Default 50 mT
+    rDisconnectedBoundary	:	REAL := 0.10;
+    rValidLoBoundary	:	REAL := 0.22;
+    rValidBoundaryMin	:	REAL := 0.6;
+    rValidHiBoundary	:	REAL := 9.7;
+    rValidHiBoundaryMax	:	REAL := 9.9;
+    rNoSensorBoundary	:	REAL := 10;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -43,30 +43,30 @@ END_VAR
 
 rV := 10*INT_TO_REAL(PG.i_iPRESS_R)/32767;
 if (b937A) THEN
-	PG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV)/0.6)-12)); //manual page 61 MKS937A
-	ELSE
-	PG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));	//manual page 73 MKS937B
+    PG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV)/0.6)-12)); //manual page 61 MKS937A
+    ELSE
+    PG.rPRESS := LREAL_TO_REAL(EXPT(10,(rV-7.2)/0.6));	//manual page 73 MKS937B
 END_IF
 
 
-//Default setpoint 
+//Default setpoint
 IF PG.rVAC_SP = 0 THEN
-	PG.rVAC_SP := rDefaultVAC_SP;
+    PG.rVAC_SP := rDefaultVAC_SP;
 END_IF
 
 IF (rV <=rValidHiBoundary ) AND (rV>=rValidBoundaryMin) THEN
-	PG.eState := Valid; // normal
+    PG.eState := Valid; // normal
 ELSIF rV >= rDisconnectedBoundary AND rV <= rValidLoBoundary THEN
-	PG.eState := ValidLo; //LO
-	PG.rPRESS := rMinPressure;
+    PG.eState := ValidLo; //LO
+    PG.rPRESS := rMinPressure;
 ELSIF rV > rValidHiBoundary AND rV<= rValidHiBoundaryMax THEN
-	PG.eState := ValidHi; //HIGH
+    PG.eState := ValidHi; //HIGH
 ELSIF rV < rDisconnectedBoundary THEN
-	PG.eState := GaugeDisconnected; //not on
-	PG.rPRESS := -1;
+    PG.eState := GaugeDisconnected; //not on
+    PG.rPRESS := -1;
 ELSE
-	PG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
-	PG.rPRESS := -1;
+    PG.eState := PressInvalid; //other fault - could be no gauge, controller powering up etc
+    PG.rPRESS := -1;
 END_IF
 
 (* Pressure OK check *)
@@ -89,28 +89,28 @@ ACT_Persistent();]]></ST>
     <Action Name="ACT_Logger" Id="{36824c19-597f-41a7-a3ab-8efea737236d}">
       <Implementation>
         <ST><![CDATA[
-//STATE Logger  
+//STATE Logger
 IF (PG.xLog) THEN
-	IF ePrevState <> PG.eState THEN
-		  CASE PG.eState OF
-			ValidHi:
-				fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
-			ValidLo:
-				fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
-			Valid:
-				fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-			GaugeDisconnected:
-				fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-			PressInvalid:
-				fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-			OoR:
-				fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-			Starting:
-				fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-		  END_CASE
-		  ePrevState := PG.eState;  
-	  END_IF
- END_IF  
+    IF ePrevState <> PG.eState THEN
+          CASE PG.eState OF
+            ValidHi:
+                fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+            ValidLo:
+                fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+            Valid:
+                fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+            GaugeDisconnected:
+                fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+            PressInvalid:
+                fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+            OoR:
+                fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+            Starting:
+                fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+          END_CASE
+          ePrevState := PG.eState;
+      END_IF
+ END_IF
 
 ]]></ST>
       </Implementation>
@@ -119,14 +119,14 @@ IF (PG.xLog) THEN
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
-	SUPER^.bRestorePersistentData	:= FALSE;
-	IF (rPRO_SP <> 0) THEN
-		PG.rPRO_SP := rPRO_SP;
-	END_IF;
+    SUPER^.bRestorePersistentData	:= FALSE;
+    IF (rPRO_SP <> 0) THEN
+        PG.rPRO_SP := rPRO_SP;
+    END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (PG.rVAC_SP = rVAC_SP) THEN
-	rVAC_SP:= PG.rVAC_SP;
+    rVAC_SP:= PG.rVAC_SP;
 END_IF;
 ]]></ST>
       </Implementation>

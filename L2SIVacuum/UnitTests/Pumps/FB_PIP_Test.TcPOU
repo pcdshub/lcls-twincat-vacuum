@@ -7,8 +7,8 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	PG : ST_VG;
-	fb_PIP_GAMMA: FB_PIP_GAMMA;
+    PG : ST_VG;
+    fb_PIP_GAMMA: FB_PIP_GAMMA;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -92,24 +92,5 @@ TEST_FINISHED_NAMED('PIP_Interlock_Lost');
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PIP_Test">
-      <LineId Id="3" Count="2" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Test.M_AutoStart">
-      <LineId Id="3" Count="6" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Test.M_Check_State">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Test.M_INIT">
-      <LineId Id="3" Count="5" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Test.M_Interlock">
-      <LineId Id="3" Count="25" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

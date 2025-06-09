@@ -3,7 +3,7 @@
   <POU Name="FB_VVC" Id="{a538d8bd-5f3e-49c2-b528-765b2211bef2}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for Vent Valves VVC.
 
-	This function block is also intended for the general use case of solenoid driven (non-variable) valves that lack status readbacks or position indicators. 
+    This function block is also intended for the general use case of solenoid driven (non-variable) valves that lack status readbacks or position indicators.
 *)
 (* Note Interlock Logic is External *)
 FUNCTION_BLOCK FB_VVC
@@ -11,25 +11,25 @@ VAR_IN_OUT
 
 END_VAR
 VAR_INPUT
-	i_xExtILK_OK:BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
-	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only*)
+    i_xExtILK_OK:BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
+    i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only*)
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv:
-	'}
-	iq_stValve : ST_VVC;
+    '}
+    iq_stValve : ST_VVC;
 END_VAR
 VAR
 
-	tonOvrd	:	TON;
-	tonDelOK : TON;
-	rtOK	:	R_TRIG;
+    tonOvrd	:	TON;
+    tonDelOK : TON;
+    rtOK	:	R_TRIG;
 
-	(*IO*)
-	q_xOPN_DO	AT%Q*: BOOL;
+    (*IO*)
+    q_xOPN_DO	AT%Q*: BOOL;
 
-	pv_xOvrdOpn: INT;
+    pv_xOvrdOpn: INT;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[
@@ -91,7 +91,7 @@ END_VAR
     <Method Name="M_Open" Id="{d474e7d3-5328-4b96-aefd-0d239f7cb017}">
       <Declaration><![CDATA[METHOD PUBLIC M_Open : BOOL
 VAR_INPUT
-	open: bool; //Set to true to open the valvue, false to close
+    open: bool; //Set to true to open the valvue, false to close
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -102,39 +102,12 @@ END_VAR
       <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
 METHOD PUBLIC M_Set_OPN_SW : BOOL
 VAR_INPUT
-	value:BOOL; //True to SET, False to RESET
+    value:BOOL; //True to SET, False to RESET
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VVC">
-      <LineId Id="70" Count="1" />
-      <LineId Id="3" Count="13" />
-      <LineId Id="100" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="18" Count="3" />
-      <LineId Id="44" Count="2" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VVC.ACT_IO">
-      <LineId Id="6" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VVC.M_IsClosed">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VVC.M_IsOpen">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VVC.M_Open">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VVC.M_Set_OPN_SW">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
