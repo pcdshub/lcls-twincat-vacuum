@@ -241,7 +241,7 @@ END_IF
     <Method Name="M_SetBackingSP" Id="{a5df0061-e4fb-441a-a9e9-98e9e90ee6b0}">
       <Declaration><![CDATA[METHOD PUBLIC M_SetBackingSP
 VAR_INPUT
-	i_fBackingPressureSP : REAL;
+    i_fBackingPressureSP : REAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -251,7 +251,7 @@ END_VAR
     <Method Name="M_SetForelineSP" Id="{157f114f-64d3-46b9-ada2-19219f6cb020}">
       <Declaration><![CDATA[METHOD PUBLIC M_SetForelineSP
 VAR_INPUT
-	i_fForelinePressureSP : REAL;
+    i_fForelinePressureSP : REAL;
 END_VAR
 ]]></Declaration>
       <Implementation>

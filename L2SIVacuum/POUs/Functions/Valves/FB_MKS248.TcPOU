@@ -61,7 +61,7 @@ q_iRawPosition := iq_stVFN.q_iRawPosition;]]></ST>
     <Method Name="M_SetControlMode" Id="{94c2fc45-3191-4410-8db4-8bf31f50a35d}">
       <Declaration><![CDATA[METHOD PUBLIC M_SetControlMode
 VAR_INPUT
-	i_eValveControlMode	:	E_VCN;
+    i_eValveControlMode	:	E_VCN;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -71,7 +71,7 @@ END_VAR
     <Method Name="M_SetReqPosition" Id="{f3548ad6-1dd0-4cbe-94ae-ffaa7c334e0f}">
       <Declaration><![CDATA[METHOD PUBLIC M_SetReqPosition
 VAR_INPUT
-	i_fReqPosition : REAL;
+    i_fReqPosition : REAL;
 END_VAR
 ]]></Declaration>
       <Implementation>

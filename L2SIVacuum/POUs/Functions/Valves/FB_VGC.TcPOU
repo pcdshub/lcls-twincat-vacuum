@@ -556,7 +556,7 @@ END_VAR
     <Method Name="M_SetAtVacSP" Id="{fedb56ad-55c5-4e50-8a6a-abbe32a177c8}">
       <Declaration><![CDATA[METHOD PUBLIC M_SetAtVacSP
 VAR_INPUT
-	i_fAtVacSP : REAL;
+    i_fAtVacSP : REAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -566,7 +566,7 @@ END_VAR
     <Method Name="M_SetAtVacSPHys" Id="{25169fe7-7e44-4802-8883-a3fa1b00ee79}">
       <Declaration><![CDATA[METHOD PUBLIC M_SetAtVacSPHys
 VAR_INPUT
-	i_fAtVacSPHys : REAL;
+    i_fAtVacSPHys : REAL;
 END_VAR
 ]]></Declaration>
       <Implementation>

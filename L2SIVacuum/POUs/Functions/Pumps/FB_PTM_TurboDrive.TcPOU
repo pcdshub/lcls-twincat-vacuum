@@ -182,7 +182,7 @@ iq_stPTM.i_xWarn := i_st_TD20_RBK.wStatusWord.14; (* warning summary bit *)
     <Method Name="M_SetBackingSP" Id="{6e065065-68e3-4f57-924c-8e7bfc981276}">
       <Declaration><![CDATA[METHOD PUBLIC M_SetBackingSP
 VAR_INPUT
-	i_fBackingPressureSP : REAL;
+    i_fBackingPressureSP : REAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -192,7 +192,7 @@ END_VAR
     <Method Name="M_SetForelineSP" Id="{f4ff84d2-f083-48f5-8918-754ad96e89ec}">
       <Declaration><![CDATA[METHOD PUBLIC M_SetForelineSP
 VAR_INPUT
-	i_fForelinePressureSP : REAL;
+    i_fForelinePressureSP : REAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
