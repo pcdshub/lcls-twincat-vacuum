@@ -10,23 +10,23 @@ VAR_IN_OUT
 
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := 'pv:'}
-	PG	:	ST_VG;
+    {attribute 'pytmc' := 'pv:'}
+    PG	:	ST_VG;
 END_VAR
 VAR_INPUT
-	i_rFULL_SCALE : REAL;
+    i_rFULL_SCALE : REAL;
 END_VAR
 VAR
-	rMinPressure: REAL;
-	rHYST_PERC	:	REAL := 0.80;	// Hysteresis percentage
-	rV	:REAL;
-	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    rMinPressure: REAL;
+    rHYST_PERC	:	REAL := 0.80;	// Hysteresis percentage
+    rV	:REAL;
+    iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* Baratron Pressure Calc 
+      <ST><![CDATA[(* Baratron Pressure Calc
 A. Wallace
 2016-6-16
 The full-scale pressure times the ratio of the meas.
@@ -40,11 +40,11 @@ rV :=MAX((10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits),0);
 
 PG.rPRESS := (PG.rFULL_SCALE/10)*rV;
 IF PG.rPRESS > (rMinPressure)THEN
-	PG.xPRESS_OK := TRUE;
-	PG.eState := Valid; 
+    PG.xPRESS_OK := TRUE;
+    PG.eState := Valid;
 ELSE
-	PG.xPRESS_OK := FALSE;
-	PG.eState := PressInvalid; 
+    PG.xPRESS_OK := FALSE;
+    PG.eState := PressInvalid;
 END_IF
 
 (*IO soft linking*)
@@ -58,7 +58,7 @@ ACT_IO();]]></ST>
     <Method Name="M_SetBits" Id="{ef0f5032-cc49-4110-b8a4-5e654a7699b0}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
-	TermBits : UINT; // The terminal's maximum value in bits
+    TermBits : UINT; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
       <Implementation>

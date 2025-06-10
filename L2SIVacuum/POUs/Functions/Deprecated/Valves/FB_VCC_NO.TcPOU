@@ -7,24 +7,24 @@
 {attribute 'obsolete' := 'FB_VCC_NO has been deprecated and is not valid!'}
 FUNCTION_BLOCK FB_VCC_NO
 VAR_IN_OUT
-	{attribute 'pytmc' := 'pv:'}
-	iq_stValve : ST_VCC_NO;
+    {attribute 'pytmc' := 'pv:'}
+    iq_stValve : ST_VCC_NO;
 
 END_VAR
 VAR_INPUT
-	i_xExtILK_OK:BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
-	i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+    i_xExtILK_OK:BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
+    i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
 
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
 
-	tonOvrd	:	TON;
-	tonDelOK : TON;
-	rtOK	:	R_TRIG;
-	(*IO*)
-	xCLS_DO	AT%Q*: BOOL;
+    tonOvrd	:	TON;
+    tonDelOK : TON;
+    rtOK	:	R_TRIG;
+    (*IO*)
+    xCLS_DO	AT%Q*: BOOL;
 
 END_VAR]]></Declaration>
     <Implementation>
@@ -60,7 +60,7 @@ xCLS_DO:= iq_stValve.xCLS_DO;]]></ST>
     <Method Name="M_Close" Id="{25a4b227-8441-4ebd-93be-fa48f91d9458}">
       <Declaration><![CDATA[METHOD M_Close : BOOL
 VAR_INPUT
-		close:BOOL; //True to CLose, False to OPEN
+        close:BOOL; //True to CLose, False to OPEN
 END_VAR
 ]]></Declaration>
       <Implementation>

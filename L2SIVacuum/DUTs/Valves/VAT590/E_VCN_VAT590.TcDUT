@@ -5,11 +5,11 @@
 {attribute 'strict'}
 TYPE E_VCN_VAT590 :
 (
-	ManualControl := 0,
-	CloseValve := 1,
-	OpenValve := 2,
-	PressureControl := 3,
-	HoldValve := 4
+    ManualControl := 0,
+    CloseValve := 1,
+    OpenValve := 2,
+    PressureControl := 3,
+    HoldValve := 4
 ) USINT := CloseValve;
 END_TYPE
 ]]></Declaration>

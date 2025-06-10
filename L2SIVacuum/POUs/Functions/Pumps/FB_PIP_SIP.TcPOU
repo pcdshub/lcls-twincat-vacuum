@@ -3,53 +3,53 @@
   <POU Name="FB_PIP_SIP" Id="{474c5979-cc75-4ff6-9f68-7f6209db67bf}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the ION pump connected to a SAES SIP controller.
  Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
-{attribute 'reflection'} 
+{attribute 'reflection'}
 FUNCTION_BLOCK FB_PIP_SIP Extends FB_Pump
 VAR_INPUT
-	i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock
-    i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum interlock logic*) 
+    i_stGauge	:	ST_VG; //Ion or Pirani gauge for pump interlock
+    i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum interlock logic*)
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	stPump	:	ST_PIP; //Gamma Ion pump structure
-	q_IG	:	ST_VG; //When ion pump is used as a measuring device for interlocking gate valves
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    stPump	:	ST_PIP; //Gamma Ion pump structure
+    q_IG	:	ST_VG; //When ion pump is used as a measuring device for interlocking gate valves
 END_VAR
 VAR
  rPRESS : REAL;
  iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
  rV : REAL;
- timer:TON; 
+ timer:TON;
 
  (* IO Controls *)
  q_xHVEna_DO AT %Q*: BOOL;	// Enable High Voltage when TRUE
  i_iPRESS  AT %I*: INT;  //
- i_xIP_ON  AT %I* : BOOL; 
+ i_xIP_ON  AT %I* : BOOL;
  i_xError  AT %I* : BOOL;
- 
+
 // For logging
 tTimeOutAction : F_TRIG;
 tOverrideActivated : R_TRIG;
 
 tPumpStartTimeout : TON := (PT:=T#10s); // Timeout pump start if pressure < 1E-11 for more than 10s.
 MinPressure : REAL:= 1E-11; // Minimum readback pressure, pump must register pressure above this to be considered running
- 
+
 //Overrides
-	tonOvrd	:	TON;
-	tonDelOK : TON;
-	rtOK	:	R_TRIG;
-	tOvrd	:	TIME := T#10s;
-	
-	{attribute 'instance-path'}
-	{attribute 'noinit'}
-	sPath: STRING;
+    tonOvrd	:	TON;
+    tonDelOK : TON;
+    rtOK	:	R_TRIG;
+    tOvrd	:	TIME := T#10s;
+
+    {attribute 'instance-path'}
+    {attribute 'noinit'}
+    sPath: STRING;
 END_VAR
 VAR CONSTANT
-	 rDefaultHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
+     rDefaultHVEna_SP : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
 END_VAR
 VAR PERSISTENT
-	rHVEna_SP : REAL;
+    rHVEna_SP : REAL;
 END_VAR
 
 ]]></Declaration>
@@ -58,7 +58,7 @@ END_VAR
 
 (*Ensures the set point is not higher than 1.0E-4*)
 IF (stPump.rHVEna_SP > rDefaultHVEna_SP) THEN
-	stPump.rHVEna_SP := rDefaultHVEna_SP;
+    stPump.rHVEna_SP := rDefaultHVEna_SP;
 END_IF
 
 (* Interlock *)
@@ -66,24 +66,24 @@ END_IF
 
 (* Enable HV *)
 IF i_stGauge.rPRESS <= stPump.rHVEna_SP AND i_stGauge.xPRESS_OK THEN
-	IF (stPump.xAutoOn) AND NOT (stPump.q_xHVEna_DO) THEN  stPump.q_xHVEna_DO := TRUE;
-	ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));  
-	END_IF
-	stPump.xILKOk:= TRUE;
-ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN 
-	IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
-		stPump.q_xHVEna_DO := FALSE;
-		stPump.xHVEna_SW := FALSE;
-		stPump.xILKOk := FALSE;
-	ELSE
-		stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode)); 
-	END_IF
+    IF (stPump.xAutoOn) AND NOT (stPump.q_xHVEna_DO) THEN  stPump.q_xHVEna_DO := TRUE;
+    ELSE stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));
+    END_IF
+    stPump.xILKOk:= TRUE;
+ELSIF stPump.q_xHVEna_DO (*AND timer.Q*) THEN
+    IF q_IG.rPRESS > (stPump.rHVEna_SP + stPump.rHYS_PR) THEN // Ion pumps when running switches off based on their own pressure readings
+        stPump.q_xHVEna_DO := FALSE;
+        stPump.xHVEna_SW := FALSE;
+        stPump.xILKOk := FALSE;
+    ELSE
+        stPump.q_xHVEna_DO := stPump.xHVEna_SW OR ((tonOvrd.Q AND i_xOverrideMode));
+    END_IF
 ELSIF (tonOvrd.Q AND i_xOverrideMode) THEN
-	stPump.q_xHVEna_DO := TRUE;
+    stPump.q_xHVEna_DO := TRUE;
 ELSE
-	stPump.q_xHVEna_DO  := FALSE;
-	stPump.xHVEna_SW := FALSE;
-	stPump.xILKOk := FALSE;
+    stPump.q_xHVEna_DO  := FALSE;
+    stPump.xHVEna_SW := FALSE;
+    stPump.xILKOk := FALSE;
 END_IF
 
 
@@ -101,17 +101,17 @@ IF tTimeOutAction.Q THEN  fbLogger(sMsg:='Pump time out.', eSevr:=TcEventSeverit
 
 (*Pump STATE*)
 IF tPumpStartTimeout.Q OR i_xError  THEN //Pump timeout
-	stPump.eState := pumpFAULT;
+    stPump.eState := pumpFAULT;
 ELSIF stPump.q_xHVEna_DO AND NOT stPump.i_xHV_DI THEN
-	stPump.eState := pumpSTARTING;
+    stPump.eState := pumpSTARTING;
 ELSIF NOT stPump.q_xHVEna_DO AND NOT stPump.i_xHV_DI THEN
-	stPump.eState := pumpSTOPPED;
+    stPump.eState := pumpSTOPPED;
 ELSIF stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
-	stPump.eState := pumpRUNNING;
+    stPump.eState := pumpRUNNING;
 ELSIF NOT stPump.q_xHVEna_DO AND stPump.i_xHV_DI THEN
-	stPump.eState := pumpSTOPPING;
-ELSE 
-	stPump.eState := pumpFAULT;
+    stPump.eState := pumpSTOPPING;
+ELSE
+    stPump.eState := pumpFAULT;
 END_IF
 
 
@@ -136,9 +136,9 @@ when the Pump permission goes true for more than ten seconds consistently, remov
 
 tonDelOK(IN:=stPump.xILKOk, PT:=T#10S);
 rtOK(CLK:=tonDelOK.Q);
-IF rtOK.Q AND stPump.pv_xOvrdStart THEN 
-	stPump.pv_xOvrdStart :=FALSE; 
-	if (stPump.eState = pumpRUNNING) AND (i_xOverrideMode) THEN stPump.xHVEna_SW:= TRUE; END_IF
+IF rtOK.Q AND stPump.pv_xOvrdStart THEN
+    stPump.pv_xOvrdStart :=FALSE;
+    if (stPump.eState = pumpRUNNING) AND (i_xOverrideMode) THEN stPump.xHVEna_SW:= TRUE; END_IF
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
@@ -153,28 +153,28 @@ tonOvrd(IN:= stPump.pv_xOvrdStart, PT:=tOvrd);
       <Implementation>
         <ST><![CDATA[// ILK logger
 
-IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTARTING)) AND NOT tonOvrd.Q THEN 
-	fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical); 
+IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTARTING)) AND NOT tonOvrd.Q THEN
+    fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical);
 END_IF
 
-//STATE Logger  
+//STATE Logger
 IF ePrevState <> stPump.eState THEN
-	  CASE stPump.eState OF
-		pumpFAULT:
-			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
-  		pumpSTOPPED:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
-		pumpSTARTING:
-			fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
-		pumpRUNNING:
-			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
-		pumpSTOPPING:
-			fbLogger(sMsg:='Pump stopping.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := stPump.eState;  
+      CASE stPump.eState OF
+        pumpFAULT:
+            fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+          pumpSTOPPED:
+            fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+        pumpSTARTING:
+            fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
+        pumpRUNNING:
+            fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+        pumpSTOPPING:
+            fbLogger(sMsg:='Pump stopping.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := stPump.eState;
   END_IF
 
-  
+
   // Log Action
 tAction(CLK:=  stPump.q_xHVEna_DO);
 IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
@@ -194,14 +194,14 @@ IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); 
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
-	SUPER^.bRestorePersistentData	:= FALSE;
-	IF (rHVEna_SP <> 0) THEN
-		stPump.rHVEna_SP := rHVEna_SP;
-	END_IF;
+    SUPER^.bRestorePersistentData	:= FALSE;
+    IF (rHVEna_SP <> 0) THEN
+        stPump.rHVEna_SP := rHVEna_SP;
+    END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (stPump.rHVEna_SP = rHVEna_SP) THEN
-	rHVEna_SP := stPump.rHVEna_SP;
+    rHVEna_SP := stPump.rHVEna_SP;
 END_IF;
 ]]></ST>
       </Implementation>
@@ -215,25 +215,25 @@ If (iTermBits=0) THEN iTermBits := 32767;END_IF
 rV := 10*INT_TO_REAL(i_iPress)/iTermBits;
 //Manual Page 29
 IF (rV >= 2.5) THEN
-	rPRESS := LREAL_TO_REAL((0.000000001*EXP(1.8421*rV))/65);
-	ELSE
-	rPRESS := LREAL_TO_REAL((0.0000000008*EXP(1.9315*rV))/65);
+    rPRESS := LREAL_TO_REAL((0.000000001*EXP(1.8421*rV))/65);
+    ELSE
+    rPRESS := LREAL_TO_REAL((0.0000000008*EXP(1.9315*rV))/65);
 END_IF
 // Min. measured pressure
 IF (rPRESS < 1E-11) AND NOT (rPRESS = 0)  THEN
-	rPRESS := 1E-11;
+    rPRESS := 1E-11;
 END_IF
 
 IF (stPump.q_xHVEna_DO) THEN
-	q_IG.rPRESS := rPRESS;
-	stPump.rPRESS := rPRESS;
+    q_IG.rPRESS := rPRESS;
+    stPump.rPRESS := rPRESS;
 END_IF
 
 
-IF (stPump.i_xHV_DI) AND (q_IG.rPRESS < q_IG.rVAC_SP) THEN //ADP// AND (q_IG.rPRESS<>0) AND stPump.q_xHVEna_DO) THEN 
-	q_IG.xPRESS_OK := TRUE;
-	ELSE
-	q_IG.xPRESS_OK := FALSE;
+IF (stPump.i_xHV_DI) AND (q_IG.rPRESS < q_IG.rVAC_SP) THEN //ADP// AND (q_IG.rPRESS<>0) AND stPump.q_xHVEna_DO) THEN
+    q_IG.xPRESS_OK := TRUE;
+    ELSE
+    q_IG.xPRESS_OK := FALSE;
 END_IF
 
 q_IG.sPath := This^.stPump.sPath;
@@ -245,9 +245,9 @@ q_IG.sPath := This^.stPump.sPath;
       <Implementation>
         <ST><![CDATA[stPump.sIlkDeviceName := This^.i_stGauge.sPath;
 stPump.xError := i_xError;// (stPump.eState = pumpFAULT);
-stPump.xOverrideMode := i_xOverrideMode; 
+stPump.xOverrideMode := i_xOverrideMode;
 (*inputs*)
-stPump.i_iPRESS:=	i_iPRESS;  
+stPump.i_iPRESS:=	i_iPRESS;
 stPump.i_xHV_DI:=	i_xIP_ON;
 (*output*)
 q_xHVEna_DO:=  stPump.q_xHVEna_DO; //According to Manual pin should be grounded to activate function
@@ -268,7 +268,7 @@ END_VAR
       <Declaration><![CDATA[
 METHOD PUBLIC M_Run : BOOL
 VAR_INPUT
-	run:bool; // set to true to run, false to stop;
+    run:bool; // set to true to run, false to stop;
 END_VAR
 ]]></Declaration>
       <Implementation>

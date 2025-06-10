@@ -5,21 +5,21 @@
 {attribute 'strict'}
 TYPE E_ControlMode :
 (
-	Init := 0,
-	Synch := 1,
-	ManualControl := 2,
-	CloseValve := 3,
-	OpenValve := 4,
-	PressureControl := 5,
-	HoldValve := 6,
-	LearnProcedure := 7,
-	InterlockOpen := 8,
-	InterlockClose := 9,
-	MaintenanceOpen := 10,
-	MaintenanceClose := 11,
-	PowerFailure := 12,
-	Safety := 13,
-	FatalError := 14
+    Init := 0,
+    Synch := 1,
+    ManualControl := 2,
+    CloseValve := 3,
+    OpenValve := 4,
+    PressureControl := 5,
+    HoldValve := 6,
+    LearnProcedure := 7,
+    InterlockOpen := 8,
+    InterlockClose := 9,
+    MaintenanceOpen := 10,
+    MaintenanceClose := 11,
+    PowerFailure := 12,
+    Safety := 13,
+    FatalError := 14
 ) USINT := Init;
 END_TYPE
 ]]></Declaration>

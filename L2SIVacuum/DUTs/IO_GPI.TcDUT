@@ -3,7 +3,7 @@
   <DUT Name="IO_GPI" Id="{87373775-3a0f-40b2-b0b7-2e87924b0b02}">
     <Declaration><![CDATA[TYPE IO_GPI :
 STRUCT
-		i_aPRESS: INT;
+        i_aPRESS: INT;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

@@ -7,8 +7,8 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	VRC: FB_VRC;
-	ex               : __SYSTEM.ExceptionCode;
+    VRC: FB_VRC;
+    ex               : __SYSTEM.ExceptionCode;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -27,11 +27,11 @@ END_VAR
     <Method Name="M_INIT" Id="{3f7b8356-1b25-416f-9975-41838a39c6b2}">
       <Declaration><![CDATA[METHOD M_INIT : BOOL
 VAR//_INPUT
-	
-	
-	Interlock_OK :BOOL := TRUE;
- 
-	ex: INT;
+
+
+    Interlock_OK :BOOL := TRUE;
+
+    ex: INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -40,7 +40,7 @@ END_VAR
 VRC(i_xExtILK_OK:= Interlock_OK, i_xOverrideMode:= , iq_stValve=> );
 AssertFalse(VRC.iq_stValve.q_xOPN_DO,'VRC q_xOPN_DO is set to true');
 AssertFalse(VRC.iq_stValve.pv_xOPN_SW,'VRC pv_xOPN_SW is set to true');
-//__CATCH(ex) 
+//__CATCH(ex)
 //__FINALLY
 TEST_FINISHED_NAMED('VRC_Startup');
 //__ENDTRY
@@ -51,10 +51,10 @@ TEST_FINISHED_NAMED('VRC_Startup');
     <Method Name="M_Interlock" Id="{abf40c39-b4a6-4afd-ac77-461f84c0f1c0}">
       <Declaration><![CDATA[METHOD M_Interlock
 VAR
-	US_IG : ST_VG;
-	DS_IG : ST_VG;
-	
-	VRC: FB_VRC;
+    US_IG : ST_VG;
+    DS_IG : ST_VG;
+
+    VRC: FB_VRC;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -80,20 +80,5 @@ TEST_FINISHED_NAMED('VRC_Interlock_Lost');
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VRC_Test">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VRC_Test.M_Check_State">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VRC_Test.M_INIT">
-      <LineId Id="3" Count="9" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VRC_Test.M_Interlock">
-      <LineId Id="3" Count="18" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

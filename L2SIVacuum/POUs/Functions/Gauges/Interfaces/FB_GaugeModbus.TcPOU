@@ -3,33 +3,33 @@
   <POU Name="FB_GaugeModbus" Id="{a3fde534-3e0e-4f6e-ae05-bc79ebe7e08a}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_GaugeModbus EXTENDS FB_GaugeBase
 VAR_INPUT
-	IP: STRING;	//IP of Legacy PLC
+    IP: STRING;	//IP of Legacy PLC
     nMBAddr	:WORD; //Start address of the Register Memory
-	iBitOffset:INT :=0; // must be smaller than 32
-	tTimeout :TIME:= T#1s;
+    iBitOffset:INT :=0; // must be smaller than 32
+    tTimeout :TIME:= T#1s;
 END_VAR
 VAR_OUTPUT
-	VG: ST_VG;
-	xNoPLCResponse: BOOL;
+    VG: ST_VG;
+    xNoPLCResponse: BOOL;
 END_VAR
 VAR
-	fbPLCInputCoilsRx	:	FB_MBReadInputs;// (Modbus function 2)
-	i_PLC_nBits	:	ARRAY [1..4] OF BYTE;
-	ftReset	: F_TRIG; 
-	tonRetry : TON;
-	ErrCount:INT :=0;
-	iIndex :INT;
-	iBit:INT;
+    fbPLCInputCoilsRx	:	FB_MBReadInputs;// (Modbus function 2)
+    i_PLC_nBits	:	ARRAY [1..4] OF BYTE;
+    ftReset	: F_TRIG;
+    tonRetry : TON;
+    ErrCount:INT :=0;
+    iIndex :INT;
+    iBit:INT;
 END_VAR
 VAR CONSTANT
     nZero : INT := 0;
-	nOne : INT := 1;
-	nTwo : INT := 2;
-	nThree : INT := 3;
-	nFour : INT := 4;
-	nFive : INT := 5;
-	nSix : INT := 6;
-	nSeven : INT := 7;
+    nOne : INT := 1;
+    nTwo : INT := 2;
+    nThree : INT := 3;
+    nFour : INT := 4;
+    nFive : INT := 5;
+    nSix : INT := 6;
+    nSeven : INT := 7;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[A_ReadMB();
@@ -63,69 +63,69 @@ fbPLCInputCoilsRx.bExecute := ftReset.Q OR tonRetry.Q;
 fbPLCInputCoilsRx(sIPAddr:=IP, nTCPPort:=502, nQuantity:=32, nMBAddr:=nMBAddr, cbLength:=SIZEOF(i_PLC_nBits),  pDestAddr:=ADR(i_PLC_nBits), tTimeout:=tTimeout);
 //if there's a modbus error, set all incoming bits to zero
 IF fbPLCInputCoilsRx.bError THEN
-	i_PLC_nBits[1].0 := 0;
-	i_PLC_nBits[1].1 := 0;
-	i_PLC_nBits[1].2 := 0;
-	i_PLC_nBits[1].3 := 0;
-	i_PLC_nBits[1].4 := 0;
-	i_PLC_nBits[1].5 := 0;
-	i_PLC_nBits[1].6 := 0;
-	i_PLC_nBits[1].7 := 0;
-	i_PLC_nBits[2].0 := 0;
-	i_PLC_nBits[2].1 := 0;
-	i_PLC_nBits[2].2 := 0;
-	i_PLC_nBits[2].3 := 0;
-	i_PLC_nBits[2].4 := 0;
-	i_PLC_nBits[2].5 := 0;
-	i_PLC_nBits[2].6 := 0;
-	i_PLC_nBits[2].7 := 0;
-	VG.xPRESS_OK := FALSE;
-	xNoPLCResponse:= TRUE;	
+    i_PLC_nBits[1].0 := 0;
+    i_PLC_nBits[1].1 := 0;
+    i_PLC_nBits[1].2 := 0;
+    i_PLC_nBits[1].3 := 0;
+    i_PLC_nBits[1].4 := 0;
+    i_PLC_nBits[1].5 := 0;
+    i_PLC_nBits[1].6 := 0;
+    i_PLC_nBits[1].7 := 0;
+    i_PLC_nBits[2].0 := 0;
+    i_PLC_nBits[2].1 := 0;
+    i_PLC_nBits[2].2 := 0;
+    i_PLC_nBits[2].3 := 0;
+    i_PLC_nBits[2].4 := 0;
+    i_PLC_nBits[2].5 := 0;
+    i_PLC_nBits[2].6 := 0;
+    i_PLC_nBits[2].7 := 0;
+    VG.xPRESS_OK := FALSE;
+    xNoPLCResponse:= TRUE;
 ELSIF NOT ftReset.Q AND fbPLCInputCoilsRx.cbRead > 0 THEN
-	xNoPLCResponse:= FALSE;
-	VG.rPRESS := 1E-8;
-	iIndex:= REAL_TO_INT(iBitOffset/8);
-	iBit:= (24 MOD 10);
-	VG.xPRESS_OK := M_GetBit(iIndex,iBit);
-	fbPLCInputCoilsRx.bExecute :=False;
+    xNoPLCResponse:= FALSE;
+    VG.rPRESS := 1E-8;
+    iIndex:= REAL_TO_INT(iBitOffset/8);
+    iBit:= (24 MOD 10);
+    VG.xPRESS_OK := M_GetBit(iIndex,iBit);
+    fbPLCInputCoilsRx.bExecute :=False;
 ELSIF (*ftReset.Q*) NOT (fbPLCInputCoilsRx.bExecute) AND fbPLCInputCoilsRx.cbRead = 0 THEN
-	xNoPLCResponse:= TRUE;		
+    xNoPLCResponse:= TRUE;
 END_IF
 
 // Log Action
 tAction(CLK:=   fbPLCInputCoilsRx.bError or xNoPLCResponse);
-IF tAction.Q THEN 
-ErrCount:= ErrCount+1; 
+IF tAction.Q THEN
+ErrCount:= ErrCount+1;
 fbLogger(sMsg:='Modbus read error', eSevr:=TcEventSeverity.Critical);
 END_IF
-	]]></ST>
+    ]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_GetBit" Id="{511583e8-935b-4039-a88b-8ff94a18863d}">
       <Declaration><![CDATA[METHOD M_GetBit : BOOL
 VAR_INPUT
-	iIndex:INT;
-	iBit:INT;
+    iIndex:INT;
+    iBit:INT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[Case iBit OF
-	nZero: 
-		M_GetBit:=i_PLC_nBits[iIndex].nZero;
-	nOne: 
-		M_GetBit:=i_PLC_nBits[iIndex].nOne;
-	nTwo: 
-		M_GetBit:=i_PLC_nBits[iIndex].nTwo;
-	nThree: 
-		M_GetBit:=i_PLC_nBits[iIndex].nThree;
-	nFour: 
-		M_GetBit:=i_PLC_nBits[iIndex].nFour;
-	nFive: 
-		M_GetBit:=i_PLC_nBits[iIndex].nFive;
-	nSix: 
-		M_GetBit:=i_PLC_nBits[iIndex].nSix;
-	nSeven: 
-		M_GetBit:=i_PLC_nBits[iIndex].nSeven;
+    nZero:
+        M_GetBit:=i_PLC_nBits[iIndex].nZero;
+    nOne:
+        M_GetBit:=i_PLC_nBits[iIndex].nOne;
+    nTwo:
+        M_GetBit:=i_PLC_nBits[iIndex].nTwo;
+    nThree:
+        M_GetBit:=i_PLC_nBits[iIndex].nThree;
+    nFour:
+        M_GetBit:=i_PLC_nBits[iIndex].nFour;
+    nFive:
+        M_GetBit:=i_PLC_nBits[iIndex].nFive;
+    nSix:
+        M_GetBit:=i_PLC_nBits[iIndex].nSix;
+    nSeven:
+        M_GetBit:=i_PLC_nBits[iIndex].nSeven;
 END_CASE]]></ST>
       </Implementation>
     </Method>

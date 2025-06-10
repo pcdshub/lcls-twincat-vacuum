@@ -4,31 +4,31 @@
     <Declaration><![CDATA[(* This function implements the Basic functions for the Pfeiffer EVR 116 needle valve*)
 FUNCTION_BLOCK FB_VCN EXTENDS FB_Valve
 VAR_INPUT
-	i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
-	i_ReqPos	:	REAL; //Requested position
-	i_xPurge	: BOOL:= FALSE;// When purge is set the maximum threshold is ignored, has to be set evey cycle.
+    i_xExtIlkOK	:	BOOL; //External Interlock, SET to TRUE if not used
+    i_ReqPos	:	REAL; //Requested position
+    i_xPurge	: BOOL:= FALSE;// When purge is set the maximum threshold is ignored, has to be set evey cycle.
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
     pv:
-	'}
-	iq_stVCN	:	ST_VCN; //Needle valve structure
+    '}
+    iq_stVCN	:	ST_VCN; //Needle valve structure
 END_VAR
 VAR CONSTANT
-	rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual, A Voltage of 9V it is completely Open
-	rCloseVoltage	:	REAL := 0.4;// a voltage <0.5 V the valve is closed	
+    rOpenVoltage	:	REAL := 9.1; // From the EVR 116 manual, A Voltage of 9V it is completely Open
+    rCloseVoltage	:	REAL := 0.4;// a voltage <0.5 V the valve is closed
 END_VAR
 VAR
-	// Requested voltage
-	{attribute 'pytmc' := '
-	pv: POS_AO;
-	io: i ;
-	'}
-	rReqVoltage: REAL := 0;
-	//iResolution: INT :=16;
-	// 
-	(*IO*)
-	q_iRawPosition AT%Q* :INT;
+    // Requested voltage
+    {attribute 'pytmc' := '
+    pv: POS_AO;
+    io: i ;
+    '}
+    rReqVoltage: REAL := 0;
+    //iResolution: INT :=16;
+    //
+    (*IO*)
+    q_iRawPosition AT%Q* :INT;
 END_VAR
 VAR PERSISTENT
     rUpperLimit	:	REAL;
@@ -61,28 +61,28 @@ iq_stVCN.rUpperLimit :=  LIMIT(0, iq_stVCN.rUpperLimit, 100);
 iq_stVCN.xIlkOK := i_xExtIlkOK;
 (*Checking which Control mode is selected*)
 IF iq_stVCN.xIlkOK THEN
-	IF iq_stVCN.eValveControl = OpenValve THEN
-		iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;(*Percentage*)
-	ELSIF iq_stVCN.eValveControl = CloseValve THEN
-		iq_stVCN.rReqPosition := 0; (*Percentage*)
-	ELSIF (iq_stVCN.eValveControl = ManualControl) (*AND (iq_stVCN.xOPN_SW)*) THEN
-		iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
-	ELSIF iq_stVCN.eValveControl = PressureControl THEN
-		IF (i_xPurge) THEN
-		iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, 100); 
-		ELSE iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, iq_stVCN.rUpperLimit); 
-		END_IF
-	END_IF
+    IF iq_stVCN.eValveControl = OpenValve THEN
+        iq_stVCN.rReqPosition := iq_stVCN.rUpperLimit;(*Percentage*)
+    ELSIF iq_stVCN.eValveControl = CloseValve THEN
+        iq_stVCN.rReqPosition := 0; (*Percentage*)
+    ELSIF (iq_stVCN.eValveControl = ManualControl) (*AND (iq_stVCN.xOPN_SW)*) THEN
+        iq_stVCN.rReqPosition := LIMIT(0, iq_stVCN.rReqPosition, iq_stVCN.rUpperLimit);
+    ELSIF iq_stVCN.eValveControl = PressureControl THEN
+        IF (i_xPurge) THEN
+        iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, 100);
+        ELSE iq_stVCN.rReqPosition := LIMIT(0, i_ReqPos, iq_stVCN.rUpperLimit);
+        END_IF
+    END_IF
 ELSE
-	iq_stVCN.rReqPosition := 0;
-	iq_stVCN.eValveControl := CloseValve;
+    iq_stVCN.rReqPosition := 0;
+    iq_stVCN.eValveControl := CloseValve;
 END_IF
 
 // Requested Voltage calculation
 rReqVoltage := iq_stVCN.rReqPosition * (rOpenVoltage-rCloseVoltage)/100 + rCloseVoltage;
 rReqVoltage := LIMIT(rCloseVoltage, rReqVoltage, rOpenVoltage); //The requested voltage should remain within this range
 //Raw position calc
-iq_stvcn.q_iRawPosition := REAL_TO_INT( 32767/10 * rReqVoltage);	
+iq_stvcn.q_iRawPosition := REAL_TO_INT( 32767/10 * rReqVoltage);
 
 (*SOft IO Mapping*)
 ACT_IO();
@@ -104,25 +104,25 @@ iq_stVCN.i_iPosition := iq_stvcn.q_iRawPosition;]]></ST>
         <ST><![CDATA[// ILK logger
 
 IF NOT (iq_stVCN.xIlkOK ) AND NOT(ePrevState = CloseValve) THEN
- 		fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);  	
+         fbLogger(sMsg:='Lost interlock ok bit while valve was open.', eSevr:=TcEventSeverity.Critical);
 END_IF
 
 
-//Control STATE Logger  
+//Control STATE Logger
 IF ePrevState <> iq_stVCN.eValveControl THEN
-	  CASE iq_stVCN.eValveControl OF
-		ManualControl:
-			fbLogger(sMsg:='Valve in manual control mode', eSevr:=TcEventSeverity.Warning);
-		OpenValve:
-			fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
-		PressureControl:
-			fbLogger(sMsg:='Valve in pressure control mode.', eSevr:=TcEventSeverity.Info);
-		CloseValve:
-			fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := iq_stVCN.eValveControl;  
+      CASE iq_stVCN.eValveControl OF
+        ManualControl:
+            fbLogger(sMsg:='Valve in manual control mode', eSevr:=TcEventSeverity.Warning);
+        OpenValve:
+            fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+        PressureControl:
+            fbLogger(sMsg:='Valve in pressure control mode.', eSevr:=TcEventSeverity.Info);
+        CloseValve:
+            fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := iq_stVCN.eValveControl;
   END_IF
- 
+
 
 // Log valve open
 tAction(CLK:= (iq_stVCN.eValveControl = OpenValve) );
@@ -134,16 +134,16 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded to fully open', eSevr:=TcEvent
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (bRestorePersistentData) THEN
-	bRestorePersistentData	:= FALSE;
-	IF (rUpperLimit <> 0) THEN
-		iq_stVCN.rUpperLimit := rUpperLimit;
-	END_IF;
-	
+    bRestorePersistentData	:= FALSE;
+    IF (rUpperLimit <> 0) THEN
+        iq_stVCN.rUpperLimit := rUpperLimit;
+    END_IF;
+
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (iq_stVCN.rUpperLimit = rUpperLimit) THEN
-	rUpperLimit := iq_stVCN.rUpperLimit;
-	//fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
+    rUpperLimit := iq_stVCN.rUpperLimit;
+    //fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
 ELSE
      // fbWritePersistentData( START:=FALSE);
 END_IF;]]></ST>
@@ -152,7 +152,7 @@ END_IF;]]></ST>
     <Method Name="M_SetThrottle" Id="{6aa2c134-f3ab-4cc1-9ed9-8718a4b7a174}">
       <Declaration><![CDATA[METHOD M_SetThrottle : BOOL
 VAR_INPUT
-	rUpperLimit	:	REAL;
+    rUpperLimit	:	REAL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -163,7 +163,7 @@ iq_stVCN.rUpperLimit := LIMIT(0, rUpperLimit, 100);]]></ST>
     <Method Name="M_ValveControl" Id="{cbcd5e0b-59b7-45f1-86d7-5c7278df4f56}">
       <Declaration><![CDATA[METHOD M_ValveControl : BOOL
 VAR_INPUT
-	state:E_VCN; // Close, Open, Pressure, Manual
+    state:E_VCN; // Close, Open, Pressure, Manual
 END_VAR
 ]]></Declaration>
       <Implementation>

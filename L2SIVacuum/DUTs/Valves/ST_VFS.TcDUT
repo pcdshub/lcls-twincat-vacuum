@@ -5,51 +5,51 @@
 STRUCT
 
 (* Interlock *)
-	{attribute 'pytmc' := '
-	pv: TRIG; 
-	field: ZNAM TRIG_OFF; 
-	field: ONAM TRIG_ON;
-	io: i ;
-	'}
-	i_xTrigger : BOOL;
+    {attribute 'pytmc' := '
+    pv: TRIG;
+    field: ZNAM TRIG_OFF;
+    field: ONAM TRIG_ON;
+    io: i ;
+    '}
+    i_xTrigger : BOOL;
 (* Commands *)
-	{attribute 'pytmc' := '
-	pv: CLS_SW; 
-	field: ZNAM FALSE; 
-	field: ONAM CLOSE;
-	io: io ;
-	'}
-	xCLS_SW AT%Q*:BOOL; (*external open signal e.g epics*)
-	
-(* Alarm Outputs *)
-	{attribute 'pytmc' := '
-    pv: ERR_Ext;
-	field: ZNAM NO ERROR ;
-	field: ONAM External error present ;
-	io: i;
+    {attribute 'pytmc' := '
+    pv: CLS_SW;
+    field: ZNAM FALSE;
+    field: ONAM CLOSE;
+    io: io ;
     '}
-	xERR_ExtFault		: 	BOOL;
-	{attribute 'pytmc' := '
-	pv: VAC_FAULT_OK; 
-	field: ZNAM FAULT ; 
-	field: ONAM FAULT OK;
-	io: i ;
-	'}
-	i_xVAC_FAULT_OK : BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+    xCLS_SW AT%Q*:BOOL; (*external open signal e.g epics*)
 
-	
-(*ILK Devices*)
-	{attribute 'pytmc' := '
-    pv: GFS;
-	io: i;
-    '}	
-	sGFS: String;
-	
-	{attribute 'pytmc' := '
-    pv: VETO_DEVICE;
-	io: i;
+(* Alarm Outputs *)
+    {attribute 'pytmc' := '
+    pv: ERR_Ext;
+    field: ZNAM NO ERROR ;
+    field: ONAM External error present ;
+    io: i;
     '}
-	sVetoDeviceName: STRING;
+    xERR_ExtFault		: 	BOOL;
+    {attribute 'pytmc' := '
+    pv: VAC_FAULT_OK;
+    field: ZNAM FAULT ;
+    field: ONAM FAULT OK;
+    io: i ;
+    '}
+    i_xVAC_FAULT_OK : BOOL; (*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
+
+
+(*ILK Devices*)
+    {attribute 'pytmc' := '
+    pv: GFS;
+    io: i;
+    '}
+    sGFS: String;
+
+    {attribute 'pytmc' := '
+    pv: VETO_DEVICE;
+    io: i;
+    '}
+    sVetoDeviceName: STRING;
 
 END_STRUCT
 END_TYPE]]></Declaration>

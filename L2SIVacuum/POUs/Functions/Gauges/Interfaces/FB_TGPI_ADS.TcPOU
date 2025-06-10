@@ -6,21 +6,21 @@
 (* The variable values are read via ADS using the symbol name*)
 FUNCTION_BLOCK FB_TGPI_ADS Extends FB_ADS
 VAR_INPUT
-	sNetId : String; //NetID of the Destination PLC controller
-	nPort : uint; // port number
-	sVarName : string;// the variable name of the declared gauge function block.
-	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
+    sNetId : String; //NetID of the Destination PLC controller
+    nPort : uint; // port number
+    sVarName : string;// the variable name of the declared gauge function block.
+    iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := 'pv:'}
-	IG : ST_VG;
-	bError: BOOL;
+    {attribute 'pytmc' := 'pv:'}
+    IG : ST_VG;
+    bError: BOOL;
 END_VAR
 VAR
-	fb_CheckWatchdog: FB_CheckWatchdog;
-	fb_Read_VG: FB_ReadAdsSymByName;
-	ftReset: F_TRIG;
-	xFirstPass: BOOL:= true;
+    fb_CheckWatchdog: FB_CheckWatchdog;
+    fb_Read_VG: FB_ReadAdsSymByName;
+    ftReset: F_TRIG;
+    xFirstPass: BOOL:= true;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -29,30 +29,30 @@ ftReset(CLK:= fb_Read_VG.bBusy OR xFirstPass);
 xFirstPass := false;
 (*calling ADS read function*)
 
-//IG.xPRESS_OK := false;	
+//IG.xPRESS_OK := false;
 
 fb_Read_VG(
-	bRead:=ftReset.Q , 
-	sNetId:= sNetId, 
-	nPort:= nPort, 
-	sVarName:= CONCAT(sVarName,'.PG'), 
-	nDestAddr:= ADR(IG), 
-	nLen:= SIZEOF(IG), 
-	tTimeout:= , 
-	eComMode:=eAdsComModeFastCom , 
-	bBusy=> , 
-	bError=> , 
-	nErrorId=> );	
-	
+    bRead:=ftReset.Q ,
+    sNetId:= sNetId,
+    nPort:= nPort,
+    sVarName:= CONCAT(sVarName,'.PG'),
+    nDestAddr:= ADR(IG),
+    nLen:= SIZEOF(IG),
+    tTimeout:= ,
+    eComMode:=eAdsComModeFastCom ,
+    bBusy=> ,
+    bError=> ,
+    nErrorId=> );
+
 
 (*Error*)
 fb_CheckWatchdog(
-	bEnable:= TRUE, 
-	tWatchdogTime:= T#900ms, 
-	nCnt:= iWatchdog , 
-	bWatchdog=> , 
-	nLastCnt=> );
-	
+    bEnable:= TRUE,
+    tWatchdogTime:= T#900ms,
+    nCnt:= iWatchdog ,
+    bWatchdog=> ,
+    nLastCnt=> );
+
 bError:= fb_Read_VG.bError OR fb_CheckWatchdog.bWatchdog;
 tErrorPresent(CLK:=bError);
 

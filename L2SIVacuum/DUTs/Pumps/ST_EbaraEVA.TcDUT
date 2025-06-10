@@ -4,42 +4,42 @@
     <Declaration><![CDATA[TYPE ST_EbaraEVA EXTENDS ST_RoughPump:
 STRUCT
 
-(* Output *)	
-	//q_xRunDO 	:	BOOL; in Rough PUMP
+(* Output *)
+    //q_xRunDO 	:	BOOL; in Rough PUMP
 
-	
+
 (* Input *)
 {attribute 'pytmc' := '
     pv: REMOTE;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: io;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: io;
     '}
-	q_xRemote	:	BOOL;
-	{attribute 'pytmc' := '
-    pv: ALARM_OK;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
-    '}
-	i_xAlarmOK	:	BOOL;
-	
-	{attribute 'pytmc' := '
-    pv: RUN_DI;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
-    '}
-	i_xIsRun		:	BOOL;
-
-	
+    q_xRemote	:	BOOL;
     {attribute 'pytmc' := '
-	pv: RST_SW;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: io;
-	'}
-	q_xReset	:	BOOL; //For resetting faults
+    pv: ALARM_OK;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
+    '}
+    i_xAlarmOK	:	BOOL;
+
+    {attribute 'pytmc' := '
+    pv: RUN_DI;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
+    '}
+    i_xIsRun		:	BOOL;
+
+
+    {attribute 'pytmc' := '
+    pv: RST_SW;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: io;
+    '}
+    q_xReset	:	BOOL; //For resetting faults
 
 
 END_STRUCT

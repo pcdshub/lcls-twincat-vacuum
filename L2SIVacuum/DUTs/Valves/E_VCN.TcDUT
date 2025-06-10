@@ -2,13 +2,13 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.16">
   <DUT Name="E_VCN" Id="{8cba8144-9517-4b79-93a4-dc42ff0eaf7b}">
     <Declaration><![CDATA[TYPE E_VCN :
-	(
+    (
 CloseValve	:= 0,
 OpenValve	:= 1,
 PressureControl	:= 2,
 ManualControl	:= 3
 
-	);
+    );
 END_TYPE
 ]]></Declaration>
   </DUT>
