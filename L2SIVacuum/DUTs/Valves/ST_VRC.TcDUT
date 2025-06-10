@@ -4,12 +4,12 @@
     <Declaration><![CDATA[TYPE ST_VRC EXTENDS ST_ValveBase:
 STRUCT
 (* Readbacks *)
-	//In case VRC is normally open
-	{attribute 'pytmc' := '
+    //In case VRC is normally open
+    {attribute 'pytmc' := '
     pv: CLS_OK;
-	io: i;
+    io: i;
     '}
-	xCLS_OK : BOOL := TRUE;
+    xCLS_OK : BOOL := TRUE;
 
 END_STRUCT
 END_TYPE]]></Declaration>

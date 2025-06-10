@@ -13,27 +13,27 @@ VAR_INPUT
 END_VAR
 
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	PG : ST_VG;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    PG : ST_VG;
 END_VAR
 VAR
-	V : REAL;
-	iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
-	Vlowest: REAL := 10;
-	(*IO*)
-	i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    V : REAL;
+    iTermBits: UINT := 32767 ; // The terminal's maximum value in bits
+    Vlowest: REAL := 10;
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
 END_VAR
 
 VAR CONSTANT
-	MinPressure: REAL := 1E-4;
-	rDeadband : REAL :=0.05;
-	rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
-	rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
-	rDisconnectedBoundary	:	REAL := 0.3;
-	(*Default set point 50 mT*)
-	rDefaultVAC_SP: REAL := 5E-2;
+    MinPressure: REAL := 1E-4;
+    rDeadband : REAL :=0.05;
+    rValidLoBoundary	:	REAL := 0.375; //  0.375V as per manual page 27
+    rValidHiBoundary	:	REAL := 5.659;// 5.534; // manual page 27
+    rDisconnectedBoundary	:	REAL := 0.3;
+    (*Default set point 50 mT*)
+    rDefaultVAC_SP: REAL := 5E-2;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* This function block is used to provide protection and automatic turn on of ion gauges,
@@ -42,42 +42,42 @@ END_VAR]]></Declaration>
 
 //Default setpoint 50 mT
 IF PG.rVAC_SP = 0 THEN
-	PG.rVAC_SP := 5E-2;
+    PG.rVAC_SP := 5E-2;
 END_IF
 
 (* Real-value calculation *)
 If (iTermBits=0) THEN iTermBits := 32767;END_IF
-V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;	
+V := 10*INT_TO_REAL(PG.i_iPRESS_R)/iTermBits;
 
 Vlowest := MIN(V, Vlowest);
 
 IF V > rDisconnectedBoundary AND V < rValidLoBoundary  THEN
-	PG.rPRESS := MinPressure;
-	PG.eState := ValidLo;
-	
+    PG.rPRESS := MinPressure;
+    PG.eState := ValidLo;
+
 ELSIF V >= rValidLoBoundary AND V < rValidLoBoundary +rDeadband  THEN
-	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
-	PG.eState := ValidLo;
-	
+    PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+    PG.eState := ValidLo;
+
 ELSIF V >= rValidLoBoundary AND V < 2.842 THEN
-	PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
-	PG.eState := Valid;
+    PG.rPRESS := MAX( MinPressure, LREAL_TO_REAL( -0.02585 + 0.03767*V + 0.04563*EXPT(V,2)+ 0.1151*EXPT(V,3) - 0.04158*EXPT(V,4)+ 0.008737*EXPT(V,5)) );
+    PG.eState := Valid;
 
 ELSIF V >= 2.842 AND V < 4.945 THEN
-	PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
-	PG.eState := Valid;
+    PG.rPRESS := LREAL_TO_REAL((0.1031-0.02322*V+0.07229*EXPT(V,2))/(1-0.3986*V+0.07438*EXPT(V,2)-0.006866*EXPT(V,3)));
+    PG.eState := Valid;
 
 ELSIF V >= 4.945 AND V < rValidHiBoundary THEN
-	PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
-	PG.eState := ValidHi;
+    PG.rPRESS := LREAL_TO_REAL((100.624-20.5623*V)/(1-0.37679*V+0.0348656*EXPT(V,2)));
+    PG.eState := ValidHi;
 
 ELSIF V <= rDisconnectedBoundary THEN
-	PG.eState := GaugeDisconnected; //Most likely not connected
-	PG.rPRESS := -1;
+    PG.eState := GaugeDisconnected; //Most likely not connected
+    PG.rPRESS := -1;
 
 ELSE
-	PG.eState := OoR; //Larger voltage, probably out of range?
-	PG.rPRESS := -1;
+    PG.eState := OoR; //Larger voltage, probably out of range?
+    PG.rPRESS := -1;
 END_IF
 
 (* Protection Functions *)
@@ -103,27 +103,27 @@ ACT_Persistent();]]></ST>
     <Action Name="ACT_Logger" Id="{7969d63c-632d-445e-9c13-1e5912f29995}">
       <Implementation>
         <ST><![CDATA[
-//STATE Logger  
+//STATE Logger
 if (PG.xLog) THEN
-	IF ePrevState <> PG.eState THEN
-	  CASE PG.eState OF
-		ValidHi:
-			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
-		ValidLo:
-			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
-		Valid:
-			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-  		GaugeDisconnected:
-			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-		PressInvalid:
-			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-		OoR:
-			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-		Starting:
-			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := PG.eState;  
-  END_IF 
+    IF ePrevState <> PG.eState THEN
+      CASE PG.eState OF
+        ValidHi:
+            fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+        ValidLo:
+            fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+        Valid:
+            fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+          GaugeDisconnected:
+            fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+        PressInvalid:
+            fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+        OoR:
+            fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+        Starting:
+            fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := PG.eState;
+  END_IF
 END_IF
 
 
@@ -134,14 +134,14 @@ END_IF
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
-	SUPER^.bRestorePersistentData	:= FALSE;
-	IF (rPRO_SP <> 0) THEN
-		PG.rPRO_SP := rPRO_SP;
-	END_IF;
+    SUPER^.bRestorePersistentData	:= FALSE;
+    IF (rPRO_SP <> 0) THEN
+        PG.rPRO_SP := rPRO_SP;
+    END_IF;
 END_IF
 (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
 IF NOT (PG.rVAC_SP = rVAC_SP) THEN
-	rVAC_SP:= PG.rVAC_SP;
+    rVAC_SP:= PG.rVAC_SP;
 END_IF;
 ]]></ST>
       </Implementation>
@@ -155,7 +155,7 @@ PG.sPath := sPath;]]></ST>
     <Method Name="M_SetBits" Id="{fdefaff1-6d61-42b8-bd10-ed9063b6a787}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
-	TermBits : UINT; // The terminal's maximum value in bits
+    TermBits : UINT; // The terminal's maximum value in bits
 END_VAR
 ]]></Declaration>
       <Implementation>

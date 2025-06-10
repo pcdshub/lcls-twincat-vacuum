@@ -7,22 +7,22 @@ FUNCTION_BLOCK FB_901_ECAT  EXTENDS FB_GaugeBase
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := '
-    pv: 
-	'}
-	PG	: ST_VG;
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    PG	: ST_VG;
 END_VAR
 VAR_IN_OUT
-	
+
 END_VAR
 VAR
-	bInit: BOOL:= TRUE;(*IO*)
-	xPress_OK AT%I* : BOOL;
-	xOverrange AT%I* : BOOL;
-	xUnderrange AT%I* : BOOL; 
-	i_iPRESS_R AT%I* : REAL; // input Pressure // Link to analog Input
-	bWcstate AT%I* : BOOL; // 0: date valid, 1: date invalid
-	
+    bInit: BOOL:= TRUE;(*IO*)
+    xPress_OK AT%I* : BOOL;
+    xOverrange AT%I* : BOOL;
+    xUnderrange AT%I* : BOOL;
+    i_iPRESS_R AT%I* : REAL; // input Pressure // Link to analog Input
+    bWcstate AT%I* : BOOL; // 0: date valid, 1: date invalid
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -32,14 +32,14 @@ END_VAR
 PG.rPRESS :=i_iPRESS_R;
 PG.xPRESS_OK := xPress_OK and NOT bWcstate ;
 IF xPress_OK and NOT bWcstate THEN
-	PG.xPRESS_OK := TRUE;
-	PG.eState := Valid; //Press OK
+    PG.xPRESS_OK := TRUE;
+    PG.eState := Valid; //Press OK
 ELSIF xOverrange and NOT bWcstate THEN
-	PG.xPRESS_OK := FALSE;
-	PG.eState := OoR;
+    PG.xPRESS_OK := FALSE;
+    PG.eState := OoR;
 ELSIF xUnderrange and NOT bWcstate THEN
-	PG.xPRESS_OK := FALSE;
-	PG.eState := PressInvalid;
+    PG.xPRESS_OK := FALSE;
+    PG.eState := PressInvalid;
 
 END_IF
 
@@ -53,10 +53,10 @@ ACT_IO();]]></ST>
     <Action Name="ACT_Init" Id="{79fc3e26-9526-4887-bb81-9ff0cb209da7}">
       <Implementation>
         <ST><![CDATA[IF (bInit) THEN
-	bInit := False;
-	
-	//set pressure units to Torr
-	// value 0x00A10000 SDO index 0xf840, si 0x01 UDINT
+    bInit := False;
+
+    //set pressure units to Torr
+    // value 0x00A10000 SDO index 0xf840, si 0x01 UDINT
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -64,9 +64,9 @@ END_IF]]></ST>
       <Implementation>
         <ST><![CDATA[
 IF PG.xPRESS_OK THEN
-  	PG.i_iPRESS_R := REAL_TO_INT(i_iPRESS_R);
+      PG.i_iPRESS_R := REAL_TO_INT(i_iPRESS_R);
 ELSE
-	PG.rPRESS := 0.0;
+    PG.rPRESS := 0.0;
 END_IF
 PG.sPath := sPath;
 ]]></ST>
@@ -75,51 +75,30 @@ PG.sPath := sPath;
     <Action Name="ACT_Logger" Id="{4887216a-c77e-43cb-a418-2b8dd97c0d8a}">
       <Implementation>
         <ST><![CDATA[
-//STATE Logger  
+//STATE Logger
 IF ePrevState <> PG.eState THEN
-	  CASE PG.eState OF
-		ValidHi:
-			fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
-		ValidLo:
-			fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
-		Valid:
-			fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
-  		GaugeDisconnected:
-			fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
-		PressInvalid:
-			fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
-		OoR:
-			fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
-		Starting:
-			fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
-	  END_CASE
-	  ePrevState := PG.eState;  
+      CASE PG.eState OF
+        ValidHi:
+            fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+        ValidLo:
+            fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+        Valid:
+            fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+          GaugeDisconnected:
+            fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+        PressInvalid:
+            fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+        OoR:
+            fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+        Starting:
+            fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := PG.eState;
   END_IF
-  
+
 
 ]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_901_ECAT">
-      <LineId Id="3" Count="13" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="17" Count="6" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_901_ECAT.ACT_Init">
-      <LineId Id="2" Count="4" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_901_ECAT.ACT_IO">
-      <LineId Id="4" Count="1" />
-      <LineId Id="1" Count="0" />
-      <LineId Id="6" Count="1" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="2" Count="1" />
-    </LineIds>
-    <LineIds Name="FB_901_ECAT.ACT_Logger">
-      <LineId Id="2" Count="22" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

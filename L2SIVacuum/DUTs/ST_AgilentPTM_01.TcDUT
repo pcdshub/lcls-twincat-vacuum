@@ -5,47 +5,47 @@
 STRUCT
 
 (* Inputs *)
-	(* 24V in Ramp state; 0V for others *)
-    i_xSTART :	BOOL; 
-	
-	(* setpoint related to frequency *)
-	i_xR1	:  BOOL;
-	
-	(* setpoint related to Power *)
-	i_xR2	:  BOOL;
-	
-	(* low speed mode *)
-	i_xLSpd	:  BOOL;
-	
-	(* Fault input*)
-	//i_xFault : BOOL;  Inherit ST_PTM.xFault
-	
-	
+    (* 24V in Ramp state; 0V for others *)
+    i_xSTART :	BOOL;
+
+    (* setpoint related to frequency *)
+    i_xR1	:  BOOL;
+
+    (* setpoint related to Power *)
+    i_xR2	:  BOOL;
+
+    (* low speed mode *)
+    i_xLSpd	:  BOOL;
+
+    (* Fault input*)
+    //i_xFault : BOOL;  Inherit ST_PTM.xFault
+
+
 
 (* controls *)
-	(* Start/Stop - 
-		q_RunDo ;   Inherit ST_PTM.
-	 *)
-	
-	(* Low speed control *)
-	q_xLSpd		:  BOOL;
-	
-	(*Soft start *)
-	q_xSS   	:  BOOL;
-	
-	(* Run interlock*)
-	q_xIlk : BOOL;
-		
-	eState	:	E_PumpState;
-	
-	rBackingPressureSP : REAL := 0.01;
-	rInletPressureSP : REAL := 0.5;
-	
-	
-	(*pump Lock*)
-	q_xPumpFaultLock : BOOL := FALSE;
-	i_xPumpLockReset: BOOL := FALSE;
-	
+    (* Start/Stop -
+        q_RunDo ;   Inherit ST_PTM.
+     *)
+
+    (* Low speed control *)
+    q_xLSpd		:  BOOL;
+
+    (*Soft start *)
+    q_xSS   	:  BOOL;
+
+    (* Run interlock*)
+    q_xIlk : BOOL;
+
+    eState	:	E_PumpState;
+
+    rBackingPressureSP : REAL := 0.01;
+    rInletPressureSP : REAL := 0.5;
+
+
+    (*pump Lock*)
+    q_xPumpFaultLock : BOOL := FALSE;
+    i_xPumpLockReset: BOOL := FALSE;
+
 
 END_STRUCT
 END_TYPE

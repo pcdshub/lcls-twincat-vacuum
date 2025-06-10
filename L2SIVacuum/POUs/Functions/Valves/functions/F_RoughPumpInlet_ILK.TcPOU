@@ -2,14 +2,14 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="F_RoughPumpInlet_ILK" Id="{25dfe2f9-c6c4-41b1-9216-615302b27fca}" SpecialFunc="None">
     <Declaration><![CDATA[(*
-	Determine whether a pump attached to the inlet of a roughing pump is safe to open. 
-	
-	Return true, signaling it is safe to open when the roughing pump is confirmed to be working. 
+    Determine whether a pump attached to the inlet of a roughing pump is safe to open.
+
+    Return true, signaling it is safe to open when the roughing pump is confirmed to be working.
 *)
 
 FUNCTION F_RoughPumpInlet_ILK : BOOL
 VAR_INPUT
-	ScrollPump	:	ST_RoughPump;
+    ScrollPump	:	ST_RoughPump;
 END_VAR
 VAR
 END_VAR
@@ -18,9 +18,5 @@ END_VAR
       <ST><![CDATA[
 F_RoughPumpInlet_ILK := (ScrollPump.eState = pumpRUNNING); (* Confirm that the roughing pump is running before opening the valve *)]]></ST>
     </Implementation>
-    <LineIds Name="F_RoughPumpInlet_ILK">
-      <LineId Id="9" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

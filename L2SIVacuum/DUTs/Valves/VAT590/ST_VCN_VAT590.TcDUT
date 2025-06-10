@@ -3,120 +3,120 @@
   <DUT Name="ST_VCN_VAT590" Id="{1cac1206-fd6c-43b8-ae08-593989ed3a26}">
     <Declaration><![CDATA[TYPE ST_VCN_VAT590 :
 STRUCT
-	(* VCN - Valve Controlled Needle
-	Used for VAT590 needle valves *)
-	{attribute 'pytmc' := '
-	pv: POS_RAW
-	io: i
+    (* VCN - Valve Controlled Needle
+    Used for VAT590 needle valves *)
+    {attribute 'pytmc' := '
+    pv: POS_RAW
+    io: i
     '}
-	nRawPosition : DINT; //Position readback
-	{attribute 'pytmc' := '
-	pv: PRES_RAW
-	io: i
+    nRawPosition : DINT; //Position readback
+    {attribute 'pytmc' := '
+    pv: PRES_RAW
+    io: i
     '}
-	nRawPressure : DINT; //Pressure readback
-	{attribute 'pytmc' := '
-	pv: PRES_TORR
-	field: EGU "TORR"
-	io: i
+    nRawPressure : DINT; //Pressure readback
+    {attribute 'pytmc' := '
+    pv: PRES_TORR
+    field: EGU "TORR"
+    io: i
     '}
-	fPressure : REAL; //Pressure readback in Torr units
-	{attribute 'pytmc' := '
-	pv: POS_SP
-	io: i
-	'}
-	nPositionSP : DINT; //Position setpoint readback
-	{attribute 'pytmc' := '
-	pv: PRES_SP
-	io: i
-	'}
-	nPressureSP : DINT; //Pressure setpoint readback
-	{attribute 'pytmc' := '
-	pv: ILK_OK
-	field: ZNAM NOT OK
-	field: ONAM OK
-	field: ZSV MAJOR
-	field: OSV NO_ALARM
-	io: i
+    fPressure : REAL; //Pressure readback in Torr units
+    {attribute 'pytmc' := '
+    pv: POS_SP
+    io: i
     '}
-	bIlkOK : BOOL := FALSE; //Interlock Bit status
-	{attribute 'pytmc' := '
-	pv: POS_LIMIT
-	io: io
-	autosave_pass1: VAL DESC
+    nPositionSP : DINT; //Position setpoint readback
+    {attribute 'pytmc' := '
+    pv: PRES_SP
+    io: i
     '}
-	fPosSetLimit	: REAL := 100; //Percentage Upper limit on valve open
-	{attribute 'pytmc' := '
-	pv: PRES_SET_LIMIT
-	io: io
-	autosave_pass1: VAL DESC
+    nPressureSP : DINT; //Pressure setpoint readback
+    {attribute 'pytmc' := '
+    pv: ILK_OK
+    field: ZNAM NOT OK
+    field: ONAM OK
+    field: ZSV MAJOR
+    field: OSV NO_ALARM
+    io: i
     '}
-	fPresSetLimit	: REAL := 1E-2; //Upper limit for pressure control 	
-	{attribute 'pytmc' := '
-	pv: PRES_RDBK_LIMIT
-	io: io
-	autosave_pass1: VAL DESC
-    '}	
-	fPresRdbkLimit : REAL := 1E-4;  //Upper limit for pressure reading before valve close
-	{attribute 'pytmc' := '
-	pv: POS_REQ
-	field: DRVL 0.0
-	field: DRVH 100.0
-	io: io
-	'}
-	fReqPosition : REAL; //Requested position (0.0-100.0%)
-	{attribute 'pytmc' := '
-	pv: PRES_REQ
-	field: EGU "TORR"
-	io: io;
-	'}
-	fReqPressure : REAL; //Requested pressure in Torr units
-	{attribute 'pytmc' :=  ' 
-	pv: STATE
-	io: io
-	'}
-	eValveControl : E_VCN_VAT590; //Valve control mode
-	{attribute 'pytmc' := '
-	pv: 
-	'}
-	stValveStatus : ST_VAT590_STATUS; //All Valve status readbacks
-	{attribute 'pytmc' :=  ' 
-	pv: REM_CTRL
-	io: io
-	'}
-	eRemoteControl : E_VAT590_AccessMode; //Select remote control mode
-	{attribute 'pytmc' := '
-	pv: ZERO
-	io: io
-	'}
-	bZero : BOOL; //Activate Zero function bit
-	{attribute 'pytmc' := '
-	pv: COE_PARAM
-	'}
-	stCoeParameters : ST_VAT590_COE; //Coe Parameters
-	{attribute 'pytmc' := '
-	pv: COE_ERROR
-	field: ZNAM OK
-	field: ONAM ERROR
-	field: ZSV NO_ALARM
-	field: OSV MINOR
-	io: i
-	'}
-	bCoeError : BOOL; //Coe Interface Error
-	{attribute 'pytmc' := '
-	pv: COE_RESET
-	io: io
-	'}
-	bResetCoeError : BOOL; //Reset Coe Interface Error
-	{attribute 'pytmc' := '
-	pv: ETHCAT_COMM_STATUS
-	field: ZNAM OK
-	field: ONAM ERROR
-	field: ZSV NO_ALARM
-	field: OSV MAJOR
-	io: i
-	'}
-	bValveEthCatStatus : BOOL; //Status of the Ethercat Communication with device
+    bIlkOK : BOOL := FALSE; //Interlock Bit status
+    {attribute 'pytmc' := '
+    pv: POS_LIMIT
+    io: io
+    autosave_pass1: VAL DESC
+    '}
+    fPosSetLimit	: REAL := 100; //Percentage Upper limit on valve open
+    {attribute 'pytmc' := '
+    pv: PRES_SET_LIMIT
+    io: io
+    autosave_pass1: VAL DESC
+    '}
+    fPresSetLimit	: REAL := 1E-2; //Upper limit for pressure control
+    {attribute 'pytmc' := '
+    pv: PRES_RDBK_LIMIT
+    io: io
+    autosave_pass1: VAL DESC
+    '}
+    fPresRdbkLimit : REAL := 1E-4;  //Upper limit for pressure reading before valve close
+    {attribute 'pytmc' := '
+    pv: POS_REQ
+    field: DRVL 0.0
+    field: DRVH 100.0
+    io: io
+    '}
+    fReqPosition : REAL; //Requested position (0.0-100.0%)
+    {attribute 'pytmc' := '
+    pv: PRES_REQ
+    field: EGU "TORR"
+    io: io;
+    '}
+    fReqPressure : REAL; //Requested pressure in Torr units
+    {attribute 'pytmc' :=  '
+    pv: STATE
+    io: io
+    '}
+    eValveControl : E_VCN_VAT590; //Valve control mode
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    stValveStatus : ST_VAT590_STATUS; //All Valve status readbacks
+    {attribute 'pytmc' :=  '
+    pv: REM_CTRL
+    io: io
+    '}
+    eRemoteControl : E_VAT590_AccessMode; //Select remote control mode
+    {attribute 'pytmc' := '
+    pv: ZERO
+    io: io
+    '}
+    bZero : BOOL; //Activate Zero function bit
+    {attribute 'pytmc' := '
+    pv: COE_PARAM
+    '}
+    stCoeParameters : ST_VAT590_COE; //Coe Parameters
+    {attribute 'pytmc' := '
+    pv: COE_ERROR
+    field: ZNAM OK
+    field: ONAM ERROR
+    field: ZSV NO_ALARM
+    field: OSV MINOR
+    io: i
+    '}
+    bCoeError : BOOL; //Coe Interface Error
+    {attribute 'pytmc' := '
+    pv: COE_RESET
+    io: io
+    '}
+    bResetCoeError : BOOL; //Reset Coe Interface Error
+    {attribute 'pytmc' := '
+    pv: ETHCAT_COMM_STATUS
+    field: ZNAM OK
+    field: ONAM ERROR
+    field: ZSV NO_ALARM
+    field: OSV MAJOR
+    io: i
+    '}
+    bValveEthCatStatus : BOOL; //Status of the Ethercat Communication with device
 END_STRUCT
 END_TYPE
 ]]></Declaration>

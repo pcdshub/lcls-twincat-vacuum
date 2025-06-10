@@ -2,39 +2,35 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
   <POU Name="F_VALVE_REL_ILK" Id="{76a07f65-882b-4a00-83f1-0c1df4ed592a}" SpecialFunc="None">
     <Declaration><![CDATA[(* OK, this is going to be a general-use function that will return whether the ratio of the pressures given is less than x orders of magnitude.
-True iff 10^(-x) < a/b < 10^x.  Simple, right?  Just make sure it gets a positive order of magnitude and the pressures aren't 0. ~Scott *)   
+True iff 10^(-x) < a/b < 10^x.  Simple, right?  Just make sure it gets a positive order of magnitude and the pressures aren't 0. ~Scott *)
 {attribute 'no_check'}
 FUNCTION F_VALVE_REL_ILK : BOOL
 VAR_INPUT
-	i_stUSG	:	ST_VG; // Upstream Gague
-	i_stDSG	:	ST_VG; // Downstream Gague
-	//Orders of magnitude allowed between up/downstream pressures for valve to open. Must be real positive integer.
-	i_iOrdersMagnitude: INT;
+    i_stUSG	:	ST_VG; // Upstream Gague
+    i_stDSG	:	ST_VG; // Downstream Gague
+    //Orders of magnitude allowed between up/downstream pressures for valve to open. Must be real positive integer.
+    i_iOrdersMagnitude: INT;
 END_VAR
 VAR
-	rPressRatio : REAL;
-	rMaxRatioAllowed	:	LREAL := EXPT(10,i_iOrdersMagnitude);
-	rMinRatioAllowed	:	LREAL := EXPT(10,(-i_iOrdersMagnitude));
+    rPressRatio : REAL;
+    rMaxRatioAllowed	:	LREAL := EXPT(10,i_iOrdersMagnitude);
+    rMinRatioAllowed	:	LREAL := EXPT(10,(-i_iOrdersMagnitude));
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* S. Stubbs 11/2015 *)
 
 (* OK, this is going to be a general-use function that will return whether the ratio of the pressures given is less than x orders of magnitude.
-True iff 10^(-x) < a/b < 10^x.  Simple, right?  Just make sure it gets a positive order of magnitude and the pressures aren't 0. ~Scott *)   
+True iff 10^(-x) < a/b < 10^x.  Simple, right?  Just make sure it gets a positive order of magnitude and the pressures aren't 0. ~Scott *)
 
 (* Find ratio *)
 
 IF i_stDSG.rPRESS <> 0 THEN
-	rPressRatio := i_stUSG.rPRESS / i_stDSG.rPRESS;
+    rPressRatio := i_stUSG.rPRESS / i_stDSG.rPRESS;
 
-	F_VALVE_REL_ILK := rPressRatio < rMaxRatioAllowed AND rMinRatioAllowed < rPressRatio;
+    F_VALVE_REL_ILK := rPressRatio < rMaxRatioAllowed AND rMinRatioAllowed < rPressRatio;
 ELSE
-	F_VALVE_REL_ILK := FALSE;
+    F_VALVE_REL_ILK := FALSE;
 END_IF]]></ST>
     </Implementation>
-    <LineIds Name="F_VALVE_REL_ILK">
-      <LineId Id="3" Count="12" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

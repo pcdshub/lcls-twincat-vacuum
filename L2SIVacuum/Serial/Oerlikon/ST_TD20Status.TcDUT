@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.26">
+  <DUT Name="ST_TD20Status" Id="{4114394e-9b7d-4381-aa92-5499001256f3}">
+    <Declaration><![CDATA[TYPE ST_TD20Status :  (* Serial communication defined in Oerlikon Leybold Manual 17200048 *)
+STRUCT
+    /// Received Status Word
+    wStatusWord: WORD;
+    /// Current stator frequency
+    wFrequency_P3: WORD;
+    /// Current intermediate circuit voltage
+    wVoltage_P4: WORD;
+    /// Current motor current
+    wMotorCurrent_P5: WORD;
+    /// Current frequency converter temperature
+    wConverterTemp_P11: WORD;
+    /// Critical frequency
+    wCriticalFreq_P20: WORD;
+    /// Max. Current Factor
+    wMaxCurrentFactor_P21: WORD;
+    /// Setpoint Frequecy
+    wSetpointFreq_P24: WORD;
+    /// Max. run up time
+    wMaxRunUpTime_P32: WORD;
+    /// Current pump temperature
+    wPumpTemp_P127: WORD;
+    /// most recent error code
+    wErrorCode_P171: WORD;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+    <ObjectProperties />
+  </DUT>
+</TcPlcObject>

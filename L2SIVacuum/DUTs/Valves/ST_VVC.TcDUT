@@ -6,43 +6,43 @@ STRUCT
 
 (* Inputs *)
 
-	{attribute 'pytmc' := '
-	pv: OPN_SW;
-	field: ZNAM CLOSE;
-	field: ONAM OPEN;
-	io: io;
-	'}
-	pv_xOPN_SW	: BOOL;
-	{attribute 'pytmc' := '
-	pv:FORCE_OPN;
-	field: ZNAM FALSE;
-	field: ONAM FORCE OPEN;
-	io: io;
-	'}
-	xOvrdOpn	:	BOOL;
-	{attribute 'pytmc' := '
-	pv: OVRD_ON;
-	field: ZNAM Override OFF ;
-	field: ONAM Override ON;
-	io: io;
-	'}
-	xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
-	{attribute 'pytmc' := '
+    {attribute 'pytmc' := '
+    pv: OPN_SW;
+    field: ZNAM CLOSE;
+    field: ONAM OPEN;
+    io: io;
+    '}
+    pv_xOPN_SW	: BOOL;
+    {attribute 'pytmc' := '
+    pv:FORCE_OPN;
+    field: ZNAM FALSE;
+    field: ONAM FORCE OPEN;
+    io: io;
+    '}
+    xOvrdOpn	:	BOOL;
+    {attribute 'pytmc' := '
+    pv: OVRD_ON;
+    field: ZNAM Override OFF ;
+    field: ONAM Override ON;
+    io: io;
+    '}
+    xOverrideMode	:	BOOL; (* Shows the override status of this valve *)
+    {attribute 'pytmc' := '
     pv: OPN_OK;
-	field: ZNAM OPN ILK NOT OK ;
-	field: ONAM OPN ILK OK ;
-	io: i;
-	'}
-	xOPN_OK	: BOOL;
+    field: ZNAM OPN ILK NOT OK ;
+    field: ONAM OPN ILK OK ;
+    io: i;
+    '}
+    xOPN_OK	: BOOL;
 
 (* Outputs *)
-	{attribute 'pytmc' := '
-	pv: OPN_DO;
-	field: ZNAM CLOSE;
-	field: ONAM OPEN;
-	io: i;
-	'}
-	q_xOPN_DO	: BOOL;
+    {attribute 'pytmc' := '
+    pv: OPN_DO;
+    field: ZNAM CLOSE;
+    field: ONAM OPEN;
+    io: i;
+    '}
+    q_xOPN_DO	: BOOL;
 
 END_STRUCT
 END_TYPE]]></Declaration>

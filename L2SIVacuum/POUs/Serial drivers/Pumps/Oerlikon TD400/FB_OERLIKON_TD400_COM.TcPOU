@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_OERLIKON_TD400_COM" Id="{c8ae72ef-e9c8-4596-8d8c-fcd5712999eb}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_OERLIKON_TD400_COM
+VAR_INPUT
+END_VAR
+VAR
+    tTimeOut : TIME := TIME#1S0MS;
+    fbTD400SerialDriver : FB_TD400SerialDriver;
+END_VAR
+VAR_IN_OUT
+    SerialRXBuffer : ComBuffer;
+    SerialTXBuffer : ComBuffer;
+    stTD400Control : ST_TD400Control;
+END_VAR
+VAR_OUTPUT
+    stTD400Status : ST_TD400Status;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This program is called from Serial PTM IO *)
+
+(* scan the pumps one at a time *)//MG???
+fbTD400SerialDriver(
+    i_xExecute:= TRUE,
+    i_tTimeOut:= tTimeOut,
+    i_wControlWord:= 16#0000,
+    iq_stControl:= stTD400Control,
+    iq_stSerialRXBuffer:= SerialRXBuffer,
+    iq_stSerialTXBuffer:= SerialTXBuffer,
+    q_xDone=> ,
+    q_xError=> ,
+    q_xTimeout=> ,
+    q_sResult=> ,
+    q_stStatus=> stTD400Status);
+
+IF fbTD400SerialDriver.q_xDone
+    OR fbTD400SerialDriver.q_xError
+    OR fbTD400SerialDriver.q_xTimeout THEN
+        (* reset for next time *)
+        fbTD400SerialDriver(i_xExecute:= FALSE, iq_stSerialRXBuffer:= SerialRXBuffer, iq_stSerialTXBuffer:= SerialTXBuffer, iq_stControl:= stTD400Control);
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

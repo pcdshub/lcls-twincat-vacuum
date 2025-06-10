@@ -3,8 +3,8 @@
   <DUT Name="ST_RoughPump" Id="{e8dd9b37-7fd0-43c2-b8a5-8831bd77891b}">
     <Declaration><![CDATA[TYPE ST_RoughPump :
 STRUCT
-	
-(* Generic roughing pump controls 
+
+(* Generic roughing pump controls
 
 NOTE: This is an archetype, use an extension of this structure for a specific pump (or make one).
 
@@ -13,64 +13,64 @@ NOTE: This is an archetype, use an extension of this structure for a specific pu
 //Controls
 {attribute 'pytmc' := '
     pv: RUN_SW;
-	field: ZNAM Stop; 
-	field: ONAM Start;
-	io: io;
-	'}
+    field: ZNAM Stop;
+    field: ONAM Start;
+    io: io;
+    '}
 pv_xRunSW	:	BOOL; //epics/ software control switch
 {attribute 'pytmc' := '
     pv: RUN_DO;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
-	'}
-q_xRunDo 	:   BOOL; 
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
+    '}
+q_xRunDo 	:   BOOL;
 
 //Status and Readback
 {attribute 'pytmc' := '
     pv: ILK_OK;
-	field: ZNAM NOT OK ;
-	field: ONAM OK ;
-	io: i
-	'}
+    field: ZNAM NOT OK ;
+    field: ONAM OK ;
+    io: i
+    '}
 xIlkOK	:	BOOL; //Interlock bit, true means OK to run
 xExtIlk	:	BOOL; //External interlock, this is where the logic goes
 {attribute 'pytmc' := '
     pv: AT_SPD;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
-	'}
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
+    '}
 xAtSpd	:	BOOL; //Pump at speed setpoint
 {attribute 'pytmc' := '
     pv: WARN;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
-	'}
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
+    '}
 xWrn	:	BOOL; //Pump warning
 iWrn	:	BOOL; //Warning state/code
 {attribute 'pytmc' := '
     pv: ERROR;
-	field: ZNAM FALSE; 
-	field: ONAM TRUE;
-	io: i
-	'}
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
+    '}
 xErr	:	BOOL; //Error summary
 iErr	:	BOOL; //Error state/code
 
-(*State*)	
-	{attribute 'pytmc' := '
-	pv: STATE;
-	field: ZRST STOPPED;
-	field: ONST STARTING;
-	field: TWST RUNNING;
-	field: THST FAULT;
-	field: FRST STOPPING;
-	io: i;
-	'}
+(*State*)
+    {attribute 'pytmc' := '
+    pv: STATE;
+    field: ZRST STOPPED;
+    field: ONST STARTING;
+    field: TWST RUNNING;
+    field: THST FAULT;
+    field: FRST STOPPING;
+    io: i;
+    '}
 
-	eState	:	E_PumpState;
+    eState	:	E_PumpState;
 
 END_STRUCT
 END_TYPE

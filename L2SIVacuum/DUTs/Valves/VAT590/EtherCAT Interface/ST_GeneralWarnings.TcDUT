@@ -3,22 +3,22 @@
   <DUT Name="ST_GeneralWarnings" Id="{c4ed2772-b72a-4790-a55d-6868dd39054b}">
     <Declaration><![CDATA[TYPE ST_GeneralWarnings :
 STRUCT
-	Bit0ServiceRequest: BIT;
-	Bit1Reserved : BIT;
-	Bit2Reserved : BIT;
-	Bit3PowerFailureBattery : BIT;
-	Bit4Reserved : BIT;
-	Bit5Reserved : BIT;
-	Bit6Reserved : BIT;
-	Bit7Reserved : BIT;
-	Bit8Reserved : BIT;
-	Bit9Reserved : BIT;
-	Bit10SensMeasUnitFault : BIT;
-	Bit11Reserved : BIT;
-	Bit12Reserved : BIT;
-	Bit13Reserved : BIT;
-	Bit14Reserved : BIT;
-	Bit15Reserved : BIT;
+    Bit0ServiceRequest: BIT;
+    Bit1Reserved : BIT;
+    Bit2Reserved : BIT;
+    Bit3PowerFailureBattery : BIT;
+    Bit4Reserved : BIT;
+    Bit5Reserved : BIT;
+    Bit6Reserved : BIT;
+    Bit7Reserved : BIT;
+    Bit8Reserved : BIT;
+    Bit9Reserved : BIT;
+    Bit10SensMeasUnitFault : BIT;
+    Bit11Reserved : BIT;
+    Bit12Reserved : BIT;
+    Bit13Reserved : BIT;
+    Bit14Reserved : BIT;
+    Bit15Reserved : BIT;
 END_STRUCT
 END_TYPE
 ]]></Declaration>

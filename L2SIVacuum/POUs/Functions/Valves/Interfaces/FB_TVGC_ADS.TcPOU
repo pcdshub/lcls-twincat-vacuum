@@ -6,21 +6,21 @@
 (*Use with FB_ADS_WATCHDOG on remotePLC*)
 FUNCTION_BLOCK FB_TVGC_ADS extends FB_ADS
 VAR_INPUT
-	sNetId : String; //NetID of the Destination PLC controller
-	nPort : UINT; // port number
-	sVarName : string;// the variable name of the (device) declared function block.
-	iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
+    sNetId : String; //NetID of the Destination PLC controller
+    nPort : UINT; // port number
+    sVarName : string;// the variable name of the (device) declared function block.
+    iWatchdog:UDINT;//The watchdog variable name written to by the remote plc
 END_VAR
 VAR_OUTPUT
-	{attribute 'pytmc' := 'pv: '}
-	VGC:ST_VGC;
-	bError:BOOL;
+    {attribute 'pytmc' := 'pv: '}
+    VGC:ST_VGC;
+    bError:BOOL;
 END_VAR
 VAR
-	fb_CheckWatchdog: FB_CheckWatchdog;
-	fb_Read_VGC: FB_ReadAdsSymByName;
-	ftReset: F_TRIG;
-	xFirstPass: bool:= true;
+    fb_CheckWatchdog: FB_CheckWatchdog;
+    fb_Read_VGC: FB_ReadAdsSymByName;
+    ftReset: F_TRIG;
+    xFirstPass: bool:= true;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -28,26 +28,26 @@ END_VAR
 xFirstPass:=false;
 (*calling ADS read function*)
 fb_Read_VGC(
-	bRead:= ftReset.Q, 
-	sNetId:= sNetId, 
-	nPort:= nPort, 
-	sVarName:= CONCAT(sVarName,'.iq_stValve'), 
-	nDestAddr:= ADR(VGC), 
-	nLen:= SIZEOF(VGC), 
-	tTimeout:= , 
-	eComMode:= eAdsComModeFastCom, 
-	bBusy=> , 
-	bError=> , 
-	nErrorId=> );
-	
+    bRead:= ftReset.Q,
+    sNetId:= sNetId,
+    nPort:= nPort,
+    sVarName:= CONCAT(sVarName,'.iq_stValve'),
+    nDestAddr:= ADR(VGC),
+    nLen:= SIZEOF(VGC),
+    tTimeout:= ,
+    eComMode:= eAdsComModeFastCom,
+    bBusy=> ,
+    bError=> ,
+    nErrorId=> );
+
 
 (*Error*)
 fb_CheckWatchdog(
-	bEnable:= TRUE, 
-	tWatchdogTime:= T#900ms, 
-	nCnt:= iWatchdog , 
-	bWatchdog=> , 
-	nLastCnt=> );
+    bEnable:= TRUE,
+    tWatchdogTime:= T#900ms,
+    nCnt:= iWatchdog ,
+    bWatchdog=> ,
+    nLastCnt=> );
 bError:= fb_Read_VGC.bError OR fb_CheckWatchdog.bWatchdog;
 
 ACT_Logger();]]></ST>
@@ -61,18 +61,5 @@ END_IF
 ]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_TVGC_ADS">
-      <LineId Id="18" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="34" Count="12" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="107" Count="8" />
-      <LineId Id="137" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_TVGC_ADS.ACT_Logger">
-      <LineId Id="2" Count="3" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_OERLIKON_TO_PTM" Id="{b8c18c05-718b-473b-b092-6fb68e2790b5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_OERLIKON_TO_PTM
+VAR_IN_OUT
+    iq_stPTM: ST_LeyboldPTM;
+    iq_stOerlikon_stat: ST_TD20Status;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This function block is used to map the IO points from the Oerlikon structures
+to the generic turbo structures *)
+
+(* Readbacks *)
+iq_stPTM.i_xAccel := iq_stOerlikon_stat.wStatusWord.4;
+iq_stPTM.i_xDecel := iq_stOerlikon_stat.wStatusWord.5;
+iq_stPTM.i_xAtSpd := iq_stOerlikon_stat.wStatusWord.10;
+iq_stPTM.q_xRemote := iq_stOerlikon_stat.wStatusWord.15; (* Remote control enabled *)
+iq_stPTM.i_diCurSpd := WORD_TO_DINT(iq_stOerlikon_stat.wFrequency_P3);
+iq_stPTM.i_diPwr := LREAL_TO_DINT(WORD_TO_DINT(iq_stOerlikon_stat.wMotorCurrent_P5 * iq_stOerlikon_stat.wVoltage_P4)*0.01); (*Current in units 0.1 A and voltage in units 0.1V, TD20 manual page 23*)
+iq_stPTM.i_diElecTemp := WORD_TO_DINT(iq_stOerlikon_stat.wConverterTemp_P11);
+//iq_stPTM.i_diPumpTemp := WORD_TO_DINT(iq_stOerlikon_stat.wPumpTemp_P127);
+
+(* Faults and warnings *)
+//iq_stPTM.xFault := iq_stOerlikon_stat.wStatusWord.3;
+iq_stPTM.i_xTempFault := iq_stOerlikon_stat.wStatusWord.7; (* specified as a temperature warning but it could be a fault *)
+//iq_stPTM.xWarn := iq_stOerlikon_stat.wStatusWord.14; (* warning summary bit *)
+
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

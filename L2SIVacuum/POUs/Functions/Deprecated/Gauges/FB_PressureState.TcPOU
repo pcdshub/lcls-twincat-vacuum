@@ -4,22 +4,22 @@
     <Declaration><![CDATA[(*Deprecated*)
 FUNCTION_BLOCK FB_PressureState
 VAR_INPUT
-	i_rV	:	REAL;
-	i_rVMin	:	REAL := 0.01; // Anything less than this voltage is considered disconnected
-	i_rVMax :	REAL := 10.5; // Anything more than this is considered invalid
-	i_IGTurnOnTime	:	TIME := T#10S;
-	
-	i_MinPressure	:	REAL;
-	i_MaxPressure	:	REAL;
+    i_rV	:	REAL;
+    i_rVMin	:	REAL := 0.01; // Anything less than this voltage is considered disconnected
+    i_rVMax :	REAL := 10.5; // Anything more than this is considered invalid
+    i_IGTurnOnTime	:	TIME := T#10S;
+
+    i_MinPressure	:	REAL;
+    i_MaxPressure	:	REAL;
 END_VAR
 VAR_OUTPUT
-	q_eState 	:	E_PressureState;
+    q_eState 	:	E_PressureState;
 END_VAR
 VAR_IN_OUT
-	iq_stVG	:	ST_VG;
+    iq_stVG	:	ST_VG;
 END_VAR
 VAR
-	tonGaugeTurnOnTmr : TON;
+    tonGaugeTurnOnTmr : TON;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -31,48 +31,48 @@ This FB serves to evaluate the state of the pressure based on the raw voltage, p
 *)
 // Is the gauge plugged in, and within a reasonable range?
 IF i_rV < i_rVMin THEN
-	q_eState := GaugeDisconnected;
+    q_eState := GaugeDisconnected;
 ELSIF i_rV > i_rVMax THEN
-	q_eState := PressInvalid;
+    q_eState := PressInvalid;
 ELSE
-	// Is the gauge reading back a pressure that makes sense?
-	CASE iq_stVG.eTYPE OF
-		IG903:
-			tonGaugeTurnOnTmr(IN:=iq_stVG.q_xHV_DIS, PT:=i_IGTurnOnTime, Q=>iq_stVG.xTurnOnTime);
-			IF iq_stVG.q_xHV_DIS THEN
-				IF tonGaugeTurnOnTmr.Q THEN
-					IF iq_stVG.rPRESS >= i_MinPressure AND iq_stVG.rPRESS <= i_MaxPressure THEN
-						q_eState := Valid;
-					ELSE
-						q_eState := OoR; 
-					END_IF
-				ELSE
-						q_eState := Starting;
-				END_IF
-			ELSE
-				q_eState := Off;
-			END_IF
-		IG909:
-			IF iq_stVG.q_xHV_DIS THEN
-				IF iq_stVG.rPRESS >= i_MinPressure AND iq_stVG.rPRESS <= i_MaxPressure THEN
-					q_eState := Valid;
-				ELSE
-					q_eState := OoR;
-				END_IF
-			ELSE
-				q_eState := Off;
-			END_IF
-		PG907, PG925, PG722B:
-			IF iq_stVG.rPRESS >= i_MinPressure AND iq_stVG.rPRESS <= i_MaxPressure THEN
-				q_eState := Valid;
-			ELSIF iq_stVG.rPRESS < i_MinPressure THEN
-				q_eState := ValidLo;
-			ELSE
-				q_eState := ValidHi;
-			END_IF
-		ELSE
-			q_eState := PressInvalid;
-	END_CASE
+    // Is the gauge reading back a pressure that makes sense?
+    CASE iq_stVG.eTYPE OF
+        IG903:
+            tonGaugeTurnOnTmr(IN:=iq_stVG.q_xHV_DIS, PT:=i_IGTurnOnTime, Q=>iq_stVG.xTurnOnTime);
+            IF iq_stVG.q_xHV_DIS THEN
+                IF tonGaugeTurnOnTmr.Q THEN
+                    IF iq_stVG.rPRESS >= i_MinPressure AND iq_stVG.rPRESS <= i_MaxPressure THEN
+                        q_eState := Valid;
+                    ELSE
+                        q_eState := OoR;
+                    END_IF
+                ELSE
+                        q_eState := Starting;
+                END_IF
+            ELSE
+                q_eState := Off;
+            END_IF
+        IG909:
+            IF iq_stVG.q_xHV_DIS THEN
+                IF iq_stVG.rPRESS >= i_MinPressure AND iq_stVG.rPRESS <= i_MaxPressure THEN
+                    q_eState := Valid;
+                ELSE
+                    q_eState := OoR;
+                END_IF
+            ELSE
+                q_eState := Off;
+            END_IF
+        PG907, PG925, PG722B:
+            IF iq_stVG.rPRESS >= i_MinPressure AND iq_stVG.rPRESS <= i_MaxPressure THEN
+                q_eState := Valid;
+            ELSIF iq_stVG.rPRESS < i_MinPressure THEN
+                q_eState := ValidLo;
+            ELSE
+                q_eState := ValidHi;
+            END_IF
+        ELSE
+            q_eState := PressInvalid;
+    END_CASE
 END_IF
 
 
@@ -81,9 +81,5 @@ iq_stVG.eState := q_eState;
 // Legacy Press OK boolean eval
 iq_stVG.xPRESS_OK := q_eState >= gc_GaugeValidState;]]></ST>
     </Implementation>
-    <LineIds Name="FB_PressureState">
-      <LineId Id="3" Count="55" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
