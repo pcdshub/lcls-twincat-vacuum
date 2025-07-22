@@ -112,19 +112,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_9XX">
-      <LineId Id="3" Count="33" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_9XX.ACT_IO">
-      <LineId Id="1" Count="1" />
-    </LineIds>
-    <LineIds Name="FB_9XX.ACT_Logger">
-      <LineId Id="2" Count="22" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_9XX.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
