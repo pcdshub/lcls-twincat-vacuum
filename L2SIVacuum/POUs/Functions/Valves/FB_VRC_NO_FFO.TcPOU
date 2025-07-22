@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_VRC_NO_FFO" Id="{c495bbea-0449-471b-ac8a-8e043f5385ad}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is different from the regular VRC in that CLOSING must be permitted. *)
 FUNCTION_BLOCK FB_VRC_NO_FFO EXTENDS FB_VRC_NO
@@ -24,7 +24,7 @@ VAR
     tBPTMtimeout:TON;
     bptm: BeamParameterTransitionManager;
     FFO    :    FB_FastFault :=(
-        i_DevName := i_sDevName,
+        i_DevName := 'VGC_NO',
         i_Desc := 'Fault occurs when the valve is not in safe state',
         i_TypeCode := 16#1010);
     xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
@@ -38,6 +38,7 @@ END_VAR]]></Declaration>
 (* On first PLC pass, put valve into vented state, which implies a closed valve *)
 fbFSInit( CLK := TRUE, Q => xFirstPass);
 IF xFirstPass THEN
+    FFO.i_DevName := i_sDevName;
     iq_stValve.pv_xCLS_SW := FALSE;
 END_IF
 
@@ -219,5 +220,28 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xCLS_SW := value;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VRC_NO_FFO">
+      <LineId Id="3" Count="6" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="10" Count="107" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_NO_FFO.ACT_IO">
+      <LineId Id="2" Count="7" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_NO_FFO.ACT_PMPS">
+      <LineId Id="2" Count="23" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_NO_FFO.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_NO_FFO.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VRC_NO_FFO.M_Set_CLS_SW">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
