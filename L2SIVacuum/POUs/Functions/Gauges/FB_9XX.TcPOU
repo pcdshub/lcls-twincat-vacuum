@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_9XX" Id="{2b25be69-d890-49a3-9eed-41a1523a8d75}" SpecialFunc="None">
     <Declaration><![CDATA[(* Standard MKS 9XX series conversion *)
 (* works for 925 *)
@@ -70,7 +70,8 @@ ACT_IO();]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{fa0165d3-2f39-4dbf-b71c-224ecb928e0b}">
       <Implementation>
-        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;]]></ST>
+        <ST><![CDATA[PG.i_iPRESS_R :=i_iPRESS_R;
+PG.sPath := sPath;]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_Logger" Id="{8202116e-e944-4d2f-9609-fb14baf15925}">
@@ -111,5 +112,19 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_9XX">
+      <LineId Id="3" Count="33" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_9XX.ACT_IO">
+      <LineId Id="1" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_9XX.ACT_Logger">
+      <LineId Id="2" Count="22" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_9XX.M_SetBits">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
