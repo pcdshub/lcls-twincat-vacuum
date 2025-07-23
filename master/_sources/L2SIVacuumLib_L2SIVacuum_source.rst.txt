@@ -3404,6 +3404,7 @@ FB_9XX
 
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
+    PG.sPath := sPath;
     END_ACTION
 
     ACTION ACT_Logger:
@@ -16252,7 +16253,7 @@ FB_VRC_NO_FFO
     VAR_INPUT
         i_xPMPS_OK:	BOOL	; (*Set to True To switch off the bptm and PMPS Arbiter*)
         i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
-        i_sDevName : T_MaxString :=  'VGC_NO'; // Device name for diagnostic
+        i_sDevName : T_MaxString :=  'VGC_NO_FFO'; // Device name for diagnostic
         i_nTransitionRootID: UDINT; //A unique transition Root ID that is equal to or greater than 1000i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
     END_VAR
     VAR_OUTPUT
@@ -16266,7 +16267,7 @@ FB_VRC_NO_FFO
         tBPTMtimeout:TON;
         bptm: BeamParameterTransitionManager;
         FFO    :    FB_FastFault :=(
-            i_DevName := i_sDevName,
+            i_DevName := 'VGC_NO',
             i_Desc := 'Fault occurs when the valve is not in safe state',
             i_TypeCode := 16#1010);
         xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
@@ -16279,6 +16280,7 @@ FB_VRC_NO_FFO
     (* On first PLC pass, put valve into vented state, which implies a closed valve *)
     fbFSInit( CLK := TRUE, Q => xFirstPass);
     IF xFirstPass THEN
+        FFO.i_DevName := i_sDevName;
         iq_stValve.pv_xCLS_SW := FALSE;
     END_IF
 
