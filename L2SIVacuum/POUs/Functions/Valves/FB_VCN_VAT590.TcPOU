@@ -658,43 +658,5 @@ o_stGenCtrlSP.Bit0ExecuteZero := stVcnVat590.bZero;
 o_stGenCtrlSP.Bit4AccessMode := bRemAcsToggle;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_VCN_VAT590">
-      <LineId Id="3" Count="119" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.LoadPersistentData">
-      <LineId Id="2" Count="11" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.Logger">
-      <LineId Id="2" Count="26" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.ReadCoeParameters">
-      <LineId Id="2" Count="144" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.ReadFromInput">
-      <LineId Id="2" Count="36" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.SetCoeInterface">
-      <LineId Id="2" Count="4" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.SetThrottle">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.ValveControl">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.WriteCoeParameters">
-      <LineId Id="2" Count="136" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VCN_VAT590.WriteToOutput">
-      <LineId Id="2" Count="14" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

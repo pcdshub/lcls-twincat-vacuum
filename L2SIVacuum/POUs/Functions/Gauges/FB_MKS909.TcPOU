@@ -135,7 +135,6 @@ IF ePrevState <> IG.eState THEN
       ePrevState := IG.eState;
 END_IF
 
-
 ]]></ST>
       </Implementation>
     </Action>

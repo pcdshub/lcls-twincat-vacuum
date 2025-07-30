@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.26">
+  <DUT Name="ST_PfeifferStatus" Id="{da3d7e8d-9074-40f5-8a85-092bcdefcef2}">
+    <Declaration><![CDATA[TYPE ST_PfeifferStatus :
+STRUCT
+    xPumpingStation_010: BOOL;
+    xMotorPump_023: BOOL;
+    iGasMode_027: INT;
+    sErrorCode_303: STRING;
+    xExcessTempPump_305: BOOL;
+    xRotationSpeedAttn_306: BOOL;
+    xPumpAccelerating_307: BOOL;
+    diActiveRotationSpeed_309: DINT;
+    lrDriveCurrent_310: LREAL;
+    diDrivePower_316: DINT;
+    diTempElec_326: DINT;
+    diTempPmpBot_330: DINT;
+    diTempBearng_342: DINT;
+    diTempMotor_346: DINT;
+    xTimeout: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+    <ObjectProperties />
+  </DUT>
+</TcPlcObject>

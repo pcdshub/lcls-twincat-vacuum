@@ -6,7 +6,7 @@
     <ProjectGuid>{19f43c40-aa59-45d4-a14d-cfb75472aebc}</ProjectGuid>
     <SubObjectsSortedByName>True</SubObjectsSortedByName>
     <Name>L2SIVacuum</Name>
-    <ProgramVersion>3.1.4020.5</ProgramVersion>
+    <ProgramVersion>3.1.4026.15</ProgramVersion>
     <Application>{ec2c8f51-7353-4d04-b987-61112033694a}</Application>
     <TypeSystem>{01172995-117a-4a34-b9ae-68487ff7e1d8}</TypeSystem>
     <Implicit_Task_Info>{6bca474a-79f2-4149-8428-db181c5ee816}</Implicit_Task_Info>
@@ -39,6 +39,24 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Gauges\ST_VG.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\LVDT\ST_SerLVC4000.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Oerlikon\ST_TD20Status.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Oerlikon\ST_TD400Control.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Oerlikon\ST_TD400Status.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Pfeiffer\ST_PfeifferControl.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Pfeiffer\ST_PfeifferStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Pumps\E_PumpState.TcDUT">
@@ -165,6 +183,12 @@
     <Compile Include="GVLs\Global_Variables.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="GVLs\GVL_MacroSensorsParameters.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GVLs\GVL_PfeifferParameters.TcGVL">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
@@ -463,6 +487,60 @@
     <Compile Include="POUs\Functions\Valves\Interfaces\ITF_Valve.TcIO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Serial drivers\LVDT\MacroSensors\FB_LVC4000Com.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\LVDT\MacroSensors\FB_LVC4000SerialDriver.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\LVDT\MacroSensors\FB_LVC4000Transaction.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Oerlikon TD20\FB_OERLIKON_TD20_COM.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Oerlikon TD20\FB_OERLIKON_TO_PTM.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Oerlikon TD20\FB_TD20SerialDriver.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Oerlikon TD20\FB_TD20Transaction.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Oerlikon TD20\F_CalcTD20Checksum.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Oerlikon TD400\FB_OERLIKON_TD400_COM.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Oerlikon TD400\FB_OERLIKON_TD400_TO_PTM.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Oerlikon TD400\FB_TD400SerialDriver.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Oerlikon TD400\FB_TD400Transaction.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Oerlikon TD400\F_CalcTD400Checksum.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Pfeiffer\FB_PfeifferSerialDriver.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Pfeiffer\FB_PfeifferTransaction.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Pfeiffer\FB_PFEIFFER_COM.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Pfeiffer\FB_PFEIFFER_TO_PTM.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Serial drivers\Pumps\Pfeiffer\F_CalcPfeifferCheckSum.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="UnitTests\Functions\V_TO_INT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -494,6 +572,9 @@
   <ItemGroup>
     <Folder Include="DUTs" />
     <Folder Include="DUTs\Gauges" />
+    <Folder Include="DUTs\LVDT" />
+    <Folder Include="DUTs\Oerlikon" />
+    <Folder Include="DUTs\Pfeiffer" />
     <Folder Include="DUTs\Pumps" />
     <Folder Include="DUTs\Valves" />
     <Folder Include="DUTs\Valves\VAT590" />
@@ -502,6 +583,13 @@
     <Folder Include="POUs\Functions\Deprecated" />
     <Folder Include="POUs\Functions\Deprecated\Gauges" />
     <Folder Include="POUs\Functions\Deprecated\Valves" />
+    <Folder Include="POUs\Serial drivers" />
+    <Folder Include="POUs\Serial drivers\LVDT" />
+    <Folder Include="POUs\Serial drivers\LVDT\MacroSensors" />
+    <Folder Include="POUs\Serial drivers\Pumps" />
+    <Folder Include="POUs\Serial drivers\Pumps\Oerlikon TD20" />
+    <Folder Include="POUs\Serial drivers\Pumps\Oerlikon TD400" />
+    <Folder Include="POUs\Serial drivers\Pumps\Pfeiffer" />
     <Folder Include="UnitTests" />
     <Folder Include="POUs\Functions" />
     <Folder Include="POUs\Functions\Gauges" />
@@ -541,6 +629,9 @@
     <PlaceholderReference Include="Tc2_ModbusSrv">
       <DefaultResolution>Tc2_ModbusSrv, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_ModbusSrv</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_SerialCom">
+      <DefaultResolution>Tc2_SerialCom, * (Beckhoff Automation GmbH)</DefaultResolution>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Standard">
       <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>

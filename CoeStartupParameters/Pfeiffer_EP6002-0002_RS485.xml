@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<EtherCATMailbox>
+  <CoE>
+    <InitCmds>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Interface Type Ch 1</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>63488</Index>
+        <SubIndex>1</SubIndex>
+        <Data>01</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Interface Type Ch 2</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>63488</Index>
+        <SubIndex>2</SubIndex>
+        <Data>01</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Baudrate</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32784</Index>
+        <SubIndex>17</SubIndex>
+        <Data>06</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Enable half duplex</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32784</Index>
+        <SubIndex>6</SubIndex>
+        <Data>01</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Baudrate</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32768</Index>
+        <SubIndex>17</SubIndex>
+        <Data>06</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Enable half duplex</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32768</Index>
+        <SubIndex>6</SubIndex>
+        <Data>01</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Enable point to point connection (RS422)</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32768</Index>
+        <SubIndex>7</SubIndex>
+        <Data>00</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Enable point to point connection (RS422)</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32784</Index>
+        <SubIndex>7</SubIndex>
+        <Data>00</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Data frame</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32768</Index>
+        <SubIndex>21</SubIndex>
+        <Data>03</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Data frame</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32784</Index>
+        <SubIndex>21</SubIndex>
+        <Data>03</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Enable XON/XOFF supported tx data</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32768</Index>
+        <SubIndex>2</SubIndex>
+        <Data>00</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Enable XON/XOFF supported rx data</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32768</Index>
+        <SubIndex>3</SubIndex>
+        <Data>00</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Enable XON/XOFF supported tx data</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32784</Index>
+        <SubIndex>2</SubIndex>
+        <Data>00</Data>
+      </InitCmd>
+      <InitCmd>
+        <Transition>PS</Transition>
+        <Comment>Enable XON/XOFF supported rx data</Comment>
+        <Timeout>0</Timeout>
+        <Ccs>1</Ccs>
+        <Index>32784</Index>
+        <SubIndex>3</SubIndex>
+        <Data>00</Data>
+      </InitCmd>
+    </InitCmds>
+  </CoE>
+</EtherCATMailbox>
