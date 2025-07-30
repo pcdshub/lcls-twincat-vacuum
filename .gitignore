@@ -1,9 +1,26 @@
+# From Confluence "Twincat 3 Git Setup and Best Practices
+_Boot
+_Libraries
+_CompileInfo
 *.suo
-*.sln
 *~
 *.tpy
 *.bak
 *.~u
-_Boot
-_Libraries
-_CompileInfo
+*.csv
+*.svd
+*.dbg
+TrialLicense.tclrs
+*.library
+*.tmcRefac
+.pytmc_build
+.vs/*
+
+# In a library (no IOC, no pytmc), we don't need the tmc file
+*.tmc
+
+# An extra
+UpgradeLog.htm
+
+# Vim ignores
+*.swp

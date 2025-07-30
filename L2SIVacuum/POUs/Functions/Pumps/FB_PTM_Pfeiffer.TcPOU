@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_PTM_Pfeiffer" Id="{f61aaad0-85b4-4244-b8a7-58d7d76a340e}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Pfeiffer Turbo pump connected to the TM700 and TC400 Controllers.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)
@@ -209,7 +209,7 @@ iq_stPTM.i_diBtmTemp := st_Pfeiffer_RBK.diTempPmpBot_330;
 iq_stPTM.i_diBrngTemp := st_Pfeiffer_RBK.diTempBearng_342;
 iq_stPTM.i_diMtrTemp := st_Pfeiffer_RBK.diTempMotor_346;
 iq_stPTM.i_uiPowerPctRbk := st_Pfeiffer_RBK.uiPowerPct_708;
-iq_stPTM.i_rCurrentMon :=  st_Pfeiffer_RBK.lrDriveCurrent_310;
+iq_stPTM.i_rCurrentMon :=  LREAL_TO_REAL(st_Pfeiffer_RBK.lrDriveCurrent_310);
 iq_stPTM.xCommTimeout	:=	st_Pfeiffer_RBK.xTimeout;
 iq_stPTM.i_iErrorCode := st_Pfeiffer_RBK.iErrorCode_303;
 iq_stPTM.i_iWarningCode := st_Pfeiffer_RBK.iWarningCode_303;

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_MKS909" Id="{e4d3e807-daeb-4a47-bccf-64bd129edfcd}" SpecialFunc="None">
     <Declaration><![CDATA[(* Standard MKS 909 hot cathode *)
 (* works for 972 and 925 *)
@@ -133,7 +133,7 @@ IF ePrevState <> IG.eState THEN
             fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
       END_CASE
       ePrevState := IG.eState;
-  END_IF
+END_IF
 
 
 ]]></ST>
