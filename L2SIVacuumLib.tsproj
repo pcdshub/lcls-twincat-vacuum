@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.15">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.17">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{F27C2E36-F71A-4739-B9BA-8A892874FECC}" PersistentType="true">VacEventClass</Name>
@@ -54,7 +54,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{19F43C40-AA59-45D4-A14D-CFB75472AEBC}" Name="L2SIVacuum" PrjFilePath="L2SIVacuum\L2SIVacuum.plcproj" TmcFilePath="L2SIVacuum\L2SIVacuum.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{010F5764-3589-BFCD-D30E-F6BB49EDF151}" TmcPath="L2SIVacuum\L2SIVacuum.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{CA75D5E8-9D0D-3F15-6ADA-68C1E93D9E94}" TmcPath="L2SIVacuum\L2SIVacuum.tmc">
 					<Name>L2SIVacuum Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="8" AreaNo="4">
@@ -74,6 +74,7 @@
 						<Var>
 							<Name>PMPS_GVL.BP_jsonDoc</Name>
 							<Type>SJsonValue</Type>
+							<BitSize>32</BitSize>
 							<InOut>7</InOut>
 						</Var>
 					</Vars>

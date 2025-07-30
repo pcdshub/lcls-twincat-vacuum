@@ -119,9 +119,9 @@ IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEv
 //STATE Logger
 IF ePrevState <> IG.eState THEN
       CASE IG.eState OF
-        ValidHi:;
-        ValidLo:;
-        Valid:;
+        ValidHi:
+        ValidLo:
+        Valid:
             fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
           GaugeDisconnected:
             fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
@@ -133,8 +133,7 @@ IF ePrevState <> IG.eState THEN
             fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
       END_CASE
       ePrevState := IG.eState;
-  END_IF
-
+END_IF
 
 ]]></ST>
       </Implementation>
