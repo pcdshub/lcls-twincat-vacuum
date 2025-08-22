@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_VCC_NO" Id="{ba131e16-6293-4fa2-9f66-e3d9ca59a9ec}" SpecialFunc="None">
     <Declaration><![CDATA[(*Deprecated*)
 (* This Function Block Implements Basic Functionality for NO Vent Valves VVC *)
@@ -64,7 +64,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[This^.iq_stValve.pv_xCLS_SW :=Close;]]></ST>
+        <ST><![CDATA[// Checking the VAR_IN_OUT reference, leave the current method in case of invalid reference
+IF NOT __ISVALIDREF(iq_stValve) THEN
+    RETURN;
+END_IF
+
+This^.iq_stValve.pv_xCLS_SW :=Close;]]></ST>
       </Implementation>
     </Method>
   </POU>

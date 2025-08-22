@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.3">
+  <POU Name="FB_PFEIFFER_COM" Id="{8acfeb34-8814-43c5-b863-afc50afa2539}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PFEIFFER_COM
+VAR_IN_OUT
+    astPfeifferControl: ARRAY[1..gcMaxPfeifferPumps] OF ST_PfeifferControl;
+    astPfeifferStatus: ARRAY[1..gcMaxPfeifferPumps] OF ST_PfeifferStatus;
+    SerialRXBuffer: ComBuffer;
+    SerialTXBuffer: ComBuffer;
+END_VAR
+VAR
+    afbPfeifferSerialDriver: ARRAY[1..gcMaxPfeifferPumps] OF FB_PfeifferSerialDriver;
+    iPump: INT := 1;
+    tTimeOut: TIME := TIME#1s0ms;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* This program is called from Serial PTM IO *)
+
+(* scan the pumps one at a time *)
+afbPfeifferSerialDriver[iPump](
+    i_xExecute:= TRUE,
+    i_tTimeOut:= tTimeOut,
+    i_stControl:=astPfeifferControl[iPump] ,
+    iq_stSerialRXBuffer:= SerialRXBuffer,
+    iq_stSerialTXBuffer:=  SerialTXBuffer,
+    q_stStatus=> astPfeifferStatus[iPump] );
+
+IF afbPfeifferSerialDriver[iPump].q_xDone
+OR afbPfeifferSerialDriver[iPump].q_xError
+THEN
+        (* reset for next time *)
+        afbPfeifferSerialDriver[iPump]( i_xExecute:= FALSE, iq_stSerialRXBuffer:= SerialRXBuffer, iq_stSerialTXBuffer:=  SerialTXBuffer);
+        (* select next pump *)
+        iPump := iPump + 1;
+        IF iPump > gcMaxPfeifferPumps THEN
+            iPump:= 1;
+        END_IF
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

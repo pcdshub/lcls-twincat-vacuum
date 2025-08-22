@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_VCN_VAT590" Id="{4758ecab-cc0c-4c37-8981-9d3a1c0c082a}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function implements the Basic functions for the VAT590 needle valve*)
 FUNCTION_BLOCK FB_VCN_VAT590 EXTENDS FB_Valve
