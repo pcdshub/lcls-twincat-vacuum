@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.26">
+<TcPlcObject>
   <DUT Name="ST_TD20Status" Id="{4114394e-9b7d-4381-aa92-5499001256f3}">
     <Declaration><![CDATA[TYPE ST_TD20Status :  (* Serial communication defined in Oerlikon Leybold Manual 17200048 *)
 STRUCT

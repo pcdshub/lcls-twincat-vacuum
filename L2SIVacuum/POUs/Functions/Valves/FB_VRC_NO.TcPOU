@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_VRC_NO" Id="{5d1c15c7-6ca9-4210-b69b-eb5b4e8facc5}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is different from the regular VRC in that CLOSING must be permitted. *)
 FUNCTION_BLOCK FB_VRC_NO EXTENDS FB_Valve

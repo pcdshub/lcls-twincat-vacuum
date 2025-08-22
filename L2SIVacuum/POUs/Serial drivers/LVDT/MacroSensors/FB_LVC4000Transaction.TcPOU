@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_LVC4000Transaction" Id="{7f68d6c9-2d15-48e7-9147-99c051549076}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_LVC4000Transaction
 VAR_INPUT

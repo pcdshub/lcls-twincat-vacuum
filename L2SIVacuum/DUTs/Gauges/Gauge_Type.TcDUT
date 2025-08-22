@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject Version="1.1.0.1">
   <DUT Name="Gauge_Type" Id="{c777043f-0b38-4846-b2d2-725c1a5388f6}">
     <Declaration><![CDATA[TYPE Gauge_Type: (
 PG722B := 0, //Baraton Gauge

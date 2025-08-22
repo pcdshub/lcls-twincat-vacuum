@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_VCC" Id="{5ba1a6cc-24ff-4014-aa5e-6a7b6226a38e}" SpecialFunc="None">
     <Declaration><![CDATA[(*Deprecated*)
 (* THE FB_VCC FUNCTION BLOCK IS DEPRECATED. USE FB_VVC INSTEAD. *)

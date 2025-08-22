@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_VGC_AP" Id="{35834045-fb1e-4ba9-a4dc-abf7b4af153b}" SpecialFunc="None">
     <Declaration><![CDATA[(*Deprectated*)
 (* This function block implements basic functionality for Isolation Gate Valves with Appertures*)

@@ -31,6 +31,7 @@
     <Author>LCLS ECS-Platforms</Author>
     <ProjectVersion>0.0.0</ProjectVersion>
     <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
+    <WriteProductVersion>false</WriteProductVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DUTs\Gauges\E_PressureState.TcDUT">

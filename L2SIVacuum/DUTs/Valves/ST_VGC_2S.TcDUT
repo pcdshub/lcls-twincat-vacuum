@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <DUT Name="ST_VGC_2S" Id="{d40d8100-9381-4a07-9a91-635cbd71ed90}">
     <Declaration><![CDATA[TYPE ST_VGC_2S EXTENDS ST_VGC:
 STRUCT

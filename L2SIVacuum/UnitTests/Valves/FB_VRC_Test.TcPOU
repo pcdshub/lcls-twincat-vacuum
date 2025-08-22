@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_VRC_Test" Id="{28f055fd-f5c0-4307-957c-f7993195c167}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_VRC_Test EXTENDS TcUnit.FB_TestSuite
 VAR_INPUT

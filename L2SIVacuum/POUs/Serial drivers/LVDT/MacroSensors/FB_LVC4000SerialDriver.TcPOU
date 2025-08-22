@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4018.5">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_LVC4000SerialDriver" Id="{ae4b86c1-3ea8-4881-a7dc-2dd9995b4e63}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_LVC4000SerialDriver
 VAR_INPUT
@@ -89,14 +89,6 @@ iq_stLVC4000.xTimeout := fbtrans.q_xTimeout;
 q_sLastSentString := fbtrans.q_sLastSentString;
 q_sLastReceivedString := fbtrans.q_sLastReceivedString;]]></ST>
     </Implementation>
-    <Action Name="a_ErrorMesg" Id="{b3a6f4e0-9fb2-41d0-94af-43ceed0c99de}">
-      <Implementation>
-        <ST><![CDATA[fbFormatString( sformat:=sErrMesg,
-    arg1:=F_INT(iStep),
-    arg2:=F_STRING(fbtrans.q_sResult),
-    sOut => q_sResult);]]></ST>
-      </Implementation>
-    </Action>
     <Action Name="a_ClearTrans" Id="{cbc46b91-bc1a-4d15-840f-cb6f0aaaf34d}">
       <Implementation>
         <ST><![CDATA[(* Refactor this action to match your transaction *)
@@ -114,6 +106,14 @@ fbTrans(
     i_tTimeOut:= i_tTimeOut,
     iq_stSerialRXBuffer:= iq_stSerialRXBuffer,
     iq_stSerialTXBuffer:= iq_stSerialTXBuffer );]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="a_ErrorMesg" Id="{b3a6f4e0-9fb2-41d0-94af-43ceed0c99de}">
+      <Implementation>
+        <ST><![CDATA[fbFormatString( sformat:=sErrMesg,
+    arg1:=F_INT(iStep),
+    arg2:=F_STRING(fbtrans.q_sResult),
+    sOut => q_sResult);]]></ST>
       </Implementation>
     </Action>
   </POU>
