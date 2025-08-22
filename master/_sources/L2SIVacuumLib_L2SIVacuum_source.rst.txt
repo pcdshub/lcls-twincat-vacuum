@@ -883,6 +883,78 @@ Related:
     * `ST_PTM`_
 
 
+ST_PfeifferControl
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    TYPE ST_PfeifferControl :
+    STRUCT
+        /// enables communication
+        {attribute 'pytmc' := '
+        pv: COMM_EN;
+        io: io;
+        '}
+        xEnableComm: BOOL;
+        /// RS-485 Address
+        {attribute 'pytmc' := '
+        pv: ADDR;
+        io: io;
+        '}
+        iSerialAddress: INT;
+        {attribute 'pytmc' := '
+        pv: EXT_ILK_OK;
+        field: ZNAM ILK ACTIVE;
+        field: ONAM ILK OK;
+        io: i;
+        '}
+        /// pumping station (equivalent to ilk bit for varian)
+        xPumpingStation_010: BOOL;
+        {attribute 'pytmc' := '
+        pv: SetPumpSpeed;
+        io: i;
+        '}
+        iSetRotationSpeed_707: INT :=100; /// speed setting in % (normally 100%)
+        /// RUN_DO bit
+        {attribute 'pytmc' := '
+        pv: RUN_DO;
+        io: i;
+        '}
+        xMotorPump_023: BOOL;
+        {attribute 'pytmc' := '
+        pv: GAS_MODE;
+        io: io;
+        '}
+        iGasMode_027: INT;
+        /// interlock bit
+         {attribute 'pytmc' := '
+        pv: ILK_OK;
+        field: ZNAM ILK ACTIVE;
+        field: ONAM ILK OK;
+        io: i;
+        '}
+        xIlk: BOOL;
+        /// run/start bit
+        {attribute 'pytmc' := '
+        pv: RUN_SW;
+        io: io;
+        '}
+        xRunSW: BOOL;
+        /// error acknowledgement/reset bit
+        {attribute 'pytmc' := '
+        pv: ERR_RST;
+        io: io;
+        '}
+        xErrorAck_009: BOOL;
+        /// power consumption setting in % (normally 100%)
+        uiPowerPct_708: UINT;
+        xSetSpdMode_026: BOOL;
+    END_STRUCT
+    END_TYPE
+
+
+
+
 ST_PfeifferPTM
 ^^^^^^^^^^^^^^
 
@@ -975,6 +1047,124 @@ ST_PfeifferPTM
 
 Related:
     * `ST_PTM`_
+
+
+ST_PfeifferStatus
+^^^^^^^^^^^^^^^^^
+
+::
+
+    TYPE ST_PfeifferStatus :
+    STRUCT
+        {attribute 'pytmc' := '
+        pv: PumpingStation_RBV;
+        field: ZNAM ILK ACTIVE;
+        field: ONAM ILK OK;
+        io: i;
+        '}
+        xPumpingStation_010: BOOL;
+        {attribute 'pytmc' := '
+        pv: PumpingStation_RBV;
+        field: ZNAM FALSE;
+        field: ONAM TRUE;
+        io: i;
+        '}
+        xMotorPump_023: BOOL;
+        {attribute 'pytmc' := '
+        pv: GasMode_RBV;
+        io: i;
+        '}
+        iGasMode_027: INT;
+        {attribute 'pytmc' := '
+        pv: ErrorMessage_RBV;
+        io: i;
+        '}
+        sErrorCode_303: STRING;
+        {attribute 'pytmc' := '
+        pv: ErrorCode_RBV;
+        io: i;
+        '}
+        iErrorCode_303	:	INT;
+        {attribute 'pytmc' := '
+        pv: WarningCode_RBV;
+        io: i;
+        '}
+        iWarningCode_303	:	INT;
+        {attribute 'pytmc' := '
+        pv: ExcessPumpTemp_RBV;
+        field: ZNAM FALSE;
+        field: ONAM TRUE;
+        io: i;
+        '}
+        xExcessTempPump_305: BOOL;
+        {attribute 'pytmc' := '
+        pv: TotationSpeedAttn_RBV;
+        field: ZNAM FALSE;
+        field: ONAM TRUE;
+        io: i;
+        '}
+        xRotationSpeedAttn_306: BOOL;
+        {attribute 'pytmc' := '
+        pv: PumpAccelerating_RBV;
+        field: ZNAM FALSE;
+        field: ONAM TRUE;
+        io: i;
+        '}
+        xPumpAccelerating_307: BOOL;
+        {attribute 'pytmc' := '
+        pv: PumpSpeed_RBV;
+        io: i;
+        '}
+        diActiveRotationSpeed_309: DINT;
+        {attribute 'pytmc' := '
+        pv: DriveCurrent_RBV;
+        io: i;
+        '}
+        lrDriveCurrent_310: LREAL;
+        {attribute 'pytmc' := '
+        pv: DrivePower_RBV;
+        io: i;
+        '}
+        diDrivePower_316: DINT;
+        {attribute 'pytmc' := '
+        pv: TempElect_RBV;
+        io: i;
+        '}
+        diTempElec_326: DINT;
+        {attribute 'pytmc' := '
+        pv: TempPump_RBV;
+        io: i;
+        '}
+        diTempPmpBot_330: DINT;
+        {attribute 'pytmc' := '
+        pv: TempBearing_RBV;
+        io: i;
+        '}
+        diTempBearng_342: DINT;
+        {attribute 'pytmc' := '
+        pv: TempMotor_RBV;
+        io: i;
+        '}
+        diTempMotor_346: DINT;
+        {attribute 'pytmc' := '
+        pv: Power_RBV;
+        io: i;
+        '}
+        uiPowerPct_708: UINT;
+        {attribute 'pytmc' := '
+        pv: Timeout_RBV;
+        field: ZNAM FALSE;
+        field: ONAM TRUE;
+        io: i;
+        '}
+        xTimeout: BOOL;
+        iSetRotationSpeed_707 : INT;
+        iSetSpdMode_026: INT;
+        xErrorAcknowledged: BOOL; //Not actually read back from the pump, but tells us ErrAck has processed
+    END_STRUCT
+    END_TYPE
+
+
 
 
 ST_PIP
@@ -1385,6 +1575,242 @@ ST_RoughPump
 
 Related:
     * `E_PumpState`_
+
+
+ST_SerLVC4000
+^^^^^^^^^^^^^
+
+::
+
+    TYPE ST_SerLVC4000 :
+    STRUCT
+        (* Readbacks *)
+        {attribute 'pytmc' := '
+        pv: voltage;
+        io: i;
+        '}
+        i_iOut	:	INT; //Output voltage
+        (* Controls *)
+        {attribute 'pytmc' := '
+        pv: ADC_COEFF;
+        io: io;
+        '}
+        q_rADCsl	:	REAL; //ADC slope coeff
+        {attribute 'pytmc' := '
+        pv: ADC_OFFSET;
+        io: io;
+        '}
+        q_rADCos	:	REAL; //ADC offset
+        {attribute 'pytmc' := '
+        pv: CALIB_SET;
+        io: io;
+        '}
+        q_xCal	:	BOOL; //Activate calibration mode
+        {attribute 'pytmc' := '
+        pv: DISP_SET;
+        io: io;
+        '}
+        q_xFull	:	BOOL; //Set full displacement during calibration
+        {attribute 'pytmc' := '
+        pv: ZERO_SET;
+        io: io;
+        '}
+        q_xZero	:	BOOL; //Set zero during calibration
+        {attribute 'pytmc' := '
+        pv: GAIN_SET;
+        io: io;
+        '}
+        q_iGain	:	INT; //Set instrument gain
+        {attribute 'pytmc' := '
+        pv: CALIB_ABORT;
+        io: io;
+        '}
+        q_xAbortCal	:	BOOL; //Abort calibration mode
+        (* Internal params *)
+        {attribute 'pytmc' := '
+        pv: ADDR;
+        io: io;
+        '}
+        iAddr	:	INT; //RS485 address
+        xTimeout	:	BOOL; //Timeout (true if no comm)
+    END_STRUCT
+    END_TYPE
+
+
+
+
+ST_TD20Status
+^^^^^^^^^^^^^
+
+::
+
+    TYPE ST_TD20Status :  (* Serial communication defined in Oerlikon Leybold Manual 17200048 *)
+    STRUCT
+        /// Received Status Word
+        wStatusWord: WORD;
+        /// Current stator frequency
+        {attribute 'pytmc' := '
+        pv: Frequency;
+        io: i;
+        '}
+        wFrequency_P3: WORD;
+        /// Current intermediate circuit voltage
+        {attribute 'pytmc' := '
+        pv: Voltage;
+        io: i;
+        '}
+        wVoltage_P4: WORD;
+        /// Current motor current
+        {attribute 'pytmc' := '
+        pv: MotorCurrent;
+        io: i;
+        '}
+        wMotorCurrent_P5: WORD;
+        /// Current frequency converter temperature
+        {attribute 'pytmc' := '
+        pv: Temperature;
+        io: i;
+        '}
+        wConverterTemp_P11: WORD;
+        /// Critical frequency
+        {attribute 'pytmc' := '
+        pv: CriticalFrequency;
+        io: i;
+        '}
+        wCriticalFreq_P20: WORD;
+        /// Max. Current Factor
+        {attribute 'pytmc' := '
+        pv: MaxCurrentFactor;
+        io: i;
+        '}
+        wMaxCurrentFactor_P21: WORD;
+        /// Setpoint Frequecy
+        {attribute 'pytmc' := '
+        pv: SetPointFreq;
+        io: i;
+        '}
+        wSetpointFreq_P24: WORD;
+        /// Max. run up time
+        {attribute 'pytmc' := '
+        pv: MaxRunUpTime;
+        io: i;
+        '}
+        wMaxRunUpTime_P32: WORD;
+        /// Current pump temperature
+        {attribute 'pytmc' := '
+        pv: PumpTemp;
+        io: i;
+        '}
+        wPumpTemp_P127: WORD;
+        /// most recent error code
+        {attribute 'pytmc' := '
+        pv: ErrorCode;
+        io: i;
+        '}
+        wErrorCode_P171: WORD;
+    END_STRUCT
+    END_TYPE
+
+
+
+
+ST_TD400Control
+^^^^^^^^^^^^^^^
+
+::
+
+    TYPE ST_TD400Control :  (* Serial communication defined in Oerlikon Leybold Manual GA05281_002_C0 *)
+    STRUCT
+        {attribute 'pytmc' := '
+        pv: SetPumpSpeed;
+        io: i;
+        '}
+        wSetSetpointFreq_P24: WORD; // speed setting in Hz
+    END_STRUCT
+    END_TYPE
+
+
+
+
+ST_TD400Status
+^^^^^^^^^^^^^^
+
+::
+
+    TYPE ST_TD400Status :  (* Serial communication defined in Oerlikon Leybold Manual 17200048 *)
+    STRUCT
+        /// Received Status Word
+        wStatusWord: WORD;
+        /// Current stator frequency
+        {attribute 'pytmc' := '
+        pv: Frequency;
+        io: i;
+        '}
+        wFrequency_P3: WORD;
+        /// Current intermediate circuit voltage
+        {attribute 'pytmc' := '
+        pv: Voltage;
+        io: i;
+        '}
+        wVoltage_P4: WORD;
+        /// Current motor current
+        {attribute 'pytmc' := '
+        pv: MotorCurrent;
+        io: i;
+        '}
+        wMotorCurrent_P5: WORD;
+        /// Current frequency converter temperature
+        {attribute 'pytmc' := '
+        pv: Temperature;
+        io: i;
+        '}
+        wConverterTemp_P11: WORD;
+        /// Maximum setpoint frequency
+        {attribute 'pytmc' := '
+        pv: MaxSetpoinFreq;
+        io: i;
+        '}
+        wMaxSetpointFreq_P18: WORD;
+        /// Minimum setpoint frequency
+        {attribute 'pytmc' := '
+        pv: MinSetpoinFreq;
+        io: i;
+        '}
+        wMinSetpointFreq_P19: WORD;
+        /// Critical frequency
+        {attribute 'pytmc' := '
+        pv: CriticalFrequency;
+        io: i;
+        '}
+        wCriticalFreq_P20: WORD;
+        /// Setpoint Frequecy
+        {attribute 'pytmc' := '
+        pv: SetPointFreq;
+        io: i;
+        '}
+        wSetpointFreq_P24: WORD;
+        /// Max. run up time
+        {attribute 'pytmc' := '
+        pv: MaxRunUpTime;
+        io: i;
+        '}
+        wMaxRunUpTime_P32: WORD;
+        /// Current pump temperature
+        {attribute 'pytmc' := '
+        pv: PumpTemp;
+        io: i;
+        '}
+        wPumpTemp_P127: WORD;
+        /// most recent error code
+        {attribute 'pytmc' := '
+        pv: ErrorCode;
+        io: i;
+        '}
+        wErrorCode_P171: WORD;
+    END_STRUCT
+    END_TYPE
+
+
 
 
 ST_ValveBase
@@ -2745,7 +3171,31 @@ Global_Version
     // This function has been automatically generated from the project information.
     VAR_GLOBAL CONSTANT
         {attribute 'const_non_replaced'}
-        stLibVersion_LCLS_Vacuum : ST_LibVersion := (iMajor := 0, iMinor := 0, iBuild := 0, iRevision := 0, sVersion := '0.0.0');
+        stLibVersion_LCLS_Vacuum : ST_LibVersion := (iMajor := 0, iMinor := 0, iBuild := 0, iRevision := 0, nFlags := 0, sVersion := '0.0.0');
+    END_VAR
+
+
+
+
+GVL_MacroSensorsParameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    VAR_GLOBAL CONSTANT
+        gcMaxLVC4000	:	INT := 20; //maximum number of LVC4000 units per port
+    END_VAR
+
+
+
+
+GVL_PfeifferParameters
+^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    VAR_GLOBAL CONSTANT
+        gcMaxPfeifferPumps	:	INT := 20; //maximum size of the Pfeiffer turbo pump array for a single port
     END_VAR
 
 
@@ -2753,6 +3203,80 @@ Global_Version
 
 POUs
 ----
+
+
+F_CalcPfeifferCheckSum
+^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION F_CalcPfeifferCheckSum : BYTE
+    VAR_INPUT
+        sData: STRING;
+    END_VAR
+    VAR
+        bSum: BYTE;
+        i: INT;
+    END_VAR
+    bSum := 0;
+
+    FOR i := 1 TO LEN(sData) DO
+        bSum := bSum + F_ToASC(MID(sData,1,i));
+    END_FOR
+
+    F_CalcPfeifferChecksum := bSum;
+
+    END_FUNCTION
+
+
+
+
+F_CalcTD20Checksum
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION F_CalcTD20Checksum : BYTE
+    VAR_INPUT
+        i_abData: ARRAY[0..23] OF BYTE;
+    END_VAR
+    VAR
+        bChecksum: BYTE;
+        i: INT;
+    END_VAR
+    bChecksum := i_abData[0];
+    FOR i:=1 TO 22 DO
+        bChecksum := bChecksum XOR i_abData[i];
+    END_FOR
+    F_CalcTD20Checksum := bChecksum;
+
+    END_FUNCTION
+
+
+
+
+F_CalcTD400Checksum
+^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION F_CalcTD400Checksum : BYTE
+    VAR_INPUT
+        i_abData: ARRAY[0..23] OF BYTE;
+    END_VAR
+    VAR
+        bChecksum: BYTE;
+        i: INT;
+    END_VAR
+    bChecksum := i_abData[0];
+    FOR i:=1 TO 22 DO
+        bChecksum := bChecksum XOR i_abData[i];
+    END_FOR
+    F_CalcTD400Checksum := bChecksum;
+
+    END_FUNCTION
+
+
 
 
 F_RoughPumpInlet_ILK
@@ -5869,6 +6393,351 @@ Related:
     * `ST_KashiyamaDryPump`_
 
 
+FB_LVC4000Com
+^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_LVC4000Com
+    (*
+    A. Wallace 2016-7-20
+
+    This FB is used for communicating with the LVC-4000 LVDT signal conditioners on
+    RS-485. It is set up for multiple conditioners on one interface.
+
+    Usage:
+    Pass the array of your LVC4000 structures to the FB, along with your serial RX and TX buffers.
+    Also pass the number of LVC-4000 connected to the bus. This must be less than gcMaxLVC4000.
+
+    *)
+    VAR_IN_OUT
+        iq_astLVC4000: ARRAY[1..gcMaxLVC4000] OF ST_SerLVC4000;
+        afbLVC4000SerialDriver: ARRAY[1..gcMaxLVC4000] OF FB_LVC4000SerialDriver;
+        SerialRXBuffer: ComBuffer;
+        SerialTXBuffer: ComBuffer;
+    END_VAR
+    VAR_INPUT
+        i_iQty	:	INT := 0;
+    END_VAR
+    VAR
+        iUnit: INT := 1;
+        tTimeOut: TIME := TIME#1s0ms;
+    END_VAR
+    (* This program is called from Serial PTM IO *)
+
+    i_iQty := MIN(i_iQty, gcMaxLVC4000);
+
+    (* scan the units one at a time *)
+    afbLVC4000SerialDriver[iUnit](
+        i_xExecute:= TRUE,
+        i_tTimeOut:= tTimeOut,
+        iq_stLVC4000:=iq_astLVC4000[iUnit] ,
+        iq_stSerialRXBuffer:= SerialRXBuffer,
+        iq_stSerialTXBuffer:=  SerialTXBuffer,
+        );
+
+    IF afbLVC4000SerialDriver[iUnit].q_xDone
+    OR afbLVC4000SerialDriver[iUnit].q_xError
+    THEN
+            (* reset for next time *)
+            afbLVC4000SerialDriver[iUnit]( i_xExecute:= FALSE, iq_stLVC4000:=iq_astLVC4000[iUnit], iq_stSerialRXBuffer:= SerialRXBuffer, iq_stSerialTXBuffer:=  SerialTXBuffer);
+            (* select next pump *)
+            iUnit := iUnit + 1;
+            IF iUnit > i_iQty THEN
+                iUnit:= 1;
+            END_IF
+    END_IF
+
+    END_FUNCTION_BLOCK
+
+
+Related:
+    * `FB_LVC4000SerialDriver`_
+    * `ST_SerLVC4000`_
+
+
+FB_LVC4000SerialDriver
+^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_LVC4000SerialDriver
+    VAR_INPUT
+        /// rising edge execute
+        i_xExecute: BOOL;
+        /// Maximum wait time for reply
+        i_tTimeOut: TIME := TIME#1s0ms;
+    END_VAR
+    VAR_OUTPUT
+        q_xDone: BOOL;
+        q_xError: BOOL;
+        q_xTimeout: BOOL;
+        q_sResult: STRING(255);
+        /// Last String Sent to Serial Device - for debugging
+        q_sLastSentString: STRING;
+        /// Last String Received from Serial Device - for debugging
+        q_sLastReceivedString: STRING;
+    END_VAR
+    VAR_IN_OUT
+        iq_stLVC4000	:	ST_SerLVC4000;
+        iq_stSerialRXBuffer: ComBuffer;
+        iq_stSerialTXBuffer: ComBuffer;
+    END_VAR
+    VAR
+        rtExecute: R_TRIG;
+        iStep: INT;
+        sCmd	:	STRING;
+        sSendData : STRING;
+        fbTrans: FB_LVC4000Transaction;
+        fbFormatString: FB_FormatString;
+        sErrMesg : STRING := 'In step %d fbtrans failed with message: %s';
+    END_VAR
+    (* This function block performs serial transactions with an LVC 4000 LVDT Signal Conditioner *)
+
+    (* rising edge trigger *)
+    rtExecute(CLK:= i_xExecute);
+    IF rtExecute.Q  THEN
+        q_xDone	:= FALSE;
+        q_xError := FALSE;
+        q_sResult:= '';
+        a_ClearTrans();  (* to provide rising edge for execute *)
+        iStep := 10;
+    END_IF
+
+
+    CASE iStep OF
+        0: (* idle *)
+            ;
+
+        (* Get output *)
+        10:
+            sCmd := 'getOut';
+            fbtrans.i_xExecute := TRUE;
+            IF fbtrans.q_xDone THEN
+                iq_stLVC4000.i_iOut := STRING_TO_INT(fbtrans.q_sResponseData);
+                iStep := 8000;
+                a_ClearTrans();
+            ELSIF fbtrans.q_xError THEN
+                a_ErrorMesg();
+                iStep := 9000;
+                a_ClearTrans();
+            END_IF
+
+        8000: (* done *)
+            q_xDone := TRUE;
+            IF  i_xExecute = FALSE THEN
+                q_xDone:= FALSE;
+                iStep := 0;
+            END_IF
+
+        9000:
+            q_xError := TRUE;
+
+    END_CASE
+
+    //call transaction
+    fbTrans(
+        i_iAddress:= iq_stLVC4000.iAddr,
+        i_tTimeOut:= i_tTimeOut,
+        i_sCmd:=sCmd,
+        i_sParam:=sSendData,
+        iq_stSerialRXBuffer:= iq_stSerialRXBuffer,
+        iq_stSerialTXBuffer:= iq_stSerialTXBuffer );
+
+    iq_stLVC4000.xTimeout := fbtrans.q_xTimeout;
+    q_sLastSentString := fbtrans.q_sLastSentString;
+    q_sLastReceivedString := fbtrans.q_sLastReceivedString;
+
+    END_FUNCTION_BLOCK
+
+    ACTION a_ClearTrans:
+    (* Refactor this action to match your transaction *)
+    fbtrans.i_xExecute := TRUE;
+    fbtrans.i_sCmd:= '';
+    fbtrans.i_sParam := '';
+    fbTrans(
+        i_iAddress:= iq_stLVC4000.iAddr,
+        i_tTimeOut:= i_tTimeOut,
+        iq_stSerialRXBuffer:= iq_stSerialRXBuffer,
+        iq_stSerialTXBuffer:= iq_stSerialTXBuffer );
+    fbtrans.i_xExecute := FALSE;
+    fbTrans(
+        i_iAddress:= iq_stLVC4000.iAddr,
+        i_tTimeOut:= i_tTimeOut,
+        iq_stSerialRXBuffer:= iq_stSerialRXBuffer,
+        iq_stSerialTXBuffer:= iq_stSerialTXBuffer );
+    END_ACTION
+
+    ACTION a_ErrorMesg:
+    fbFormatString( sformat:=sErrMesg,
+        arg1:=F_INT(iStep),
+        arg2:=F_STRING(fbtrans.q_sResult),
+        sOut => q_sResult);
+    END_ACTION
+
+
+Related:
+    * `FB_LVC4000Transaction`_
+    * `ST_SerLVC4000`_
+
+
+FB_LVC4000Transaction
+^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_LVC4000Transaction
+    VAR_INPUT
+        /// rising edge execute
+        i_xExecute: BOOL;
+        /// RS-485 Address of LVC 4000
+        i_iAddress: INT;
+        /// Maximum wait time for reply
+        i_tTimeOut: TIME := TIME#1s0ms;
+        // Command field
+        i_sCmd: T_MAXSTRING;
+        // Parameter field
+        i_sParam: T_MAXSTRING;
+    END_VAR
+    VAR_OUTPUT
+        q_xDone: BOOL;
+        q_sResponseData: STRING;
+        q_xError: BOOL;
+        q_xTimeout: BOOL;
+        q_sResult: T_MAXSTRING;
+        /// Last String Sent to Serial Device - for debugging
+        q_sLastSentString: STRING;
+        /// Last String Received from Serial Device - for debugging
+        q_sLastReceivedString: STRING;
+    END_VAR
+    VAR_IN_OUT
+        iq_stSerialRXBuffer: ComBuffer;
+        iq_stSerialTXBuffer: ComBuffer;
+    END_VAR
+    VAR
+        rtExecute: R_TRIG;
+        iStep: INT;
+        fbClearComBuffer: ClearComBuffer;
+        sSendString: STRING;
+        fbFormatString: FB_FormatString;
+        iChecksum: INT;
+        fbSendString: SendString;
+        fbReceiveString: ReceiveString;
+        sReceivedString: STRING;
+        tonTimeout: TON;
+        sRXStringForChecksum: STRING;
+        sReceiveStringWOChecksum: STRING;
+        sRXCheckSum: STRING;
+        sRXAddress: STRING;
+        sRXParmNum: STRING;
+        CarRtn : BYTE :=16#0D;
+        rAddress: REAL;
+    END_VAR
+    (* This function block performs serial transactions with an LVC 4000 LVDT Signal Conditioner *)
+
+    (* rising edge trigger *)
+    rtExecute(CLK:= i_xExecute);
+    IF rtExecute.Q THEN
+        q_xDone	:= FALSE;
+        q_sResponseData := '';
+        q_xError := FALSE;
+        //q_xTimeout := FALSE;
+        q_sResult:= '';
+        q_sLastSentString := '';
+        q_sLastReceivedString:= '';
+        iStep := 10;
+    END_IF
+
+    CASE iStep OF
+        0:
+            ; (* idle *)
+
+        10: (* clear com buffers *)
+            fbClearComBuffer(Buffer:= iq_stSerialRXBuffer);
+            fbClearComBuffer(Buffer:= iq_stSerialTXBuffer);
+            rAddress := INT_TO_REAL(i_iAddress);
+            (* build the send string *)
+            IF i_sParam = '' THEN
+                fbFormatString( sFormat:= ':%02.0f %s $R',
+                    arg1:= F_REAL(rAddress),
+                    arg2:= F_STRING(i_sCmd),
+                    sOut=> sSendString);
+            ELSE
+                fbFormatString( sFormat:= ':%02.0f %s %s $R',
+                arg1:= F_REAL(rAddress),
+                arg2:= F_STRING(i_sCmd),
+                arg3:= F_STRING(i_sParam),
+                sOut=> sSendString);
+            END_IF
+            (* send it *)
+            fbSendString( SendString:= sSendString, TXbuffer:= iq_stSerialTXBuffer );
+            q_sLastSentString := sSendString;
+            iStep := iStep + 10;
+
+        20: (* Finish sending the String *)
+            IF fbSendString.Busy THEN
+                fbSendString( SendString:= sSendString, TXbuffer:= iq_stSerialTXBuffer );
+            ELSIF fbSendString.Error <> 0 THEN
+                q_sResult := CONCAT('In step 20 fbSendString resulted in error: ', INT_TO_STRING(fbSendString.Error));
+                iStep := 9000;
+            ELSIF NOT fbSendString.Busy THEN
+                IF i_sCmd = 'getOut' THEN
+                iStep := iStep + 10;
+                ELSE
+                iStep := 100; //no response?
+                END_IF
+            END_IF
+            (* Reset receive *)
+            fbReceiveString(
+                Reset:= TRUE,
+                ReceivedString:= sReceivedString,
+                RXbuffer:= iq_stSerialRXBuffer );
+            tonTimeout(IN:= FALSE);
+
+        30: (* Get reply *)
+            fbReceiveString(
+                Prefix:= ,
+                Suffix:= '$R',
+                Timeout:= i_tTimeOut,
+                Reset:= FALSE,
+                ReceivedString:= sReceivedString,
+                RXbuffer:= iq_stSerialRXBuffer );
+            tonTimeout(IN:= TRUE, PT:= i_tTimeOut);
+            IF fbReceiveString.Error <> 0 AND fbReceiveString.Error <> 16#1008 THEN //16#1008 is timeout error
+                q_sResult := CONCAT('In step 30 fbReceiveString resulted in error: ', INT_TO_STRING(fbReceiveString.Error));
+                iStep := 9000;
+            ELSIF fbReceiveString.RxTimeout OR tonTimeout.Q THEN
+                q_sResult := 'Device failed to reply within timeout period';
+                q_xTimeout := TRUE;
+                iStep := 9000;
+            ELSIF fbReceiveString.StringReceived THEN
+                q_xTimeout := FALSE; //no timeout
+                q_sLastReceivedString := sReceivedString;
+                q_sResponseData := sReceivedString;
+                q_sResult := 'Success.';
+                q_xDone:= TRUE;
+                iStep := 100;
+            END_IF
+
+        100: (* done *)
+            IF  i_xExecute = FALSE THEN
+                q_xDone:= FALSE;
+                iStep := 0;
+            END_IF
+
+        9000:
+            q_xError := TRUE;
+
+
+
+
+    END_CASE
+
+    END_FUNCTION_BLOCK
+
+
+
+
 FB_MKS248
 ^^^^^^^^^
 
@@ -6423,6 +7292,13 @@ FB_MKS392
     ACTION ACT_IO:
     PG.i_iPRESS_R :=i_iPRESS_R;
     END_ACTION
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+        TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
 
 
 Related:
@@ -7340,7 +8216,7 @@ FB_MKS909
                 fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
           END_CASE
           ePrevState := IG.eState;
-      END_IF
+    END_IF
     END_ACTION
 
     ACTION ACT_Persistent:
@@ -7637,7 +8513,7 @@ FB_MX7M
 
     (*Set Guage State based on the Analog voltage*)
     IF IG.q_xHV_DIS THEN
-        IF rV >= cGaugeLowV AND rV <= cGaugeMaxV THEN
+        IF rV >= cGaugeLowV AND rV < cGaugeMaxV THEN
             IG.eState := Valid;
             IG.rPRESS := rPRESS;
         ELSIF rV < cGaugeLowV AND rV >= cGaugeMinV - cDeadbandV THEN
@@ -7651,6 +8527,9 @@ FB_MX7M
             IG.rPRESS := cDefaultP;
         ELSIF rV > cGaugeMaxV AND rV < cGaugeStartingV - cDeadbandV THEN
             IG.eState := OoR;
+            IG.rPRESS := cDefaultP;
+        ELSIF rV = cGaugeMaxV THEN
+            IG.eState := Off;
             IG.rPRESS := cDefaultP;
         ELSE
             IG.eState := PressInvalid;
@@ -7834,6 +8713,1040 @@ FB_MX7M
 Related:
     * `FB_GaugeBase`_
     * `ST_VG`_
+
+
+FB_OERLIKON_TD20_COM
+^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_OERLIKON_TD20_COM
+    VAR
+        tTimeOut: TIME := TIME#1S0MS;
+        fbTD20SerialDriver: FB_TD20SerialDriver;
+
+    END_VAR
+    VAR_IN_OUT
+        SerialRXBuffer : ComBuffer;
+        SerialTXBuffer : ComBuffer;
+    END_VAR
+    VAR_OUTPUT
+        astTD20Status: ST_TD20Status;
+    END_VAR
+    (* This program is called from Serial PTM IO *)
+
+    (* scan the pumps one at a time *)//MG???
+    fbTD20SerialDriver(
+        i_xExecute:= TRUE,
+        i_tTimeOut:= tTimeOut,
+        i_wControlWord:= 16#0000,
+        iq_stSerialRXBuffer:= SerialRXBuffer,
+        iq_stSerialTXBuffer:= SerialTXBuffer,
+        q_xDone=> ,
+        q_xError=> ,
+        q_xTimeout=> ,
+        q_sResult=> ,
+        q_stStatus=> astTD20Status);
+
+    IF fbTD20SerialDriver.q_xDone
+        OR fbTD20SerialDriver.q_xError
+        OR fbTD20SerialDriver.q_xTimeout THEN
+            (* reset for next time *)
+            fbTD20SerialDriver(i_xExecute:= FALSE, iq_stSerialRXBuffer:= SerialRXBuffer, iq_stSerialTXBuffer:= SerialTXBuffer);
+    END_IF
+
+    END_FUNCTION_BLOCK
+
+
+Related:
+    * `FB_TD20SerialDriver`_
+    * `ST_TD20Status`_
+
+
+FB_OERLIKON_TD400_COM
+^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_OERLIKON_TD400_COM
+    VAR_INPUT
+    END_VAR
+    VAR
+        tTimeOut : TIME := TIME#1S0MS;
+        fbTD400SerialDriver : FB_TD400SerialDriver;
+    END_VAR
+    VAR_IN_OUT
+        SerialRXBuffer : ComBuffer;
+        SerialTXBuffer : ComBuffer;
+        stTD400Control : ST_TD400Control;
+    END_VAR
+    VAR_OUTPUT
+        stTD400Status : ST_TD400Status;
+    END_VAR
+    (* This program is called from Serial PTM IO *)
+
+    (* scan the pumps one at a time *)//MG???
+    fbTD400SerialDriver(
+        i_xExecute:= TRUE,
+        i_tTimeOut:= tTimeOut,
+        i_wControlWord:= 16#0000,
+        iq_stControl:= stTD400Control,
+        iq_stSerialRXBuffer:= SerialRXBuffer,
+        iq_stSerialTXBuffer:= SerialTXBuffer,
+        q_xDone=> ,
+        q_xError=> ,
+        q_xTimeout=> ,
+        q_sResult=> ,
+        q_stStatus=> stTD400Status);
+
+    IF fbTD400SerialDriver.q_xDone
+        OR fbTD400SerialDriver.q_xError
+        OR fbTD400SerialDriver.q_xTimeout THEN
+            (* reset for next time *)
+            fbTD400SerialDriver(i_xExecute:= FALSE, iq_stSerialRXBuffer:= SerialRXBuffer, iq_stSerialTXBuffer:= SerialTXBuffer, iq_stControl:= stTD400Control);
+    END_IF
+
+    END_FUNCTION_BLOCK
+
+
+Related:
+    * `FB_TD400SerialDriver`_
+    * `ST_TD400Control`_
+    * `ST_TD400Status`_
+
+
+FB_OERLIKON_TD400_TO_PTM
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_OERLIKON_TD400_TO_PTM
+    VAR_IN_OUT
+        iq_stPTM : ST_LeyboldPTM;
+        iq_stTD400Status : ST_TD400Status;
+        iq_stTD400Control : ST_TD400Control;
+    END_VAR
+    VAR
+    END_VAR
+    (* This function block is used to map the IO points from the Oerlikon TD400 structures
+    to the generic turbo structures *)
+    //Use this function to map IO as a temporary solution if we don't change method FB_PTM_TurboDrive.M_Serial_IO and ST_LeyboldPTM structure
+
+    (* Readbacks *)
+    iq_stPTM.i_xAccel := iq_stTD400Status.wStatusWord.4;
+    iq_stPTM.i_xDecel := iq_stTD400Status.wStatusWord.5;
+    //iq_stPTM.i_xAtSpd := iq_stTD400Status.wStatusWord.10;
+    iq_stPTM.q_xRemote := iq_stTD400Status.wStatusWord.15; (* Remote control enabled *)
+    iq_stPTM.i_diCurSpd := WORD_TO_DINT(iq_stTD400Status.wFrequency_P3);
+    iq_stPTM.i_rCurrentMon := WORD_TO_INT(iq_stTD400Status.wMotorCurrent_P5)*0.1; (*Current in units 0.1 A, TD400 Interface manual page 6*)
+    iq_stPTM.i_diPwr := LREAL_TO_DINT(WORD_TO_DINT(iq_stTD400Status.wMotorCurrent_P5 * iq_stTD400Status.wVoltage_P4)*0.1); (*Current in units 0.1 A, TD400 Interface manual page 6*)
+    iq_stPTM.i_diElecTemp := WORD_TO_DINT(iq_stTD400Status.wConverterTemp_P11);
+    iq_stPTM.i_rTempMon := WORD_TO_INT(iq_stTD400Status.wPumpTemp_P127);
+
+    (* Faults and warnings *)
+    //iq_stPTM.xFault := iq_stTD400Status.wStatusWord.3;
+    iq_stPTM.i_xTempFault := iq_stTD400Status.wStatusWord.7; (* specified as a temperature warning but it could be a fault *)
+    iq_stPTM.i_xWarn := iq_stTD400Status.wStatusWord.14; (* warning summary bit *)
+
+    (* Controls *)
+    iq_stTD400Control.wSetSetpointFreq_P24 := LIMIT (iq_stTD400Status.wMinSetpointFreq_P19, iq_stTD400Control.wSetSetpointFreq_P24, iq_stTD400Status.wMaxSetpointFreq_P18);
+
+    END_FUNCTION_BLOCK
+
+
+Related:
+    * `FB_PTM_TurboDrive`_
+    * `ST_LeyboldPTM`_
+    * `ST_TD400Control`_
+    * `ST_TD400Status`_
+
+
+FB_OERLIKON_TO_PTM
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_OERLIKON_TO_PTM
+    VAR_IN_OUT
+        iq_stPTM: ST_LeyboldPTM;
+        iq_stOerlikon_stat: ST_TD20Status;
+    END_VAR
+    (* This function block is used to map the IO points from the Oerlikon structures
+    to the generic turbo structures *)
+
+    (* Readbacks *)
+    iq_stPTM.i_xAccel := iq_stOerlikon_stat.wStatusWord.4;
+    iq_stPTM.i_xDecel := iq_stOerlikon_stat.wStatusWord.5;
+    iq_stPTM.i_xAtSpd := iq_stOerlikon_stat.wStatusWord.10;
+    iq_stPTM.q_xRemote := iq_stOerlikon_stat.wStatusWord.15; (* Remote control enabled *)
+    iq_stPTM.i_diCurSpd := WORD_TO_DINT(iq_stOerlikon_stat.wFrequency_P3);
+    iq_stPTM.i_diPwr := LREAL_TO_DINT(WORD_TO_DINT(iq_stOerlikon_stat.wMotorCurrent_P5 * iq_stOerlikon_stat.wVoltage_P4)*0.01); (*Current in units 0.1 A and voltage in units 0.1V, TD20 manual page 23*)
+    iq_stPTM.i_diElecTemp := WORD_TO_DINT(iq_stOerlikon_stat.wConverterTemp_P11);
+    //iq_stPTM.i_diPumpTemp := WORD_TO_DINT(iq_stOerlikon_stat.wPumpTemp_P127);
+
+    (* Faults and warnings *)
+    //iq_stPTM.xFault := iq_stOerlikon_stat.wStatusWord.3;
+    iq_stPTM.i_xTempFault := iq_stOerlikon_stat.wStatusWord.7; (* specified as a temperature warning but it could be a fault *)
+    //iq_stPTM.xWarn := iq_stOerlikon_stat.wStatusWord.14; (* warning summary bit *)
+
+    END_FUNCTION_BLOCK
+
+
+Related:
+    * `ST_LeyboldPTM`_
+    * `ST_TD20Status`_
+
+
+FB_PFEIFFER_COM
+^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_PFEIFFER_COM
+    VAR_IN_OUT
+        astPfeifferControl: ARRAY[1..gcMaxPfeifferPumps] OF ST_PfeifferControl;
+        astPfeifferStatus: ARRAY[1..gcMaxPfeifferPumps] OF ST_PfeifferStatus;
+        SerialRXBuffer: ComBuffer;
+        SerialTXBuffer: ComBuffer;
+    END_VAR
+    VAR
+        afbPfeifferSerialDriver: ARRAY[1..gcMaxPfeifferPumps] OF FB_PfeifferSerialDriver;
+        iPump: INT := 1;
+        tTimeOut: TIME := TIME#1s0ms;
+    END_VAR
+    (* This program is called from Serial PTM IO *)
+
+    (* scan the pumps one at a time *)
+    afbPfeifferSerialDriver[iPump](
+        i_xExecute:= TRUE,
+        i_tTimeOut:= tTimeOut,
+        i_stControl:=astPfeifferControl[iPump] ,
+        iq_stSerialRXBuffer:= SerialRXBuffer,
+        iq_stSerialTXBuffer:=  SerialTXBuffer,
+        q_stStatus=> astPfeifferStatus[iPump] );
+
+    IF afbPfeifferSerialDriver[iPump].q_xDone
+    OR afbPfeifferSerialDriver[iPump].q_xError
+    THEN
+            (* reset for next time *)
+            afbPfeifferSerialDriver[iPump]( i_xExecute:= FALSE, iq_stSerialRXBuffer:= SerialRXBuffer, iq_stSerialTXBuffer:=  SerialTXBuffer);
+            (* select next pump *)
+            iPump := iPump + 1;
+            IF iPump > gcMaxPfeifferPumps THEN
+                iPump:= 1;
+            END_IF
+    END_IF
+
+    END_FUNCTION_BLOCK
+
+
+Related:
+    * `FB_PfeifferSerialDriver`_
+    * `ST_PfeifferControl`_
+    * `ST_PfeifferStatus`_
+
+
+FB_PFEIFFER_TO_PTM
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_PFEIFFER_TO_PTM
+    VAR_IN_OUT
+        {attribute 'pytmc' :=' pv:'}
+        iq_stPTM: ST_PfeifferPTM;
+        iq_stPfeiffer_ctrl: ST_PfeifferControl;
+        iq_stPfeiffer_stat: ST_PfeifferStatus;
+    END_VAR
+    (* This function block is used to map the IO points from the pfeiffer structures
+    to the generic turbo structures *)
+
+    (* Controls *)
+    iq_stPfeiffer_ctrl.xPumpingStation_010 := iq_stPTM.q_RunDO;
+    iq_stPfeiffer_ctrl.xMotorPump_023 := 1; //Setting always true because parameter 10 alone can enable/disable the pump
+    iq_stPfeiffer_ctrl.uiPowerPct_708 := iq_stPTM.q_uiPowerPct;
+    iq_stPfeiffer_ctrl.xErrorAck_009 := iq_stPTM.xResetSW;
+
+    (* Readbacks *)
+    iq_stPTM.i_xAccel := iq_stPfeiffer_stat.xPumpAccelerating_307;
+    iq_stPTM.i_xAtSpd := iq_stPfeiffer_stat.xRotationSpeedAttn_306;
+    iq_stPTM.i_diCurSpd := iq_stPfeiffer_stat.diActiveRotationSpeed_309;
+    iq_stPTM.i_diPwr := iq_stPfeiffer_stat.diDrivePower_316;
+    iq_stPTM.i_diElecTemp := iq_stPfeiffer_stat.diTempElec_326;
+    iq_stPTM.i_diBtmTemp := iq_stPfeiffer_stat.diTempPmpBot_330;
+    iq_stPTM.i_diBrngTemp := iq_stPfeiffer_stat.diTempBearng_342;
+    iq_stPTM.i_diMtrTemp := iq_stPfeiffer_stat.diTempMotor_346;
+    iq_stPTM.i_uiPowerPctRbk := iq_stPfeiffer_stat.uiPowerPct_708;
+
+    iq_stPTM.xCommTimeout	:=	iq_stPfeiffer_stat.xTimeout;
+    iq_stPTM.i_iErrorCode := iq_stPfeiffer_stat.iErrorCode_303;
+    iq_stPTM.i_iWarningCode := iq_stPfeiffer_stat.iWarningCode_303;
+
+    (* Check that error acknowledgment is processed*)
+    IF iq_stPfeiffer_stat.xErrorAcknowledged THEN
+        iq_stPfeiffer_stat.xErrorAcknowledged := FALSE;
+        iq_stPfeiffer_ctrl.xErrorAck_009 := FALSE;
+        iq_stPTM.xResetSW := FALSE;
+    END_IF
+
+    IF iq_stPfeiffer_stat.sErrorCode_303 = '' THEN
+        ;
+    ELSIF iq_stPfeiffer_stat.sErrorCode_303 <> '000000' THEN
+    iq_stPTM.i_xFault := TRUE;
+    ELSE
+    iq_stPTM.i_xFault := FALSE;
+    END_IF
+
+    END_FUNCTION_BLOCK
+
+
+Related:
+    * `ST_PfeifferControl`_
+    * `ST_PfeifferPTM`_
+    * `ST_PfeifferStatus`_
+
+
+FB_PfeifferSerialDriver
+^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_PfeifferSerialDriver
+    VAR_INPUT
+        /// rising edge execute
+        i_xExecute: BOOL;
+        /// Maximum wait time for reply
+        i_tTimeOut: TIME := TIME#1s0ms;
+        i_stControl: ST_PfeifferControl;
+    END_VAR
+    VAR_OUTPUT
+        q_xDone: BOOL;
+        q_xError: BOOL;
+        q_xTimeout: BOOL;
+        q_sResult: STRING(255);
+        /// Last String Sent to Serial Device - for debugging
+        q_sLastSentString: STRING;
+        /// Last String Received from Serial Device - for debugging
+        q_sLastReceivedString: STRING;
+        q_stStatus: ST_PfeifferStatus;
+    END_VAR
+    VAR_IN_OUT
+        iq_stSerialRXBuffer: ComBuffer;
+        iq_stSerialTXBuffer: ComBuffer;
+    END_VAR
+    VAR
+        rtExecute: R_TRIG;
+        iStep: INT;
+        sSendData: STRING;
+        fbPfeifferTransaction: FB_PfeifferTransaction;
+        fbFormatString: FB_FormatString;
+        diOldSetRotationSpeed_707 :DINT;
+    END_VAR
+    (* This function block performs serial transactions with a Pfeiffer RC400 Pump controller *)
+
+    IF NOT i_stControl.xEnableComm THEN
+        _A_ClearStatus();
+    END_IF
+
+    (* rising edge trigger *)
+    rtExecute(CLK:= i_xExecute);
+    IF rtExecute.Q  THEN
+        q_xDone	:= FALSE;
+        q_xError := FALSE;
+        q_sResult:= '';
+        IF  i_stControl.xEnableComm THEN
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            iStep := 10;
+        ELSE
+            q_sResult := 'Communication not enabled';
+            iStep := 8000;
+        END_IF
+    END_IF
+
+
+    CASE iStep OF
+        0: (* idle *)
+            ;
+
+        (* Get all statuses *)
+        10: (* Pumping Station *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 10;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 10 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = '000000' OR fbPfeifferTransaction.q_sResponseData = '111111' THEN
+                    q_stStatus.xPumpingStation_010 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := iStep + 10;
+                ELSE
+                    q_sResult := CONCAT('In step 10 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF
+
+        20: (* Gas Mode *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 27;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 20 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                q_stStatus.iGasMode_027 := STRING_TO_INT( fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 10;
+            END_IF
+
+        30: (* Error Code *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 303;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 30 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                q_stStatus.sErrorCode_303 := fbPfeifferTransaction.q_sResponseData;
+                IF LEFT(q_stStatus.sErrorCode_303, 3) = 'Err' THEN
+                    q_stStatus.iErrorCode_303 := STRING_TO_INT(	RIGHT(q_stStatus.sErrorCode_303, 3) );
+                    q_stStatus.iWarningCode_303 := 0;
+                ELSIF LEFT(q_stStatus.sErrorCode_303, 3) = 'Wrn' THEN
+                    q_stStatus.iWarningCode_303 := STRING_TO_INT(	RIGHT(q_stStatus.sErrorCode_303, 3) );
+                    q_stStatus.iErrorCode_303 := 0;
+                ELSIF q_stStatus.sErrorCode_303 = '000000' THEN
+                    q_stStatus.iErrorCode_303 := q_stStatus.iWarningCode_303 := 0;
+                END_IF
+
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 10;
+            END_IF
+
+        40: (* Excess Temperature Pump *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 305;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 40 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = '000000' OR fbPfeifferTransaction.q_sResponseData = '111111' THEN
+                    q_stStatus.xExcessTempPump_305 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := iStep + 10;
+                ELSE
+                    q_sResult := CONCAT('In step 40 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF
+
+        50: (* Rotation Speed Attained *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 306;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 50 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = '000000' OR fbPfeifferTransaction.q_sResponseData = '111111' THEN
+                    q_stStatus.xRotationSpeedAttn_306 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := iStep + 10;
+                ELSE
+                    q_sResult := CONCAT('In step 50 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF
+
+        60: (* Pump Accelerating *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 307;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 60 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = '000000' OR fbPfeifferTransaction.q_sResponseData = '111111' THEN
+                    q_stStatus.xPumpAccelerating_307 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := iStep + 10;
+                ELSE
+                    q_sResult := CONCAT('In step 60 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF
+
+        70: (* Acitve Rotation Speed *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 309;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 70 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                q_stStatus.diActiveRotationSpeed_309 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 1;
+            END_IF
+
+        71: (* Electronics Temp *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 326;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 71 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                q_stStatus.diTempElec_326 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 1;
+            END_IF
+
+        72: (* Bottom of Pump Temp *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 330;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 72 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                q_stStatus.diTempPmpBot_330 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 1;
+            END_IF
+
+        73: (* Temp bearing *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 342;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 73 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                q_stStatus.diTempBearng_342 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 1;
+            END_IF
+
+
+        74: (* Temp motor *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 346;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 74 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                q_stStatus.diTempMotor_346 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 80;
+            END_IF
+
+        80: (* Drive Current *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 310;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 80 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                q_stStatus.lrDriveCurrent_310 := STRING_TO_LREAL( fbPfeifferTransaction.q_sResponseData)/100.0;
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := iStep + 10;
+            END_IF
+
+        90: (* Drive Power *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 316;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 90 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                q_stStatus.diDrivePower_316 := STRING_TO_DINT( fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 91;
+            END_IF
+
+        91: (* Check Power Consumption Limit *)
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= FALSE;
+                fbPfeifferTransaction.i_iParameterNum:= 708;
+                fbPfeifferTransaction.i_iDataLength:= 2;
+                fbPfeifferTransaction.i_sSendData:= '=?';
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 91 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                q_stStatus.uiPowerPct_708 := STRING_TO_UINT( fbPfeifferTransaction.q_sResponseData);
+                a_ClearTrans();  (* to provide rising edge for execute *)
+                iStep := 8000;// this step not tested 110; // was 5000, but we don't want to control via serial but via PLC IO, just write the pump speed
+            END_IF
+
+        100:
+            (*IF (i_stControl.iSetRotationSpeed_707 <> diOldSetRotationSpeed_707) AND ( i_stControl.iSetRotationSpeed_707 <> 0)  THEN
+                diOldSetRotationSpeed_707 := i_stControl.iSetRotationSpeed_707;
+                iStep := 110;
+            ELSE
+                q_sResult := 'Success';
+                iStep := 8000;// maybe should be 5000
+            END_IF*)
+
+        110: (* Set  SpdSetMode: Rotation speed setting mode*)
+            IF i_stControl.xSetSpdMode_026 THEN
+                sSendData := '001';
+            ELSE
+                sSendData := '000';
+            END_IF
+                //i_stControl.iSetSpdMode_026:=1;
+                //fbFormatString( sFormat:= '%.3u', arg1:= F_INT(i_stControl.iSetSpdMode_026), sOut => sSendData);
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= TRUE;
+                fbPfeifferTransaction.i_iParameterNum:= 26;
+                fbPfeifferTransaction.i_iDataLength:= 3;
+                fbPfeifferTransaction.i_sSendData:= sSendData;
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 110 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                    q_stStatus.iSetSpdMode_026 := STRING_TO_INT(fbPfeifferTransaction.q_sResponseData);
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := 120;
+                ELSE
+                    q_sResult := CONCAT('In step 110 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF
+
+        120:(* Update Pump Speed *) (* SpdSVal % Set value in rot. speed setting mode *)
+                i_stControl.iSetRotationSpeed_707 := i_stControl.iSetRotationSpeed_707 *100; //Datatype 2
+                fbFormatString( sFormat:= '%.6u', arg1:= F_INT(i_stControl.iSetRotationSpeed_707), sOut => sSendData);
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= TRUE;
+                fbPfeifferTransaction.i_iParameterNum:= 707;
+                fbPfeifferTransaction.i_iDataLength:= 6;
+                fbPfeifferTransaction.i_sSendData:= sSendData;
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 120 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                q_stStatus.iSetRotationSpeed_707 := STRING_TO_INT( fbPfeifferTransaction.q_sResponseData);
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := 8000;
+                ELSE
+                    q_sResult := CONCAT('In step 120 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF
+
+
+        130: (* Set  SpdSetMode: Rotation speed setting mode Off*)
+            (*	i_stControl.iSetSpdMode_026:=0;
+                fbFormatString( sFormat:= '%.3u', arg1:= F_INT(i_stControl.iSetSpdMode_026), sOut => sSendData);
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= TRUE;
+                fbPfeifferTransaction.i_iParameterNum:= 26;
+                fbPfeifferTransaction.i_iDataLength:= 3;
+                fbPfeifferTransaction.i_sSendData:= sSendData;
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 110 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                    q_stStatus.iSetSpdMode_026 := STRING_TO_INT(fbPfeifferTransaction.q_sResponseData);
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := 100;
+                ELSE
+                    q_sResult := CONCAT('In step 110 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF*)
+
+        5000:(* Check Status vs. requested parameters, set iff necessary *)
+            IF i_stControl.xErrorAck_009 THEN
+                iStep := 5030;
+            ELSIF i_stControl.xPumpingStation_010 <> q_stStatus.xPumpingStation_010 THEN
+                //iStep := 5010; Done through the PLC DIO
+            ELSIF  i_stControl.iGasMode_027 <> q_stStatus.iGasMode_027 THEN
+                iStep := 5020;
+            ELSIF i_stControl.xMotorPump_023 <> q_stStatus.xMotorPump_023 THEN
+                //iStep := 5011;  Done through the PLC DIO
+            ELSIF i_stControl.uiPowerPct_708 <> q_stStatus.uiPowerPct_708 THEN
+                iStep := 5012;
+            ELSE
+                q_sResult := 'Success';
+                iStep := 8000;
+            END_IF
+
+        5010: (* Update Pumping Station *)
+            IF i_stControl.xPumpingStation_010 THEN
+                sSendData := '111111';
+            ELSE
+                sSendData := '000000';
+            END_IF
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= TRUE;
+                fbPfeifferTransaction.i_iParameterNum:= 10;
+                fbPfeifferTransaction.i_iDataLength:= 6;
+                fbPfeifferTransaction.i_sSendData:= sSendData;
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 5010 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                    q_stStatus.xPumpingStation_010 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := 5000;
+                ELSE
+                    q_sResult := CONCAT('In step 5010 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF
+
+        5011: (* Update Pump Motor *)
+            IF i_stControl.xMotorPump_023 THEN
+                sSendData := '111111';
+            ELSE
+                sSendData := '000000';
+            END_IF
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= TRUE;
+                fbPfeifferTransaction.i_iParameterNum:= 23;
+                fbPfeifferTransaction.i_iDataLength:= 6;
+                fbPfeifferTransaction.i_sSendData:= sSendData;
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 5011 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                    q_stStatus.xMotorPump_023 := (fbPfeifferTransaction.q_sResponseData = '111111');
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := 5000;
+                ELSE
+                    q_sResult := CONCAT('In step 5011 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF
+
+        5012: (* Update Power Consumption Percent *)
+            fbFormatString( sFormat:= '%.6u', arg1:= F_UINT(i_stControl.uiPowerPct_708), sOut => sSendData);
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= TRUE;
+                fbPfeifferTransaction.i_iParameterNum:= 708;
+                fbPfeifferTransaction.i_iDataLength:= 3;
+                fbPfeifferTransaction.i_sSendData:= sSendData;
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 5012 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                    q_stStatus.uiPowerPct_708 := STRING_TO_UINT(fbPfeifferTransaction.q_sResponseData);
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := 5000;
+                ELSE
+                    q_sResult := CONCAT('In step 5012 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF
+
+        5020: (* Update Gas Mode *)
+            fbFormatString( sFormat:= '%.3u', arg1:= F_INT(i_stControl.iGasMode_027), sOut => sSendData);
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= TRUE;
+                fbPfeifferTransaction.i_iParameterNum:= 27;
+                fbPfeifferTransaction.i_iDataLength:= 3;
+                fbPfeifferTransaction.i_sSendData:= sSendData;
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 5020 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN
+                IF fbPfeifferTransaction.q_sResponseData = sSendData THEN
+                    q_stStatus.iGasMode_027 := STRING_TO_INT(fbPfeifferTransaction.q_sResponseData);
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := 5000;
+                ELSE
+                    q_sResult := CONCAT('In step 5020 invalid data returned from Pfeiffer: ', fbPfeifferTransaction.q_sResponseData);
+                    iStep := 9000;
+                END_IF
+            END_IF
+
+        5030: (* Update Error Acknowledgement *)
+            IF i_stControl.xErrorAck_009 THEN
+                q_stStatus.xErrorAcknowledged := TRUE;
+                sSendData := '111111';
+            ELSE
+                sSendData := '000000';
+            END_IF
+                fbPfeifferTransaction.i_xExecute:= TRUE;
+                fbPfeifferTransaction.i_xActionCommand:= TRUE;
+                fbPfeifferTransaction.i_iParameterNum:= 9;
+                fbPfeifferTransaction.i_iDataLength:= 6;
+                fbPfeifferTransaction.i_sSendData:= sSendData;
+            IF fbPfeifferTransaction.q_xError THEN
+                q_sResult := CONCAT('in Step 5030 fbPfeifferTransaction failed with message: ', fbPfeifferTransaction.q_sResult);
+                iStep := 9000;
+            ELSIF fbPfeifferTransaction.q_xDone THEN (* Error Acknowledged *)
+                    a_ClearTrans();  (* to provide rising edge for execute *)
+                    iStep := 5000;
+            END_IF
+
+
+        8000: (* done *)
+            q_xDone := TRUE;
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            IF  i_xExecute = FALSE THEN
+                q_xDone:= FALSE;
+                iStep := 0;
+            END_IF
+
+        9000:
+            _A_ClearStatus();
+            a_ClearTrans();  (* to provide rising edge for execute *)
+            q_xError := TRUE;
+
+    END_CASE
+
+    //call transaction
+    fbPfeifferTransaction(
+        i_iAddress:= i_stControl.iSerialAddress,
+        i_tTimeOut:= i_tTimeOut,
+        iq_stSerialRXBuffer:= iq_stSerialRXBuffer,
+        iq_stSerialTXBuffer:= iq_stSerialTXBuffer );
+
+    q_stStatus.xTimeout := fbPfeifferTransaction.q_xTimeout;
+    q_sLastSentString := fbPfeifferTransaction.q_sLastSentString;
+    q_sLastReceivedString := fbPfeifferTransaction.q_sLastReceivedString;
+
+    END_FUNCTION_BLOCK
+
+    ACTION _A_ClearStatus:
+    q_stStatus.xPumpingStation_010 := FALSE;
+    q_stStatus.iGasMode_027 := 0;
+    q_stStatus.sErrorCode_303 := '';
+    q_stStatus.xExcessTempPump_305 := FALSE;
+    q_stStatus.xRotationSpeedAttn_306 := FALSE;
+    q_stStatus.xPumpAccelerating_307 := FALSE;
+    q_stStatus.diActiveRotationSpeed_309 := 0;
+    q_stStatus.lrDriveCurrent_310 := 0;
+    q_stStatus.diDrivePower_316 := 0;
+    END_ACTION
+
+    ACTION a_ClearTrans:
+    fbPfeifferTransaction.i_xExecute := FALSE;
+    fbPfeifferTransaction.i_xActionCommand:= FALSE;
+    fbPfeifferTransaction.i_iParameterNum:= 0;
+    fbPfeifferTransaction.i_iDataLength:= 0;
+    fbPfeifferTransaction.i_sSendData:= '';
+    END_ACTION
+
+
+Related:
+    * `FB_PfeifferTransaction`_
+    * `ST_PfeifferControl`_
+    * `ST_PfeifferStatus`_
+
+
+FB_PfeifferTransaction
+^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_PfeifferTransaction
+    VAR_INPUT
+        /// rising edge execute
+        i_xExecute: BOOL;
+        /// RS-485 Address of Pump
+        i_iAddress: INT;
+        /// False is data request, True is control command
+        i_xActionCommand: BOOL;
+        /// Parameter Number 1-999
+        i_iParameterNum: INT;
+        /// Send Data Length
+        i_iDataLength: INT;
+        /// Send Data
+        i_sSendData: STRING;
+        /// Maximum wait time for reply
+        i_tTimeOut: TIME := TIME#1s0ms;
+    END_VAR
+    VAR_OUTPUT
+        q_xDone: BOOL;
+        q_sResponseData: STRING;
+        q_xError: BOOL;
+        q_xTimeout: BOOL;
+        q_sResult: STRING;
+        /// Last String Sent to Serial Device - for debugging
+        q_sLastSentString: STRING;
+        /// Last String Received from Serial Device - for debugging
+        q_sLastReceivedString: STRING;
+    END_VAR
+    VAR_IN_OUT
+        iq_stSerialRXBuffer: ComBuffer;
+        iq_stSerialTXBuffer: ComBuffer;
+    END_VAR
+    VAR
+        rtExecute: R_TRIG;
+        iStep: INT;
+        fbClearComBuffer: ClearComBuffer;
+        sSendString: STRING;
+        fbFormatString: FB_FormatString;
+        iChecksum: INT;
+        fbSendString: SendString;
+        fbReceiveString: ReceiveString;
+        sReceivedString: STRING;
+        tonTimeout: TON;
+        sRXStringForChecksum: STRING;
+        sReceiveStringWOChecksum: STRING;
+        sRXCheckSum: STRING;
+        sRXAddress: STRING;
+        sRXParmNum: STRING;
+    END_VAR
+    (* This function block performs serial transactions with a Pfeiffer RC400 Pump controller *)
+
+    (* rising edge trigger *)
+    rtExecute(CLK:= i_xExecute);
+    IF rtExecute.Q THEN
+        q_xDone	:= FALSE;
+        q_sResponseData := '';
+        q_xError := FALSE;
+        //q_xTimeout := FALSE;
+        q_sResult:= '';
+        q_sLastSentString := '';
+        q_sLastReceivedString:= '';
+        iStep := 10;
+    END_IF
+
+    CASE iStep OF
+        0:
+            ; (* idle *)
+
+        10: (* clear com buffers *)
+            fbClearComBuffer(Buffer:= iq_stSerialRXBuffer);
+            fbClearComBuffer(Buffer:= iq_stSerialTXBuffer);
+
+            (* build the send string *)
+            fbFormatString( sFormat:= '%0.3d', arg1:= F_INT(i_iAddress), sOut=> sSendString); (* address *)
+            IF i_xActionCommand THEN (* action *)
+                sSendString := CONCAT(sSendString, '10');
+            ELSE
+                sSendString := CONCAT(sSendString, '00');
+            END_IF
+            fbFormatString( sFormat:= '%0.3u', arg1:= F_INT(i_iParameterNum)); (* parameter number *)
+            sSendString := CONCAT(sSendString, fbFormatString.sOut);
+            fbFormatString( sFormat:= '%0.2u', arg1:= F_INT(i_iDataLength)); (* data length *)
+            sSendString := CONCAT(sSendString, fbFormatString.sOut);
+            sSendString := CONCAT(sSendString, i_sSendData); (* data *)
+            iChecksum := F_CalcPfeifferChecksum(sSendString); (* checksum *)
+            fbFormatString( sFormat:= '%0.3u$R', arg1:= F_INT(iChecksum));
+            sSendString := CONCAT(sSendString, fbFormatString.sOut);
+            (* send it *)
+            fbSendString( SendString:= sSendString, TXbuffer:= iq_stSerialTXBuffer );
+            q_sLastSentString := sSendString;
+            iStep := iStep + 10;
+
+        20: (* Finish sending the String *)
+            IF fbSendString.Busy THEN
+                fbSendString( SendString:= sSendString, TXbuffer:= iq_stSerialTXBuffer );
+            ELSIF fbSendString.Error <> 0 THEN
+                q_sResult := CONCAT('In step 20 fbSendString resulted in error: ', INT_TO_STRING(fbSendString.Error));
+                iStep := 9000;
+            ELSIF NOT fbSendString.Busy THEN
+                iStep := iStep + 10;
+            END_IF
+            (* Reset receive *)
+            fbReceiveString(
+                Reset:= TRUE,
+                ReceivedString:= sReceivedString,
+                RXbuffer:= iq_stSerialRXBuffer );
+            tonTimeout(IN:= FALSE);
+
+        30: (* Get reply *)
+            fbReceiveString(
+                Prefix:= ,
+                Suffix:= '$R',
+                Timeout:= i_tTimeOut,
+                Reset:= FALSE,
+                ReceivedString:= sReceivedString,
+                RXbuffer:= iq_stSerialRXBuffer );
+            tonTimeout(IN:= TRUE, PT:= i_tTimeOut);
+            IF fbReceiveString.Error <> 0 AND fbReceiveString.Error <> 16#1008 THEN //16#1008 is timeout error
+                q_sResult := CONCAT('In step 30 fbReceiveString resulted in error: ', INT_TO_STRING(fbReceiveString.Error));
+                iStep := 9000;
+            ELSIF fbReceiveString.RxTimeout OR tonTimeout.Q THEN
+                q_sResult := 'Pfeiffer pump failed to reply within timeout period';
+                q_xTimeout := TRUE;
+                iStep := 9000;
+            ELSIF fbReceiveString.StringReceived THEN
+                q_xTimeout := FALSE; //no timeout
+                q_sLastReceivedString := sReceivedString;
+                (* check checksum *)
+                sReceiveStringWOChecksum := LEFT(sReceivedString, LEN(sReceivedString)-4);
+                iChecksum := F_CalcPfeifferChecksum(sReceiveStringWOChecksum);
+                sRXCheckSum := MID(sReceivedString,3,LEN(sReceivedString)-3);
+                sRXAddress := LEFT(sReceivedString,3);
+                sRXParmNum := MID(sReceivedString,3,6);
+                IF iChecksum <> STRING_TO_INT(sRXCheckSum) THEN
+                    q_sResult := 'Invalid checksum on received string.';
+                    iStep := 9000;
+                ELSIF i_iAddress <> STRING_TO_INT(sRXAddress) THEN
+                    q_sResult := 'Invalid unit address on received string.';
+                    iStep := 9000;
+                ELSIF i_iParameterNum <> STRING_TO_INT(sRXParmNum) THEN
+                    q_sResult := 'Invalid parameter number on received string.';
+                    iStep := 9000;
+                ELSE
+                    q_sResponseData := MID(sReceivedString,LEN(sReceivedString)-14 ,11);
+                    q_sResult := 'Success.';
+                    q_xDone:= TRUE;
+                    iStep := 100;
+                END_IF
+            END_IF
+
+        100: (* done *)
+            IF  i_xExecute = FALSE THEN
+                q_xDone:= FALSE;
+                iStep := 0;
+            END_IF
+
+        9000:
+            q_xError := TRUE;
+
+
+
+
+    END_CASE
+
+    END_FUNCTION_BLOCK
+
+
 
 
 FB_PIP_Gamma
@@ -9893,7 +11806,7 @@ FB_PTM_Pfeiffer
     iq_stPTM.i_diBrngTemp := st_Pfeiffer_RBK.diTempBearng_342;
     iq_stPTM.i_diMtrTemp := st_Pfeiffer_RBK.diTempMotor_346;
     iq_stPTM.i_uiPowerPctRbk := st_Pfeiffer_RBK.uiPowerPct_708;
-    iq_stPTM.i_rCurrentMon :=  st_Pfeiffer_RBK.lrDriveCurrent_310;
+    iq_stPTM.i_rCurrentMon :=  LREAL_TO_REAL(st_Pfeiffer_RBK.lrDriveCurrent_310);
     iq_stPTM.xCommTimeout	:=	st_Pfeiffer_RBK.xTimeout;
     iq_stPTM.i_iErrorCode := st_Pfeiffer_RBK.iErrorCode_303;
     iq_stPTM.i_iWarningCode := st_Pfeiffer_RBK.iWarningCode_303;
@@ -9938,7 +11851,9 @@ FB_PTM_Pfeiffer
 
 Related:
     * `FB_Pump`_
+    * `ST_PfeifferControl`_
     * `ST_PfeifferPTM`_
+    * `ST_PfeifferStatus`_
 
 
 FB_PTM_Test
@@ -10225,7 +12140,7 @@ FB_PTM_TurboDrive
     iq_stPTM.i_xRemote := i_st_TD20_RBK.wStatusWord.15; (* Remote control enabled *)
     iq_stPTM.i_diCurSpd := WORD_TO_DINT(i_st_TD20_RBK.wFrequency_P3);
     iq_stPTM.i_rCurrentMon := WORD_TO_INT(i_st_TD20_RBK.wMotorCurrent_P5)*0.1; (*Current in units 0.1 A, TD20 manual page 23*)
-    iq_stPTM.i_diPwr := REAL_TO_DINT(WORD_TO_DINT(i_st_TD20_RBK.wMotorCurrent_P5 * i_st_TD20_RBK.wVoltage_P4)*0.01); (*Current in units 0.1 A and voltage in units 0.1V, TD20 manual page 23*)
+    iq_stPTM.i_diPwr := LREAL_TO_DINT(WORD_TO_DINT(i_st_TD20_RBK.wMotorCurrent_P5 * i_st_TD20_RBK.wVoltage_P4)*0.01); (*Current in units 0.1 A and voltage in units 0.1V, TD20 manual page 23*)
     iq_stPTM.i_diElecTemp := WORD_TO_DINT(i_st_TD20_RBK.wConverterTemp_P11);
     iq_stPTM.i_rTempMon := WORD_TO_INT(i_st_TD20_RBK.wPumpTemp_P127);
 
@@ -10253,6 +12168,7 @@ FB_PTM_TurboDrive
 Related:
     * `FB_Pump`_
     * `ST_LeyboldPTM`_
+    * `ST_TD20Status`_
 
 
 FB_PTM_TwisTorr
@@ -10570,6 +12486,1014 @@ FB_TBOOL_ADS
 
 Related:
     * `FB_ADS`_
+
+
+FB_TD20SerialDriver
+^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_TD20SerialDriver
+    VAR_INPUT
+        /// rising edge execute
+        i_xExecute: BOOL;
+        /// Maximum wait time for reply
+        i_tTimeOut: TIME := TIME#1s0ms;
+        i_wControlWord: WORD;
+    END_VAR
+    VAR_OUTPUT
+        q_xDone: BOOL;
+        q_xError: BOOL;
+        q_xTimeout: BOOL;
+        q_sResult: STRING(255);
+        q_stStatus: ST_TD20Status;
+        /// Last Byte Sequence Sent to Serial Device - for debugging
+        q_abLastSentArray: ARRAY[0..23] OF BYTE;
+        /// Last Byte Sequence Received from Serial Device - for debugging
+        q_abLastReceivedArray: ARRAY[0..23] OF BYTE;
+    END_VAR
+    VAR_IN_OUT
+        iq_stSerialRXBuffer: ComBuffer;
+        iq_stSerialTXBuffer: ComBuffer;
+    END_VAR
+    VAR
+        rtExecute: R_TRIG;
+        rtTransDone: R_TRIG;
+        iStep: INT;
+        fbTD20Transaction: FB_TD20Transaction;
+        fbFormatString: FB_FormatString;
+        iCatch: INT;
+        sTransactionErrMesg : STRING := 'In step %d fbTD20Transaction failed with message: %s';
+        sDriverErrMesg		: STRING := 'In step %d FB_TD20SerialDriver failed with unexpected PKE reply: %X';
+        i		: INT := 1;
+    END_VAR
+    (* This function block performs serial transactions with a Oerlikon TD20 Pump controller *)
+
+    (* rising edge trigger *)
+    rtExecute(CLK:= i_xExecute);
+    IF rtExecute.Q  THEN
+        q_xDone	:= FALSE;
+        q_xError := FALSE;
+        q_xTimeout := FALSE;
+        q_sResult:= '';
+        iStep := 10;
+    END_IF
+
+    CASE iStep OF
+        0: (* idle *)
+            ;
+
+        10: (* assure rising edge *)
+            fbTD20Transaction.i_xExecute := FALSE;
+            iStep := iStep + 10;
+
+        20:(* get P20 *)
+            fbTD20Transaction.i_wPKE := 16#1000 OR 20;
+            fbTD20Transaction.i_bIND := 0;
+            fbTD20Transaction.i_dwPWE := 0;
+            fbTD20Transaction.i_xExecute := TRUE;
+
+            IF fbTD20Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD20Transaction.q_xDone THEN
+                fbTD20Transaction.i_xExecute := FALSE;
+                IF fbTD20Transaction.q_wPKE = (16#1000 OR 20) THEN
+                    q_stStatus.wCriticalFreq_P20 := DWORD_TO_WORD(fbTD20Transaction.q_dwPWE);
+                    iStep := iStep + 10;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        30:(* get P21 *)
+            fbTD20Transaction.i_wPKE := 16#1000 OR 21;
+            fbTD20Transaction.i_bIND := 0;
+            fbTD20Transaction.i_dwPWE := 0;
+            fbTD20Transaction.i_xExecute := TRUE;
+            IF fbTD20Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD20Transaction.q_xDone THEN
+                fbTD20Transaction.i_xExecute := FALSE;
+                IF fbTD20Transaction.q_wPKE = (16#1000 OR 21) THEN
+                    q_stStatus.wMaxCurrentFactor_P21 := DWORD_TO_WORD(fbTD20Transaction.q_dwPWE);
+                    iStep := iStep + 10;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        40:(* get P24 *)
+            fbTD20Transaction.i_wPKE := 16#1000 OR 24;
+            fbTD20Transaction.i_bIND := 0;
+            fbTD20Transaction.i_dwPWE := 0;
+            fbTD20Transaction.i_xExecute := TRUE;
+            IF fbTD20Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD20Transaction.q_xDone THEN
+                fbTD20Transaction.i_xExecute := FALSE;
+                IF fbTD20Transaction.q_wPKE = (16#1000 OR 24) THEN
+                    q_stStatus.wSetpointFreq_P24 := DWORD_TO_WORD(fbTD20Transaction.q_dwPWE);
+                    iStep := iStep + 10;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        50:(* get P32 *)
+            fbTD20Transaction.i_wPKE := 16#1000 OR 32;
+            fbTD20Transaction.i_bIND := 0;
+            fbTD20Transaction.i_dwPWE := 0;
+            fbTD20Transaction.i_xExecute := TRUE;
+            IF fbTD20Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD20Transaction.q_xDone THEN
+                fbTD20Transaction.i_xExecute := FALSE;
+                IF fbTD20Transaction.q_wPKE = (16#1000 OR 32) THEN
+                    q_stStatus.wMaxRunUpTime_P32 := DWORD_TO_WORD(fbTD20Transaction.q_dwPWE);
+                    iStep := iStep + 10;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        60:(* get P171 index 0 *)
+            fbTD20Transaction.i_wPKE := 16#6000 OR 171;
+            fbTD20Transaction.i_bIND := 0;
+            fbTD20Transaction.i_dwPWE := 0;
+            fbTD20Transaction.i_xExecute := TRUE;
+            IF fbTD20Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD20Transaction.q_xDone THEN
+                fbTD20Transaction.i_xExecute := FALSE;
+                IF fbTD20Transaction.q_wPKE = (16#4000 OR 171) THEN
+                    q_stStatus.wErrorCode_P171 := DWORD_TO_WORD(fbTD20Transaction.q_dwPWE);
+                    iStep := 8000;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        8000: (* done *)
+            q_xDone := TRUE;
+            IF  i_xExecute = FALSE THEN
+                q_xDone:= FALSE;
+                iStep := 0;
+            END_IF
+
+        9000: (* Transaction Error *)
+            q_xError := TRUE;
+
+        9100: (* Driver Error *)
+            q_xError := TRUE;
+
+    END_CASE
+
+    fbTD20Transaction(
+        i_wControlWord:= i_wControlWord,
+        i_tTimeOut:= i_tTimeOut,
+        iq_stSerialRXBuffer:= iq_stSerialRXBuffer,
+        iq_stSerialTXBuffer:= iq_stSerialTXBuffer,
+        q_wStatusWord=> q_stStatus.wStatusWord,
+        q_wFrequency_P3=>  q_stStatus.wFrequency_P3,
+        q_wVoltage_P4=> q_stStatus.wVoltage_P4,
+        q_wMotorCurrent_P5=> q_stStatus.wMotorCurrent_P5,
+        q_wConverterTemp_P11=> q_stStatus.wConverterTemp_P11,
+        q_wPumpTemp_P127=> q_stStatus.wPumpTemp_P127);
+
+    IF fbTD20Transaction.q_xError THEN
+        a_ClearStatus();
+    END_IF
+
+    q_abLastSentArray := fbTD20Transaction.q_abLastSentArray;
+    q_abLastReceivedArray := fbTD20Transaction.q_abLastReceivedArray;
+
+    END_FUNCTION_BLOCK
+
+    ACTION a_ClearStatus:
+    q_stStatus.wStatusWord := 0;
+    q_stStatus.wFrequency_P3 := 0;
+    q_stStatus.wVoltage_P4 := 0;
+    q_stStatus.wMotorCurrent_P5 := 0;
+    q_stStatus.wConverterTemp_P11 := 0;
+    q_stStatus.wCriticalFreq_P20 := 0;
+    q_stStatus.wMaxCurrentFactor_P21 := 0;
+    q_stStatus.wSetpointFreq_P24 := 0;
+    q_stStatus.wMaxRunUpTime_P32 := 0;
+    q_stStatus.wPumpTemp_P127 := 0;
+    q_stStatus.wErrorCode_P171 := 0;
+    END_ACTION
+
+    ACTION a_DriverErrorMesg:
+    fbFormatString( sformat:=sDriverErrMesg,
+        arg1:=F_INT(iStep),
+        arg2:=F_WORD(fbTD20Transaction.q_wPKE),
+        sOut => q_sResult);
+
+    a_ClearStatus();
+    END_ACTION
+
+    ACTION a_TransactionErrorMesg:
+    fbFormatString( sformat:=sTransactionErrMesg,
+        arg1:=F_INT(iStep),
+        arg2:=F_STRING(fbTD20Transaction.q_sResult),
+        sOut => q_sResult);
+
+    a_ClearStatus();
+    q_xTimeout := fbTD20Transaction.q_xTimeout;
+    END_ACTION
+
+
+Related:
+    * `FB_TD20Transaction`_
+    * `ST_TD20Status`_
+
+
+FB_TD20Transaction
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_TD20Transaction
+    VAR_INPUT
+        /// rising edge execute
+        i_xExecute: BOOL;
+        /// RS-485 Addrress of Pump, 0 if RS-232
+        i_bAddress: BYTE;
+        /// PKE Parameter number and type of access
+        i_wPKE: WORD;
+        /// IND Parameter index
+        i_bIND: BYTE;
+        /// PWE Parameter value
+        i_dwPWE: DWORD;
+        /// Control Word
+        i_wControlWord: WORD;
+        /// Maximum wait time for reply
+        i_tTimeOut: TIME := TIME#1s0ms;
+    END_VAR
+    VAR_OUTPUT
+        q_xDone: BOOL;
+        q_xError: BOOL;
+        q_xTimeout: BOOL;
+        q_sResult: STRING(MAX_STRING_LENGTH);
+        /// Sent data
+        q_abSendData: ARRAY[0..23] OF BYTE;
+        /// Received Data data
+        q_abResponseData: ARRAY[0..23] OF BYTE;
+        /// Received PKE
+        q_wPKE: WORD;
+        /// Received PWE
+        q_dwPWE: DWORD;
+        /// Received Status Word
+        q_wStatusWord: WORD;
+        /// Current stator frequency
+        q_wFrequency_P3: WORD;
+        /// Current intermediate circuit voltage
+        q_wVoltage_P4: WORD;
+        /// Current motor current
+        q_wMotorCurrent_P5: WORD;
+        /// Current frequency converter temperature
+        q_wConverterTemp_P11: WORD;
+        /// Current pump temperature
+        q_wPumpTemp_P127: WORD;
+        /// Last Byte Sequence Sent to Serial Device - for debugging
+        q_abLastSentArray: ARRAY[0..23] OF BYTE;
+        /// Last Byte Sequence Received from Serial Device - for debugging
+        q_abLastReceivedArray: ARRAY[0..23] OF BYTE;
+    END_VAR
+    VAR_IN_OUT
+        iq_stSerialRXBuffer: ComBuffer;
+        iq_stSerialTXBuffer: ComBuffer;
+    END_VAR
+    VAR
+        rtExecute: R_TRIG;
+        iStep: INT;
+        fbClearComBuffer: ClearComBuffer;
+        tonTimeout: TON;
+        wTemp: WORD;
+        dwTemp: DWORD;
+        i: INT;
+        fbSendData: SendData;
+        fbReceiveData: ReceiveData;
+        bRXChecksum: BYTE;
+        bRXAddress: BYTE;
+        nPrefix : BYTE := 16#02;
+    END_VAR
+    (* This function block performs serial transactions with an Oerlikon TD20 *)
+
+    (* rising edge trigger *)
+    rtExecute(CLK:= i_xExecute);
+    IF rtExecute.Q THEN
+        q_xDone	:= FALSE;
+        q_xError := FALSE;
+        q_xTimeout := FALSE;
+        q_sResult:= '';
+        MEMSET(destAddr:=ADR(q_abSendData), fillByte:=0, n:=SIZEOF(q_abSendData));
+        MEMSET(destAddr:=ADR(q_abResponseData), fillByte:=0, n:=SIZEOF(q_abResponseData));
+        iStep := 10;
+    END_IF
+
+    CASE iStep OF
+        0:
+            ; (* idle *)
+
+        10: (* clear com buffers *)
+            fbClearComBuffer(Buffer:= iq_stSerialRXBuffer);
+            fbClearComBuffer(Buffer:= iq_stSerialTXBuffer);
+
+            (* build the send data *)
+            (* byte 0 STX *)
+            q_abSendData[0] := 2; (* STX *)
+
+            (* byte 1 LGE - Length *)
+            q_abSendData[1] := 22;
+
+            (* byte 2 ADR - Address for RS-485, use 0 for RS-232 *)
+            q_abSendData[2] := i_bAddress;
+
+            (* bytes 3-4 PKE - Parameter Number and Type of Access *)
+            wTemp :=  HOST_TO_BE16(i_wPKE);
+            MEMCPY(destAddr:= ADR(q_abSendData[3]), srcAddr:=ADR(wTemp), n:=2);
+
+            (* byte 5 is reserved *)
+            (* byte 6 IND - Parameter index *)
+            q_abSendData[6] := i_bIND;
+
+            (* bytes 7-10 - Parameter Value *)
+            dwTemp := HOST_TO_BE32(i_dwPWE);
+            MEMCPY(destAddr:= ADR(q_abSendData[7]), srcAddr:=ADR(dwTemp), n:=4);
+
+            (* bytes 11-12 - control word *)
+            wTemp :=  HOST_TO_BE16(i_wControlWord);
+            MEMCPY(destAddr:= ADR(q_abSendData[11]), srcAddr:=ADR(wTemp), n:=2);
+
+            (* rest of the bytes for any read or write are 0 *)
+            (* generate checksum *)
+            q_abSendData[23] := F_CalcTD20Checksum(i_abData:=q_abSendData);
+
+            (* send the data *)
+            fbSendData(
+                pSendData:= ADR(q_abSendData),
+                Length:= 24,
+                TXbuffer:= iq_stSerialTXBuffer);
+
+
+            q_abLastSentArray := q_abSendData;
+            iStep := iStep + 10;
+
+        20: (* Finish sending the data *)
+            IF fbSendData.Busy THEN
+                fbSendData( TXbuffer:= iq_stSerialTXBuffer );
+            ELSIF fbSendData.Error <> 0 THEN
+                q_sResult := CONCAT('In step 20 fbSendData resulted in error: ', INT_TO_STRING(fbSendData.Error));
+                iStep := 9000;
+            ELSIF NOT fbSendData.Busy THEN
+                iStep := iStep + 10;
+            END_IF
+            (* Reset receive *)
+            fbReceiveData(
+                pReceiveData:= ADR(q_abResponseData),
+                Reset:= TRUE,
+                RXbuffer:= iq_stSerialRXBuffer);
+            tonTimeout(IN:= FALSE);
+
+        30: (* Get reply *)
+            fbReceiveData(
+                pReceiveData:= ADR(q_abResponseData),
+                SizeReceiveData:= 24,
+                Timeout:= i_tTimeOut,
+                Reset:= FALSE,
+                RXbuffer:= iq_stSerialRXBuffer,
+                pPrefix := ADR(nPrefix), LenPrefix:=1 );
+            tonTimeout(IN:= TRUE, PT:= i_tTimeOut);
+            IF fbReceiveData.Error <> 0 THEN
+                q_sResult := CONCAT('In step 30 fbReceiveData resulted in error: ', INT_TO_STRING(fbReceiveData.Error));
+                iStep := 9000;
+            ELSIF fbReceiveData.RxTimeout OR tonTimeout.Q THEN
+                q_sResult := 'Device failed to reply within timeout period';
+                q_xTimeout := TRUE;
+                iStep := 9000;
+            ELSIF fbReceiveData.DataReceived THEN
+                q_abLastReceivedArray := q_abResponseData;
+                bRXChecksum := F_CalcTD20Checksum(q_abResponseData);
+                bRXAddress := q_abResponseData[2];
+                MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[3]), n:=2);
+                q_wPKE := BE16_TO_HOST(wTemp);
+                MEMCPY(destAddr:=ADR(dwTemp) , srcAddr:=ADR(q_abResponseData[7]), n:=4);
+                q_dwPWE := BE32_TO_HOST(dwTemp);
+
+                IF bRXChecksum <> q_abResponseData[23] THEN
+                    q_sResult := 'Invalid checksum on received data.';
+                    iStep := 9000;
+                ELSIF i_bAddress <> bRXAddress THEN
+                    q_sResult := 'Invalid unit address on received data.';
+                    iStep := 9000;
+                ELSIF (q_wPKE AND 16#F000) = 2#0111000000000000 THEN
+                    q_sResult := 'Frequency converter cannot run the command.';
+                    iStep := 9000;
+                ELSIF (Q_wPKE AND 16#F000) = 2#1000000000000000 THEN
+                    q_sResult := 'During write access: no permission to write.';
+                    iStep := 9000;
+                ELSE
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[11]), n:=2);
+                    q_wStatusWord := BE16_TO_HOST(wTemp);
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[13]), n:=2);
+                    q_wFrequency_P3:= BE16_TO_HOST(wTemp);
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[21]), n:=2);
+                    q_wVoltage_P4:= BE16_TO_HOST(wTemp);
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[17]), n:=2);
+                    q_wMotorCurrent_P5:= BE16_TO_HOST(wTemp);
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[15]), n:=2);
+                    q_wConverterTemp_P11:= BE16_TO_HOST(wTemp);
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[19]), n:=2);
+                    q_wPumpTemp_P127:= BE16_TO_HOST(wTemp);
+                    q_sResult := 'Success.';
+                    q_xDone:= TRUE;
+                    iStep := 100;
+                END_IF
+            END_IF
+
+        100: (* done *)
+            IF  i_xExecute = FALSE THEN
+                q_xDone:= FALSE;
+                iStep := 0;
+            END_IF
+
+        9000:
+            q_wPKE:= 0;
+            q_dwPWE:= 0;
+            q_wStatusWord:= 0;
+            q_wFrequency_P3:= 0;
+            q_wVoltage_P4:= 0;
+            q_wMotorCurrent_P5:= 0;
+            q_wConverterTemp_P11:= 0;
+            q_wPumpTemp_P127:= 0;
+            q_xError := TRUE;;
+
+
+
+
+    END_CASE
+
+    END_FUNCTION_BLOCK
+
+
+Related:
+    * `F_CalcTD20Checksum`_
+
+
+FB_TD400SerialDriver
+^^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_TD400SerialDriver
+    VAR_INPUT
+        /// rising edge execute
+        i_xExecute: BOOL;
+        /// Maximum wait time for reply
+        i_tTimeOut: TIME := TIME#1s0ms;
+        i_wControlWord: WORD;
+    END_VAR
+    VAR_OUTPUT
+        q_xDone: BOOL;
+        q_xError: BOOL;
+        q_xTimeout: BOOL;
+        q_sResult: STRING(255);
+        q_stStatus: ST_TD400Status;
+        /// Last Byte Sequence Sent to Serial Device - for debugging
+        q_abLastSentArray: ARRAY[0..23] OF BYTE;
+        /// Last Byte Sequence Received from Serial Device - for debugging
+        q_abLastReceivedArray: ARRAY[0..23] OF BYTE;
+    END_VAR
+    VAR_IN_OUT
+        iq_stSerialRXBuffer: ComBuffer;
+        iq_stSerialTXBuffer: ComBuffer;
+        iq_stControl: ST_TD400Control;
+    END_VAR
+    VAR
+        rtExecute: R_TRIG;
+        rtTransDone: R_TRIG;
+        iStep: INT;
+        fbTD400Transaction: FB_TD400Transaction;
+        fbFormatString: FB_FormatString;
+        iCatch: INT;
+        sTransactionErrMesg : STRING := 'In step %d fbTD20Transaction failed with message: %s';
+        sDriverErrMesg		: STRING := 'In step %d FB_TD20SerialDriver failed with unexpected PKE reply: %X';
+        bSetFreq : BOOL := FALSE; //flag to write to controller to set new frequency
+        nOldSetSetpointFreq_P24 : WORD; //local value for setpoint frequency parameter to compare with new value
+        bControlDisabled : BOOL := TRUE; //flag to enable setting frequency
+    END_VAR
+    (* This function block performs serial transactions with a Oerlikon TD400 Pump controller *)
+    //Wait until all needed parameters received to enable control to set frequency
+    IF q_stStatus.wMinSetpointFreq_P19 <> 0 AND q_stStatus.wMaxSetpointFreq_P18 <> 0 AND q_stStatus.wSetpointFreq_P24 <> 0 THEN
+        //On first pass update Set frequency parameter with value from controller
+        IF bControlDisabled THEN
+            iq_stControl.wSetSetpointFreq_P24 := q_stStatus.wSetpointFreq_P24;
+            nOldSetSetpointFreq_P24 := q_stStatus.wSetpointFreq_P24;
+            bControlDisabled := FALSE;
+            bSetFreq := FALSE;
+        ELSE
+            IF nOldSetSetpointFreq_P24 <> iq_stControl.wSetSetpointFreq_P24 THEN
+                nOldSetSetpointFreq_P24 := iq_stControl.wSetSetpointFreq_P24;
+                bSetFreq := TRUE;
+            END_IF
+        END_IF
+    ELSE
+        iq_stControl.wSetSetpointFreq_P24 := q_stStatus.wSetpointFreq_P24;
+        bControlDisabled := TRUE;
+        bSetFreq := FALSE;
+    END_IF
+
+    (* rising edge trigger *)
+    rtExecute(CLK:= i_xExecute);
+    IF rtExecute.Q  THEN
+        q_xDone	:= FALSE;
+        q_xError := FALSE;
+        q_xTimeout := FALSE;
+        q_sResult:= '';
+        iStep := 10;
+    END_IF
+
+    CASE iStep OF
+        0: (* idle *)
+            ;
+
+        10: (* assure rising edge *)
+            fbTD400Transaction.i_xExecute := FALSE;
+            iStep := iStep + 10;
+
+        20:(* get P20 *)
+            fbTD400Transaction.i_wPKE := 16#1000 OR 20;
+            fbTD400Transaction.i_bIND := 0;
+            fbTD400Transaction.i_dwPWE := 0;
+            fbTD400Transaction.i_xExecute := TRUE;
+
+            IF fbTD400Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD400Transaction.q_xDone THEN
+                fbTD400Transaction.i_xExecute := FALSE;
+                IF fbTD400Transaction.q_wPKE = (16#1000 OR 20) THEN
+                    q_stStatus.wCriticalFreq_P20 := DWORD_TO_WORD(fbTD400Transaction.q_dwPWE);
+                    iStep := iStep + 10;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        30:(* set P24 *)
+            IF bSetFreq THEN
+                fbTD400Transaction.i_wPKE := 16#2000 OR 24;
+                fbTD400Transaction.i_bIND := 0;
+                fbTD400Transaction.i_dwPWE := WORD_TO_DWORD(iq_stControl.wSetSetpointFreq_P24);
+                fbTD400Transaction.i_xExecute := TRUE;
+
+                IF fbTD400Transaction.q_xError THEN
+                    iCatch := iCatch +1;
+                    a_TransactionErrorMesg();
+                    iStep := 9000;
+                    bSetFreq := FALSE;
+                ELSIF fbTD400Transaction.q_xDone THEN
+                    fbTD400Transaction.i_xExecute := FALSE;
+                    bSetFreq := FALSE;
+                    IF fbTD400Transaction.q_wPKE = (16#1000 OR 24) THEN
+                        q_stStatus.wSetpointFreq_P24 := DWORD_TO_WORD(fbTD400Transaction.q_dwPWE);
+                        iStep := iStep + 10;
+                    ELSE
+                        a_DriverErrorMesg();
+                        iStep := 9100;
+                    END_IF
+                END_IF
+            ELSE
+                iStep := iStep + 10;
+            END_IF
+
+        40:(* get P24 *)
+            fbTD400Transaction.i_wPKE := 16#1000 OR 24;
+            fbTD400Transaction.i_bIND := 0;
+            fbTD400Transaction.i_dwPWE := 0;
+            fbTD400Transaction.i_xExecute := TRUE;
+            IF fbTD400Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD400Transaction.q_xDone THEN
+                fbTD400Transaction.i_xExecute := FALSE;
+                IF fbTD400Transaction.q_wPKE = (16#1000 OR 24) THEN
+                    q_stStatus.wSetpointFreq_P24 := DWORD_TO_WORD(fbTD400Transaction.q_dwPWE);
+                    iStep := iStep + 10;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        50:(* get P32 *)
+            fbTD400Transaction.i_wPKE := 16#1000 OR 32;
+            fbTD400Transaction.i_bIND := 0;
+            fbTD400Transaction.i_dwPWE := 0;
+            fbTD400Transaction.i_xExecute := TRUE;
+            IF fbTD400Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD400Transaction.q_xDone THEN
+                fbTD400Transaction.i_xExecute := FALSE;
+                IF fbTD400Transaction.q_wPKE = (16#1000 OR 32) THEN
+                    q_stStatus.wMaxRunUpTime_P32 := DWORD_TO_WORD(fbTD400Transaction.q_dwPWE);
+                    iStep := iStep + 10;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        60:(* get P171 index 0 *)
+            fbTD400Transaction.i_wPKE := 16#6000 OR 171;
+            fbTD400Transaction.i_bIND := 0;
+            fbTD400Transaction.i_dwPWE := 0;
+            fbTD400Transaction.i_xExecute := TRUE;
+            IF fbTD400Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD400Transaction.q_xDone THEN
+                fbTD400Transaction.i_xExecute := FALSE;
+                IF fbTD400Transaction.q_wPKE = (16#4000 OR 171) THEN
+                    q_stStatus.wErrorCode_P171 := DWORD_TO_WORD(fbTD400Transaction.q_dwPWE);
+                    //iStep := 8000;
+                    iStep := iStep + 10;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        70:(* get P18 *)
+            fbTD400Transaction.i_wPKE := 16#1000 OR 18;
+            fbTD400Transaction.i_bIND := 0;
+            fbTD400Transaction.i_dwPWE := 0;
+            fbTD400Transaction.i_xExecute := TRUE;
+            IF fbTD400Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD400Transaction.q_xDone THEN
+                fbTD400Transaction.i_xExecute := FALSE;
+                IF fbTD400Transaction.q_wPKE = (16#1000 OR 18) THEN
+                    q_stStatus.wMaxSetpointFreq_P18 := DWORD_TO_WORD(fbTD400Transaction.q_dwPWE);
+                    iStep := iStep + 10;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        80:(* get P19 *)
+            fbTD400Transaction.i_wPKE := 16#1000 OR 19;
+            fbTD400Transaction.i_bIND := 0;
+            fbTD400Transaction.i_dwPWE := 0;
+            fbTD400Transaction.i_xExecute := TRUE;
+            IF fbTD400Transaction.q_xError THEN
+                iCatch := iCatch +1;
+                a_TransactionErrorMesg();
+                iStep := 9000;
+            ELSIF fbTD400Transaction.q_xDone THEN
+                fbTD400Transaction.i_xExecute := FALSE;
+                IF fbTD400Transaction.q_wPKE = (16#1000 OR 19) THEN
+                    q_stStatus.wMinSetpointFreq_P19 := DWORD_TO_WORD(fbTD400Transaction.q_dwPWE);
+                    iStep := 8000;
+                ELSE
+                    a_DriverErrorMesg();
+                    iStep := 9100;
+                END_IF
+            END_IF
+
+        8000: (* done *)
+            q_xDone := TRUE;
+            IF  i_xExecute = FALSE THEN
+                q_xDone:= FALSE;
+                iStep := 0;
+            END_IF
+
+        9000: (* Transaction Error *)
+            q_xError := TRUE;
+
+        9100: (* Driver Error *)
+            q_xError := TRUE;
+
+    END_CASE
+
+    fbTD400Transaction(
+        i_wControlWord:= i_wControlWord,
+        i_tTimeOut:= i_tTimeOut,
+        iq_stSerialRXBuffer:= iq_stSerialRXBuffer,
+        iq_stSerialTXBuffer:= iq_stSerialTXBuffer,
+        q_wStatusWord=> q_stStatus.wStatusWord,
+        q_wFrequency_P3=>  q_stStatus.wFrequency_P3,
+        q_wVoltage_P4=> q_stStatus.wVoltage_P4,
+        q_wMotorCurrent_P5=> q_stStatus.wMotorCurrent_P5,
+        q_wConverterTemp_P11=> q_stStatus.wConverterTemp_P11,
+        q_wPumpTemp_P127=> q_stStatus.wPumpTemp_P127);
+
+    IF fbTD400Transaction.q_xError THEN
+        a_ClearStatus();
+    END_IF
+
+    q_abLastSentArray := fbTD400Transaction.q_abLastSentArray;
+    q_abLastReceivedArray := fbTD400Transaction.q_abLastReceivedArray;
+
+    END_FUNCTION_BLOCK
+
+    ACTION a_ClearStatus:
+    q_stStatus.wStatusWord := 0;
+    q_stStatus.wFrequency_P3 := 0;
+    q_stStatus.wVoltage_P4 := 0;
+    q_stStatus.wMotorCurrent_P5 := 0;
+    q_stStatus.wConverterTemp_P11 := 0;
+    q_stStatus.wMaxSetpointFreq_P18 := 0;
+    q_stStatus.wMinSetpointFreq_P19 := 0;
+    q_stStatus.wCriticalFreq_P20 := 0;
+    //q_stStatus.wMaxCurrentFactor_P21 := 0;
+    q_stStatus.wSetpointFreq_P24 := 0;
+    q_stStatus.wMaxRunUpTime_P32 := 0;
+    q_stStatus.wPumpTemp_P127 := 0;
+    q_stStatus.wErrorCode_P171 := 0;
+    END_ACTION
+
+    ACTION a_DriverErrorMesg:
+    fbFormatString( sformat:=sDriverErrMesg,
+        arg1:=F_INT(iStep),
+        arg2:=F_WORD(fbTD400Transaction.q_wPKE),
+        sOut => q_sResult);
+
+    a_ClearStatus();
+    END_ACTION
+
+    ACTION a_TransactionErrorMesg:
+    fbFormatString( sformat:=sTransactionErrMesg,
+        arg1:=F_INT(iStep),
+        arg2:=F_STRING(fbTD400Transaction.q_sResult),
+        sOut => q_sResult);
+
+    a_ClearStatus();
+    q_xTimeout := fbTD400Transaction.q_xTimeout;
+    END_ACTION
+
+
+Related:
+    * `FB_TD20SerialDriver`_
+    * `FB_TD400Transaction`_
+    * `ST_TD400Control`_
+    * `ST_TD400Status`_
+
+
+FB_TD400Transaction
+^^^^^^^^^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_TD400Transaction
+    VAR_INPUT
+        /// rising edge execute
+        i_xExecute: BOOL;
+        /// RS-485 Addrress of Pump, 0 if RS-232
+        i_bAddress: BYTE;
+        /// PKE Parameter number and type of access
+        i_wPKE: WORD;
+        /// IND Parameter index
+        i_bIND: BYTE;
+        /// PWE Parameter value
+        i_dwPWE: DWORD;
+        /// Control Word
+        i_wControlWord: WORD;
+        /// Maximum wait time for reply
+        i_tTimeOut: TIME := TIME#1s0ms;
+    END_VAR
+    VAR_OUTPUT
+        q_xDone: BOOL;
+        q_xError: BOOL;
+        q_xTimeout: BOOL;
+        q_sResult: STRING(MAX_STRING_LENGTH);
+        /// Sent data
+        q_abSendData: ARRAY[0..23] OF BYTE;
+        /// Received Data data
+        q_abResponseData: ARRAY[0..23] OF BYTE;
+        /// Received PKE
+        q_wPKE: WORD;
+        /// Received PWE
+        q_dwPWE: DWORD;
+        /// Received Status Word
+        q_wStatusWord: WORD;
+        /// Current stator frequency
+        q_wFrequency_P3: WORD;
+        /// Current intermediate circuit voltage
+        q_wVoltage_P4: WORD;
+        /// Current motor current
+        q_wMotorCurrent_P5: WORD;
+        /// Current frequency converter temperature
+        q_wConverterTemp_P11: WORD;
+        /// Current pump temperature
+        q_wPumpTemp_P127: WORD;
+        /// Last Byte Sequence Sent to Serial Device - for debugging
+        q_abLastSentArray: ARRAY[0..23] OF BYTE;
+        /// Last Byte Sequence Received from Serial Device - for debugging
+        q_abLastReceivedArray: ARRAY[0..23] OF BYTE;
+    END_VAR
+    VAR_IN_OUT
+        iq_stSerialRXBuffer: ComBuffer;
+        iq_stSerialTXBuffer: ComBuffer;
+    END_VAR
+    VAR
+        rtExecute: R_TRIG;
+        iStep: INT;
+        fbClearComBuffer: ClearComBuffer;
+        tonTimeout: TON;
+        wTemp: WORD;
+        dwTemp: DWORD;
+        i: INT;
+        fbSendData: SendData;
+        fbReceiveData: ReceiveData;
+        bRXChecksum: BYTE;
+        bRXAddress: BYTE;
+        nPrefix : BYTE := 16#02;
+    END_VAR
+    (* This function block performs serial transactions with an Oerlikon TD20 *)
+
+    (* rising edge trigger *)
+    rtExecute(CLK:= i_xExecute);
+    IF rtExecute.Q THEN
+        q_xDone	:= FALSE;
+        q_xError := FALSE;
+        q_xTimeout := FALSE;
+        q_sResult:= '';
+        MEMSET(destAddr:=ADR(q_abSendData), fillByte:=0, n:=SIZEOF(q_abSendData));
+        MEMSET(destAddr:=ADR(q_abResponseData), fillByte:=0, n:=SIZEOF(q_abResponseData));
+        iStep := 10;
+    END_IF
+
+    CASE iStep OF
+        0:
+            ; (* idle *)
+
+        10: (* clear com buffers *)
+            fbClearComBuffer(Buffer:= iq_stSerialRXBuffer);
+            fbClearComBuffer(Buffer:= iq_stSerialTXBuffer);
+
+            (* build the send data *)
+            (* byte 0 STX *)
+            q_abSendData[0] := 2; (* STX *)
+
+            (* byte 1 LGE - Length *)
+            q_abSendData[1] := 22;
+
+            (* byte 2 ADR - Address for RS-485, use 0 for RS-232 *)
+            q_abSendData[2] := i_bAddress;
+
+            (* bytes 3-4 PKE - Parameter Number and Type of Access *)
+            wTemp :=  HOST_TO_BE16(i_wPKE);
+            MEMCPY(destAddr:= ADR(q_abSendData[3]), srcAddr:=ADR(wTemp), n:=2);
+
+            (* byte 5 is reserved *)
+            (* byte 6 IND - Parameter index *)
+            q_abSendData[6] := i_bIND;
+
+            (* bytes 7-10 - Parameter Value *)
+            dwTemp := HOST_TO_BE32(i_dwPWE);
+            MEMCPY(destAddr:= ADR(q_abSendData[7]), srcAddr:=ADR(dwTemp), n:=4);
+
+            (* bytes 11-12 - control word *)
+            wTemp :=  HOST_TO_BE16(i_wControlWord);
+            MEMCPY(destAddr:= ADR(q_abSendData[11]), srcAddr:=ADR(wTemp), n:=2);
+
+            (* rest of the bytes for any read or write are 0 *)
+            (* generate checksum *)
+            q_abSendData[23] := F_CalcTD20Checksum(i_abData:=q_abSendData);
+
+            (* send the data *)
+            fbSendData(
+                pSendData:= ADR(q_abSendData),
+                Length:= 24,
+                TXbuffer:= iq_stSerialTXBuffer);
+
+
+            q_abLastSentArray := q_abSendData;
+            iStep := iStep + 10;
+
+        20: (* Finish sending the data *)
+            IF fbSendData.Busy THEN
+                fbSendData( TXbuffer:= iq_stSerialTXBuffer );
+            ELSIF fbSendData.Error <> 0 THEN
+                q_sResult := CONCAT('In step 20 fbSendData resulted in error: ', INT_TO_STRING(fbSendData.Error));
+                iStep := 9000;
+            ELSIF NOT fbSendData.Busy THEN
+                iStep := iStep + 10;
+            END_IF
+            (* Reset receive *)
+            fbReceiveData(
+                pReceiveData:= ADR(q_abResponseData),
+                Reset:= TRUE,
+                RXbuffer:= iq_stSerialRXBuffer);
+            tonTimeout(IN:= FALSE);
+
+        30: (* Get reply *)
+            fbReceiveData(
+                pReceiveData:= ADR(q_abResponseData),
+                SizeReceiveData:= 24,
+                Timeout:= i_tTimeOut,
+                Reset:= FALSE,
+                RXbuffer:= iq_stSerialRXBuffer,
+                pPrefix := ADR(nPrefix), LenPrefix:=1 );
+            tonTimeout(IN:= TRUE, PT:= i_tTimeOut);
+            IF fbReceiveData.Error <> 0 THEN
+                q_sResult := CONCAT('In step 30 fbReceiveData resulted in error: ', INT_TO_STRING(fbReceiveData.Error));
+                iStep := 9000;
+            ELSIF fbReceiveData.RxTimeout OR tonTimeout.Q THEN
+                q_sResult := 'Device failed to reply within timeout period';
+                q_xTimeout := TRUE;
+                iStep := 9000;
+            ELSIF fbReceiveData.DataReceived THEN
+                q_abLastReceivedArray := q_abResponseData;
+                bRXChecksum := F_CalcTD400Checksum(q_abResponseData);
+                bRXAddress := q_abResponseData[2];
+                MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[3]), n:=2);
+                q_wPKE := BE16_TO_HOST(wTemp);
+                MEMCPY(destAddr:=ADR(dwTemp) , srcAddr:=ADR(q_abResponseData[7]), n:=4);
+                q_dwPWE := BE32_TO_HOST(dwTemp);
+
+                IF bRXChecksum <> q_abResponseData[23] THEN
+                    q_sResult := 'Invalid checksum on received data.';
+                    iStep := 9000;
+                ELSIF i_bAddress <> bRXAddress THEN
+                    q_sResult := 'Invalid unit address on received data.';
+                    iStep := 9000;
+                ELSIF (q_wPKE AND 16#F000) = 2#0111000000000000 THEN
+                    q_sResult := 'Frequency converter cannot run the command.';
+                    iStep := 9000;
+                ELSIF (Q_wPKE AND 16#F000) = 2#1000000000000000 THEN
+                    q_sResult := 'During write access: no permission to write.';
+                    iStep := 9000;
+                ELSE
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[11]), n:=2);
+                    q_wStatusWord := BE16_TO_HOST(wTemp);
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[13]), n:=2);
+                    q_wFrequency_P3:= BE16_TO_HOST(wTemp);
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[21]), n:=2);
+                    q_wVoltage_P4:= BE16_TO_HOST(wTemp);
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[17]), n:=2);
+                    q_wMotorCurrent_P5:= BE16_TO_HOST(wTemp);
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[15]), n:=2);
+                    q_wConverterTemp_P11:= BE16_TO_HOST(wTemp);
+                    MEMCPY(destAddr:=ADR(wTemp) , srcAddr:=ADR(q_abResponseData[19]), n:=2);
+                    q_wPumpTemp_P127:= BE16_TO_HOST(wTemp);
+                    q_sResult := 'Success.';
+                    q_xDone:= TRUE;
+                    iStep := 100;
+                END_IF
+            END_IF
+
+        100: (* done *)
+            IF  i_xExecute = FALSE THEN
+                q_xDone:= FALSE;
+                iStep := 0;
+            END_IF
+
+        9000:
+            q_wPKE:= 0;
+            q_dwPWE:= 0;
+            q_wStatusWord:= 0;
+            q_wFrequency_P3:= 0;
+            q_wVoltage_P4:= 0;
+            q_wMotorCurrent_P5:= 0;
+            q_wConverterTemp_P11:= 0;
+            q_wPumpTemp_P127:= 0;
+            q_xError := TRUE;
+
+    END_CASE
+
+    END_FUNCTION_BLOCK
+
+
+Related:
+    * `F_CalcTD20Checksum`_
+    * `F_CalcTD400Checksum`_
 
 
 FB_TGCC_ADS
@@ -11253,6 +14177,11 @@ FB_VCC_NO
     VAR_INPUT
             close:BOOL; //True to CLose, False to OPEN
     END_VAR
+    // Checking the VAR_IN_OUT reference, leave the current method in case of invalid reference
+    IF NOT __ISVALIDREF(iq_stValve) THEN
+        RETURN;
+    END_IF
+
     This^.iq_stValve.pv_xCLS_SW :=Close;
     END_METHOD
 
