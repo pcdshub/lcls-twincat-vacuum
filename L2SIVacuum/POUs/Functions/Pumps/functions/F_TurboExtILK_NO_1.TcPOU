@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="F_TurboExtILK_NO_1" Id="{a8dfe7f9-5324-46a7-9f13-de5ec630395c}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function Block interfaces with a NO turbo valve*)
 (* Mainly used in the FEE HXR GATT*)

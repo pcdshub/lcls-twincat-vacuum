@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="F_VRC_DIODE_ILK_OK" Id="{798f6d64-142d-4689-ba31-4d47e7072741}" SpecialFunc="None">
     <Declaration><![CDATA[(*The function returns TRUE i.e. ILK_OK when pressure on A side is greater than or equal to the pressure on B side*)
 FUNCTION F_VRC_DIODE_ILK_OK : BOOL

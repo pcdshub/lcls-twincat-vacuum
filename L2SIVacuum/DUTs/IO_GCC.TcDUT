@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject>
   <DUT Name="IO_GCC" Id="{99df1f4e-2c23-47ef-9581-42fe333e225e}">
     <Declaration><![CDATA[TYPE IO_GCC :
 STRUCT

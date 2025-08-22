@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.12">
+<TcPlcObject>
   <DUT Name="ST_AgilentPTM_01" Id="{a938abf6-36f3-4107-b22c-ed5b703ad258}">
     <Declaration><![CDATA[TYPE ST_AgilentPTM_01 EXTENDS ST_PTM :
 STRUCT

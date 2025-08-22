@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4020.6">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="F_CalcTD20Checksum" Id="{59d21b56-e4d7-4723-a1de-95977cb48cdd}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION F_CalcTD20Checksum : BYTE
 VAR_INPUT

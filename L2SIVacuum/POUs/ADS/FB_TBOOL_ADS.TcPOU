@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_TBOOL_ADS" Id="{55de7e0e-296a-42bd-8da3-0dfe79b7395a}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block is created for interface a boolean singal between different PLCs*)
 (* The variable values are read via ADS using the symbol name*)

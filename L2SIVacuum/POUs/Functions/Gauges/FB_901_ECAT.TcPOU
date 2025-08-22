@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_901_ECAT" Id="{84706132-589d-4d51-8b00-ab55510b97b2}" SpecialFunc="None">
     <Declaration><![CDATA[(* works for 901 with Ethercat interface*)
 {attribute 'no_check'}

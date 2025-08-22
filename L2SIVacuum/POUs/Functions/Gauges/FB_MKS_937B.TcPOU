@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MKS_937B" Id="{a7ec3968-3989-4c07-aeb2-4dc132212737}" SpecialFunc="None">
     <Declaration><![CDATA[(* 937B Logarithmic Output Conversion *)
 (* 5-20-2016, Alex Wallace and Scott Stubbs *)

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_VRC_NC_ClsLS" Id="{c8e0c1f7-5d63-4e08-9f94-8c1d7ca472c0}" SpecialFunc="None">
     <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for ChemRIX NC valve, which has one NC LS mounting at Open position.
 Valve considers CLOSED when the LS is closed.
