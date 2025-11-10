@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MKS909" Id="{e4d3e807-daeb-4a47-bccf-64bd129edfcd}" SpecialFunc="None">
     <Declaration><![CDATA[(* Standard MKS 909 hot cathode *)
 (* works for 972 and 925 *)
@@ -28,7 +28,8 @@ VAR
     iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
     (*IO*)
     i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
-    q_xHV_DIS AT %Q* : BOOL := True; // Active Low
+    q_xHV_DIS AT %Q* : BOOL := TRUE; // Active Low
+	i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1084) ^Input
 
 END_VAR
 ]]></Declaration>
@@ -47,11 +48,11 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 (* Pressure OK check *)
 // Gauge state
 // Is the gauge plugged in, and within a reasonable range?
-IF  (rV >= 0.1 and rV <=8.7) THEN // as per manual
+IF  (rV >= 0.1 AND rV <=8.7) AND IG.i_xHV_ON THEN // as per manual
     IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
     IG.eState := Valid;
     IG.xPRESS_OK := TRUE; //Backwards compatibility
-ELSIF rV > 8.7 AND rV < 10 THEN
+ELSIF rV > 8.7 AND rV < 10 AND IG.i_xHV_ON THEN
     IG.rPRESS :=rMaxPressure;
     IG.xPRESS_OK := FALSE;
     IG.eState := Off;
@@ -186,5 +187,27 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_MKS909">
+      <LineId Id="3" Count="57" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS909.ACT_IO">
+      <LineId Id="2" Count="3" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS909.ACT_Logger">
+      <LineId Id="2" Count="30" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS909.ACT_Persistent">
+      <LineId Id="2" Count="23" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS909.M_AutoOn">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS909.M_SetBits">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
