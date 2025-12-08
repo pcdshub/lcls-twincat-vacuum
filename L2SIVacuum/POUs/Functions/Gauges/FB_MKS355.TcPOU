@@ -271,29 +271,5 @@ END_VAR
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS355">
-      <LineId Id="1" Count="71" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.ACT_Logger">
-      <LineId Id="1" Count="38" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.ACT_Persistent">
-      <LineId Id="1" Count="38" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.ACT_Recover">
-      <LineId Id="1" Count="8" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.IO">
-      <LineId Id="1" Count="8" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.M_HVE">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.M_Recover">
-      <LineId Id="1" Count="2" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.M_SetBits">
-      <LineId Id="1" Count="1" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -29,7 +29,7 @@ VAR
     (*IO*)
     i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
     q_xHV_DIS AT %Q* : BOOL := TRUE; // Active Low
-	i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1084) ^Input
+    i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1084) ^Input
 
 END_VAR
 ]]></Declaration>
@@ -187,27 +187,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS909">
-      <LineId Id="3" Count="57" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS909.ACT_IO">
-      <LineId Id="2" Count="3" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS909.ACT_Logger">
-      <LineId Id="2" Count="30" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS909.ACT_Persistent">
-      <LineId Id="2" Count="23" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS909.M_AutoOn">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS909.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
