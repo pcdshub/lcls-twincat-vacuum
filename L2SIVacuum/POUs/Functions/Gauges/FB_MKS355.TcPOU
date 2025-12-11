@@ -6,7 +6,7 @@
 This function provides ILK and Set Point Protection for the hot Cathode.
 *)
 
-FUNCTION_BLOCK FB_MKS355_TEST EXTENDS FB_GaugeBase
+FUNCTION_BLOCK FB_MKS355 EXTENDS FB_GaugeBase
 VAR_IN_OUT
 
 END_VAR
@@ -113,7 +113,7 @@ END_IF
 GaugeTurnOnTmr(IN:=IG.q_xHV_DIS, PT:=T#10S, Q=>IG.xTurnOnTime);
 
 //Backwards compatibility
-IG.xPRESS_OK := (IG.eState = Valid) OR IG.xBAKEOUT;
+IG.xPRESS_OK := (IG.eState = Valid) OR (IG.eState = ValidLo) OR IG.xBAKEOUT;
 
 (* Setpoint evaluation *)
 IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid) ;
@@ -271,5 +271,36 @@ END_VAR
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_MKS355">
+      <LineId Id="3" Count="70" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS355.ACT_Logger">
+      <LineId Id="2" Count="37" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS355.ACT_Persistent">
+      <LineId Id="2" Count="37" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS355.ACT_Recover">
+      <LineId Id="2" Count="7" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS355.IO">
+      <LineId Id="2" Count="7" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS355.M_HVE">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS355.M_Recover">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MKS355.M_SetBits">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
