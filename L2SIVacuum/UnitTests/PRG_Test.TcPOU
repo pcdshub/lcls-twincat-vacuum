@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="PRG_Test" Id="{3d3ce199-d6e8-49d3-9e69-49f0a2678e11}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_Test
 VAR
@@ -8,7 +8,7 @@ VAR
     fb_PIP_Test: FB_PIP_Test;
     fb_PTM_Test: FB_PTM_Test;
     fb_GPI_Test:FB_GPI_Test;
-    fb_GCC_Test:FB_GCC_Test;
+    fb_GCC_Test:FB_GHC_Test;
 
     TotalTests : INT:=0;
 END_VAR
