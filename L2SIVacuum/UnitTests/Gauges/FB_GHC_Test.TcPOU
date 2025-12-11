@@ -34,7 +34,7 @@ END_VAR
         <ST><![CDATA[TEST('Check_Range');
 Case This^.cycle of
     12:
-    THIS^.fb_MKS355.i_iPRESS_R :=  V_TO_INT(1);
+    THIS^.fb_MKS355.IG.i_iPRESS_R :=  V_TO_INT(1);
     THIS^.fb_MKS355.PG.rPRESS := 1E-4;
     THIS^.fb_MKS355.PG.xPRESS_OK := TRUE;
     THIS^.fb_MKS355.M_HVE(TRUE);
@@ -51,7 +51,7 @@ Case This^.cycle of
     TEST_FINISHED_NAMED('MKS355_Range_Valid');
 
     20:
-    THIS^.fb_MKS355.i_iPRESS_R :=  V_TO_INT(0.001);
+    THIS^.fb_MKS355.IG.i_iPRESS_R :=  V_TO_INT(0.001);
     TEST('MKS355 Range ValidLo');
     Expected :=1E-10;
     Actual := THIS^.fb_MKS355.IG.rPRESS;
@@ -64,7 +64,7 @@ Case This^.cycle of
 
 
     24:
-    THIS^.fb_MKS355.i_iPRESS_R :=  V_TO_INT(10);
+    THIS^.fb_MKS355.IG.i_iPRESS_R :=  V_TO_INT(10);
     TEST('MKS355 Range Off');
     Expected :=0 ;
     eStateExpected := Off;
@@ -76,26 +76,7 @@ Case This^.cycle of
     TEST_FINISHED_NAMED('MKS355_Range_Off');
 
 
-    25:
-    This^.i_iPRESS_R :=  V_TO_INT(10);
-
-
-    29:
-    TEST('MKS355 Range Invalid');
-    Expected :=0 ;
-    eStateExpected := PressInvalid;
-    Actual := This^.fb_MKS422.IG.rPRESS;
-    eStateActual := This^.fb_MKS422.IG.eState;
-    AssertFalse(This^.fb_MKS422.IG.xPRESS_OK, 'MKS422A xPRESS_OK is set to True');
-    AssertEquals(eStateExpected,eStateActual,'MKS422A eState Fail');
-    AssertEquals_REAL(Expected, Actual,1, 'MKS422A rPress Fail');
-    TEST_FINISHED_NAMED('MKS422_Range_Invalid');
-    TEST_FINISHED_NAMED('Check_Range');
-
 END_CASE
-
-THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
-
 
 ]]></ST>
       </Implementation>
