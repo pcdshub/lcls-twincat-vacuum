@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_VFS_Test" Id="{18f5dc17-b3a9-4d7d-9b49-4cbfbb3ed5d5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_VFS_Test EXTENDS TcUnit.FB_TestSuite
+VAR
+	fbVFS : FB_VFS;
+	fbVFSInterface  : FB_VFS_Interface;
+	fbGFS : FB_MKS422;
+	fbFastFaultOutput  :   FB_HardwareFFOutput:= (i_sNetID:='');
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="TestFaultRestWithInterface" Id="{ed9a5d9a-7ef3-4c6c-9d52-df3c54c38420}">
+      <Declaration><![CDATA[METHOD TestFaultRestWithInterface
+(* Test Fault Reset after External Fault. The Interface, that is resposible for the GUI to have OPEN_OK = True when Fault is reset*)
+VAR_INPUT
+	i_xOPN_LS AT%Q* : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbGFS.IG.xPRESS_OK := TRUE;
+i_xOPN_LS := TRUE; // SET VFS AS OPEN;
+
+fbVFS(
+    i_xVeto_Enable:=False,
+    i_xPMPS_OK:= TRUE,
+    i_xExt_OK:= TRUE,
+    i_sDevName:= 'TST:VFS:01',
+    io_fbFFHWO:= fbFastFaultOutput
+    );
+	
+fbVFSInterface(IG:=fbGFS.IG);
+
+	
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
