@@ -54,8 +54,8 @@ Case This^.cycle of
 
     20:
     THIS^.fb_MKS355.i_iPRESS_R_test :=  V_TO_INT(0.001);
-	
-	21:
+
+    21:
     TEST('MKS355_Range_ValidLo');
     Expected :=1E-10;
     Actual := THIS^.fb_MKS355.IG.rPRESS;
@@ -69,8 +69,8 @@ Case This^.cycle of
 
     24:
     THIS^.fb_MKS355.i_iPRESS_R_test :=  V_TO_INT(10);
-	
-	25:
+
+    25:
     TEST('MKS355_Range_Off');
     Expected :=0 ;
     eStateExpected := Off;
@@ -95,13 +95,13 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TEST('MKS355_Startup');
 IF (cycle = 1) THEN
-	THIS^.PG.rPRESS := 1E-4;
-	THIS^.PG.xPRESS_OK := TRUE;
-	THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
-	THIS^.fb_MKS355.M_HVE(TRUE);
-	AssertTrue(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to False');
+    THIS^.PG.rPRESS := 1E-4;
+    THIS^.PG.xPRESS_OK := TRUE;
+    THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
+    THIS^.fb_MKS355.M_HVE(TRUE);
+    AssertTrue(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to False');
 ELSIF (cycle = 2) THEN
-	THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
+    THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
     AssertTrue(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to False');
     TEST_FINISHED_NAMED('MKS355_Startup');
 End_IF;]]></ST>
@@ -122,9 +122,9 @@ CASE cycle OF
     3:
     THIS^.fb_MKS355.PG.rPRESS := 1E-1;
     THIS^.fb_MKS355.PG.xPRESS_OK := FALSE;
-	fb_MKS355.M_HVE(FALSE);
-	
-	4:
+    fb_MKS355.M_HVE(FALSE);
+
+    4:
     AssertFalse(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to True');
     AssertFalse(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to True');
     TEST_FINISHED_NAMED('MKS355_Interlock_Lost');
@@ -171,42 +171,5 @@ TEST_FINISHED_NAMED('MKS355_Self_Protection');
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_GHC_Test">
-      <LineId Id="3" Count="3" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GHC_Test.M_CheckRange">
-      <LineId Id="3" Count="20" />
-      <LineId Id="50" Count="1" />
-      <LineId Id="24" Count="12" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="37" Count="12" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GHC_Test.M_INIT">
-      <LineId Id="3" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="4" Count="3" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="10" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GHC_Test.M_Interlock">
-      <LineId Id="3" Count="8" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="26" Count="2" />
-      <LineId Id="13" Count="12" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GHC_Test.M_SelfProtection">
-      <LineId Id="3" Count="19" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

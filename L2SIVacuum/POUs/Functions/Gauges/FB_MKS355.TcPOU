@@ -11,7 +11,7 @@ VAR_IN_OUT
 
 END_VAR
 VAR_INPUT
-	i_iPRESS_R_test : INT;
+    i_iPRESS_R_test : INT;
     PG	:	ST_VG;
     tRecoverDelay:TIME:=T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
 END_VAR
@@ -272,36 +272,5 @@ END_VAR
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MKS355">
-      <LineId Id="3" Count="70" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.ACT_Logger">
-      <LineId Id="2" Count="37" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.ACT_Persistent">
-      <LineId Id="2" Count="37" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.ACT_Recover">
-      <LineId Id="2" Count="7" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.IO">
-      <LineId Id="2" Count="7" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.M_HVE">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.M_Recover">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MKS355.M_SetBits">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
