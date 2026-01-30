@@ -57,5 +57,15 @@ ACT_IO();
 ]]></ST>
       </Implementation>
     </Action>
+    <Method Name="M_SetBits" Id="{106bbbc2-0b06-42f6-904e-df5a4040a1c2}">
+      <Declaration><![CDATA[METHOD M_SetBits : BOOL
+VAR_INPUT
+    TermBits : UINT; // The terminal's maximum value in bits
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>
