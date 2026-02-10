@@ -73,8 +73,8 @@ IF IG.q_xHV_DIS THEN
     ELSIF rV > cGaugeMaxV AND rV < cGaugeStartingV - cDeadbandV THEN
         IG.eState := OoR;
         IG.rPRESS := cDefaultP;
-	ELSIF rV = cGaugeMaxV THEN
-		IG.eState := Off;
+    ELSIF rV = cGaugeMaxV THEN
+        IG.eState := Off;
         IG.rPRESS := cDefaultP;
     ELSE
         IG.eState := PressInvalid;
@@ -265,38 +265,5 @@ END_VAR
         <ST><![CDATA[This^.iTermBits := TermBits;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_MX7M">
-      <LineId Id="3" Count="23" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="77" Count="1" />
-      <LineId Id="27" Count="47" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MX7M.ACT_Logger">
-      <LineId Id="2" Count="32" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MX7M.ACT_Persistent">
-      <LineId Id="2" Count="38" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MX7M.ACT_Recover">
-      <LineId Id="2" Count="7" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MX7M.IO">
-      <LineId Id="2" Count="7" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MX7M.M_HVE">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MX7M.M_Recover">
-      <LineId Id="3" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_MX7M.M_SetBits">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
