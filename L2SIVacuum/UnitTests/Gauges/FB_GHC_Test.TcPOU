@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="FB_GHC_Test" Id="{abe007c5-97e2-4f83-88a7-7230dad873a3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_GHC_Test EXTENDS TcUnit.FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    PG : ST_VG;
+    fb_MKS355: FB_MKS355;
+    i_iPRESS_R AT %Q* :INT;
+    cycle:INT :=0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[M_INIT();
+M_Interlock();
+M_CheckRange();
+//M_SelfProtection();
+cycle:=cycle+1;
+
+
+fb_MKS355(PG:=PG, IG=>);]]></ST>
+    </Implementation>
+    <Method Name="M_CheckRange" Id="{1ce3796c-9d57-423a-81de-918c6cc47319}">
+      <Declaration><![CDATA[METHOD M_CheckRange
+VAR
+    Expected:REAL;
+    Actual:REAL;
+    eStateExpected: E_PressureState;
+    eStateActual: E_PressureState;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('Check_Range');
+Case This^.cycle of
+    12:
+    THIS^.fb_MKS355.i_iPRESS_R_test :=  V_TO_INT(1);
+    THIS^.fb_MKS355.PG.rPRESS := 1E-4;
+    THIS^.fb_MKS355.PG.xPRESS_OK := TRUE;
+    THIS^.fb_MKS355.M_HVE(TRUE);
+
+    15:
+    TEST('MKS355_Range_Valid');
+    Expected :=1E-9 ;
+    eStateExpected := Valid;
+    Actual := THIS^.fb_MKS355.IG.rPRESS;
+    eStateActual := THIS^.fb_MKS355.IG.eState;
+    AssertTrue(THIS^.fb_MKS355.IG.xPRESS_OK, 'MKS355 xPRESS_OK is set to False');
+    AssertEquals(eStateExpected,eStateActual,'MKS355 eState Fail');
+    AssertEquals_REAL(Expected, Actual,1E-10, 'MKS355 rPress Fail');
+    TEST_FINISHED_NAMED('MKS355_Range_Valid');
+
+    20:
+    THIS^.fb_MKS355.i_iPRESS_R_test :=  V_TO_INT(0.001);
+
+    21:
+    TEST('MKS355_Range_ValidLo');
+    Expected :=1E-10;
+    Actual := THIS^.fb_MKS355.IG.rPRESS;
+    eStateExpected := ValidLo;
+    eStateActual := THIS^.fb_MKS355.IG.eState;
+    AssertTrue(THIS^.fb_MKS355.IG.xPRESS_OK, 'MKS355 xPRESS_OK is set to False');
+    AssertEquals(eStateExpected,eStateActual,'MKS355 eState Fail');
+    AssertEquals_REAL(Expected, Actual,1E-10, 'MKS355 rPress Fail');
+    TEST_FINISHED_NAMED('MKS355_Range_ValidLo');
+
+
+    24:
+    THIS^.fb_MKS355.i_iPRESS_R_test :=  V_TO_INT(10);
+
+    25:
+    TEST('MKS355_Range_Off');
+    Expected :=0 ;
+    eStateExpected := Off;
+    Actual := THIS^.fb_MKS355.IG.rPRESS;
+    eStateActual := THIS^.fb_MKS355.IG.eState;
+    AssertFalse(THIS^.fb_MKS355.IG.xPRESS_OK, 'MKS355 xPRESS_OK is set to True');
+    AssertEquals(eStateExpected,eStateActual,'MKS355 eState Fail');
+    AssertEquals_REAL(Expected, Actual,1, 'MKS355 rPress Fail');
+    TEST_FINISHED_NAMED('MKS355_Range_Off');
+
+
+END_CASE
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_INIT" Id="{6a239255-8bd8-42eb-b1a0-2dca15c1db92}">
+      <Declaration><![CDATA[METHOD M_INIT
+VAR
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('MKS355_Startup');
+IF (cycle = 1) THEN
+    THIS^.PG.rPRESS := 1E-4;
+    THIS^.PG.xPRESS_OK := TRUE;
+    THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
+    THIS^.fb_MKS355.M_HVE(TRUE);
+    AssertTrue(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to False');
+ELSIF (cycle = 2) THEN
+    THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
+    AssertTrue(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to False');
+    TEST_FINISHED_NAMED('MKS355_Startup');
+End_IF;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_Interlock" Id="{376a3c27-9e60-4e4c-aaa9-e38bd67d3a7b}">
+      <Declaration><![CDATA[METHOD M_Interlock
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('MKS355_Interlock_Active');
+TEST('MKS355_Interlock_OK');
+TEST('MKS355_Interlock_Lost');
+
+CASE cycle OF
+
+    3:
+    THIS^.fb_MKS355.PG.rPRESS := 1E-1;
+    THIS^.fb_MKS355.PG.xPRESS_OK := FALSE;
+    fb_MKS355.M_HVE(FALSE);
+
+    4:
+    AssertFalse(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to True');
+    AssertFalse(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to True');
+    TEST_FINISHED_NAMED('MKS355_Interlock_Lost');
+
+    5:
+    THIS^.fb_MKS355.PG.rPRESS := 1E-4;
+    THIS^.fb_MKS355.PG.xPRESS_OK := TRUE;
+    fb_MKS355.M_HVE(TRUE);
+
+    6:
+    AssertTrue(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to False');
+    AssertTrue(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to False');
+    TEST_FINISHED_NAMED('MKS355_Interlock_OK');
+
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_SelfProtection" Id="{ee508d43-9bf6-4fa4-a8d8-d9a6f8404bfe}">
+      <Declaration><![CDATA[METHOD M_SelfProtection
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Switching the Cold cathode backon
+TEST('MKS355_Interlock_OK_1');
+This^.PG.rPRESS := 1E-4;
+This^.PG.xPRESS_OK := True;
+fb_MKS355.M_HVE(TRUE);
+THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
+AssertTrue(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to False');
+AssertFalse(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to True');
+TEST_FINISHED_NAMED('MKS355_Interlock_OK_1');
+
+TEST('MKS355_Self_Protection');
+This^.PG.rPRESS := 1E-3;
+This^.PG.xPRESS_OK := TRUE;
+THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
+AssertFalse(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to True');
+AssertTrue(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to False');
+TEST_FINISHED_NAMED('MKS355_Self_Protection');
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
