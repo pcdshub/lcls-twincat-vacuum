@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_MX7M" Id="{15379e40-3aed-42d9-b6b1-5d3c97c28cce}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode MX7M from Televac. *)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)
@@ -58,7 +58,7 @@ rPRESS := LREAL_TO_REAL(EXPT(10,((rV-cBaseV)/cSlope+LOG(cBaseP))));
 
 (*Set Guage State based on the Analog voltage*)
 IF IG.q_xHV_DIS THEN
-    IF rV >= cGaugeLowV AND rV <= cGaugeMaxV THEN
+    IF rV >= cGaugeLowV AND rV < cGaugeMaxV THEN
         IG.eState := Valid;
         IG.rPRESS := rPRESS;
     ELSIF rV < cGaugeLowV AND rV >= cGaugeMinV - cDeadbandV THEN
@@ -72,6 +72,9 @@ IF IG.q_xHV_DIS THEN
         IG.rPRESS := cDefaultP;
     ELSIF rV > cGaugeMaxV AND rV < cGaugeStartingV - cDeadbandV THEN
         IG.eState := OoR;
+        IG.rPRESS := cDefaultP;
+    ELSIF rV = cGaugeMaxV THEN
+        IG.eState := Off;
         IG.rPRESS := cDefaultP;
     ELSE
         IG.eState := PressInvalid;

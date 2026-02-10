@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <DUT Name="ST_PTM" Id="{4cff5a41-fc78-4938-9468-a980c788ccb5}">
     <Declaration><![CDATA[TYPE ST_PTM :
 STRUCT

@@ -46,6 +46,11 @@
 			<Settings MaxCpus="4">
 				<Cpu CpuId="3"/>
 			</Settings>
+			<Licenses>
+				<Target>
+					<ManualSelect>{3EBB9639-5FF3-42B6-8847-35C70DC013C8}</ManualSelect>
+				</Target>
+			</Licenses>
 			<Tasks>
 				<Task Id="3" Priority="16" CycleTime="100000" AmsPort="350" AdtTasks="true">
 					<Name>TestTask</Name>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_PTM_TwisTorr" Id="{91de0c91-34da-4736-bacc-23eca1b0004f}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block does basic controls FOR the Agilent TwisTorr 304 FS with on board Controller.
  Turns off pump in the event of errors/ warnings. Provides interlocking interface.*)

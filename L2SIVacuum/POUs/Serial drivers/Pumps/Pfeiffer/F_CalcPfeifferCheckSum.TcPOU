@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.26">
-  <POU Name="F_CalcPfeifferCheckSum" Id="{16130ab7-d093-4369-b333-020b7bba7100}">
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="F_CalcPfeifferCheckSum" Id="{16130ab7-d093-4369-b333-020b7bba7100}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION F_CalcPfeifferCheckSum : BYTE
 VAR_INPUT
     sData: STRING;
@@ -19,6 +19,5 @@ END_FOR
 
 F_CalcPfeifferChecksum := bSum;]]></ST>
     </Implementation>
-    <ObjectProperties />
   </POU>
 </TcPlcObject>

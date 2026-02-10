@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_VFS_Interface" Id="{57bc9317-df03-4829-82d4-3e35e70264fe}" SpecialFunc="None">
     <Declaration><![CDATA[(*Used as soft IO mapping to create a psuedo valve to communicate over two task on the same PLC.*)
 (*for FAST shutter control*)

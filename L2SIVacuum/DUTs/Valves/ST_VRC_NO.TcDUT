@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <DUT Name="ST_VRC_NO" Id="{3c78b61e-192a-4faf-ac1e-61fc63c91393}">
     <Declaration><![CDATA[TYPE ST_VRC_NO EXTENDS ST_ValveBase:
 STRUCT

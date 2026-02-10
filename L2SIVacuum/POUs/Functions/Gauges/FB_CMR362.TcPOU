@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_CMR362" Id="{829c6b91-5e76-4127-a78c-3990b7df60a3}" SpecialFunc="None">
     <Declaration><![CDATA[(* For Pfeiffer CMR 362 *)
 FUNCTION_BLOCK FB_CMR362

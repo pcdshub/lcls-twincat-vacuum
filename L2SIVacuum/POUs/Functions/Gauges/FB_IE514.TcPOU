@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_IE514" Id="{a97e2217-150d-4da1-935e-7cd0aee79bd0}" SpecialFunc="None">
     <Declaration><![CDATA[(*This function is for the IE514 connected to controller IM540*)
 (*This function provides ILK and Set Point Protection for the IE514*)

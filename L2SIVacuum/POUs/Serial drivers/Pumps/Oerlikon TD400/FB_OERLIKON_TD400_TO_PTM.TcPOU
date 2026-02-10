@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_OERLIKON_TD400_TO_PTM" Id="{baf7e8bc-1486-4fb9-99c8-79be208378ac}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_OERLIKON_TD400_TO_PTM
 VAR_IN_OUT

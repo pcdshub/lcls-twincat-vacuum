@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="FB_CCM501" Id="{a694e345-1167-47e5-8470-6cec1a701b87}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function is for the Cold Cathode CCM 501 fro instrutech (hornet). *)
 (*This function provides ILK and Set Point Protection for the Cold Cathode*)

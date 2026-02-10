@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1">
   <POU Name="F_RoughPumpInlet_ILK" Id="{25dfe2f9-c6c4-41b1-9216-615302b27fca}" SpecialFunc="None">
     <Declaration><![CDATA[(*
     Determine whether a pump attached to the inlet of a roughing pump is safe to open.

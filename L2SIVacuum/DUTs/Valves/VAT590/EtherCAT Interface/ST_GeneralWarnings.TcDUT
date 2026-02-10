@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.18">
+<TcPlcObject Version="1.1.0.1">
   <DUT Name="ST_GeneralWarnings" Id="{c4ed2772-b72a-4790-a55d-6868dd39054b}">
     <Declaration><![CDATA[TYPE ST_GeneralWarnings :
 STRUCT
