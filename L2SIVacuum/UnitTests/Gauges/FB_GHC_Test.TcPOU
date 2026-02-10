@@ -171,25 +171,5 @@ TEST_FINISHED_NAMED('MKS355_Self_Protection');
 ]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_GHC_Test">
-      <LineId Id="3" Count="6" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GHC_Test.M_CheckRange">
-      <LineId Id="3" Count="50" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GHC_Test.M_INIT">
-      <LineId Id="3" Count="10" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GHC_Test.M_Interlock">
-      <LineId Id="3" Count="25" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_GHC_Test.M_SelfProtection">
-      <LineId Id="3" Count="19" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
