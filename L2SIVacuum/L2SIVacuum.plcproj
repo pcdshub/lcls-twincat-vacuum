@@ -248,6 +248,9 @@
     <Compile Include="POUs\Functions\Gauges\FB_MX7M.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_MKS355.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_GaugeBase.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -261,6 +264,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_MKS909.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Gauges\FB_MKS909_HV.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Gauges\FB_CMR362.TcPOU">
@@ -547,6 +553,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTests\Gauges\FB_GCC_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UnitTests\Gauges\FB_GHC_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UnitTests\Gauges\FB_GPI_Test.TcPOU">

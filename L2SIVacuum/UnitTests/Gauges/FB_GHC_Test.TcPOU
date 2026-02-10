@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_GHC_Test" Id="{abe007c5-97e2-4f83-88a7-7230dad873a3}" SpecialFunc="None">
+  <POU Name="FB_GHC_Test" Id="{f7fd3506-8304-4d5e-afd5-5bdd2a932908}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_GHC_Test EXTENDS TcUnit.FB_TestSuite
 VAR_INPUT
 END_VAR
@@ -23,7 +23,7 @@ cycle:=cycle+1;
 
 fb_MKS355(PG:=PG, IG=>);]]></ST>
     </Implementation>
-    <Method Name="M_CheckRange" Id="{1ce3796c-9d57-423a-81de-918c6cc47319}">
+    <Method Name="M_CheckRange" Id="{53105405-12c4-47fe-9eb1-62f8edbcaead}">
       <Declaration><![CDATA[METHOD M_CheckRange
 VAR
     Expected:REAL;
@@ -87,7 +87,7 @@ END_CASE
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_INIT" Id="{6a239255-8bd8-42eb-b1a0-2dca15c1db92}">
+    <Method Name="M_INIT" Id="{f4a9b92b-1a26-450c-87a4-8d492bdda6a7}">
       <Declaration><![CDATA[METHOD M_INIT
 VAR
 END_VAR
@@ -107,7 +107,7 @@ ELSIF (cycle = 2) THEN
 End_IF;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Interlock" Id="{376a3c27-9e60-4e4c-aaa9-e38bd67d3a7b}">
+    <Method Name="M_Interlock" Id="{712402d9-9391-4b17-9a79-d8271e29d28b}">
       <Declaration><![CDATA[METHOD M_Interlock
 VAR_INPUT
 END_VAR
@@ -142,7 +142,7 @@ CASE cycle OF
 END_CASE]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_SelfProtection" Id="{ee508d43-9bf6-4fa4-a8d8-d9a6f8404bfe}">
+    <Method Name="M_SelfProtection" Id="{9293e797-5fc9-49d6-a6b5-3d1191ac3c6c}">
       <Declaration><![CDATA[METHOD M_SelfProtection
 VAR_INPUT
 END_VAR
@@ -171,5 +171,25 @@ TEST_FINISHED_NAMED('MKS355_Self_Protection');
 ]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_GHC_Test">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GHC_Test.M_CheckRange">
+      <LineId Id="3" Count="50" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GHC_Test.M_INIT">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GHC_Test.M_Interlock">
+      <LineId Id="3" Count="25" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_GHC_Test.M_SelfProtection">
+      <LineId Id="3" Count="19" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
