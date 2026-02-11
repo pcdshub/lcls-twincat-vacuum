@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_MKS909_HV" Id="{e4d3e807-daeb-4a47-bccf-64bd129edfcd}" SpecialFunc="None">
-    <Declaration><![CDATA[(* Standard MKS 909 hot cathode *)
+  <POU Name="FB_MKS909_RBK" Id="{e4d3e807-daeb-4a47-bccf-64bd129edfcd}" SpecialFunc="None">
+    <Declaration><![CDATA[(* Standard MKS 909 hot cathode with gauge on reedback*)
 (* works for 972 and 925 *)
 
-FUNCTION_BLOCK FB_MKS909_HV EXTENDS FB_GaugeBase
+FUNCTION_BLOCK FB_MKS909_RBK EXTENDS FB_GaugeBase
 
 VAR_INPUT
     PG	: ST_VG;
@@ -22,6 +22,7 @@ VAR
     rV : REAL;
     rMaxPressure	:	REAL := 5E-2; //Torr
     rMinPressure	:	REAL := 1E-10; //Torr
+    rOffPressure	:	REAL := 0.0;
     timer:TON;
     (*Default set point 50 mT*)
     rDefaultVAC_SP: REAL := 9E-3; // as per manual
@@ -29,7 +30,7 @@ VAR
     (*IO*)
     i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
     q_xHV_DIS AT %Q* : BOOL := TRUE; // Active Low
-    i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1084) ^Input
+    i_xGauge_ON AT %I*	: BOOL; //  True when gauge has power  // 'TcLinkTo' (EL1084) ^Input
 
 END_VAR
 ]]></Declaration>
@@ -48,15 +49,22 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 (* Pressure OK check *)
 // Gauge state
 // Is the gauge plugged in, and within a reasonable range?
-IF  (rV >= 0.1 AND rV <=8.7) AND IG.i_xHV_ON THEN // as per manual
-    IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
-    IG.eState := Valid;
-    IG.xPRESS_OK := TRUE; //Backwards compatibility
-ELSIF rV > 8.7 AND rV < 10 AND IG.i_xHV_ON THEN
-    IG.rPRESS :=rMaxPressure;
-    IG.xPRESS_OK := FALSE;
-    IG.eState := Off;
+IF i_xGauge_ON THEN
+    IF  (rV >= 0.1 AND rV <=8.7) THEN // as per manual
+        IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
+        IG.eState := Valid;
+        IG.xPRESS_OK := TRUE; //Backwards compatibility
+    ELSIF rV > 8.7 AND rV < 10 THEN
+        IG.rPRESS :=rMaxPressure;
+        IG.xPRESS_OK := FALSE;
+        IG.eState := Off;
+    ELSE
+        IG.rPRESS := rOffPressure;
+        IG.xPRESS_OK := FALSE;
+        IG.eState := OoR;
+    END_IF
 ELSE
+    IG.rPRESS := rOffPressure;
     IG.xPRESS_OK := FALSE;
     IG.eState := GaugeDisconnected;
 END_IF
@@ -98,7 +106,6 @@ ACT_Persistent();
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
 IG.i_iPRESS_R:=	i_iPRESS_R;
-IG.i_xHV_ON := i_xHV_ON;
 
 (*soft link outputs*)
 q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
