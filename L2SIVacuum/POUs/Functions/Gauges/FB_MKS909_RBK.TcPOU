@@ -55,7 +55,7 @@ IF i_xGauge_ON THEN
         IG.eState := Valid;
         IG.xPRESS_OK := TRUE; //Backwards compatibility
     ELSIF rV > 8.7 AND rV < 10 THEN
-        IG.rPRESS :=rMaxPressure;
+        IG.rPRESS :=rOffPressure;
         IG.xPRESS_OK := FALSE;
         IG.eState := Off;
     ELSE
