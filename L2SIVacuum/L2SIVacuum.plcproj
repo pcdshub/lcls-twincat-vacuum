@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version='1.0' encoding='UTF-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <FileVersion>1.0.0.0</FileVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -15,7 +15,7 @@
     <LibraryReferences>{2bc9c512-7c1a-483c-9892-8f50f3778fb4}</LibraryReferences>
     <CombineIds>false</CombineIds>
     <Company>SLAC - LCLS</Company>
-    <Released>false</Released>
+    <Released>true</Released>
     <Title>LCLS Vacuum</Title>
     <DefaultNamespace>LCLS_Vacuum</DefaultNamespace>
     <LibraryCategories>
@@ -29,7 +29,7 @@
       <Id>{a5724f56-da3f-40b6-8a5e-63302d98c4cc}</Id>
     </SelectedLibraryCategories>
     <Author>LCLS ECS-Platforms</Author>
-    <ProjectVersion>0.0.0</ProjectVersion>
+    <ProjectVersion>2.5.0</ProjectVersion>
     <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
     <WriteProductVersion>false</WriteProductVersion>
   </PropertyGroup>
@@ -581,44 +581,44 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DUTs" />
-    <Folder Include="DUTs\Gauges" />
-    <Folder Include="DUTs\LVDT" />
-    <Folder Include="DUTs\Oerlikon" />
-    <Folder Include="DUTs\Pfeiffer" />
-    <Folder Include="DUTs\Pumps" />
-    <Folder Include="DUTs\Valves" />
-    <Folder Include="DUTs\Valves\VAT590" />
-    <Folder Include="DUTs\Valves\VAT590\EtherCAT Interface" />
-    <Folder Include="GVLs" />
-    <Folder Include="POUs\Functions\Deprecated" />
-    <Folder Include="POUs\Functions\Deprecated\Gauges" />
-    <Folder Include="POUs\Functions\Deprecated\Valves" />
-    <Folder Include="POUs\Serial drivers" />
-    <Folder Include="POUs\Serial drivers\LVDT" />
-    <Folder Include="POUs\Serial drivers\LVDT\MacroSensors" />
-    <Folder Include="POUs\Serial drivers\Pumps" />
-    <Folder Include="POUs\Serial drivers\Pumps\Oerlikon TD20" />
-    <Folder Include="POUs\Serial drivers\Pumps\Oerlikon TD400" />
-    <Folder Include="POUs\Serial drivers\Pumps\Pfeiffer" />
-    <Folder Include="UnitTests" />
-    <Folder Include="POUs\Functions" />
-    <Folder Include="POUs\Functions\Gauges" />
-    <Folder Include="POUs\Functions\Gauges\Interfaces" />
-    <Folder Include="POUs\Functions\Pumps\functions" />
-    <Folder Include="POUs\Functions\Pumps\Interfaces" />
-    <Folder Include="POUs\Functions\Valves" />
-    <Folder Include="POUs\Functions\Pumps" />
-    <Folder Include="POUs\Functions\Valves\functions" />
-    <Folder Include="POUs\Functions\Valves\Interfaces" />
-    <Folder Include="POUs\ADS" />
-    <Folder Include="UnitTests\Gauges" />
-    <Folder Include="UnitTests\Functions" />
-    <Folder Include="UnitTests\Pumps" />
-    <Folder Include="UnitTests\Valves" />
-    <Folder Include="Version" />
-    <Folder Include="VISUs" />
-    <Folder Include="POUs" />
+    <Folder Include="DUTs"/>
+    <Folder Include="Version"/><Folder Include="DUTs\Gauges"/>
+    <Folder Include="DUTs\LVDT"/>
+    <Folder Include="DUTs\Oerlikon"/>
+    <Folder Include="DUTs\Pfeiffer"/>
+    <Folder Include="DUTs\Pumps"/>
+    <Folder Include="DUTs\Valves"/>
+    <Folder Include="DUTs\Valves\VAT590"/>
+    <Folder Include="DUTs\Valves\VAT590\EtherCAT Interface"/>
+    <Folder Include="GVLs"/>
+    <Folder Include="POUs\Functions\Deprecated"/>
+    <Folder Include="POUs\Functions\Deprecated\Gauges"/>
+    <Folder Include="POUs\Functions\Deprecated\Valves"/>
+    <Folder Include="POUs\Serial drivers"/>
+    <Folder Include="POUs\Serial drivers\LVDT"/>
+    <Folder Include="POUs\Serial drivers\LVDT\MacroSensors"/>
+    <Folder Include="POUs\Serial drivers\Pumps"/>
+    <Folder Include="POUs\Serial drivers\Pumps\Oerlikon TD20"/>
+    <Folder Include="POUs\Serial drivers\Pumps\Oerlikon TD400"/>
+    <Folder Include="POUs\Serial drivers\Pumps\Pfeiffer"/>
+    <Folder Include="UnitTests"/>
+    <Folder Include="POUs\Functions"/>
+    <Folder Include="POUs\Functions\Gauges"/>
+    <Folder Include="POUs\Functions\Gauges\Interfaces"/>
+    <Folder Include="POUs\Functions\Pumps\functions"/>
+    <Folder Include="POUs\Functions\Pumps\Interfaces"/>
+    <Folder Include="POUs\Functions\Valves"/>
+    <Folder Include="POUs\Functions\Pumps"/>
+    <Folder Include="POUs\Functions\Valves\functions"/>
+    <Folder Include="POUs\Functions\Valves\Interfaces"/>
+    <Folder Include="POUs\ADS"/>
+    <Folder Include="UnitTests\Gauges"/>
+    <Folder Include="UnitTests\Functions"/>
+    <Folder Include="UnitTests\Pumps"/>
+    <Folder Include="UnitTests\Valves"/>
+    <Folder Include="Version"/>
+    <Folder Include="VISUs"/>
+    <Folder Include="POUs"/>
   </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="LCLS General">
@@ -754,13 +754,13 @@
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
         <o>
           <v n="Name">"{192FAD59-8248-4824-A8DE-9177C94C195A}"</v>
-          <d n="SubKeys" t="Hashtable" />
-          <d n="Values" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
+          <d n="Values" t="Hashtable"/>
         </o>
         <v>{246001F4-279D-43AC-B241-948EB31120E1}</v>
         <o>
           <v n="Name">"{246001F4-279D-43AC-B241-948EB31120E1}"</v>
-          <d n="SubKeys" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
           <d n="Values" t="Hashtable" ckt="String" cvt="String">
             <v>GlobalVisuImageFilePath</v>
             <v>%APPLICATIONPATH%</v>
@@ -773,22 +773,22 @@
             <v>NamingConventions</v>
             <o>
               <v n="Name">"NamingConventions"</v>
-              <d n="SubKeys" t="Hashtable" />
-              <d n="Values" t="Hashtable" />
+              <d n="SubKeys" t="Hashtable"/>
+              <d n="Values" t="Hashtable"/>
             </o>
             <v>Rules</v>
             <o>
               <v n="Name">"Rules"</v>
-              <d n="SubKeys" t="Hashtable" />
-              <d n="Values" t="Hashtable" />
+              <d n="SubKeys" t="Hashtable"/>
+              <d n="Values" t="Hashtable"/>
             </o>
           </d>
-          <d n="Values" t="Hashtable" />
+          <d n="Values" t="Hashtable"/>
         </o>
         <v>{40450F57-0AA3-4216-96F3-5444ECB29763}</v>
         <o>
           <v n="Name">"{40450F57-0AA3-4216-96F3-5444ECB29763}"</v>
-          <d n="SubKeys" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
           <d n="Values" t="Hashtable" ckt="String">
             <v>ActiveVisuExtensionsLength</v>
             <v>0</v>
@@ -799,7 +799,7 @@
         <v>{8A0FB252-96EB-4DCC-A5B4-B4804D05E2D6}</v>
         <o>
           <v n="Name">"{8A0FB252-96EB-4DCC-A5B4-B4804D05E2D6}"</v>
-          <d n="SubKeys" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
           <d n="Values" t="Hashtable" ckt="String" cvt="Boolean">
             <v>WriteLineIDs</v>
             <v>True</v>
@@ -808,17 +808,17 @@
         <v>{8F99A816-E488-41E4-9FA3-846536012284}</v>
         <o>
           <v n="Name">"{8F99A816-E488-41E4-9FA3-846536012284}"</v>
-          <d n="SubKeys" t="Hashtable" />
-          <d n="Values" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
+          <d n="Values" t="Hashtable"/>
         </o>
         <v>{F66C7017-BDD8-4114-926C-81D6D687E35F}</v>
         <o>
           <v n="Name">"{F66C7017-BDD8-4114-926C-81D6D687E35F}"</v>
-          <d n="SubKeys" t="Hashtable" />
-          <d n="Values" t="Hashtable" />
+          <d n="SubKeys" t="Hashtable"/>
+          <d n="Values" t="Hashtable"/>
         </o>
       </d>
-      <d n="Values" t="Hashtable" />
+      <d n="Values" t="Hashtable"/>
     </o>
   </Data>
   <TypeList>
