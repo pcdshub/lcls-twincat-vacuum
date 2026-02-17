@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_MKS909" Id="{e4d2d06a-72de-4bb3-a238-37b2fab13b2b}" SpecialFunc="None">
-    <Declaration><![CDATA[(* Standard MKS 909 hot cathode *)
+  <POU Name="FB_MKS909_RBK" Id="{e4d3e807-daeb-4a47-bccf-64bd129edfcd}" SpecialFunc="None">
+    <Declaration><![CDATA[(* Standard MKS 909 hot cathode with gauge on reedback*)
 (* works for 972 and 925 *)
 
-FUNCTION_BLOCK FB_MKS909 EXTENDS FB_GaugeBase
+FUNCTION_BLOCK FB_MKS909_RBK EXTENDS FB_GaugeBase
 
 VAR_INPUT
     PG	: ST_VG;
@@ -22,6 +22,7 @@ VAR
     rV : REAL;
     rMaxPressure	:	REAL := 5E-2; //Torr
     rMinPressure	:	REAL := 1E-10; //Torr
+    rOffPressure	:	REAL := 0.0;
     timer:TON;
     (*Default set point 50 mT*)
     rDefaultVAC_SP: REAL := 9E-3; // as per manual
@@ -29,6 +30,7 @@ VAR
     (*IO*)
     i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
     q_xHV_DIS AT %Q* : BOOL := TRUE; // Active Low
+    i_xGauge_ON AT %I*	: BOOL; //  True when gauge has power  // 'TcLinkTo' (EL1084) ^Input
 
 END_VAR
 ]]></Declaration>
@@ -47,15 +49,22 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 (* Pressure OK check *)
 // Gauge state
 // Is the gauge plugged in, and within a reasonable range?
-IF  (rV >= 0.1 AND rV <=8.7) THEN // as per manual
-    IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
-    IG.eState := Valid;
-    IG.xPRESS_OK := TRUE; //Backwards compatibility
-ELSIF rV > 8.7 AND rV < 10 THEN
-    IG.rPRESS :=rMaxPressure;
-    IG.xPRESS_OK := FALSE;
-    IG.eState := Off;
+IF i_xGauge_ON THEN
+    IF  (rV >= 0.1 AND rV <=8.7) THEN // as per manual
+        IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
+        IG.eState := Valid;
+        IG.xPRESS_OK := TRUE; //Backwards compatibility
+    ELSIF rV > 8.7 AND rV < 10 THEN
+        IG.rPRESS :=rOffPressure;
+        IG.xPRESS_OK := FALSE;
+        IG.eState := Off;
+    ELSE
+        IG.rPRESS := rOffPressure;
+        IG.xPRESS_OK := FALSE;
+        IG.eState := OoR;
+    END_IF
 ELSE
+    IG.rPRESS := rOffPressure;
     IG.xPRESS_OK := FALSE;
     IG.eState := GaugeDisconnected;
 END_IF
@@ -93,7 +102,7 @@ THIS^.ACT_Logger();
 ACT_Persistent();
 ]]></ST>
     </Implementation>
-    <Action Name="ACT_IO" Id="{4a0e574a-c69d-4ead-b28c-08d5f48a2072}">
+    <Action Name="ACT_IO" Id="{89c7028d-3190-45b7-aaec-73bdcb00e265}">
       <Implementation>
         <ST><![CDATA[(*soft link inputs*)
 IG.i_iPRESS_R:=	i_iPRESS_R;
@@ -102,7 +111,7 @@ IG.i_iPRESS_R:=	i_iPRESS_R;
 q_xHV_DIS := IG.q_xHV_DIS;]]></ST>
       </Implementation>
     </Action>
-    <Action Name="ACT_Logger" Id="{4573c79c-5500-42f0-a9f8-4a16e69be2a6}">
+    <Action Name="ACT_Logger" Id="{c289ef5c-0d6d-44e6-b87e-b28bbd141dbf}">
       <Implementation>
         <ST><![CDATA[// ILK logger
 IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
@@ -138,7 +147,7 @@ END_IF
 ]]></ST>
       </Implementation>
     </Action>
-    <Action Name="ACT_Persistent" Id="{bcfe6ad8-26ae-4165-9889-34c7b77023e7}">
+    <Action Name="ACT_Persistent" Id="{ba42c9e0-fb4b-4426-98a9-0712e0f03714}">
       <Implementation>
         <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
 IF (SUPER^.bRestorePersistentData) THEN
@@ -167,7 +176,7 @@ IF NOT (IG.rHYS_PR = rHYS_PR) THEN
 END_IF;]]></ST>
       </Implementation>
     </Action>
-    <Method Name="M_AutoOn" Id="{1d96f54d-bcda-48da-aa82-5381de88f995}">
+    <Method Name="M_AutoOn" Id="{6fde0073-91f6-4cb9-bbee-4ff5715804d3}">
       <Declaration><![CDATA[METHOD M_AutoOn : BOOL
 VAR_INPUT
 END_VAR
@@ -176,7 +185,7 @@ END_VAR
         <ST><![CDATA[this^.IG.q_xHV_DIS:= FALSE;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_SetBits" Id="{b968ce06-6643-478f-a849-3fdac69c4bdb}">
+    <Method Name="M_SetBits" Id="{a0b5c519-56d7-42f9-be00-fe9985112627}">
       <Declaration><![CDATA[METHOD M_SetBits : BOOL
 VAR_INPUT
     TermBits : UINT; // The terminal's maximum value in bits
