@@ -5277,6 +5277,171 @@ Related:
     * `ST_VG`_
 
 
+FB_GHC_Test
+^^^^^^^^^^^
+
+::
+
+    FUNCTION_BLOCK FB_GHC_Test EXTENDS TcUnit.FB_TestSuite
+    VAR_INPUT
+    END_VAR
+    VAR_OUTPUT
+    END_VAR
+    VAR
+        PG : ST_VG;
+        fb_MKS355: FB_MKS355;
+        i_iPRESS_R AT %Q* :INT;
+        cycle:INT :=0;
+    END_VAR
+    M_INIT();
+    M_Interlock();
+    M_CheckRange();
+    //M_SelfProtection();
+    cycle:=cycle+1;
+
+
+    fb_MKS355(PG:=PG, IG=>);
+
+    END_FUNCTION_BLOCK
+
+    METHOD M_CheckRange
+    VAR
+        Expected:REAL;
+        Actual:REAL;
+        eStateExpected: E_PressureState;
+        eStateActual: E_PressureState;
+    END_VAR
+    TEST('Check_Range');
+    Case This^.cycle of
+        12:
+        THIS^.fb_MKS355.i_iPRESS_R_test :=  V_TO_INT(1);
+        THIS^.fb_MKS355.PG.rPRESS := 1E-4;
+        THIS^.fb_MKS355.PG.xPRESS_OK := TRUE;
+        THIS^.fb_MKS355.M_HVE(TRUE);
+
+        15:
+        TEST('MKS355_Range_Valid');
+        Expected :=1E-9 ;
+        eStateExpected := Valid;
+        Actual := THIS^.fb_MKS355.IG.rPRESS;
+        eStateActual := THIS^.fb_MKS355.IG.eState;
+        AssertTrue(THIS^.fb_MKS355.IG.xPRESS_OK, 'MKS355 xPRESS_OK is set to False');
+        AssertEquals(eStateExpected,eStateActual,'MKS355 eState Fail');
+        AssertEquals_REAL(Expected, Actual,1E-10, 'MKS355 rPress Fail');
+        TEST_FINISHED_NAMED('MKS355_Range_Valid');
+
+        20:
+        THIS^.fb_MKS355.i_iPRESS_R_test :=  V_TO_INT(0.001);
+
+        21:
+        TEST('MKS355_Range_ValidLo');
+        Expected :=1E-10;
+        Actual := THIS^.fb_MKS355.IG.rPRESS;
+        eStateExpected := ValidLo;
+        eStateActual := THIS^.fb_MKS355.IG.eState;
+        AssertTrue(THIS^.fb_MKS355.IG.xPRESS_OK, 'MKS355 xPRESS_OK is set to False');
+        AssertEquals(eStateExpected,eStateActual,'MKS355 eState Fail');
+        AssertEquals_REAL(Expected, Actual,1E-10, 'MKS355 rPress Fail');
+        TEST_FINISHED_NAMED('MKS355_Range_ValidLo');
+
+
+        24:
+        THIS^.fb_MKS355.i_iPRESS_R_test :=  V_TO_INT(10);
+
+        25:
+        TEST('MKS355_Range_Off');
+        Expected :=0 ;
+        eStateExpected := Off;
+        Actual := THIS^.fb_MKS355.IG.rPRESS;
+        eStateActual := THIS^.fb_MKS355.IG.eState;
+        AssertFalse(THIS^.fb_MKS355.IG.xPRESS_OK, 'MKS355 xPRESS_OK is set to True');
+        AssertEquals(eStateExpected,eStateActual,'MKS355 eState Fail');
+        AssertEquals_REAL(Expected, Actual,1, 'MKS355 rPress Fail');
+        TEST_FINISHED_NAMED('MKS355_Range_Off');
+
+
+    END_CASE
+    END_METHOD
+
+    METHOD M_INIT
+    VAR
+    END_VAR
+    TEST('MKS355_Startup');
+    IF (cycle = 1) THEN
+        THIS^.PG.rPRESS := 1E-4;
+        THIS^.PG.xPRESS_OK := TRUE;
+        THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
+        THIS^.fb_MKS355.M_HVE(TRUE);
+        AssertTrue(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to False');
+    ELSIF (cycle = 2) THEN
+        THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
+        AssertTrue(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to False');
+        TEST_FINISHED_NAMED('MKS355_Startup');
+    End_IF;
+    END_METHOD
+
+    METHOD M_Interlock
+    VAR_INPUT
+    END_VAR
+    TEST('MKS355_Interlock_Active');
+    TEST('MKS355_Interlock_OK');
+    TEST('MKS355_Interlock_Lost');
+
+    CASE cycle OF
+
+        3:
+        THIS^.fb_MKS355.PG.rPRESS := 1E-1;
+        THIS^.fb_MKS355.PG.xPRESS_OK := FALSE;
+        fb_MKS355.M_HVE(FALSE);
+
+        4:
+        AssertFalse(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to True');
+        AssertFalse(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to True');
+        TEST_FINISHED_NAMED('MKS355_Interlock_Lost');
+
+        5:
+        THIS^.fb_MKS355.PG.rPRESS := 1E-4;
+        THIS^.fb_MKS355.PG.xPRESS_OK := TRUE;
+        fb_MKS355.M_HVE(TRUE);
+
+        6:
+        AssertTrue(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to False');
+        AssertTrue(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to False');
+        TEST_FINISHED_NAMED('MKS355_Interlock_OK');
+
+    END_CASE
+    END_METHOD
+
+    METHOD M_SelfProtection
+    VAR_INPUT
+    END_VAR
+    // Switching the Cold cathode backon
+    TEST('MKS355_Interlock_OK_1');
+    This^.PG.rPRESS := 1E-4;
+    This^.PG.xPRESS_OK := True;
+    fb_MKS355.M_HVE(TRUE);
+    THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
+    AssertTrue(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to False');
+    AssertFalse(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to True');
+    TEST_FINISHED_NAMED('MKS355_Interlock_OK_1');
+
+    TEST('MKS355_Self_Protection');
+    This^.PG.rPRESS := 1E-3;
+    This^.PG.xPRESS_OK := TRUE;
+    THIS^.fb_MKS355(PG:=THIS^.PG, IG=>);
+    AssertFalse(THIS^.fb_MKS355.IG.xHV_SW, 'MKS355 xHV_SW set to True');
+    AssertTrue(THIS^.fb_MKS355.IG.q_xHV_DIS, 'MKS355 q_xHV_DIS set to False');
+    TEST_FINISHED_NAMED('MKS355_Self_Protection');
+    END_METHOD
+
+
+Related:
+    * `E_PressureState`_
+    * `FB_MKS355`_
+    * `ST_VG`_
+    * `V_TO_INT`_
+
+
 FB_GPI_Test
 ^^^^^^^^^^^
 
@@ -7236,6 +7401,268 @@ Related:
     * `ST_VG`_
 
 
+FB_MKS355
+^^^^^^^^^
+
+::
+
+    (* This function is for the Hot Cathode MKS 355.
+
+    This function provides ILK and Set Point Protection for the hot Cathode.
+    *)
+
+    FUNCTION_BLOCK FB_MKS355 EXTENDS FB_GaugeBase
+    VAR_IN_OUT
+
+    END_VAR
+    VAR_INPUT
+        PG	:	ST_VG;
+        tRecoverDelay:TIME:=T#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)
+    END_VAR
+    VAR_OUTPUT
+    {attribute 'pytmc' := '
+        pv:
+        '}
+        IG : ST_VG;
+    END_VAR
+    VAR
+        rV : REAL;
+        GaugeTurnOnTmr : TON;
+        tStartupTimer:TON;
+        iTermBits: UINT := 30518 ; // The terminal's maximum value in bits
+        (*IOs to be linked*)
+        /// Controls and I/Os
+        i_iPRESS_R AT %I* :INT; // input Pressure // Link to analog Input
+        q_xHV_DIS AT %Q* : BOOL; // Enable High Voltage when True // 'TcLinkTo' (EP2624) ^Output
+        // only for EL and ES terminal
+        i_xHV_ON AT %I*	: BOOL; //  True when High Voltage is on  // 'TcLinkTo' (EL1084) ^Input
+
+        binit:BOOL:=TRUE;
+    END_VAR
+
+    VAR CONSTANT
+        vBase : REAL := 1.0;
+        vDisconnected : REAL:= 0.001; //shift from 0 to eliminate single noise effect
+        vTorr : REAL := 10;
+        vGaugeOff: REAL := 10;
+        rMinPressure: REAL := 1E-10;
+        cDefaultPressure : REAL := 0;
+        rDeadband : REAL :=1.0;
+    END_VAR
+
+    VAR PERSISTENT
+        bWasOn : BOOL;
+        bAutoRecover:BOOL;
+        bAutoRecoverWrite:BOOL;
+    END_VAR
+    (*Startup time*)
+    IF (bInit) THEN
+        tStartupTimer.IN:=TRUE;
+        bInit :=FALSE;
+    END_IF
+    tStartupTimer(PT:=T#3S);
+
+    (* 355 Logarithmic Output Conversion, factory default configuration
+       EL3174, EL3174-xxxx iTermbits 30518, 10V
+    *)
+    If (iTermBits=0) THEN iTermBits := 30518;END_IF
+    rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
+
+    (* Set Guage State based on the Analog voltage*)
+
+    IF rV <= vDisconnected AND IG.i_xHV_ON and IG.q_xHV_DIS THEN
+        IG.eState := ValidLo;
+        IG.rPRESS := rMinPressure;
+    ELSIF rV <= vDisconnected AND NOT IG.i_xHV_ON AND IG.q_xHV_DIS THEN
+        IG.eState := GaugeDisconnected;
+        IG.rPRESS := cDefaultPressure;
+    ELSIF rV > vDisconnected AND rV < (vGaugeOff -rDeadband) AND IG.i_xHV_ON AND IG.q_xHV_DIS THEN
+        IG.eState := Valid;
+        IG.rPRESS := LREAL_TO_REAL(EXPT(10,((rV*vBase)- vTorr)));
+    ELSIF rV >= (vGaugeOff -rDeadband) THEN
+        IG.eState := Off;
+        IG.rPRESS := cDefaultPressure;
+    ELSE
+        IG.eState := OoR;
+        IG.rPRESS := cDefaultPressure;
+    END_IF
+
+
+
+    (* Ion Gauge Protection Functions *)
+    (* If the PG pressure is greater than the VG.PRO_SP then the gauge is disabled *)
+    (* If the PG pressure is less than the VG.PRO_SP then the gauge is enabled *)
+    (* This FB also implements some hysteresis so the gauge doesn't have rapid power cycling while near the turn on boundary *)
+
+
+    IF PG.rPRESS <= IG.rPRO_SP AND PG.xPRESS_OK THEN
+        IG.q_xHV_DIS := IG.xHV_SW;
+        IG.xILKOk := TRUE;
+    ELSIF IG.q_xHV_DIS THEN
+        IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR)  OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+            IG.q_xHV_DIS := FALSE;
+            IG.xHV_SW := FALSE;
+        END_IF
+    ELSE
+        IG.q_xHV_DIS := FALSE;
+        IG.xHV_SW := FALSE;
+        IG.xILKOk := FALSE;
+    END_IF
+
+    (* Pressure gauge OK checks *)
+
+    GaugeTurnOnTmr(IN:=IG.q_xHV_DIS, PT:=T#10S, Q=>IG.xTurnOnTime);
+
+    //Backwards compatibility
+    IG.xPRESS_OK := (IG.eState = Valid) OR (IG.eState = ValidLo) OR IG.xBAKEOUT;
+
+    (* Setpoint evaluation *)
+    IG.xAT_VAC := (IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP)) OR IG.xBAKEOUT AND (IG.eState = Valid) ;
+
+    ACT_Logger();
+    (*Soft IO Linking*)
+    // check ethercat Diagnostics
+    IO();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
+    (*Run Auto Recovery*)
+    ACT_Recover();
+
+    END_FUNCTION_BLOCK
+
+    ACTION ACT_Logger:
+    // ILK logger
+    IF (IG.xLog) THEN
+        IF NOT IG.xILKOk AND IG.q_xHV_DIS THEN
+                fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);
+        END_IF
+
+
+        // Log Action
+        tAction(CLK:=   IG.xHV_SW);
+        IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+
+
+
+        //STATE Logger
+        tState(CLK:=  ePrevState <> IG.eState);
+        IF ePrevState <> IG.eState THEN
+              CASE IG.eState OF
+                ValidHi:
+                    fbLogger(sMsg:='Gauge pressure valid high.', eSevr:=TcEventSeverity.Info);
+                ValidLo:
+                    fbLogger(sMsg:='Gauge pressure valid low.', eSevr:=TcEventSeverity.Info);
+                Valid:
+                    fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+                GaugeDisconnected:
+                    fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+                PressInvalid:
+                    fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+                OoR:
+                    fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+                Starting:
+                    fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+              END_CASE
+              ePrevState := IG.eState;
+              stateTimer.IN := TRUE;
+          END_IF
+    END_IF
+    END_ACTION
+
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+        SUPER^.bRestorePersistentData	:= FALSE;
+        IF ( rVAC_SP <> 0) THEN
+            IG.rVAC_SP := rVAC_SP;
+        END_IF;
+        IF ( rPRO_SP <> 0) THEN
+            IG.rPRO_SP := rPRO_SP;
+        END_IF;
+        IF ( rHYS_PR <> 0) THEN
+            IG.rHYS_PR := rHYS_PR;
+        END_IF;
+        IF ( bAutoRecoverWrite) THEN
+            IG.xAutoOn := bAutoRecover;
+        END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+        rVAC_SP := IG.rVAC_SP;
+    END_IF;
+
+    IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+        rPRO_SP:= IG.rPRO_SP;
+    END_IF;
+
+    IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+        rHYS_PR:= IG.rHYS_PR;
+    END_IF;
+
+    IF NOT(bAutoRecoverWrite) OR NOT (bAutoRecover = IG.xAutoOn) THEN
+        bAutoRecover := IG.xAutoOn;
+        bAutoRecoverWrite := TRUE;
+    END_IF;
+    stateTimer(PT:=T#10S);
+    IF (stateTimer.Q) THEN
+        bWasOn := (IG.eState >=Valid );
+        stateTimer.IN := FALSE;
+        fbWritePersistentData(NETID:='', PORT:=851, START:=TRUE, TMOUT:=T#1s );
+    END_IF;
+    END_ACTION
+
+    ACTION ACT_Recover:
+    fbGetCurTaskIdx();
+    IF (TwinCAT_SystemInfoVarList._TaskInfo[fbGetCurTaskIdx.index].FirstCycle) THEN
+        tRecover.IN := TRUE;
+    END_IF
+    tRecover(IN:= , PT:=tRecoverDelay);
+    IF NOT(bAutoRecoverWrite) OR (tRecover.Q AND bAutoRecover ) THEN
+        This^.M_Recover();
+        tRecover.IN := FALSE;
+    END_IF
+    END_ACTION
+
+    ACTION IO:
+    (*soft link inputs*)
+    IG.i_iPRESS_R:=	i_iPRESS_R;
+    IG.i_xHV_ON:= i_xHV_ON;
+    //IG.i_xDisc_Active:=i_xDisc_Active;
+    (*soft link outputs*)
+    q_xHV_DIS := IG.q_xHV_DIS;
+
+    IG.sPath := sPath;
+    IG.iAutoOnTimer:= TIME_TO_INT(tRecover.PT);
+    END_ACTION
+
+    METHOD M_HVE : BOOL
+    VAR_INPUT
+            enable:bool; // set to true to enable, false to disable;
+    END_VAR
+    this^.IG.xHV_SW:= enable;
+    END_METHOD
+
+    METHOD M_Recover : BOOL
+    VAR_INPUT
+    END_VAR
+    This^.M_HVE(This^.bWasOn);
+    M_Recover := bWasOn;
+    IF (bWasOn) THEN fbLogger(sMsg:='Auto Recovery Initiated.', eSevr:=TcEventSeverity.Info); END_IF;
+    END_METHOD
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+        TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
+
+
+Related:
+    * `FB_GaugeBase`_
+    * `ST_VG`_
+
+
 FB_MKS392
 ^^^^^^^^^
 
@@ -8114,7 +8541,7 @@ FB_MKS909
         iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
         (*IO*)
         i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
-        q_xHV_DIS AT %Q* : BOOL := True; // Active Low
+        q_xHV_DIS AT %Q* : BOOL := TRUE; // Active Low
 
     END_VAR
     (* Standard MKS 9XX series conversion *)
@@ -8131,7 +8558,7 @@ FB_MKS909
     (* Pressure OK check *)
     // Gauge state
     // Is the gauge plugged in, and within a reasonable range?
-    IF  (rV >= 0.1 and rV <=8.7) THEN // as per manual
+    IF  (rV >= 0.1 AND rV <=8.7) THEN // as per manual
         IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
         IG.eState := Valid;
         IG.xPRESS_OK := TRUE; //Backwards compatibility
@@ -8140,6 +8567,199 @@ FB_MKS909
         IG.xPRESS_OK := FALSE;
         IG.eState := Off;
     ELSE
+        IG.xPRESS_OK := FALSE;
+        IG.eState := GaugeDisconnected;
+    END_IF
+
+
+    IF (PG.rPRESS <= IG.rPRO_SP)  AND (PG.xPRESS_OK) THEN
+             IG.q_xHV_DIS := IG.xHV_SW;
+             IG.xILKOk := TRUE;
+        ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
+            IF IG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS > (IG.rPRO_SP + IG.rHYS_PR) THEN
+            IG.q_xHV_DIS := FALSE;
+            IG.xHV_SW := FALSE;
+            END_IF
+        ELSE
+            IG.q_xHV_DIS := FALSE;
+            IG.xHV_SW := FALSE;
+            IG.xILKOk := FALSE;
+         END_IF
+
+
+    timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
+
+    (* Setpoint evaluation *)
+    IG.xAT_VAC := IG.xPRESS_OK AND (IG.rPRESS < IG.rVAC_SP);
+
+    (*Soft IO Mapping*)
+    ACT_IO();
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
+
+    (*Logger*)
+    THIS^.ACT_Logger();
+
+    (*Load or save the persistent variables*)
+    ACT_Persistent();
+
+    END_FUNCTION_BLOCK
+
+    ACTION ACT_IO:
+    (*soft link inputs*)
+    IG.i_iPRESS_R:=	i_iPRESS_R;
+
+    (*soft link outputs*)
+    q_xHV_DIS := IG.q_xHV_DIS;
+    END_ACTION
+
+    ACTION ACT_Logger:
+    // ILK logger
+    IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
+             fbLogger(sMsg:='Lost external interlock while gauge was on.', eSevr:=TcEventSeverity.Critical);
+    END_IF
+
+
+    // Log Action
+    tAction(CLK:=  IG.q_xHV_DIS);
+    IF tAction.Q THEN fbLogger(sMsg:='Ion gauge commanded to switch on', eSevr:=TcEventSeverity.Info); END_IF
+
+
+
+    //STATE Logger
+    IF ePrevState <> IG.eState THEN
+          CASE IG.eState OF
+            ValidHi:
+            ValidLo:
+            Valid:
+                fbLogger(sMsg:='Gauge pressure valid.', eSevr:=TcEventSeverity.Info);
+              GaugeDisconnected:
+                fbLogger(sMsg:='Gauge Disconnected.', eSevr:=TcEventSeverity.Critical);
+            PressInvalid:
+                fbLogger(sMsg:='Gauge pressure invalid.', eSevr:=TcEventSeverity.Warning);
+            OoR:
+                fbLogger(sMsg:='Gauge pressure out of range.', eSevr:=TcEventSeverity.Warning);
+            Starting:
+                fbLogger(sMsg:='Gauge starting.', eSevr:=TcEventSeverity.Info);
+          END_CASE
+          ePrevState := IG.eState;
+    END_IF
+    END_ACTION
+
+    ACTION ACT_Persistent:
+    (*On first PLC pass, load the persistent value into the structrue variable*)
+    IF (SUPER^.bRestorePersistentData) THEN
+        SUPER^.bRestorePersistentData	:= FALSE;
+        IF ( rVAC_SP <> 0) THEN
+            IG.rVAC_SP := rVAC_SP;
+        END_IF;
+        IF ( rPRO_SP <> 0) THEN
+            IG.rPRO_SP := rPRO_SP;
+        END_IF;
+        IF ( rHYS_PR <> 0) THEN
+            IG.rHYS_PR := rHYS_PR;
+        END_IF;
+    END_IF
+    (*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+    IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+        rVAC_SP := IG.rVAC_SP;
+    END_IF;
+
+    IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+        rPRO_SP:= IG.rPRO_SP;
+    END_IF;
+
+    IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+        rHYS_PR:= IG.rHYS_PR;
+    END_IF;
+    END_ACTION
+
+    METHOD M_AutoOn : BOOL
+    VAR_INPUT
+    END_VAR
+    this^.IG.q_xHV_DIS:= FALSE;
+    END_METHOD
+
+    METHOD M_SetBits : BOOL
+    VAR_INPUT
+        TermBits : UINT; // The terminal's maximum value in bits
+    END_VAR
+    This^.iTermBits := TermBits;
+    END_METHOD
+
+
+Related:
+    * `FB_GaugeBase`_
+    * `ST_VG`_
+
+
+FB_MKS909_RBK
+^^^^^^^^^^^^^
+
+::
+
+    (* Standard MKS 909 hot cathode with gauge on reedback*)
+    (* works for 972 and 925 *)
+
+    FUNCTION_BLOCK FB_MKS909_RBK EXTENDS FB_GaugeBase
+
+    VAR_INPUT
+        PG	: ST_VG;
+    END_VAR
+    VAR_OUTPUT
+        {attribute 'pytmc' := '
+        pv:
+        '}
+        IG	: ST_VG;
+    END_VAR
+    VAR_IN_OUT
+
+    END_VAR
+    VAR
+        rV : REAL;
+        rMaxPressure	:	REAL := 5E-2; //Torr
+        rMinPressure	:	REAL := 1E-10; //Torr
+        rOffPressure	:	REAL := 0.0;
+        timer:TON;
+        (*Default set point 50 mT*)
+        rDefaultVAC_SP: REAL := 9E-3; // as per manual
+        iTermBits: UINT := 30518 ; // The terminal's maximum value in bits default el3174 as per vacuum architecture
+        (*IO*)
+        i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+        q_xHV_DIS AT %Q* : BOOL := TRUE; // Active Low
+        i_xGauge_ON AT %I*	: BOOL; //  True when gauge has power  // 'TcLinkTo' (EL1084) ^Input
+
+    END_VAR
+    (* Standard MKS 9XX series conversion *)
+    (* works for 972 and 925 *)
+
+    //Default setpoint 50 mT
+    IF PG.rVAC_SP = 0 THEN
+        PG.rVAC_SP := rDefaultVAC_SP;
+    END_IF
+    // check no div by zero
+    If (iTermBits=0) THEN iTermBits := 30518;END_IF
+    rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
+
+    (* Pressure OK check *)
+    // Gauge state
+    // Is the gauge plugged in, and within a reasonable range?
+    IF i_xGauge_ON THEN
+        IF  (rV >= 0.1 AND rV <=8.7) THEN // as per manual
+            IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
+            IG.eState := Valid;
+            IG.xPRESS_OK := TRUE; //Backwards compatibility
+        ELSIF rV > 8.7 AND rV < 10 THEN
+            IG.rPRESS :=rOffPressure;
+            IG.xPRESS_OK := FALSE;
+            IG.eState := Off;
+        ELSE
+            IG.rPRESS := rOffPressure;
+            IG.xPRESS_OK := FALSE;
+            IG.eState := OoR;
+        END_IF
+    ELSE
+        IG.rPRESS := rOffPressure;
         IG.xPRESS_OK := FALSE;
         IG.eState := GaugeDisconnected;
     END_IF

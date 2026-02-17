@@ -150,6 +150,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#fb-gaugemodbus">FB_GaugeModbus</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-gcc-test">FB_GCC_Test</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-gcm">FB_GCM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-ghc-test">FB_GHC_Test</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-gpi-test">FB_GPI_Test</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-ie514">FB_IE514</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-img401">FB_IMG401</a></li>
@@ -163,12 +164,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks275">FB_MKS275</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks317">FB_MKS317</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks317a">FB_MKS317A</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks355">FB_MKS355</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks392">FB_MKS392</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks422">FB_MKS422</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks500">FB_MKS500</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks500-ep">FB_MKS500_EP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks722">FB_MKS722</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks909">FB_MKS909</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-mks909-rbk">FB_MKS909_RBK</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks-937a">FB_MKS_937A</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mks-937b">FB_MKS_937B</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-mx7m">FB_MX7M</a></li>
@@ -5399,6 +5402,171 @@ END_ACTION
 </dd>
 </dl>
 </section>
+<section id="fb-ghc-test">
+<h2>FB_GHC_Test<a class="headerlink" href="#fb-ghc-test" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_GHC_Test</span> <span class="n">EXTENDS</span> <span class="n">TcUnit</span><span class="o">.</span><span class="n">FB_TestSuite</span>
+<span class="n">VAR_INPUT</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">PG</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span>
+    <span class="n">fb_MKS355</span><span class="p">:</span> <span class="n">FB_MKS355</span><span class="p">;</span>
+    <span class="n">i_iPRESS_R</span> <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span><span class="n">INT</span><span class="p">;</span>
+    <span class="n">cycle</span><span class="p">:</span><span class="n">INT</span> <span class="o">:=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">M_INIT</span><span class="p">();</span>
+<span class="n">M_Interlock</span><span class="p">();</span>
+<span class="n">M_CheckRange</span><span class="p">();</span>
+<span class="o">//</span><span class="n">M_SelfProtection</span><span class="p">();</span>
+<span class="n">cycle</span><span class="o">:=</span><span class="n">cycle</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+
+
+<span class="n">fb_MKS355</span><span class="p">(</span><span class="n">PG</span><span class="o">:=</span><span class="n">PG</span><span class="p">,</span> <span class="n">IG</span><span class="o">=&gt;</span><span class="p">);</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+
+<span class="n">METHOD</span> <span class="n">M_CheckRange</span>
+<span class="n">VAR</span>
+    <span class="n">Expected</span><span class="p">:</span><span class="n">REAL</span><span class="p">;</span>
+    <span class="n">Actual</span><span class="p">:</span><span class="n">REAL</span><span class="p">;</span>
+    <span class="n">eStateExpected</span><span class="p">:</span> <span class="n">E_PressureState</span><span class="p">;</span>
+    <span class="n">eStateActual</span><span class="p">:</span> <span class="n">E_PressureState</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">TEST</span><span class="p">(</span><span class="s1">&#39;Check_Range&#39;</span><span class="p">);</span>
+<span class="n">Case</span> <span class="n">This</span><span class="o">^.</span><span class="n">cycle</span> <span class="n">of</span>
+    <span class="mi">12</span><span class="p">:</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">i_iPRESS_R_test</span> <span class="o">:=</span>  <span class="n">V_TO_INT</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="mf">1E-4</span><span class="p">;</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">M_HVE</span><span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+
+    <span class="mi">15</span><span class="p">:</span>
+    <span class="n">TEST</span><span class="p">(</span><span class="s1">&#39;MKS355_Range_Valid&#39;</span><span class="p">);</span>
+    <span class="n">Expected</span> <span class="o">:=</span><span class="mf">1E-9</span> <span class="p">;</span>
+    <span class="n">eStateExpected</span> <span class="o">:=</span> <span class="n">Valid</span><span class="p">;</span>
+    <span class="n">Actual</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span><span class="p">;</span>
+    <span class="n">eStateActual</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
+    <span class="n">AssertTrue</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span><span class="p">,</span> <span class="s1">&#39;MKS355 xPRESS_OK is set to False&#39;</span><span class="p">);</span>
+    <span class="n">AssertEquals</span><span class="p">(</span><span class="n">eStateExpected</span><span class="p">,</span><span class="n">eStateActual</span><span class="p">,</span><span class="s1">&#39;MKS355 eState Fail&#39;</span><span class="p">);</span>
+    <span class="n">AssertEquals_REAL</span><span class="p">(</span><span class="n">Expected</span><span class="p">,</span> <span class="n">Actual</span><span class="p">,</span><span class="mf">1E-10</span><span class="p">,</span> <span class="s1">&#39;MKS355 rPress Fail&#39;</span><span class="p">);</span>
+    <span class="n">TEST_FINISHED_NAMED</span><span class="p">(</span><span class="s1">&#39;MKS355_Range_Valid&#39;</span><span class="p">);</span>
+
+    <span class="mi">20</span><span class="p">:</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">i_iPRESS_R_test</span> <span class="o">:=</span>  <span class="n">V_TO_INT</span><span class="p">(</span><span class="mf">0.001</span><span class="p">);</span>
+
+    <span class="mi">21</span><span class="p">:</span>
+    <span class="n">TEST</span><span class="p">(</span><span class="s1">&#39;MKS355_Range_ValidLo&#39;</span><span class="p">);</span>
+    <span class="n">Expected</span> <span class="o">:=</span><span class="mf">1E-10</span><span class="p">;</span>
+    <span class="n">Actual</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span><span class="p">;</span>
+    <span class="n">eStateExpected</span> <span class="o">:=</span> <span class="n">ValidLo</span><span class="p">;</span>
+    <span class="n">eStateActual</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
+    <span class="n">AssertTrue</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span><span class="p">,</span> <span class="s1">&#39;MKS355 xPRESS_OK is set to False&#39;</span><span class="p">);</span>
+    <span class="n">AssertEquals</span><span class="p">(</span><span class="n">eStateExpected</span><span class="p">,</span><span class="n">eStateActual</span><span class="p">,</span><span class="s1">&#39;MKS355 eState Fail&#39;</span><span class="p">);</span>
+    <span class="n">AssertEquals_REAL</span><span class="p">(</span><span class="n">Expected</span><span class="p">,</span> <span class="n">Actual</span><span class="p">,</span><span class="mf">1E-10</span><span class="p">,</span> <span class="s1">&#39;MKS355 rPress Fail&#39;</span><span class="p">);</span>
+    <span class="n">TEST_FINISHED_NAMED</span><span class="p">(</span><span class="s1">&#39;MKS355_Range_ValidLo&#39;</span><span class="p">);</span>
+
+
+    <span class="mi">24</span><span class="p">:</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">i_iPRESS_R_test</span> <span class="o">:=</span>  <span class="n">V_TO_INT</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+    <span class="mi">25</span><span class="p">:</span>
+    <span class="n">TEST</span><span class="p">(</span><span class="s1">&#39;MKS355_Range_Off&#39;</span><span class="p">);</span>
+    <span class="n">Expected</span> <span class="o">:=</span><span class="mi">0</span> <span class="p">;</span>
+    <span class="n">eStateExpected</span> <span class="o">:=</span> <span class="n">Off</span><span class="p">;</span>
+    <span class="n">Actual</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span><span class="p">;</span>
+    <span class="n">eStateActual</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
+    <span class="n">AssertFalse</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span><span class="p">,</span> <span class="s1">&#39;MKS355 xPRESS_OK is set to True&#39;</span><span class="p">);</span>
+    <span class="n">AssertEquals</span><span class="p">(</span><span class="n">eStateExpected</span><span class="p">,</span><span class="n">eStateActual</span><span class="p">,</span><span class="s1">&#39;MKS355 eState Fail&#39;</span><span class="p">);</span>
+    <span class="n">AssertEquals_REAL</span><span class="p">(</span><span class="n">Expected</span><span class="p">,</span> <span class="n">Actual</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;MKS355 rPress Fail&#39;</span><span class="p">);</span>
+    <span class="n">TEST_FINISHED_NAMED</span><span class="p">(</span><span class="s1">&#39;MKS355_Range_Off&#39;</span><span class="p">);</span>
+
+
+<span class="n">END_CASE</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_INIT</span>
+<span class="n">VAR</span>
+<span class="n">END_VAR</span>
+<span class="n">TEST</span><span class="p">(</span><span class="s1">&#39;MKS355_Startup&#39;</span><span class="p">);</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">cycle</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="mf">1E-4</span><span class="p">;</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="p">(</span><span class="n">PG</span><span class="o">:=</span><span class="n">THIS</span><span class="o">^.</span><span class="n">PG</span><span class="p">,</span> <span class="n">IG</span><span class="o">=&gt;</span><span class="p">);</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">M_HVE</span><span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+    <span class="n">AssertTrue</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span><span class="p">,</span> <span class="s1">&#39;MKS355 xHV_SW set to False&#39;</span><span class="p">);</span>
+<span class="n">ELSIF</span> <span class="p">(</span><span class="n">cycle</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="p">(</span><span class="n">PG</span><span class="o">:=</span><span class="n">THIS</span><span class="o">^.</span><span class="n">PG</span><span class="p">,</span> <span class="n">IG</span><span class="o">=&gt;</span><span class="p">);</span>
+    <span class="n">AssertTrue</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span><span class="p">,</span> <span class="s1">&#39;MKS355 q_xHV_DIS set to False&#39;</span><span class="p">);</span>
+    <span class="n">TEST_FINISHED_NAMED</span><span class="p">(</span><span class="s1">&#39;MKS355_Startup&#39;</span><span class="p">);</span>
+<span class="n">End_IF</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_Interlock</span>
+<span class="n">VAR_INPUT</span>
+<span class="n">END_VAR</span>
+<span class="n">TEST</span><span class="p">(</span><span class="s1">&#39;MKS355_Interlock_Active&#39;</span><span class="p">);</span>
+<span class="n">TEST</span><span class="p">(</span><span class="s1">&#39;MKS355_Interlock_OK&#39;</span><span class="p">);</span>
+<span class="n">TEST</span><span class="p">(</span><span class="s1">&#39;MKS355_Interlock_Lost&#39;</span><span class="p">);</span>
+
+<span class="n">CASE</span> <span class="n">cycle</span> <span class="n">OF</span>
+
+    <span class="mi">3</span><span class="p">:</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="mf">1E-1</span><span class="p">;</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">fb_MKS355</span><span class="o">.</span><span class="n">M_HVE</span><span class="p">(</span><span class="n">FALSE</span><span class="p">);</span>
+
+    <span class="mi">4</span><span class="p">:</span>
+    <span class="n">AssertFalse</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span><span class="p">,</span> <span class="s1">&#39;MKS355 xHV_SW set to True&#39;</span><span class="p">);</span>
+    <span class="n">AssertFalse</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span><span class="p">,</span> <span class="s1">&#39;MKS355 q_xHV_DIS set to True&#39;</span><span class="p">);</span>
+    <span class="n">TEST_FINISHED_NAMED</span><span class="p">(</span><span class="s1">&#39;MKS355_Interlock_Lost&#39;</span><span class="p">);</span>
+
+    <span class="mi">5</span><span class="p">:</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="mf">1E-4</span><span class="p">;</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">fb_MKS355</span><span class="o">.</span><span class="n">M_HVE</span><span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+
+    <span class="mi">6</span><span class="p">:</span>
+    <span class="n">AssertTrue</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span><span class="p">,</span> <span class="s1">&#39;MKS355 xHV_SW set to False&#39;</span><span class="p">);</span>
+    <span class="n">AssertTrue</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span><span class="p">,</span> <span class="s1">&#39;MKS355 q_xHV_DIS set to False&#39;</span><span class="p">);</span>
+    <span class="n">TEST_FINISHED_NAMED</span><span class="p">(</span><span class="s1">&#39;MKS355_Interlock_OK&#39;</span><span class="p">);</span>
+
+<span class="n">END_CASE</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_SelfProtection</span>
+<span class="n">VAR_INPUT</span>
+<span class="n">END_VAR</span>
+<span class="o">//</span> <span class="n">Switching</span> <span class="n">the</span> <span class="n">Cold</span> <span class="n">cathode</span> <span class="n">backon</span>
+<span class="n">TEST</span><span class="p">(</span><span class="s1">&#39;MKS355_Interlock_OK_1&#39;</span><span class="p">);</span>
+<span class="n">This</span><span class="o">^.</span><span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="mf">1E-4</span><span class="p">;</span>
+<span class="n">This</span><span class="o">^.</span><span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="kc">True</span><span class="p">;</span>
+<span class="n">fb_MKS355</span><span class="o">.</span><span class="n">M_HVE</span><span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+<span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="p">(</span><span class="n">PG</span><span class="o">:=</span><span class="n">THIS</span><span class="o">^.</span><span class="n">PG</span><span class="p">,</span> <span class="n">IG</span><span class="o">=&gt;</span><span class="p">);</span>
+<span class="n">AssertTrue</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span><span class="p">,</span> <span class="s1">&#39;MKS355 xHV_SW set to False&#39;</span><span class="p">);</span>
+<span class="n">AssertFalse</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span><span class="p">,</span> <span class="s1">&#39;MKS355 q_xHV_DIS set to True&#39;</span><span class="p">);</span>
+<span class="n">TEST_FINISHED_NAMED</span><span class="p">(</span><span class="s1">&#39;MKS355_Interlock_OK_1&#39;</span><span class="p">);</span>
+
+<span class="n">TEST</span><span class="p">(</span><span class="s1">&#39;MKS355_Self_Protection&#39;</span><span class="p">);</span>
+<span class="n">This</span><span class="o">^.</span><span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="mf">1E-3</span><span class="p">;</span>
+<span class="n">This</span><span class="o">^.</span><span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="p">(</span><span class="n">PG</span><span class="o">:=</span><span class="n">THIS</span><span class="o">^.</span><span class="n">PG</span><span class="p">,</span> <span class="n">IG</span><span class="o">=&gt;</span><span class="p">);</span>
+<span class="n">AssertFalse</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span><span class="p">,</span> <span class="s1">&#39;MKS355 xHV_SW set to True&#39;</span><span class="p">);</span>
+<span class="n">AssertTrue</span><span class="p">(</span><span class="n">THIS</span><span class="o">^.</span><span class="n">fb_MKS355</span><span class="o">.</span><span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span><span class="p">,</span> <span class="s1">&#39;MKS355 q_xHV_DIS set to False&#39;</span><span class="p">);</span>
+<span class="n">TEST_FINISHED_NAMED</span><span class="p">(</span><span class="s1">&#39;MKS355_Self_Protection&#39;</span><span class="p">);</span>
+<span class="n">END_METHOD</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Related:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#e-pressurestate">E_PressureState</a></p></li>
+<li><p><a class="reference internal" href="#fb-mks355">FB_MKS355</a></p></li>
+<li><p><a class="reference internal" href="#st-vg">ST_VG</a></p></li>
+<li><p><a class="reference internal" href="#v-to-int">V_TO_INT</a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
 <section id="fb-gpi-test">
 <h2>FB_GPI_Test<a class="headerlink" href="#fb-gpi-test" title="Link to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FUNCTION_BLOCK</span> <span class="n">FB_GPI_Test</span> <span class="n">EXTENDS</span> <span class="n">TcUnit</span><span class="o">.</span><span class="n">FB_TestSuite</span>
@@ -7354,6 +7522,268 @@ END_METHOD
 </dd>
 </dl>
 </section>
+<section id="fb-mks355">
+<h2>FB_MKS355<a class="headerlink" href="#fb-mks355" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="ow">is</span> <span class="k">for</span> <span class="n">the</span> <span class="n">Hot</span> <span class="n">Cathode</span> <span class="n">MKS</span> <span class="mf">355.</span>
+
+<span class="n">This</span> <span class="n">function</span> <span class="n">provides</span> <span class="n">ILK</span> <span class="ow">and</span> <span class="n">Set</span> <span class="n">Point</span> <span class="n">Protection</span> <span class="k">for</span> <span class="n">the</span> <span class="n">hot</span> <span class="n">Cathode</span><span class="o">.</span>
+<span class="o">*</span><span class="p">)</span>
+
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_MKS355</span> <span class="n">EXTENDS</span> <span class="n">FB_GaugeBase</span>
+<span class="n">VAR_IN_OUT</span>
+
+<span class="n">END_VAR</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">PG</span>      <span class="p">:</span>       <span class="n">ST_VG</span><span class="p">;</span>
+    <span class="n">tRecoverDelay</span><span class="p">:</span><span class="n">TIME</span><span class="o">:=</span><span class="n">T</span><span class="c1">#600S; (*Delay Time after the first cycle to start the device. Default is 600S*)</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+<span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">IG</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">rV</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
+    <span class="n">GaugeTurnOnTmr</span> <span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
+    <span class="n">tStartupTimer</span><span class="p">:</span><span class="n">TON</span><span class="p">;</span>
+    <span class="n">iTermBits</span><span class="p">:</span> <span class="n">UINT</span> <span class="o">:=</span> <span class="mi">30518</span> <span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">terminal</span><span class="s1">&#39;s maximum value in bits</span>
+    <span class="p">(</span><span class="o">*</span><span class="n">IOs</span> <span class="n">to</span> <span class="n">be</span> <span class="n">linked</span><span class="o">*</span><span class="p">)</span>
+    <span class="o">///</span> <span class="n">Controls</span> <span class="ow">and</span> <span class="n">I</span><span class="o">/</span><span class="n">Os</span>
+    <span class="n">i_iPRESS_R</span> <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span><span class="n">INT</span><span class="p">;</span> <span class="o">//</span> <span class="nb">input</span> <span class="n">Pressure</span> <span class="o">//</span> <span class="n">Link</span> <span class="n">to</span> <span class="n">analog</span> <span class="n">Input</span>
+    <span class="n">q_xHV_DIS</span> <span class="n">AT</span> <span class="o">%</span><span class="n">Q</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Enable</span> <span class="n">High</span> <span class="n">Voltage</span> <span class="n">when</span> <span class="kc">True</span> <span class="o">//</span> <span class="s1">&#39;TcLinkTo&#39;</span> <span class="p">(</span><span class="n">EP2624</span><span class="p">)</span> <span class="o">^</span><span class="n">Output</span>
+    <span class="o">//</span> <span class="n">only</span> <span class="k">for</span> <span class="n">EL</span> <span class="ow">and</span> <span class="n">ES</span> <span class="n">terminal</span>
+    <span class="n">i_xHV_ON</span> <span class="n">AT</span> <span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span>  <span class="kc">True</span> <span class="n">when</span> <span class="n">High</span> <span class="n">Voltage</span> <span class="ow">is</span> <span class="n">on</span>  <span class="o">//</span> <span class="s1">&#39;TcLinkTo&#39;</span> <span class="p">(</span><span class="n">EL1084</span><span class="p">)</span> <span class="o">^</span><span class="n">Input</span>
+
+    <span class="n">binit</span><span class="p">:</span><span class="n">BOOL</span><span class="o">:=</span><span class="n">TRUE</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+
+<span class="n">VAR</span> <span class="n">CONSTANT</span>
+    <span class="n">vBase</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1.0</span><span class="p">;</span>
+    <span class="n">vDisconnected</span> <span class="p">:</span> <span class="n">REAL</span><span class="o">:=</span> <span class="mf">0.001</span><span class="p">;</span> <span class="o">//</span><span class="n">shift</span> <span class="kn">from</span><span class="w"> </span><span class="mi">0</span> <span class="n">to</span> <span class="n">eliminate</span> <span class="n">single</span> <span class="n">noise</span> <span class="n">effect</span>
+    <span class="n">vTorr</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="n">vGaugeOff</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="n">rMinPressure</span><span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">1E-10</span><span class="p">;</span>
+    <span class="n">cDefaultPressure</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">rDeadband</span> <span class="p">:</span> <span class="n">REAL</span> <span class="o">:=</span><span class="mf">1.0</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+
+<span class="n">VAR</span> <span class="n">PERSISTENT</span>
+    <span class="n">bWasOn</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">bAutoRecover</span><span class="p">:</span><span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">bAutoRecoverWrite</span><span class="p">:</span><span class="n">BOOL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Startup</span> <span class="n">time</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">bInit</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">tStartupTimer</span><span class="o">.</span><span class="n">IN</span><span class="o">:=</span><span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">bInit</span> <span class="o">:=</span><span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">tStartupTimer</span><span class="p">(</span><span class="n">PT</span><span class="o">:=</span><span class="n">T</span><span class="c1">#3S);</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="mi">355</span> <span class="n">Logarithmic</span> <span class="n">Output</span> <span class="n">Conversion</span><span class="p">,</span> <span class="n">factory</span> <span class="n">default</span> <span class="n">configuration</span>
+   <span class="n">EL3174</span><span class="p">,</span> <span class="n">EL3174</span><span class="o">-</span><span class="n">xxxx</span> <span class="n">iTermbits</span> <span class="mi">30518</span><span class="p">,</span> <span class="mi">10</span><span class="n">V</span>
+<span class="o">*</span><span class="p">)</span>
+<span class="n">If</span> <span class="p">(</span><span class="n">iTermBits</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">iTermBits</span> <span class="o">:=</span> <span class="mi">30518</span><span class="p">;</span><span class="n">END_IF</span>
+<span class="n">rV</span> <span class="o">:=</span> <span class="mi">10</span><span class="o">*</span><span class="n">INT_TO_REAL</span><span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">i_iPRESS_R</span><span class="p">)</span><span class="o">/</span><span class="n">iTermBits</span><span class="p">;</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Set</span> <span class="n">Guage</span> <span class="n">State</span> <span class="n">based</span> <span class="n">on</span> <span class="n">the</span> <span class="n">Analog</span> <span class="n">voltage</span><span class="o">*</span><span class="p">)</span>
+
+<span class="n">IF</span> <span class="n">rV</span> <span class="o">&lt;=</span> <span class="n">vDisconnected</span> <span class="n">AND</span> <span class="n">IG</span><span class="o">.</span><span class="n">i_xHV_ON</span> <span class="ow">and</span> <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="n">THEN</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">ValidLo</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">rMinPressure</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&lt;=</span> <span class="n">vDisconnected</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">IG</span><span class="o">.</span><span class="n">i_xHV_ON</span> <span class="n">AND</span> <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="n">THEN</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">GaugeDisconnected</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">cDefaultPressure</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&gt;</span> <span class="n">vDisconnected</span> <span class="n">AND</span> <span class="n">rV</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">vGaugeOff</span> <span class="o">-</span><span class="n">rDeadband</span><span class="p">)</span> <span class="n">AND</span> <span class="n">IG</span><span class="o">.</span><span class="n">i_xHV_ON</span> <span class="n">AND</span> <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="n">THEN</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">Valid</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">LREAL_TO_REAL</span><span class="p">(</span><span class="n">EXPT</span><span class="p">(</span><span class="mi">10</span><span class="p">,((</span><span class="n">rV</span><span class="o">*</span><span class="n">vBase</span><span class="p">)</span><span class="o">-</span> <span class="n">vTorr</span><span class="p">)));</span>
+<span class="n">ELSIF</span> <span class="n">rV</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">vGaugeOff</span> <span class="o">-</span><span class="n">rDeadband</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">Off</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">cDefaultPressure</span><span class="p">;</span>
+<span class="n">ELSE</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">OoR</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">cDefaultPressure</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Ion</span> <span class="n">Gauge</span> <span class="n">Protection</span> <span class="n">Functions</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">If</span> <span class="n">the</span> <span class="n">PG</span> <span class="n">pressure</span> <span class="ow">is</span> <span class="n">greater</span> <span class="n">than</span> <span class="n">the</span> <span class="n">VG</span><span class="o">.</span><span class="n">PRO_SP</span> <span class="n">then</span> <span class="n">the</span> <span class="n">gauge</span> <span class="ow">is</span> <span class="n">disabled</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">If</span> <span class="n">the</span> <span class="n">PG</span> <span class="n">pressure</span> <span class="ow">is</span> <span class="n">less</span> <span class="n">than</span> <span class="n">the</span> <span class="n">VG</span><span class="o">.</span><span class="n">PRO_SP</span> <span class="n">then</span> <span class="n">the</span> <span class="n">gauge</span> <span class="ow">is</span> <span class="n">enabled</span> <span class="o">*</span><span class="p">)</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">FB</span> <span class="n">also</span> <span class="n">implements</span> <span class="n">some</span> <span class="n">hysteresis</span> <span class="n">so</span> <span class="n">the</span> <span class="n">gauge</span> <span class="n">doesn</span><span class="s1">&#39;t have rapid power cycling while near the turn on boundary *)</span>
+
+
+<span class="n">IF</span> <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="n">AND</span> <span class="n">PG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">THEN</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">xILKOk</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="n">THEN</span>
+    <span class="n">IF</span> <span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">+</span> <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span><span class="p">)</span>  <span class="n">OR</span> <span class="n">PG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">+</span> <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span><span class="p">)</span> <span class="n">THEN</span>
+        <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+        <span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">END_IF</span>
+<span class="n">ELSE</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IG</span><span class="o">.</span><span class="n">xILKOk</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Pressure</span> <span class="n">gauge</span> <span class="n">OK</span> <span class="n">checks</span> <span class="o">*</span><span class="p">)</span>
+
+<span class="n">GaugeTurnOnTmr</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span><span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span><span class="p">,</span> <span class="n">PT</span><span class="o">:=</span><span class="n">T</span><span class="c1">#10S, Q=&gt;IG.xTurnOnTime);</span>
+
+<span class="o">//</span><span class="n">Backwards</span> <span class="n">compatibility</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">Valid</span><span class="p">)</span> <span class="n">OR</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">ValidLo</span><span class="p">)</span> <span class="n">OR</span> <span class="n">IG</span><span class="o">.</span><span class="n">xBAKEOUT</span><span class="p">;</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Setpoint</span> <span class="n">evaluation</span> <span class="o">*</span><span class="p">)</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">xAT_VAC</span> <span class="o">:=</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="n">AND</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">&lt;</span> <span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span><span class="p">))</span> <span class="n">OR</span> <span class="n">IG</span><span class="o">.</span><span class="n">xBAKEOUT</span> <span class="n">AND</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">=</span> <span class="n">Valid</span><span class="p">)</span> <span class="p">;</span>
+
+<span class="n">ACT_Logger</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Soft</span> <span class="n">IO</span> <span class="n">Linking</span><span class="o">*</span><span class="p">)</span>
+<span class="o">//</span> <span class="n">check</span> <span class="n">ethercat</span> <span class="n">Diagnostics</span>
+<span class="n">IO</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Load</span> <span class="ow">or</span> <span class="n">save</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variables</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Persistent</span><span class="p">();</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Run</span> <span class="n">Auto</span> <span class="n">Recovery</span><span class="o">*</span><span class="p">)</span>
+<span class="n">ACT_Recover</span><span class="p">();</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+
+<span class="n">ACTION</span> <span class="n">ACT_Logger</span><span class="p">:</span>
+<span class="o">//</span> <span class="n">ILK</span> <span class="n">logger</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">xLog</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">IF</span> <span class="n">NOT</span> <span class="n">IG</span><span class="o">.</span><span class="n">xILKOk</span> <span class="n">AND</span> <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span> <span class="n">THEN</span>
+            <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Lost external interlock while gauge was on.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+    <span class="n">END_IF</span>
+
+
+    <span class="o">//</span> <span class="n">Log</span> <span class="n">Action</span>
+    <span class="n">tAction</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span>   <span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span><span class="p">);</span>
+    <span class="n">IF</span> <span class="n">tAction</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Ion gauge commanded to switch on&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span> <span class="n">END_IF</span>
+
+
+
+    <span class="o">//</span><span class="n">STATE</span> <span class="n">Logger</span>
+    <span class="n">tState</span><span class="p">(</span><span class="n">CLK</span><span class="o">:=</span>  <span class="n">ePrevState</span> <span class="o">&lt;&gt;</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span><span class="p">);</span>
+    <span class="n">IF</span> <span class="n">ePrevState</span> <span class="o">&lt;&gt;</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="n">THEN</span>
+          <span class="n">CASE</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="n">OF</span>
+            <span class="n">ValidHi</span><span class="p">:</span>
+                <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure valid high.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">ValidLo</span><span class="p">:</span>
+                <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure valid low.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">Valid</span><span class="p">:</span>
+                <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure valid.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+            <span class="n">GaugeDisconnected</span><span class="p">:</span>
+                <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge Disconnected.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Critical</span><span class="p">);</span>
+            <span class="n">PressInvalid</span><span class="p">:</span>
+                <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure invalid.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+            <span class="n">OoR</span><span class="p">:</span>
+                <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge pressure out of range.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Warning</span><span class="p">);</span>
+            <span class="n">Starting</span><span class="p">:</span>
+                <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Gauge starting.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span>
+          <span class="n">END_CASE</span>
+          <span class="n">ePrevState</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">eState</span><span class="p">;</span>
+          <span class="n">stateTimer</span><span class="o">.</span><span class="n">IN</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+      <span class="n">END_IF</span>
+<span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+
+<span class="n">ACTION</span> <span class="n">ACT_Persistent</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">On</span> <span class="n">first</span> <span class="n">PLC</span> <span class="k">pass</span><span class="p">,</span> <span class="n">load</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">value</span> <span class="n">into</span> <span class="n">the</span> <span class="n">structrue</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">SUPER</span><span class="o">^.</span><span class="n">bRestorePersistentData</span>   <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rVAC_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+        <span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">:=</span> <span class="n">rVAC_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rPRO_SP</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+        <span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">:=</span> <span class="n">rPRO_SP</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">rHYS_PR</span> <span class="o">&lt;&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">THEN</span>
+        <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span> <span class="o">:=</span> <span class="n">rHYS_PR</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+    <span class="n">IF</span> <span class="p">(</span> <span class="n">bAutoRecoverWrite</span><span class="p">)</span> <span class="n">THEN</span>
+        <span class="n">IG</span><span class="o">.</span><span class="n">xAutoOn</span> <span class="o">:=</span> <span class="n">bAutoRecover</span><span class="p">;</span>
+    <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="p">(</span><span class="o">*</span><span class="n">Check</span> <span class="k">if</span> <span class="n">a</span> <span class="n">new</span> <span class="n">value</span> <span class="n">has</span> <span class="n">been</span> <span class="n">written</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">structure</span> <span class="n">variable</span> <span class="n">copy</span> <span class="n">it</span> <span class="n">to</span> <span class="n">the</span> <span class="n">persistent</span> <span class="n">variable</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span> <span class="o">=</span> <span class="n">rVAC_SP</span><span class="p">)</span>  <span class="n">THEN</span>
+    <span class="n">rVAC_SP</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rVAC_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span> <span class="o">=</span> <span class="n">rPRO_SP</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rPRO_SP</span><span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rPRO_SP</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span> <span class="o">=</span> <span class="n">rHYS_PR</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">rHYS_PR</span><span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">rHYS_PR</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">NOT</span><span class="p">(</span><span class="n">bAutoRecoverWrite</span><span class="p">)</span> <span class="n">OR</span> <span class="n">NOT</span> <span class="p">(</span><span class="n">bAutoRecover</span> <span class="o">=</span> <span class="n">IG</span><span class="o">.</span><span class="n">xAutoOn</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">bAutoRecover</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">xAutoOn</span><span class="p">;</span>
+    <span class="n">bAutoRecoverWrite</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">END_IF</span><span class="p">;</span>
+<span class="n">stateTimer</span><span class="p">(</span><span class="n">PT</span><span class="o">:=</span><span class="n">T</span><span class="c1">#10S);</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">stateTimer</span><span class="o">.</span><span class="n">Q</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">bWasOn</span> <span class="o">:=</span> <span class="p">(</span><span class="n">IG</span><span class="o">.</span><span class="n">eState</span> <span class="o">&gt;=</span><span class="n">Valid</span> <span class="p">);</span>
+    <span class="n">stateTimer</span><span class="o">.</span><span class="n">IN</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">fbWritePersistentData</span><span class="p">(</span><span class="n">NETID</span><span class="o">:=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">PORT</span><span class="o">:=</span><span class="mi">851</span><span class="p">,</span> <span class="n">START</span><span class="o">:=</span><span class="n">TRUE</span><span class="p">,</span> <span class="n">TMOUT</span><span class="o">:=</span><span class="n">T</span><span class="c1">#1s );</span>
+<span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_ACTION</span>
+
+<span class="n">ACTION</span> <span class="n">ACT_Recover</span><span class="p">:</span>
+<span class="n">fbGetCurTaskIdx</span><span class="p">();</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">TwinCAT_SystemInfoVarList</span><span class="o">.</span><span class="n">_TaskInfo</span><span class="p">[</span><span class="n">fbGetCurTaskIdx</span><span class="o">.</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">FirstCycle</span><span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">tRecover</span><span class="o">.</span><span class="n">IN</span> <span class="o">:=</span> <span class="n">TRUE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">tRecover</span><span class="p">(</span><span class="n">IN</span><span class="o">:=</span> <span class="p">,</span> <span class="n">PT</span><span class="o">:=</span><span class="n">tRecoverDelay</span><span class="p">);</span>
+<span class="n">IF</span> <span class="n">NOT</span><span class="p">(</span><span class="n">bAutoRecoverWrite</span><span class="p">)</span> <span class="n">OR</span> <span class="p">(</span><span class="n">tRecover</span><span class="o">.</span><span class="n">Q</span> <span class="n">AND</span> <span class="n">bAutoRecover</span> <span class="p">)</span> <span class="n">THEN</span>
+    <span class="n">This</span><span class="o">^.</span><span class="n">M_Recover</span><span class="p">();</span>
+    <span class="n">tRecover</span><span class="o">.</span><span class="n">IN</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+<span class="n">END_ACTION</span>
+
+<span class="n">ACTION</span> <span class="n">IO</span><span class="p">:</span>
+<span class="p">(</span><span class="o">*</span><span class="n">soft</span> <span class="n">link</span> <span class="n">inputs</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">i_iPRESS_R</span><span class="o">:=</span>     <span class="n">i_iPRESS_R</span><span class="p">;</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">i_xHV_ON</span><span class="o">:=</span> <span class="n">i_xHV_ON</span><span class="p">;</span>
+<span class="o">//</span><span class="n">IG</span><span class="o">.</span><span class="n">i_xDisc_Active</span><span class="o">:=</span><span class="n">i_xDisc_Active</span><span class="p">;</span>
+<span class="p">(</span><span class="o">*</span><span class="n">soft</span> <span class="n">link</span> <span class="n">outputs</span><span class="o">*</span><span class="p">)</span>
+<span class="n">q_xHV_DIS</span> <span class="o">:=</span> <span class="n">IG</span><span class="o">.</span><span class="n">q_xHV_DIS</span><span class="p">;</span>
+
+<span class="n">IG</span><span class="o">.</span><span class="n">sPath</span> <span class="o">:=</span> <span class="n">sPath</span><span class="p">;</span>
+<span class="n">IG</span><span class="o">.</span><span class="n">iAutoOnTimer</span><span class="o">:=</span> <span class="n">TIME_TO_INT</span><span class="p">(</span><span class="n">tRecover</span><span class="o">.</span><span class="n">PT</span><span class="p">);</span>
+<span class="n">END_ACTION</span>
+
+<span class="n">METHOD</span> <span class="n">M_HVE</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+        <span class="n">enable</span><span class="p">:</span><span class="nb">bool</span><span class="p">;</span> <span class="o">//</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">true</span> <span class="n">to</span> <span class="n">enable</span><span class="p">,</span> <span class="n">false</span> <span class="n">to</span> <span class="n">disable</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">this</span><span class="o">^.</span><span class="n">IG</span><span class="o">.</span><span class="n">xHV_SW</span><span class="o">:=</span> <span class="n">enable</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_Recover</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+<span class="n">END_VAR</span>
+<span class="n">This</span><span class="o">^.</span><span class="n">M_HVE</span><span class="p">(</span><span class="n">This</span><span class="o">^.</span><span class="n">bWasOn</span><span class="p">);</span>
+<span class="n">M_Recover</span> <span class="o">:=</span> <span class="n">bWasOn</span><span class="p">;</span>
+<span class="n">IF</span> <span class="p">(</span><span class="n">bWasOn</span><span class="p">)</span> <span class="n">THEN</span> <span class="n">fbLogger</span><span class="p">(</span><span class="n">sMsg</span><span class="o">:=</span><span class="s1">&#39;Auto Recovery Initiated.&#39;</span><span class="p">,</span> <span class="n">eSevr</span><span class="o">:=</span><span class="n">TcEventSeverity</span><span class="o">.</span><span class="n">Info</span><span class="p">);</span> <span class="n">END_IF</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_SetBits</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">TermBits</span> <span class="p">:</span> <span class="n">UINT</span><span class="p">;</span> <span class="o">//</span> <span class="n">The</span> <span class="n">terminal</span><span class="s1">&#39;s maximum value in bits</span>
+<span class="n">END_VAR</span>
+<span class="n">This</span><span class="o">^.</span><span class="n">iTermBits</span> <span class="o">:=</span> <span class="n">TermBits</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Related:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#fb-gaugebase">FB_GaugeBase</a></p></li>
+<li><p><a class="reference internal" href="#st-vg">ST_VG</a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
 <section id="fb-mks392">
 <h2>FB_MKS392<a class="headerlink" href="#fb-mks392" title="Link to this heading"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">implements</span> <span class="n">the</span> <span class="n">MKS392</span> <span class="n">gauge</span><span class="o">*</span><span class="p">)</span>
@@ -8229,7 +8659,7 @@ VAR
     iTermBits: UINT := 30518 ; // The terminal&#39;s maximum value in bits default el3174 as per vacuum architecture
     (*IO*)
     i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
-    q_xHV_DIS AT %Q* : BOOL := True; // Active Low
+    q_xHV_DIS AT %Q* : BOOL := TRUE; // Active Low
 
 END_VAR
 (* Standard MKS 9XX series conversion *)
@@ -8246,7 +8676,7 @@ rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
 (* Pressure OK check *)
 // Gauge state
 // Is the gauge plugged in, and within a reasonable range?
-IF  (rV &gt;= 0.1 and rV &lt;=8.7) THEN // as per manual
+IF  (rV &gt;= 0.1 AND rV &lt;=8.7) THEN // as per manual
     IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
     IG.eState := Valid;
     IG.xPRESS_OK := TRUE; //Backwards compatibility
@@ -8255,6 +8685,199 @@ ELSIF rV &gt; 8.7 AND rV &lt; 10 THEN
     IG.xPRESS_OK := FALSE;
     IG.eState := Off;
 ELSE
+    IG.xPRESS_OK := FALSE;
+    IG.eState := GaugeDisconnected;
+END_IF
+
+
+IF (PG.rPRESS &lt;= IG.rPRO_SP)  AND (PG.xPRESS_OK) THEN
+         IG.q_xHV_DIS := IG.xHV_SW;
+         IG.xILKOk := TRUE;
+    ELSIF NOT IG.q_xHV_DIS AND timer.Q THEN
+        IF IG.rPRESS &gt; (IG.rPRO_SP + IG.rHYS_PR) OR PG.rPRESS &gt; (IG.rPRO_SP + IG.rHYS_PR) THEN
+        IG.q_xHV_DIS := FALSE;
+        IG.xHV_SW := FALSE;
+        END_IF
+    ELSE
+        IG.q_xHV_DIS := FALSE;
+        IG.xHV_SW := FALSE;
+        IG.xILKOk := FALSE;
+     END_IF
+
+
+timer(IN:= NOT IG.q_xHV_DIS, PT:= T#2s);
+
+(* Setpoint evaluation *)
+IG.xAT_VAC := IG.xPRESS_OK AND (IG.rPRESS &lt; IG.rVAC_SP);
+
+(*Soft IO Mapping*)
+ACT_IO();
+(*Load or save the persistent variables*)
+ACT_Persistent();
+
+(*Logger*)
+THIS^.ACT_Logger();
+
+(*Load or save the persistent variables*)
+ACT_Persistent();
+
+END_FUNCTION_BLOCK
+
+ACTION ACT_IO:
+(*soft link inputs*)
+IG.i_iPRESS_R:=     i_iPRESS_R;
+
+(*soft link outputs*)
+q_xHV_DIS := IG.q_xHV_DIS;
+END_ACTION
+
+ACTION ACT_Logger:
+// ILK logger
+IF NOT IG.xILKOk AND NOT IG.q_xHV_DIS THEN
+         fbLogger(sMsg:=&#39;Lost external interlock while gauge was on.&#39;, eSevr:=TcEventSeverity.Critical);
+END_IF
+
+
+// Log Action
+tAction(CLK:=  IG.q_xHV_DIS);
+IF tAction.Q THEN fbLogger(sMsg:=&#39;Ion gauge commanded to switch on&#39;, eSevr:=TcEventSeverity.Info); END_IF
+
+
+
+//STATE Logger
+IF ePrevState &lt;&gt; IG.eState THEN
+      CASE IG.eState OF
+        ValidHi:
+        ValidLo:
+        Valid:
+            fbLogger(sMsg:=&#39;Gauge pressure valid.&#39;, eSevr:=TcEventSeverity.Info);
+          GaugeDisconnected:
+            fbLogger(sMsg:=&#39;Gauge Disconnected.&#39;, eSevr:=TcEventSeverity.Critical);
+        PressInvalid:
+            fbLogger(sMsg:=&#39;Gauge pressure invalid.&#39;, eSevr:=TcEventSeverity.Warning);
+        OoR:
+            fbLogger(sMsg:=&#39;Gauge pressure out of range.&#39;, eSevr:=TcEventSeverity.Warning);
+        Starting:
+            fbLogger(sMsg:=&#39;Gauge starting.&#39;, eSevr:=TcEventSeverity.Info);
+      END_CASE
+      ePrevState := IG.eState;
+END_IF
+END_ACTION
+
+ACTION ACT_Persistent:
+(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+    SUPER^.bRestorePersistentData   := FALSE;
+    IF ( rVAC_SP &lt;&gt; 0) THEN
+        IG.rVAC_SP := rVAC_SP;
+    END_IF;
+    IF ( rPRO_SP &lt;&gt; 0) THEN
+        IG.rPRO_SP := rPRO_SP;
+    END_IF;
+    IF ( rHYS_PR &lt;&gt; 0) THEN
+        IG.rHYS_PR := rHYS_PR;
+    END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (IG.rVAC_SP = rVAC_SP)  THEN
+    rVAC_SP := IG.rVAC_SP;
+END_IF;
+
+IF NOT (IG.rPRO_SP = rPRO_SP) THEN
+    rPRO_SP:= IG.rPRO_SP;
+END_IF;
+
+IF NOT (IG.rHYS_PR = rHYS_PR) THEN
+    rHYS_PR:= IG.rHYS_PR;
+END_IF;
+END_ACTION
+
+METHOD M_AutoOn : BOOL
+VAR_INPUT
+END_VAR
+this^.IG.q_xHV_DIS:= FALSE;
+END_METHOD
+
+METHOD M_SetBits : BOOL
+VAR_INPUT
+    TermBits : UINT; // The terminal&#39;s maximum value in bits
+END_VAR
+This^.iTermBits := TermBits;
+END_METHOD
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Related:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#fb-gaugebase">FB_GaugeBase</a></p></li>
+<li><p><a class="reference internal" href="#st-vg">ST_VG</a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="fb-mks909-rbk">
+<h2>FB_MKS909_RBK<a class="headerlink" href="#fb-mks909-rbk" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(* Standard MKS 909 hot cathode with gauge on reedback*)
+(* works for 972 and 925 *)
+
+FUNCTION_BLOCK FB_MKS909_RBK EXTENDS FB_GaugeBase
+
+VAR_INPUT
+    PG      : ST_VG;
+END_VAR
+VAR_OUTPUT
+    {attribute &#39;pytmc&#39; := &#39;
+    pv:
+    &#39;}
+    IG      : ST_VG;
+END_VAR
+VAR_IN_OUT
+
+END_VAR
+VAR
+    rV : REAL;
+    rMaxPressure    :       REAL := 5E-2; //Torr
+    rMinPressure    :       REAL := 1E-10; //Torr
+    rOffPressure    :       REAL := 0.0;
+    timer:TON;
+    (*Default set point 50 mT*)
+    rDefaultVAC_SP: REAL := 9E-3; // as per manual
+    iTermBits: UINT := 30518 ; // The terminal&#39;s maximum value in bits default el3174 as per vacuum architecture
+    (*IO*)
+    i_iPRESS_R AT%I* :INT; // input Pressure // Link to analog Input
+    q_xHV_DIS AT %Q* : BOOL := TRUE; // Active Low
+    i_xGauge_ON AT %I*      : BOOL; //  True when gauge has power  // &#39;TcLinkTo&#39; (EL1084) ^Input
+
+END_VAR
+(* Standard MKS 9XX series conversion *)
+(* works for 972 and 925 *)
+
+//Default setpoint 50 mT
+IF PG.rVAC_SP = 0 THEN
+    PG.rVAC_SP := rDefaultVAC_SP;
+END_IF
+// check no div by zero
+If (iTermBits=0) THEN iTermBits := 30518;END_IF
+rV := 10*INT_TO_REAL(IG.i_iPRESS_R)/iTermBits;
+
+(* Pressure OK check *)
+// Gauge state
+// Is the gauge plugged in, and within a reasonable range?
+IF i_xGauge_ON THEN
+    IF  (rV &gt;= 0.1 AND rV &lt;=8.7) THEN // as per manual
+        IG.rPRESS := LREAL_TO_REAL(EXPT(10, rV-10));
+        IG.eState := Valid;
+        IG.xPRESS_OK := TRUE; //Backwards compatibility
+    ELSIF rV &gt; 8.7 AND rV &lt; 10 THEN
+        IG.rPRESS :=rOffPressure;
+        IG.xPRESS_OK := FALSE;
+        IG.eState := Off;
+    ELSE
+        IG.rPRESS := rOffPressure;
+        IG.xPRESS_OK := FALSE;
+        IG.eState := OoR;
+    END_IF
+ELSE
+    IG.rPRESS := rOffPressure;
     IG.xPRESS_OK := FALSE;
     IG.eState := GaugeDisconnected;
 END_IF
