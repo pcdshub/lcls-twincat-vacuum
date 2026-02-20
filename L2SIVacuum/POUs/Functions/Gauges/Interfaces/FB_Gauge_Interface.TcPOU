@@ -7,7 +7,7 @@
 FUNCTION_BLOCK FB_Gauge_Interface
 VAR_INPUT
 END_VAR
-VAR_OUTPUT
+VAR_IN_OUT
     {attribute 'pytmc' := 'pv:'}
     VG : ST_VG;
 END_VAR
@@ -28,5 +28,9 @@ VG.xAT_VAC := i_xAT_VAC;
 VG.xPRESS_OK := i_xPRESS_OK;
 ]]></ST>
     </Implementation>
+    <LineIds Name="FB_Gauge_Interface">
+      <LineId Id="3" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

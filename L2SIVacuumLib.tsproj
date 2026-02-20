@@ -41,7 +41,7 @@
 			</SubItem>
 		</DataType>
 	</DataTypes>
-	<Project ProjectGUID="{8307B492-8F76-4774-8A19-E2DE13DD96C6}" TargetNetId="172.21.148.154.1.1" ShowHideConfigurations="#x106">
+	<Project ProjectGUID="{8307B492-8F76-4774-8A19-E2DE13DD96C6}" TargetNetId="172.21.148.154.1.1" Target64Bit="true" ShowHideConfigurations="#x106">
 		<System>
 			<Settings MaxCpus="4">
 				<Cpu CpuId="3"/>
@@ -59,7 +59,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{19F43C40-AA59-45D4-A14D-CFB75472AEBC}" Name="L2SIVacuum" PrjFilePath="L2SIVacuum\L2SIVacuum.plcproj" TmcFilePath="L2SIVacuum\L2SIVacuum.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{3A135F93-72CE-44A7-A2DB-62A339DAB936}" TmcPath="L2SIVacuum\L2SIVacuum.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{B13BFE45-D6ED-A4DD-4D92-ACB171C86402}" TmcPath="L2SIVacuum\L2SIVacuum.tmc">
 					<Name>L2SIVacuum Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="8" AreaNo="4">
@@ -79,7 +79,7 @@
 						<Var>
 							<Name>PMPS_GVL.BP_jsonDoc</Name>
 							<Type>SJsonValue</Type>
-							<BitSize>64</BitSize>
+							<BitSize>32</BitSize>
 							<InOut>7</InOut>
 						</Var>
 					</Vars>

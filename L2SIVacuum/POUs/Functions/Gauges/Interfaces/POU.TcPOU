@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="POU" Id="{d0430b83-40b0-475f-aa09-4e109be9ff76}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK POU EXTENDS FB_GaugeBase
+VAR_INPUT
+	st_defaultGauge : ST_VG;
+    st_secondGauge : ST_VG;
+END_VAR
+VAR_OUTPUT
+	IG : ST_VG;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT st_defaultGauge.xPRESS_OK AND st_secondGauge.xPRESS_OK THEN
+    IG := st_secondGauge;
+ELSE
+    IG := st_defaultGauge;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="POU">
+      <LineId Id="1" Count="4" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
