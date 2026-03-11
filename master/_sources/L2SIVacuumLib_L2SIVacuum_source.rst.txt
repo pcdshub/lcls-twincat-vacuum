@@ -4819,7 +4819,7 @@ FB_Gauge_Interface
     FUNCTION_BLOCK FB_Gauge_Interface
     VAR_INPUT
     END_VAR
-    VAR_IN_OUT
+    VAR_OUTPUT
         {attribute 'pytmc' := 'pv:'}
         VG : ST_VG;
     END_VAR
@@ -4827,6 +4827,7 @@ FB_Gauge_Interface
         i_rPRESS AT%I*: REAL;
         i_xAT_VAC AT%I*: BOOL;
         i_xPRESS_OK AT%I*: BOOL;
+        i_sPath AT%I* : STRING;
 
     END_VAR
     (* This function block is created for interface devices between different PLC*)
@@ -4836,6 +4837,7 @@ FB_Gauge_Interface
     VG.rPRESS := i_rPRESS;
     VG.xAT_VAC := i_xAT_VAC;
     VG.xPRESS_OK := i_xPRESS_OK;
+    VG.sPath := i_sPath;
 
     END_FUNCTION_BLOCK
 

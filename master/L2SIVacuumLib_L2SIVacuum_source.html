@@ -4942,7 +4942,7 @@ END_ACTION
 <span class="n">FUNCTION_BLOCK</span> <span class="n">FB_Gauge_Interface</span>
 <span class="n">VAR_INPUT</span>
 <span class="n">END_VAR</span>
-<span class="n">VAR_IN_OUT</span>
+<span class="n">VAR_OUTPUT</span>
     <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;pv:&#39;</span><span class="p">}</span>
     <span class="n">VG</span> <span class="p">:</span> <span class="n">ST_VG</span><span class="p">;</span>
 <span class="n">END_VAR</span>
@@ -4950,6 +4950,7 @@ END_ACTION
     <span class="n">i_rPRESS</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
     <span class="n">i_xAT_VAC</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xPRESS_OK</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">i_sPath</span> <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span> <span class="p">:</span> <span class="n">STRING</span><span class="p">;</span>
 
 <span class="n">END_VAR</span>
 <span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="ow">is</span> <span class="n">created</span> <span class="k">for</span> <span class="n">interface</span> <span class="n">devices</span> <span class="n">between</span> <span class="n">different</span> <span class="n">PLC</span><span class="o">*</span><span class="p">)</span>
@@ -4959,6 +4960,7 @@ END_ACTION
 <span class="n">VG</span><span class="o">.</span><span class="n">rPRESS</span> <span class="o">:=</span> <span class="n">i_rPRESS</span><span class="p">;</span>
 <span class="n">VG</span><span class="o">.</span><span class="n">xAT_VAC</span> <span class="o">:=</span> <span class="n">i_xAT_VAC</span><span class="p">;</span>
 <span class="n">VG</span><span class="o">.</span><span class="n">xPRESS_OK</span> <span class="o">:=</span> <span class="n">i_xPRESS_OK</span><span class="p">;</span>
+<span class="n">VG</span><span class="o">.</span><span class="n">sPath</span> <span class="o">:=</span> <span class="n">i_sPath</span><span class="p">;</span>
 
 <span class="n">END_FUNCTION_BLOCK</span>
 </pre></div>
