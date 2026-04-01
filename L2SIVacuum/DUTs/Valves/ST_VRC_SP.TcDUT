@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_VRC_SP" Id="{ac67fa7c-d9f8-46cf-9334-3da2eb658b6e}">
+    <Declaration><![CDATA[TYPE ST_VRC_SP EXTENDS ST_VRC :
+STRUCT
+	(* Interlocks *)
+
+    {attribute 'pytmc' := '
+    pv: AT_VAC_SP;
+    io: o;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    rAT_VAC_SP	:	REAL := 0.000001;	// Interlock setpoint for gauges on both sides of valve
+    rAT_VAC_SP_LAST	:	REAL :=0.000001 ;	// Interlock setpoint for gauges on both sides of valve
+    {attribute 'pytmc' := '
+    pv: AT_VAC_HYS;
+    io: o;
+    field: HOPR 1000
+    field: LOPR 0
+    field: PREC 2
+    field: EGU "TORR"
+    autosave_pass1: VAL DESC
+    '}
+    rAT_VAC_HYS	:	REAL :=0.000001;	// Hysteresis of the vacuum sp
+    {attribute 'pytmc' := '
+    pv: HYST_PERC ;
+    io: o;
+    autosave_pass1: VAL DESC
+    '}
+    rHYST_PERC	:	REAL := 0.000001;	// Hysteresis percentage
+	
+	{attribute 'pytmc' := '
+    pv: AT_VAC ;
+    field: ZNAM NOT AT VAC ;
+    field: ONAM AT VAC ;
+    io: i;
+    '}
+    xAT_VAC	:	BOOL;	//At vacuum setpoint
+
+
+
+(* Alarm Outputs *)
+    {attribute 'pytmc' := '
+    pv: ERR_SP;
+    field: ZNAM NO ERROR ;
+    field: ONAM Setpoint error present ;
+    io: i;
+    '}
+    xERR_SP			: 	BOOL;
+    {attribute 'pytmc' := '
+    pv: ERR_Ext;
+    field: ZNAM NO ERROR ;
+    field: ONAM External error present ;
+    io: i;
+    '}
+    xERR_ExtFault		: 	BOOL;
+    xAlmSum			: 	BOOL;
+    sDevName :STRING;
+
+(*ILK Devices*)
+	{attribute 'pytmc' := '
+    pv: ILK_DEVICE_US;
+    io: i;
+    '}
+    sIlkUSDeviceName: STRING;
+    {attribute 'pytmc' := '
+    pv: ILK_DEVICE_DS;
+    io: i;
+    '}
+    sIlkDSDeviceName: STRING;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_VGC_2S" Id="{354eb9e9-ed86-48ed-95be-ed5a714fad20}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves with 2 pressure setpoints*)
+    <Declaration><![CDATA[(* This function block implements basic functionality for turbopump isolation Valves with 2 pressure setpoints*)
 (* This function block interlock is as follows:
 1. The valve can be opened when the difference between the pressures on both sides is
 less than the maximum differential pressure.
@@ -576,5 +576,38 @@ END_VAR
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VGC_2S">
+      <LineId Id="3" Count="281" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_2S.ACT_IO">
+      <LineId Id="2" Count="11" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_2S.ACT_Logger">
+      <LineId Id="2" Count="53" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_2S.ACT_Persistent">
+      <LineId Id="2" Count="24" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_2S.ACT_PMPS">
+      <LineId Id="2" Count="23" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_2S.ACT_ResetAlarms">
+      <LineId Id="2" Count="7" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_2S.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_2S.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_2S.M_Set_OPN_SW">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
