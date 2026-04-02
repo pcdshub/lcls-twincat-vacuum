@@ -20,6 +20,15 @@ STRUCT
     io: i
     '}
     q_xLspdDo	: 	BOOL;
+	{attribute 'pytmc' := '
+    pv: REMOTE_ENBL;
+    field: ZNAM FALSE;
+    field: ONAM TRUE;
+    io: i
+    '}
+    q_xRemoteEn	: 	BOOL;
+	
+
 
 (* Input *)
 {attribute 'pytmc' := '
