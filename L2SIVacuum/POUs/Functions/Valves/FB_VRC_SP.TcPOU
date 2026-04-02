@@ -1,26 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_VRC" Id="{2db6a988-e12f-4920-baa1-9b034d8c1cf9}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This Function Block Implements Basic Functionality for certain types of valves e.g Turbo Isolation valves, Apperture Valve.
-This function block is interloked by an input (i_xExtILK_OK). This is so developers can interface with custom
-interlocking logic outside this function block.*)
-(* Note Interlock Logic is External *)
+  <POU Name="FB_VRC_SP" Id="{7223f6d9-bcdf-40c0-99df-9c14312bef8e}" SpecialFunc="None">
+    <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves with pressure setpoints*)
+(* This function block interlock is as follows:
+1. The valve can be opened when the pressures on both sides are lower than the pressure-setpoints.
+2. the valve will close if the pressure on either side rises above the setpoint.*)
+
 {attribute 'no_check'}
-FUNCTION_BLOCK FB_VRC EXTENDS FB_Valve
+FUNCTION_BLOCK FB_VRC_SP  EXTENDS FB_Valve
 VAR_IN_OUT
 
 END_VAR
 VAR_INPUT
-    i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
+    (*Upstream Gauge, usually ion gauge*)
+    i_stUSG	:	ST_VG;
+    (*Downstream Gauge, usually ion gauge*)
+    i_stDSG	:	ST_VG;
+    {attribute 'pytmc' := '
+    pv: EPS_OK
+    '}
     i_xOverrideMode : BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
+    i_xExtILK_OK : BOOL; //Connect to Interlock logic condition(e.g F_TURBO_VRC_ILK Function), otherwise, Set to True if the valve is not interlocked
+    
+	{attribute 'pytmc' := '
+    pv: OVRDRMV:DELAY
+    '}
+	i_tOvrdRmvDelay	:	TIME := T#10S;
+	
+
 END_VAR
 VAR_OUTPUT
     {attribute 'pytmc' := '
     pv:
     '}
-    iq_stValve : ST_VRC;
+    iq_stValve : ST_VRC_SP; (* All valve data and states will be in this struct*)
+
+END_VAR
+VAR_IN_OUT
+
 END_VAR
 VAR
+
+//    bMoving : BOOL;
+//    bDone :BOOL;
     {attribute 'instance-path'}
     {attribute 'noinit'}
     sPath: STRING;
@@ -35,24 +57,30 @@ VAR
     tOPNtimeout: TON;
     tCLStimeout:TON;
 
+    set : BOOL;
+    reset: BOOL;
 
     (*IO*)
     i_xOpnLS	AT%I*: BOOL;
     i_xClsLS	AT%I*: BOOL;
     q_xOPN_DO	AT%Q*: BOOL;
 
+    // For logging
+//    eVGCPrevState : E_VGC;
+END_VAR
+
+VAR PERSISTENT
+    rAT_VAC_SP	:	REAL;
+    rHYST_PERC	:	REAL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
-(* On first PLC pass, put valve into vented state, which implies a closed valve *)
+      <ST><![CDATA[(* On first PLC pass, put valve into vented state, which implies a closed valve *)
 fbFSInit( CLK := TRUE, Q => xFirstPass);
 IF xFirstPass THEN
-    iq_stValve.eVGC_State := Vented;
+    iq_stValve.eSTATE := INVALID;
     iq_stValve.pv_xOPN_SW := FALSE;
     ePrevState := INVALID;
 END_IF
-
-
 
 
 ///Check valve position
@@ -70,19 +98,39 @@ ELSE
     iq_stValve.eState:=INVALID;
 END_IF
 
+// Update hysteresis
+///////////////////////////////////////////////////
+IF iq_stValve.rAT_VAC_SP_LAST <> iq_stValve.rAT_VAC_SP OR xFirstPass THEN
+    iq_stValve.rAT_VAC_SP_LAST := iq_stValve.rAT_VAC_SP;
+    iq_stValve.rAT_VAC_HYS := iq_stValve.rHYST_PERC * iq_stValve.rAT_VAC_SP;
+END_IF
+
+iq_stValve.rAT_VAC_HYS := LIMIT(0, iq_stValve.rAT_VAC_HYS, iq_stValve.rAT_VAC_SP);
+IF iq_stValve.rAT_VAC_SP <> 0 THEN
+    IF iq_stValve.rHYST_PERC <> (iq_stValve.rAT_VAC_HYS / iq_stValve.rAT_VAC_SP) THEN
+        iq_stValve.rHYST_PERC := LIMIT(0, (iq_stValve.rAT_VAC_HYS / iq_stValve.rAT_VAC_SP) ,1);
+    END_IF
+END_IF
+// Valve at vacuum check
+///////////////////////////////////////////////////
+    set := i_stUSG.rPRESS < iq_stValve.rAT_VAC_HYS AND i_stDSG.rPRESS < iq_stValve.rAT_VAC_HYS AND i_stUSG.xPRESS_OK AND i_stDSG.xPRESS_OK;
+     iq_stValve.xAT_VAC S= set;
+    reset := i_stUSG.rPRESS > iq_stValve.rAT_VAC_SP OR i_stDSG.rPRESS > iq_stValve.rAT_VAC_SP OR NOT i_stUSG.xPRESS_OK OR NOT i_stDSG.xPRESS_OK;
+    iq_stValve.xAT_VAC R= reset;
 
 
-(*evaluate Valve open external interlock*)
-iq_stValve.xOPN_OK := i_xExtILK_OK;
+(*evaluate Valve open with external interlock*)
 iq_stValve.xEXT_OK := i_xExtILK_OK;
-IF NOT iq_stValve.xOPN_OK and NOT tonOvrd.Q THEN
+iq_stValve.xOPN_OK := iq_stValve.xEXT_OK AND iq_stValve.xAT_VAC;
+
+IF NOT iq_stValve.xOPN_OK AND NOT tonOvrd.Q THEN
     iq_stValve.pv_xOPN_SW := FALSE;
-    iq_stValve.eVGC_State := ERR_ExtFault;
+//    iq_stValve.eSTATE := ERR_ExtFault;
 END_IF
 
 IF (iq_stValve.q_xOPN_DO) AND (iq_stValve.xOPN_OK) THEN
-    iq_stValve.eVGC_State := AtVacuum;
-END_IF
+//    iq_stValve.eSTATE := AtVacuum;
+END_IF 
 
 
 (* Override logic *)
@@ -91,7 +139,7 @@ Solution: Override only after ten seconds of override, protect against blips,
 when the valve permission goes true for more than ten seconds consistently, remove override
 *)
 
-tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=T#10S);
+tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=i_tOvrdRmvDelay);
 rtOK(CLK:=tonDelOK.Q);
 IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN
     iq_stValve.pv_xOvrdOpn :=FALSE;
@@ -129,21 +177,30 @@ tCLStimeout(IN:= NOT iq_stValve.q_xOPN_DO, PT := tTimeOutDuration);
 (*Soft IO Mapping*)
 ACT_IO();
 
+
 // Log States and triggers
 ACT_Logger();
+
+(*Load or save the persistent variables*)
+ACT_Persistent();
+
 ]]></ST>
     </Implementation>
-    <Action Name="ACT_IO" Id="{71e6a07b-f8a4-4ad9-819a-47adf702a688}">
+    <Action Name="ACT_IO" Id="{a3aad8f7-f123-440d-8cde-fef596735020}">
       <Implementation>
         <ST><![CDATA[(*inputs*)
 iq_stValve.i_xOpnLS := 	i_xOpnLS;
 iq_stValve.i_xClsLS:=	i_xClsLS;
 iq_stValve.xOverrideMode := i_xOverrideMode;
 (*outputs*)
-q_xOPN_DO:= iq_stValve.q_xOPN_DO;]]></ST>
+q_xOPN_DO:= iq_stValve.q_xOPN_DO;
+
+(*ILK Devices*)
+iq_stValve.sIlkUSDeviceName := This^.i_stUSG.sPath;
+iq_stValve.sIlkDSDeviceName := This^.i_stDSG.sPath;]]></ST>
       </Implementation>
     </Action>
-    <Action Name="ACT_Logger" Id="{2618c8c0-2f2b-4d3f-ad1a-f6d80a8c3ba6}">
+    <Action Name="ACT_Logger" Id="{2a8ade71-60c7-4122-9c51-72394d600c91}">
       <Implementation>
         <ST><![CDATA[// ILK logger
 
@@ -184,7 +241,29 @@ IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSe
 ]]></ST>
       </Implementation>
     </Action>
-    <Method Name="M_IsClosed" Id="{196a70bb-373f-42e5-aeaa-84bd8a433acc}">
+    <Action Name="ACT_Persistent" Id="{42e84487-2adc-49d2-88ab-ff67e36c3c1f}">
+      <Implementation>
+        <ST><![CDATA[(*On first PLC pass, load the persistent value into the structrue variable*)
+IF (SUPER^.bRestorePersistentData) THEN
+    SUPER^.bRestorePersistentData	:= FALSE;
+    IF (rAT_VAC_SP <> 0) THEN
+        iq_stValve.rAT_VAC_SP := rAT_VAC_SP;
+    END_IF;
+    IF (rHYST_PERC <> 0) THEN
+            iq_stValve.rHYST_PERC := rHYST_PERC;
+    END_IF;
+END_IF
+(*Check if a new value has been written in the structure variable copy it to the persistent variable*)
+IF NOT (iq_stValve.rAT_VAC_SP = rAT_VAC_SP) THEN
+    rAT_VAC_SP :=iq_stValve.rAT_VAC_SP;
+END_IF;
+
+IF NOT (iq_stValve.rHYST_PERC = rHYST_PERC) THEN
+    rHYST_PERC:= iq_stValve.rHYST_PERC;
+END_IF;]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="M_IsClosed" Id="{e25e9d68-c3ef-40e2-b6cf-e08ad1e23127}">
       <Declaration><![CDATA[METHOD PUBLIC M_IsClosed : BOOL
 VAR_INPUT
 END_VAR
@@ -193,7 +272,7 @@ END_VAR
         <ST><![CDATA[M_IsClosed := (This^.iq_stValve.eState = E_ValvePositionState.CLOSED);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_IsOpen" Id="{c98837b0-347d-4e29-a00c-0376b2ac9341}">
+    <Method Name="M_IsOpen" Id="{a72d0866-e4de-4586-aa1e-86ee0a14dc45}">
       <Declaration><![CDATA[METHOD PUBLIC M_IsOpen : BOOL
 VAR_INPUT
 END_VAR
@@ -202,39 +281,36 @@ END_VAR
         <ST><![CDATA[M_IsOpen := (This^.iq_stValve.eState = E_ValvePositionState.OPEN);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_Set_OPN_SW" Id="{87b0c242-3ded-4d47-af63-cf02c359390b}">
-      <Declaration><![CDATA[// Use this Methode to Open or close the valve by setting the OPN_SW to the input value.
-METHOD PUBLIC M_Set_OPN_SW : BOOL
+    <Method Name="M_Set_OPN_SW" Id="{24d04ce9-3f64-48d0-bf5f-f449a3a3102f}">
+      <Declaration><![CDATA[METHOD M_Set_OPN_SW : BOOL
 VAR_INPUT
-    value:BOOL;
+	value:BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[This^.iq_stValve.pv_xOPN_SW := value;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VRC">
-      <LineId Id="3" Count="25" />
-      <LineId Id="90" Count="1" />
-      <LineId Id="30" Count="59" />
-      <LineId Id="2" Count="0" />
+    <LineIds Name="FB_VRC_SP">
+      <LineId Id="1" Count="110" />
     </LineIds>
-    <LineIds Name="FB_VRC.ACT_IO">
-      <LineId Id="2" Count="4" />
+    <LineIds Name="FB_VRC_SP.ACT_IO">
+      <LineId Id="1" Count="9" />
+    </LineIds>
+    <LineIds Name="FB_VRC_SP.ACT_Logger">
+      <LineId Id="1" Count="36" />
+    </LineIds>
+    <LineIds Name="FB_VRC_SP.ACT_Persistent">
+      <LineId Id="1" Count="17" />
+    </LineIds>
+    <LineIds Name="FB_VRC_SP.M_IsClosed">
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_VRC.ACT_Logger">
-      <LineId Id="2" Count="35" />
+    <LineIds Name="FB_VRC_SP.M_IsOpen">
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_VRC.M_IsClosed">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VRC.M_IsOpen">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VRC.M_Set_OPN_SW">
-      <LineId Id="2" Count="0" />
+    <LineIds Name="FB_VRC_SP.M_Set_OPN_SW">
+      <LineId Id="1" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -115,6 +115,9 @@
     <Compile Include="DUTs\Valves\ST_VGC_2S.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Valves\ST_VRC_SP.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Valves\ST_VRC_NO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -327,6 +330,9 @@
     <Compile Include="POUs\Functions\Pumps\FB_EbaraEVA.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\FB_KashiyamaNeoDry_G.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_KashiyamaPump.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -412,6 +418,9 @@
     <Compile Include="POUs\Functions\Valves\FB_VGC_2S.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VRC_SP.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VRC_DA.TcPOU">
       <SubType>Code</SubType>
