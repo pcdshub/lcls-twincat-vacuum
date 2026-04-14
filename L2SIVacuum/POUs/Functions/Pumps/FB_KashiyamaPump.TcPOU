@@ -8,7 +8,7 @@ VAR_IN_OUT
 
 END_VAR
 VAR_INPUT
-
+    i_seriesG : BOOL := FALSE;
 END_VAR
 VAR_OUTPUT
     {attribute 'pytmc' := 'pv:'}
@@ -38,18 +38,24 @@ q_stPump.xIlkOK := q_stPump.i_xRemote AND q_stPump.i_xWarningOK AND q_stPump.i_x
 IF q_stPump.xIlkOK THEN
     q_stPump.q_xRunDO := q_stPump.pv_xRunSW;
     ELSE
-        q_stPump.PV_xRunSW := FALSE;
+        q_stPump.pv_xRunSW := FALSE;
         q_stPump.q_xRunDO := FALSE;
 END_IF
 
-q_stPump.xLspd_IlkENA := q_stPump.q_xRunDO;
+// Breaking this out as to not edit low speed operation logic for older models
+IF NOT i_seriesG THEN
+    q_stPump.xLspd_IlkENA := q_stPump.q_xRunDO;
+ELSE
+    q_stPump.xLspd_IlkENA := q_stPump.xIlkOK;
+END_IF
 
 IF q_stPump.xLspd_IlkENA THEN
     q_stPump.q_xLspdDo := q_stPump.xLspdSW;
-    ELSE
-        q_stPump.xLspdSW := FALSE;
-        q_stPump.q_xLspdDo := FALSE;
+ELSE
+    q_stPump.xLspdSW := FALSE;
+    q_stPump.q_xLspdDo := FALSE;
 END_IF
+
 
 //resetTmr (In := iq_stPump.xResetSW, PT := T#2S);
 //IF resetTmr.Q THEN
@@ -67,7 +73,7 @@ IF NOT q_stPump.i_xAlarmOK THEN
     q_stPump.eState := pumpFAULT;
 ELSIF NOT q_stPump.q_xRunDo AND q_stPump.i_xAlarmOK THEN
         q_stPump.eState := pumpSTOPPED;
-ELSIF NOT q_stPump.q_xRunDo AND NOT q_stPump.i_xIsRun THEN
+ELSIF q_stPump.q_xRunDo AND NOT q_stPump.i_xIsRun THEN
         q_stPump.eState := pumpSTARTING;
 ELSIF q_stPump.i_xIsRun THEN
         q_stPump.eState := pumpRUNNING;
