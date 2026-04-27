@@ -767,6 +767,13 @@ ST_KashiyamaDryPump
         io: i
         '}
         q_xLspdDo	: 	BOOL;
+        {attribute 'pytmc' := '
+        pv: REM_DO;
+        field: ZNAM FALSE;
+        field: ONAM TRUE;
+        io: i
+        '}
+        q_xRemoteDo	: 	BOOL;
 
     (* Input *)
     {attribute 'pytmc' := '
@@ -819,6 +826,13 @@ ST_KashiyamaDryPump
         io: io
         '}
         xLspdSW     :   BOOL;
+        {attribute 'pytmc' := '
+        pv: REMOTE_SW;
+        field: ZNAM FALSE;
+        field: ONAM TRUE;
+        io: io
+        '}
+        xRemoteSW     :   BOOL;
         LowSP  :   REAL := 0.02; //Torr
         HighSP :   REAL; //Torr
         RdyTmr : REAL;
@@ -6551,7 +6565,7 @@ FB_KashiyamaPump
         q_stPump.eState := pumpFAULT;
     ELSIF NOT q_stPump.q_xRunDo AND q_stPump.i_xAlarmOK THEN
             q_stPump.eState := pumpSTOPPED;
-    ELSIF NOT q_stPump.q_xRunDo AND NOT q_stPump.i_xIsRun THEN
+    ELSIF q_stPump.q_xRunDo AND NOT q_stPump.i_xIsRun THEN
             q_stPump.eState := pumpSTARTING;
     ELSIF q_stPump.i_xIsRun THEN
             q_stPump.eState := pumpRUNNING;
@@ -6576,6 +6590,144 @@ FB_KashiyamaPump
         q_stPump.i_xWarningOK :=	i_xWarning;
         q_stPump.i_xIsRun :=	i_xIsRun;
     END_ACTION
+
+    METHOD PUBLIC M_Run : BOOL
+    VAR_INPUT
+        run:bool; // set to true to run, false to stop;
+    END_VAR
+    this^.q_stPump.pv_xRunSW := run;
+    END_METHOD
+
+
+Related:
+    * `ST_KashiyamaDryPump`_
+
+
+FB_KashiyamaPump_G
+^^^^^^^^^^^^^^^^^^
+
+::
+
+    (* This function block does basic controls FOR the Kashiyama pump. Turns off pump
+    in the event of errors/ warnings. Provides interlocking interface.*)
+    FUNCTION_BLOCK FB_KashiyamaPump_G
+    VAR_IN_OUT
+
+    END_VAR
+    VAR_INPUT
+
+    END_VAR
+    VAR_OUTPUT
+        {attribute 'pytmc' := 'pv:'}
+        q_stPump : ST_KashiyamaDryPump;
+    END_VAR
+    VAR
+        TONtmr : TON;
+        resetTmr : TON;
+
+        (* Output *)
+        q_xRunDO 	AT%Q*:	BOOL;
+        q_xResetDo	AT%Q*: 	BOOL;
+        q_xLspdDo	AT%Q*: 	BOOL;
+        q_xRemote 	AT%Q*:  BOOL;
+
+    (* Input *)
+        i_xAlarm	AT%I*:	BOOL;
+        i_xIsRun	AT%I*:	BOOL;
+    END_VAR
+    //Only run when commanded to be in remote and there is no alarm (this is a normally open alarm 0 = OK)
+    q_stPump.xIlkOK := q_stPump.q_xRemoteDO AND NOT q_stPump.i_xAlarmOK;
+
+    IF q_stPump.xIlkOK THEN
+        q_stPump.q_xRunDO := q_stPump.pv_xRunSW;
+        ELSE
+            q_stPump.PV_xRunSW := FALSE;
+            q_stPump.q_xRunDO := FALSE;
+    END_IF
+
+    q_stPump.xLspd_IlkENA := q_stPump.xIlkOK;
+
+    IF q_stPump.xLspd_IlkENA THEN
+        q_stPump.q_xLspdDo := q_stPump.xLspdSW;
+        ELSE
+            q_stPump.xLspdSW := FALSE;
+            q_stPump.q_xLspdDo := FALSE;
+    END_IF
+
+    //resetTmr (In := iq_stPump.xResetSW, PT := T#2S);
+    //IF resetTmr.Q THEN
+    //	iq_stPump.xResetSW := FALSE;
+    //END_IF
+
+    q_stPump.q_xResetDo := NOT q_stPump.i_xIsRun AND q_stPump.xResetSW;
+
+    //countdown Timer
+    TONtmr (IN := q_stPump.i_xIsRun, PT := T#20S);
+    q_stPump.RdyTmr := TO_REAL(TONtmr.PT) - TO_REAL(TONtmr.ET);
+
+    (*State evaluation*)
+    IF q_stPump.i_xAlarmOK THEN  // reminder this is normally closed (0 = no alarm | 1 = alarm)
+        q_stPump.eState := pumpFAULT;
+    ELSIF NOT q_stPump.q_xRunDo AND NOT q_stPump.i_xAlarmOK THEN
+            q_stPump.eState := pumpSTOPPED;
+    ELSIF q_stPump.q_xRunDo AND NOT q_stPump.i_xIsRun THEN
+            q_stPump.eState := pumpSTARTING;
+    ELSIF q_stPump.i_xIsRun THEN
+            q_stPump.eState := pumpRUNNING;
+    ELSE
+        q_stPump.eState := pumpFAULT;
+    END_IF
+
+    //Mapping
+    M_IO();
+
+    END_FUNCTION_BLOCK
+
+    METHOD M_Alarm : BOOL
+    VAR_INPUT
+    END_VAR
+    M_alarm := THIS^.q_stPump.i_xAlarmOK;   // 0 = no alarm | 1 = alarm
+    END_METHOD
+
+    METHOD M_IO : BOOL
+    VAR_INPUT
+    END_VAR
+    (* Output *)
+        q_xRunDO 	:= THIS^.q_stPump.q_xRunDO;
+        q_xResetDo := THIS^.q_stPump.q_xResetDo;
+        q_xLspdDo := THIS^.q_stPump.q_xLspdDo;
+        q_xRemote := THIS^.q_stPump.q_xRemoteDo;
+    (* Input *)
+        THIS^.q_stPump.i_xAlarmOK :=	THIS^.i_xAlarm;
+        THIS^.q_stPump.i_xIsRun :=	THIS^.i_xIsRun;
+    END_METHOD
+
+    METHOD M_IsRun : BOOL
+    VAR_INPUT
+    END_VAR
+    M_IsRun := THIS^.q_stPump.i_xIsRun;
+    END_METHOD
+
+    METHOD M_Lspd : BOOL
+    VAR_INPUT
+        lowspeed : BOOL;  // Set low speed setting
+    END_VAR
+    THIS^.q_stPump.xLspdSW := lowspeed;
+    END_METHOD
+
+    METHOD M_Remote : BOOL
+    VAR_INPUT
+        remote : BOOL; // Remote command
+    END_VAR
+    this^.q_stPump.xRemoteSW := remote;
+    END_METHOD
+
+    METHOD M_Reset : BOOL
+    VAR_INPUT
+        reset : BOOL; // Set true to clear faults
+    END_VAR
+    this^.q_stPump.xResetSW := reset;
+    END_METHOD
 
     METHOD PUBLIC M_Run : BOOL
     VAR_INPUT

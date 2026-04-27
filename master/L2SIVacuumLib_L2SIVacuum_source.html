@@ -158,6 +158,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#fb-itr90">FB_ITR90</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-kashiyama-vrc">FB_Kashiyama_VRC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-kashiyamapump">FB_KashiyamaPump</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fb-kashiyamapump-g">FB_KashiyamaPump_G</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-lvc4000com">FB_LVC4000Com</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-lvc4000serialdriver">FB_LVC4000SerialDriver</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#fb-lvc4000transaction">FB_LVC4000Transaction</a></li>
@@ -964,6 +965,13 @@
     <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
     <span class="s1">&#39;}</span>
     <span class="n">q_xLspdDo</span>       <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">REM_DO</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">i</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">q_xRemoteDo</span>     <span class="p">:</span>       <span class="n">BOOL</span><span class="p">;</span>
 
 <span class="p">(</span><span class="o">*</span> <span class="n">Input</span> <span class="o">*</span><span class="p">)</span>
 <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
@@ -1016,6 +1024,13 @@
     <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
     <span class="s1">&#39;}</span>
     <span class="n">xLspdSW</span>     <span class="p">:</span>   <span class="n">BOOL</span><span class="p">;</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;</span>
+    <span class="n">pv</span><span class="p">:</span> <span class="n">REMOTE_SW</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ZNAM</span> <span class="n">FALSE</span><span class="p">;</span>
+    <span class="n">field</span><span class="p">:</span> <span class="n">ONAM</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="n">io</span><span class="p">:</span> <span class="n">io</span>
+    <span class="s1">&#39;}</span>
+    <span class="n">xRemoteSW</span>     <span class="p">:</span>   <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">LowSP</span>  <span class="p">:</span>   <span class="n">REAL</span> <span class="o">:=</span> <span class="mf">0.02</span><span class="p">;</span> <span class="o">//</span><span class="n">Torr</span>
     <span class="n">HighSP</span> <span class="p">:</span>   <span class="n">REAL</span><span class="p">;</span> <span class="o">//</span><span class="n">Torr</span>
     <span class="n">RdyTmr</span> <span class="p">:</span> <span class="n">REAL</span><span class="p">;</span>
@@ -6674,7 +6689,7 @@ END_ACTION
     <span class="n">q_stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpFAULT</span><span class="p">;</span>
 <span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRunDo</span> <span class="n">AND</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xAlarmOK</span> <span class="n">THEN</span>
         <span class="n">q_stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpSTOPPED</span><span class="p">;</span>
-<span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRunDo</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span> <span class="n">THEN</span>
+<span class="n">ELSIF</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRunDo</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span> <span class="n">THEN</span>
         <span class="n">q_stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpSTARTING</span><span class="p">;</span>
 <span class="n">ELSIF</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span> <span class="n">THEN</span>
         <span class="n">q_stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpRUNNING</span><span class="p">;</span>
@@ -6699,6 +6714,144 @@ END_ACTION
     <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xWarningOK</span> <span class="o">:=</span>        <span class="n">i_xWarning</span><span class="p">;</span>
     <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span> <span class="o">:=</span>    <span class="n">i_xIsRun</span><span class="p">;</span>
 <span class="n">END_ACTION</span>
+
+<span class="n">METHOD</span> <span class="n">PUBLIC</span> <span class="n">M_Run</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">run</span><span class="p">:</span><span class="nb">bool</span><span class="p">;</span> <span class="o">//</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">true</span> <span class="n">to</span> <span class="n">run</span><span class="p">,</span> <span class="n">false</span> <span class="n">to</span> <span class="n">stop</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">this</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">pv_xRunSW</span> <span class="o">:=</span> <span class="n">run</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Related:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="#st-kashiyamadrypump">ST_KashiyamaDryPump</a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="fb-kashiyamapump-g">
+<h2>FB_KashiyamaPump_G<a class="headerlink" href="#fb-kashiyamapump-g" title="Link to this heading"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="o">*</span> <span class="n">This</span> <span class="n">function</span> <span class="n">block</span> <span class="n">does</span> <span class="n">basic</span> <span class="n">controls</span> <span class="n">FOR</span> <span class="n">the</span> <span class="n">Kashiyama</span> <span class="n">pump</span><span class="o">.</span> <span class="n">Turns</span> <span class="n">off</span> <span class="n">pump</span>
+<span class="ow">in</span> <span class="n">the</span> <span class="n">event</span> <span class="n">of</span> <span class="n">errors</span><span class="o">/</span> <span class="n">warnings</span><span class="o">.</span> <span class="n">Provides</span> <span class="n">interlocking</span> <span class="n">interface</span><span class="o">.*</span><span class="p">)</span>
+<span class="n">FUNCTION_BLOCK</span> <span class="n">FB_KashiyamaPump_G</span>
+<span class="n">VAR_IN_OUT</span>
+
+<span class="n">END_VAR</span>
+<span class="n">VAR_INPUT</span>
+
+<span class="n">END_VAR</span>
+<span class="n">VAR_OUTPUT</span>
+    <span class="p">{</span><span class="n">attribute</span> <span class="s1">&#39;pytmc&#39;</span> <span class="o">:=</span> <span class="s1">&#39;pv:&#39;</span><span class="p">}</span>
+    <span class="n">q_stPump</span> <span class="p">:</span> <span class="n">ST_KashiyamaDryPump</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="n">VAR</span>
+    <span class="n">TONtmr</span> <span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
+    <span class="n">resetTmr</span> <span class="p">:</span> <span class="n">TON</span><span class="p">;</span>
+
+    <span class="p">(</span><span class="o">*</span> <span class="n">Output</span> <span class="o">*</span><span class="p">)</span>
+    <span class="n">q_xRunDO</span>        <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">q_xResetDo</span>      <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">q_xLspdDo</span>       <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">q_xRemote</span>       <span class="n">AT</span><span class="o">%</span><span class="n">Q</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
+
+<span class="p">(</span><span class="o">*</span> <span class="n">Input</span> <span class="o">*</span><span class="p">)</span>
+    <span class="n">i_xAlarm</span>        <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
+    <span class="n">i_xIsRun</span>        <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
+<span class="n">END_VAR</span>
+<span class="o">//</span><span class="n">Only</span> <span class="n">run</span> <span class="n">when</span> <span class="n">commanded</span> <span class="n">to</span> <span class="n">be</span> <span class="ow">in</span> <span class="n">remote</span> <span class="ow">and</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">alarm</span> <span class="p">(</span><span class="n">this</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">normally</span> <span class="nb">open</span> <span class="n">alarm</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">OK</span><span class="p">)</span>
+<span class="n">q_stPump</span><span class="o">.</span><span class="n">xIlkOK</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRemoteDO</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xAlarmOK</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">xIlkOK</span> <span class="n">THEN</span>
+    <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRunDO</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">pv_xRunSW</span><span class="p">;</span>
+    <span class="n">ELSE</span>
+        <span class="n">q_stPump</span><span class="o">.</span><span class="n">PV_xRunSW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+        <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRunDO</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="n">q_stPump</span><span class="o">.</span><span class="n">xLspd_IlkENA</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">xIlkOK</span><span class="p">;</span>
+
+<span class="n">IF</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">xLspd_IlkENA</span> <span class="n">THEN</span>
+    <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xLspdDo</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">xLspdSW</span><span class="p">;</span>
+    <span class="n">ELSE</span>
+        <span class="n">q_stPump</span><span class="o">.</span><span class="n">xLspdSW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+        <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xLspdDo</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="o">//</span><span class="n">resetTmr</span> <span class="p">(</span><span class="n">In</span> <span class="o">:=</span> <span class="n">iq_stPump</span><span class="o">.</span><span class="n">xResetSW</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#2S);</span>
+<span class="o">//</span><span class="n">IF</span> <span class="n">resetTmr</span><span class="o">.</span><span class="n">Q</span> <span class="n">THEN</span>
+<span class="o">//</span>  <span class="n">iq_stPump</span><span class="o">.</span><span class="n">xResetSW</span> <span class="o">:=</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="o">//</span><span class="n">END_IF</span>
+
+<span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xResetDo</span> <span class="o">:=</span> <span class="n">NOT</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span> <span class="n">AND</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">xResetSW</span><span class="p">;</span>
+
+<span class="o">//</span><span class="n">countdown</span> <span class="n">Timer</span>
+<span class="n">TONtmr</span> <span class="p">(</span><span class="n">IN</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span><span class="p">,</span> <span class="n">PT</span> <span class="o">:=</span> <span class="n">T</span><span class="c1">#20S);</span>
+<span class="n">q_stPump</span><span class="o">.</span><span class="n">RdyTmr</span> <span class="o">:=</span> <span class="n">TO_REAL</span><span class="p">(</span><span class="n">TONtmr</span><span class="o">.</span><span class="n">PT</span><span class="p">)</span> <span class="o">-</span> <span class="n">TO_REAL</span><span class="p">(</span><span class="n">TONtmr</span><span class="o">.</span><span class="n">ET</span><span class="p">);</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">State</span> <span class="n">evaluation</span><span class="o">*</span><span class="p">)</span>
+<span class="n">IF</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xAlarmOK</span> <span class="n">THEN</span>  <span class="o">//</span> <span class="n">reminder</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">normally</span> <span class="n">closed</span> <span class="p">(</span><span class="mi">0</span> <span class="o">=</span> <span class="n">no</span> <span class="n">alarm</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">=</span> <span class="n">alarm</span><span class="p">)</span>
+    <span class="n">q_stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpFAULT</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">NOT</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRunDo</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xAlarmOK</span> <span class="n">THEN</span>
+        <span class="n">q_stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpSTOPPED</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRunDo</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span> <span class="n">THEN</span>
+        <span class="n">q_stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpSTARTING</span><span class="p">;</span>
+<span class="n">ELSIF</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span> <span class="n">THEN</span>
+        <span class="n">q_stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpRUNNING</span><span class="p">;</span>
+<span class="n">ELSE</span>
+    <span class="n">q_stPump</span><span class="o">.</span><span class="n">eState</span> <span class="o">:=</span> <span class="n">pumpFAULT</span><span class="p">;</span>
+<span class="n">END_IF</span>
+
+<span class="o">//</span><span class="n">Mapping</span>
+<span class="n">M_IO</span><span class="p">();</span>
+
+<span class="n">END_FUNCTION_BLOCK</span>
+
+<span class="n">METHOD</span> <span class="n">M_Alarm</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+<span class="n">END_VAR</span>
+<span class="n">M_alarm</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xAlarmOK</span><span class="p">;</span>   <span class="o">//</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">no</span> <span class="n">alarm</span> <span class="o">|</span> <span class="mi">1</span> <span class="o">=</span> <span class="n">alarm</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_IO</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+<span class="n">END_VAR</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Output</span> <span class="o">*</span><span class="p">)</span>
+    <span class="n">q_xRunDO</span>        <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRunDO</span><span class="p">;</span>
+    <span class="n">q_xResetDo</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xResetDo</span><span class="p">;</span>
+    <span class="n">q_xLspdDo</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xLspdDo</span><span class="p">;</span>
+    <span class="n">q_xRemote</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRemoteDo</span><span class="p">;</span>
+<span class="p">(</span><span class="o">*</span> <span class="n">Input</span> <span class="o">*</span><span class="p">)</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xAlarmOK</span> <span class="o">:=</span>    <span class="n">THIS</span><span class="o">^.</span><span class="n">i_xAlarm</span><span class="p">;</span>
+    <span class="n">THIS</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span> <span class="o">:=</span>      <span class="n">THIS</span><span class="o">^.</span><span class="n">i_xIsRun</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_IsRun</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+<span class="n">END_VAR</span>
+<span class="n">M_IsRun</span> <span class="o">:=</span> <span class="n">THIS</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xIsRun</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_Lspd</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">lowspeed</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span>  <span class="o">//</span> <span class="n">Set</span> <span class="n">low</span> <span class="n">speed</span> <span class="n">setting</span>
+<span class="n">END_VAR</span>
+<span class="n">THIS</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">xLspdSW</span> <span class="o">:=</span> <span class="n">lowspeed</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_Remote</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">remote</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Remote</span> <span class="n">command</span>
+<span class="n">END_VAR</span>
+<span class="n">this</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">xRemoteSW</span> <span class="o">:=</span> <span class="n">remote</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
+
+<span class="n">METHOD</span> <span class="n">M_Reset</span> <span class="p">:</span> <span class="n">BOOL</span>
+<span class="n">VAR_INPUT</span>
+    <span class="n">reset</span> <span class="p">:</span> <span class="n">BOOL</span><span class="p">;</span> <span class="o">//</span> <span class="n">Set</span> <span class="n">true</span> <span class="n">to</span> <span class="n">clear</span> <span class="n">faults</span>
+<span class="n">END_VAR</span>
+<span class="n">this</span><span class="o">^.</span><span class="n">q_stPump</span><span class="o">.</span><span class="n">xResetSW</span> <span class="o">:=</span> <span class="n">reset</span><span class="p">;</span>
+<span class="n">END_METHOD</span>
 
 <span class="n">METHOD</span> <span class="n">PUBLIC</span> <span class="n">M_Run</span> <span class="p">:</span> <span class="n">BOOL</span>
 <span class="n">VAR_INPUT</span>
