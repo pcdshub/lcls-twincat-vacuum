@@ -30,7 +30,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[
+      <ST><![CDATA[q_stPump.q_xRemoteDo := q_stPump.xRemoteSW;
+
 //Only run when commanded to be in remote and there is no alarm (this is a normally open alarm 0 = OK)
 q_stPump.xIlkOK := q_stPump.q_xRemoteDO AND NOT q_stPump.i_xAlarmOK;
 
