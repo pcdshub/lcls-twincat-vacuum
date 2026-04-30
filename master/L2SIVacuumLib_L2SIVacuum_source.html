@@ -6759,6 +6759,8 @@ END_ACTION
     <span class="n">i_xAlarm</span>        <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
     <span class="n">i_xIsRun</span>        <span class="n">AT</span><span class="o">%</span><span class="n">I</span><span class="o">*</span><span class="p">:</span>  <span class="n">BOOL</span><span class="p">;</span>
 <span class="n">END_VAR</span>
+<span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRemoteDo</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">xRemoteSW</span><span class="p">;</span>
+
 <span class="o">//</span><span class="n">Only</span> <span class="n">run</span> <span class="n">when</span> <span class="n">commanded</span> <span class="n">to</span> <span class="n">be</span> <span class="ow">in</span> <span class="n">remote</span> <span class="ow">and</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">no</span> <span class="n">alarm</span> <span class="p">(</span><span class="n">this</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">normally</span> <span class="nb">open</span> <span class="n">alarm</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">OK</span><span class="p">)</span>
 <span class="n">q_stPump</span><span class="o">.</span><span class="n">xIlkOK</span> <span class="o">:=</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">q_xRemoteDO</span> <span class="n">AND</span> <span class="n">NOT</span> <span class="n">q_stPump</span><span class="o">.</span><span class="n">i_xAlarmOK</span><span class="p">;</span>
 
