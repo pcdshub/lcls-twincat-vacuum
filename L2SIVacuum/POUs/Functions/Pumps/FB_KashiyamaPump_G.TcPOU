@@ -32,8 +32,8 @@ END_VAR
     <Implementation>
       <ST><![CDATA[q_stPump.q_xRemoteDo := q_stPump.xRemoteSW;
 
-//Only run when commanded to be in remote and there is no alarm (this is a normally open alarm 0 = OK)
-q_stPump.xIlkOK := q_stPump.q_xRemoteDO AND NOT q_stPump.i_xAlarmOK;
+//Only run when commanded to be in remote
+q_stPump.xIlkOK := q_stPump.q_xRemoteDO AND q_stPump.i_xAlarmOK;
 
 IF q_stPump.xIlkOK THEN
     q_stPump.q_xRunDO := q_stPump.pv_xRunSW;
@@ -63,9 +63,9 @@ TONtmr (IN := q_stPump.i_xIsRun, PT := T#20S);
 q_stPump.RdyTmr := TO_REAL(TONtmr.PT) - TO_REAL(TONtmr.ET);
 
 (*State evaluation*)
-IF q_stPump.i_xAlarmOK THEN  // reminder this is normally closed (0 = no alarm | 1 = alarm)
+IF NOT q_stPump.i_xAlarmOK THEN
     q_stPump.eState := pumpFAULT;
-ELSIF NOT q_stPump.q_xRunDo AND NOT q_stPump.i_xAlarmOK THEN
+ELSIF NOT q_stPump.q_xRunDo AND q_stPump.i_xAlarmOK THEN
         q_stPump.eState := pumpSTOPPED;
 ELSIF q_stPump.q_xRunDo AND NOT q_stPump.i_xIsRun THEN
         q_stPump.eState := pumpSTARTING;
@@ -85,6 +85,15 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[M_alarm := THIS^.q_stPump.i_xAlarmOK;   // 0 = no alarm | 1 = alarm ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_AlarmOK" Id="{75954e5e-5181-49f6-89ef-e9f50c9ed770}">
+      <Declaration><![CDATA[METHOD M_AlarmOK : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_AlarmOK := THIS^.q_stPump.i_xAlarmOK;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_IO" Id="{cc5a91ec-d268-412f-a580-fe0b22b2f643}">
