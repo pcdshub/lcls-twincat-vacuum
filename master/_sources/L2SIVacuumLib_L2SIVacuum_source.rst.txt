@@ -6637,8 +6637,8 @@ FB_KashiyamaPump_G
     END_VAR
     q_stPump.q_xRemoteDo := q_stPump.xRemoteSW;
 
-    //Only run when commanded to be in remote and there is no alarm (this is a normally open alarm 0 = OK)
-    q_stPump.xIlkOK := q_stPump.q_xRemoteDO AND NOT q_stPump.i_xAlarmOK;
+    //Only run when commanded to be in remote
+    q_stPump.xIlkOK := q_stPump.q_xRemoteDO AND q_stPump.i_xAlarmOK;
 
     IF q_stPump.xIlkOK THEN
         q_stPump.q_xRunDO := q_stPump.pv_xRunSW;
@@ -6668,9 +6668,9 @@ FB_KashiyamaPump_G
     q_stPump.RdyTmr := TO_REAL(TONtmr.PT) - TO_REAL(TONtmr.ET);
 
     (*State evaluation*)
-    IF q_stPump.i_xAlarmOK THEN  // reminder this is normally closed (0 = no alarm | 1 = alarm)
+    IF NOT q_stPump.i_xAlarmOK THEN
         q_stPump.eState := pumpFAULT;
-    ELSIF NOT q_stPump.q_xRunDo AND NOT q_stPump.i_xAlarmOK THEN
+    ELSIF NOT q_stPump.q_xRunDo AND q_stPump.i_xAlarmOK THEN
             q_stPump.eState := pumpSTOPPED;
     ELSIF q_stPump.q_xRunDo AND NOT q_stPump.i_xIsRun THEN
             q_stPump.eState := pumpSTARTING;
@@ -6689,6 +6689,12 @@ FB_KashiyamaPump_G
     VAR_INPUT
     END_VAR
     M_alarm := THIS^.q_stPump.i_xAlarmOK;   // 0 = no alarm | 1 = alarm
+    END_METHOD
+
+    METHOD M_AlarmOK : BOOL
+    VAR_INPUT
+    END_VAR
+    M_AlarmOK := THIS^.q_stPump.i_xAlarmOK;
     END_METHOD
 
     METHOD M_IO : BOOL
