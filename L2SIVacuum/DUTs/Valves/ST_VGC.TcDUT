@@ -35,7 +35,8 @@ STRUCT
     field: EGU "TORR"
     autosave_pass1: VAL DESC
     '}
-    rAT_VAC_HYS	:	REAL :=0.000001;	// Hysteresis of the vacuum sp
+    rAT_VAC_HYS	:	REAL :=0.0000012;	// Hysteresis of the vacuum sp, default 20% above the SP
+	rAT_VAC_HYS_LAST : REAL :=0.0000012;  
     {attribute 'pytmc' := '
     pv: HYST_PERC ;
     io: o;

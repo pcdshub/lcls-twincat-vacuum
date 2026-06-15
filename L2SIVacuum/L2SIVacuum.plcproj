@@ -412,6 +412,10 @@
     <Compile Include="POUs\Functions\Valves\FB_VFS_2OO3.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VGC_NEW.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VGC_2S.TcPOU">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
