@@ -12,8 +12,9 @@ less than the maximum differential pressure.
 {attribute 'reflection'}
 FUNCTION_BLOCK FB_VGC_NEW Extends FB_Valve
 VAR_IN_OUT
-
+	
 END_VAR
+
 VAR_INPUT
     (*Upstream Gauge, usually ion gauge*)
     i_stUSG	:	ST_VG;
@@ -23,7 +24,7 @@ VAR_INPUT
     pv: Dis_DPIlk
     '}
     i_xDis_DPIlk : BOOL := FALSE;  (* Set to true when calling the function to disable the differential pressure interlock *)
-    i_xPMPS_OK:	BOOL	; (*Set to True To switch off the bptm and PMPS Arbiter*)
+//    i_xPMPS_OK:	BOOL	; (*Set to True To switch off the bptm and PMPS Arbiter*)
     {attribute 'pytmc' := '
     pv: EPS_OK
     '}
@@ -37,7 +38,7 @@ VAR_INPUT
     i_xReset: BOOL;
     i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
     i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
-    i_nTransitionRootID: UDINT; //A unique transition Root ID that is equal to or greater than 1000
+//    i_nTransitionRootID: UDINT; //A unique transition Root ID that is equal to or greater than 1000
 END_VAR
 VAR_OUTPUT
     {attribute 'pytmc' := '
@@ -58,18 +59,17 @@ VAR_IN_OUT
 END_VAR
 VAR
     // PMPS
-    {attribute 'pytmc' := '
-    pv: MPS_OK
-    '}
-    xPMPS_OK:	BOOL	; (*PMPS interlock*)
-    bMoving : BOOL;
-    bDone :BOOL;
-    tBPTMtimeout:TON;
-    bptm: BeamParameterTransitionManager;
+//    {attribute 'pytmc' := '
+//    pv: MPS_OK
+//    '}
+//    xPMPS_OK:	BOOL	; (*PMPS interlock*)
+//    bMoving : BOOL;
+//    bDone :BOOL;
+//    tBPTMtimeout:TON;
+//    bptm: BeamParameterTransitionManager;
     FFO    :    FB_FastFault :=(
         i_Desc := 'Fault occurs when the valve is not in open state',
         i_TypeCode := 16#1010);
-    //g_FastFaultOutput1	:	FB_HardwareFFOutput;
 
     {attribute 'instance-path'}
     {attribute 'noinit'}
@@ -83,14 +83,21 @@ VAR
     xFirstPass	:	BOOL;
     fbFSInit		:	R_TRIG;
 
-    tonDelOK : TON;
+    tonOvrdExpired : TON;
     rtOK	:	R_TRIG;
     tonOvrd	:	TON;
     rtOpen	:	R_TRIG;
     ftClose: F_TRIG;
+	
+	{attribute 'pytmc' := '
+    pv: OVRD_DURATION
+    io: io
+    '}
+    nOvrdDurationHour : REAL := 0.5;
+	tOvrdDurationMS : TIME; 
 
-    tDelOK	:	TIME := T#60S;
-    tOvrd	:	TIME := T#10s;
+//    tDelOK	:	TIME := T#60S;
+    tOvrd	:	TIME := T#10S;
 
 
     (* Timeouts*)
@@ -102,7 +109,7 @@ VAR
 	tonSet : TON;
 	tSet : TIME := T#50MS;
 	tonReset : TON;
-	tReset : TIME := T#50S;
+	tReset : TIME := T#50MS;
 
 
     (*IO*)
@@ -293,12 +300,16 @@ END_IF
 (* Override logic *)
 (* Goal: give ability to override, but do so in a way that people won't forget it.
 Solution: Override only after ten seconds of override, protect against blips,
-when the valve permission goes true for more than ten seconds consistently, remove override
+Latch override for user defined duration and up to 7 days
 *)
 
-tonDelOK(IN:=iq_stValve.xOPN_OK, PT:=tDelOK);
-rtOK(CLK:=tonDelOK.Q);
-IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN
+tOvrdDurationMS := DINT_TO_TIME(
+                        REAL_TO_DINT (nOvrdDurationHour*60*60*1000.0)
+                   );
+
+tonOvrdExpired(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrdDurationMS);
+
+IF tonOvrdExpired.Q AND iq_stValve.pv_xOvrdOpn THEN
     iq_stValve.pv_xOvrdOpn :=FALSE;
     if (iq_stValve.eState = OPEN) AND (i_xOverrideMode) THEN iq_stValve.pv_xOPN_SW := TRUE; END_IF //for seamless transition
     //Log
@@ -318,21 +329,14 @@ ftClose(CLK:= iq_stValve.pv_xOPN_SW);
 rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
 
 
-(*PMPS*)
-IF NOT(i_xPMPS_OK) THEN
-    ACT_PMPS();
-END_IF
-(*when interlock is lost the Valve closes regardless of the status of the PMPS and EPS*)
-xPMPS_OK := i_xPMPS_OK OR (bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q);
 IF NOT (iq_stValve.xOPN_OK) THEN
-    iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after inlk is lost
-    iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
-ELSIF xPMPS_OK THEN
-    iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
-//ELSIF NOT (i_xPMPS_OK) THEN
-    // Only override mode
-    //iq_stValve.q_xOPN_DO := (tonOvrd.Q AND i_xOverrideMode);
+    iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after interlock is lost
+	IF (tonOvrd.Q AND i_xOverrideMode) THEN 
+		iq_stValve.pv_xOPN_SW:= TRUE; //set switch to true if valve is overrided open
+	END_IF
 END_IF
+iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
+
 
 
 (*MPS Fault setting*)
@@ -487,35 +491,6 @@ IF NOT (iq_stValve.rAT_VAC_HYS = rAT_VAC_HYS) THEN
 END_IF;]]></ST>
       </Implementation>
     </Action>
-    <Action Name="ACT_PMPS" Id="{d22b84cb-4a73-4d0d-bfba-9250aff09c36}">
-      <Implementation>
-        <ST><![CDATA[bMoving := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xClsLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xOpnLS);
-bDone := (iq_stValve.pv_xOPN_SW AND iq_stValve.i_xOpnLS) XOR (NOT iq_stValve.pv_xOPN_SW AND i_xClsLS);
-If (i_xIsAperture ) OR (iq_stValve.pv_xOPN_SW )THEN
-    bptm.i_stRequestedAssertion := PMPS_GVL.cstFullBeam;
-ELSE  bptm.i_stRequestedAssertion := PMPS_GVL.cst0RateBeam;
-END_IF
-bptm(fbArbiter:=fbArbiter,
-    i_sDeviceName:=i_sDevName,
-     i_TransitionAssertionID:=i_nTransitionRootID+2,
-     i_stTransitionAssertion:=PMPS_GVL.cst0RateBeam,
-     i_nRequestedAssertionID:=i_nTransitionRootID+ BOOL_TO_UDINT( iq_stValve.pv_xOPN_SW),
-     i_stRequestedAssertion:=,
-     i_xMoving:=bMoving,
-     i_xDoneMoving:= bDone,
-     stCurrentBeamParameters:=PMPS_GVL.stCurrentBeamParameters,
-     q_xTransitionAuthorized=>);
-// Timeout
-tBPTMtimeout(IN:= bMoving AND NOT bptm.q_xTransitionAuthorized , PT:=T#1S);
-//xPMPS_OK := bptm.q_xTransitionAuthorized OR tBPTMtimeout.Q;
-
-//Timeout and clear request
-IF (tBPTMtimeout.Q) THEN
-    fbArbiter.RemoveRequest(bptm.i_TransitionAssertionID);
-    fbArbiter.RemoveRequest(bptm.i_nRequestedAssertionID);
-END_IF]]></ST>
-      </Implementation>
-    </Action>
     <Action Name="ACT_ResetAlarms" Id="{72d560d2-9dfd-49ab-b2e9-5662c580d80e}">
       <Implementation>
         <ST><![CDATA[iq_stValve.xERR_DifPres R= iq_stValve.pv_xAlmRst;
@@ -579,7 +554,19 @@ END_VAR
       </Implementation>
     </Method>
     <LineIds Name="FB_VGC_NEW">
-      <LineId Id="1" Count="265" />
+      <LineId Id="1" Count="172" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="288" Count="1" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="281" Count="0" />
+      <LineId Id="177" Count="18" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="203" Count="1" />
+      <LineId Id="276" Count="3" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="211" Count="55" />
     </LineIds>
     <LineIds Name="FB_VGC_NEW.ACT_IO">
       <LineId Id="1" Count="12" />
@@ -589,9 +576,6 @@ END_VAR
     </LineIds>
     <LineIds Name="FB_VGC_NEW.ACT_Persistent">
       <LineId Id="1" Count="17" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.ACT_PMPS">
-      <LineId Id="1" Count="24" />
     </LineIds>
     <LineIds Name="FB_VGC_NEW.ACT_ResetAlarms">
       <LineId Id="1" Count="8" />
