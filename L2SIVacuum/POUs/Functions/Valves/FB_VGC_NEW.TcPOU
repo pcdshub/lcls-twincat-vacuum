@@ -12,7 +12,7 @@ less than the maximum differential pressure.
 {attribute 'reflection'}
 FUNCTION_BLOCK FB_VGC_NEW Extends FB_Valve
 VAR_IN_OUT
-	
+
 END_VAR
 
 VAR_INPUT
@@ -88,13 +88,14 @@ VAR
     tonOvrd	:	TON;
     rtOpen	:	R_TRIG;
     ftClose: F_TRIG;
-	
-	{attribute 'pytmc' := '
+
+    {attribute 'pytmc' := '
     pv: OVRD_DURATION
     io: io
     '}
     nOvrdDurationHour : REAL := 0.5;
-	tOvrdDurationMS : TIME; 
+    OvrdHrFix : REAL;
+    tOvrdDurationMS : TIME;
 
 //    tDelOK	:	TIME := T#60S;
     tOvrd	:	TIME := T#10S;
@@ -104,12 +105,12 @@ VAR
     tTimeOutDuration: TIME:= T#30S;
     tOPNtimeout: TON;
     tCLStimeout:TON;
-	
-	(* Timedelay on set/reset At_vac state *)
-	tonSet : TON;
-	tSet : TIME := T#50MS;
-	tonReset : TON;
-	tReset : TIME := T#50MS;
+
+    (* Timedelay on set/reset At_vac state *)
+    tonSet : TON;
+    tSet : TIME := T#50MS;
+    tonReset : TON;
+    tReset : TIME := T#50MS;
 
 
     (*IO*)
@@ -119,14 +120,14 @@ VAR
 
     // For logging
     eVGCPrevState : E_VGC;
-	
-	rHYS_fix : REAL;
+
+    rHYS_fix : REAL;
 END_VAR
 
 VAR PERSISTENT
     rAT_VAC_SP	:	REAL;
-    rHYST_PERC	:	REAL;
-	rAT_VAC_HYS :   REAL;
+//    rHYST_PERC	:	REAL;
+    rAT_VAC_HYS :   REAL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Vacuum gate valve
@@ -185,8 +186,8 @@ END_IF
 
 // Check the setpoint and hysteresis pressure from user inputs
 // Hysteresis pressures should be above the setpoint and not higher than 20% of the setpoint
-IF iq_stValve.rAT_VAC_SP = 0.0 THEN 
-	iq_stValve.rAT_VAC_SP := 0.0000001;
+IF iq_stValve.rAT_VAC_SP = 0.0 THEN
+    iq_stValve.rAT_VAC_SP := 0.0000001;
 END_IF
 rHYS_fix := LIMIT(iq_stValve.rAT_VAC_SP, iq_stValve.rAT_VAC_HYS, iq_stValve.rAT_VAC_SP*1.2);
 iq_stValve.rAT_VAC_HYS := rHYS_fix;
@@ -194,10 +195,10 @@ iq_stValve.rAT_VAC_HYS := rHYS_fix;
 // Valve at vacuum check
 // set and rest have to latch for 50ms before change At_vac state
     set := i_stUSG.rPRESS < iq_stValve.rAT_VAC_SP AND i_stDSG.rPRESS < iq_stValve.rAT_VAC_SP AND i_stUSG.xPRESS_OK AND i_stDSG.xPRESS_OK;
-	tonSet(IN:=set, PT:=tSet);
+    tonSet(IN:=set, PT:=tSet);
     iq_stValve.xAT_VAC S= tonSet.Q;
     reset := i_stUSG.rPRESS > iq_stValve.rAT_VAC_HYS OR i_stDSG.rPRESS > iq_stValve.rAT_VAC_HYS OR NOT i_stUSG.xPRESS_OK OR NOT i_stDSG.xPRESS_OK;
-	tonReset(IN:=reset, PT:=tReset);
+    tonReset(IN:=reset, PT:=tReset);
     iq_stValve.xAT_VAC R= tonReset.Q;
 
 // Differential pressure check
@@ -303,9 +304,10 @@ Solution: Override only after ten seconds of override, protect against blips,
 Latch override for user defined duration and up to 7 days
 *)
 
+OvrdHrFix := LIMIT (0.25,nOvrdDurationHour,168); // change the override hours to between 0.25 hour to 168 hours /7days
 tOvrdDurationMS := DINT_TO_TIME(
-                        REAL_TO_DINT (nOvrdDurationHour*60*60*1000.0)
-                   );
+                        REAL_TO_DINT (OvrdHrFix*60*60*1000.0)
+                   ); //convert to time in msec
 
 tonOvrdExpired(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrdDurationMS);
 
@@ -331,9 +333,9 @@ rtOpen(CLK:= iq_stValve.pv_xOPN_SW);
 
 IF NOT (iq_stValve.xOPN_OK) THEN
     iq_stValve.pv_xOPN_SW:= FALSE; // Reset switch after interlock is lost
-	IF (tonOvrd.Q AND i_xOverrideMode) THEN 
-		iq_stValve.pv_xOPN_SW:= TRUE; //set switch to true if valve is overrided open
-	END_IF
+    IF (tonOvrd.Q AND i_xOverrideMode) THEN
+        iq_stValve.pv_xOPN_SW:= TRUE; //set switch to true if valve is overrided open
+    END_IF
 END_IF
 iq_stValve.q_xOPN_DO := (iq_stValve.pv_xOPN_SW  AND iq_stValve.xOPN_OK) OR (tonOvrd.Q AND i_xOverrideMode);
 
@@ -553,47 +555,5 @@ END_VAR
         <ST><![CDATA[iq_stValve.rAT_VAC_HYS := i_fAtVacSPHys;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VGC_NEW">
-      <LineId Id="1" Count="172" />
-      <LineId Id="283" Count="0" />
-      <LineId Id="174" Count="0" />
-      <LineId Id="288" Count="1" />
-      <LineId Id="282" Count="0" />
-      <LineId Id="175" Count="0" />
-      <LineId Id="281" Count="0" />
-      <LineId Id="177" Count="18" />
-      <LineId Id="271" Count="0" />
-      <LineId Id="203" Count="1" />
-      <LineId Id="276" Count="3" />
-      <LineId Id="205" Count="0" />
-      <LineId Id="211" Count="55" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.ACT_IO">
-      <LineId Id="1" Count="12" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.ACT_Logger">
-      <LineId Id="1" Count="54" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.ACT_Persistent">
-      <LineId Id="1" Count="17" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.ACT_ResetAlarms">
-      <LineId Id="1" Count="8" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.M_IsClosed">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.M_IsOpen">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.M_Set_OPN_SW">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.M_SetAtVacSP">
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.M_SetAtVacSPHys">
-      <LineId Id="1" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
