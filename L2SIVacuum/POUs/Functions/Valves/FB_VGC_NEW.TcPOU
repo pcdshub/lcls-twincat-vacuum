@@ -24,7 +24,7 @@ VAR_INPUT
     pv: Dis_DPIlk
     '}
     i_xDis_DPIlk : BOOL := FALSE;  (* Set to true when calling the function to disable the differential pressure interlock *)
-//    i_xPMPS_OK:	BOOL	; (*Set to True To switch off the bptm and PMPS Arbiter*)
+
     {attribute 'pytmc' := '
     pv: EPS_OK
     '}
@@ -38,8 +38,9 @@ VAR_INPUT
     i_xReset: BOOL;
     i_xIsAperture:BOOL :=FALSE; // Set tp True if this is an Aperture Valve, the MPS Fault will trip only when moving.
     i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
-//    i_nTransitionRootID: UDINT; //A unique transition Root ID that is equal to or greater than 1000
+
 END_VAR
+
 VAR_OUTPUT
     {attribute 'pytmc' := '
     pv:
@@ -53,20 +54,12 @@ VAR_OUTPUT
     '}
     xMPS_OK:	BOOL; (*MPS Fast OK, is set when the Valve is Open*)
 END_VAR
+
 VAR_IN_OUT
     io_fbFFHWO    :    FB_HardwareFFOutput;
-    fbArbiter: FB_Arbiter();
 END_VAR
+
 VAR
-    // PMPS
-//    {attribute 'pytmc' := '
-//    pv: MPS_OK
-//    '}
-//    xPMPS_OK:	BOOL	; (*PMPS interlock*)
-//    bMoving : BOOL;
-//    bDone :BOOL;
-//    tBPTMtimeout:TON;
-//    bptm: BeamParameterTransitionManager;
     FFO    :    FB_FastFault :=(
         i_Desc := 'Fault occurs when the valve is not in open state',
         i_TypeCode := 16#1010);
@@ -126,7 +119,6 @@ END_VAR
 
 VAR PERSISTENT
     rAT_VAC_SP	:	REAL;
-//    rHYST_PERC	:	REAL;
     rAT_VAC_HYS :   REAL;
 END_VAR]]></Declaration>
     <Implementation>
@@ -537,44 +529,5 @@ END_VAR
         <ST><![CDATA[iq_stValve.rAT_VAC_HYS := i_fAtVacSPHys;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_VGC_NEW">
-      <LineId Id="3" Count="1" />
-      <LineId Id="274" Count="0" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="275" Count="0" />
-      <LineId Id="27" Count="238" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.ACT_IO">
-      <LineId Id="2" Count="11" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.ACT_Logger">
-      <LineId Id="2" Count="53" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.ACT_Persistent">
-      <LineId Id="2" Count="16" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.ACT_ResetAlarms">
-      <LineId Id="2" Count="7" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.M_IsClosed">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.M_IsOpen">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.M_Set_OPN_SW">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.M_SetAtVacSP">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_VGC_NEW.M_SetAtVacSPHys">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
