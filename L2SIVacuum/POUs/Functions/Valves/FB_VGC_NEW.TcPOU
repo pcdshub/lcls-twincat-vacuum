@@ -3,11 +3,11 @@
   <POU Name="FB_VGC_NEW" Id="{80441ea9-a989-41d5-976d-0953083f9bee}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements basic functionality for Isolation Gate Valves*)
 (* This function block interlock is as follows:
-1. The valve can be opened when the difference between the pressures on both sides is
-less than the maximum differential pressure.
-2. This rule persists until the pressures on both sides are lower than the vacuum-setpoint.
-3. Once at-vac, the valve will close if the pressure on either side rises above the setpoint.*)
-(*This function block also implements PMPS and EPS interlocks, as well as Fast MPS trigger*)
+1. The valve can be opened when the pressures on both sides is
+below than the pressure setpoint.
+2. This rule persists until the interlock is overrided.
+3. Once at-vac, the valve will close if the pressure on either side rises above the hysteresis pressure *)
+(*This function block also implements EPS interlocks and Fast MPS trigger*)
 {attribute 'no_check'}
 {attribute 'reflection'}
 FUNCTION_BLOCK FB_VGC_NEW Extends FB_Valve
@@ -131,29 +131,11 @@ VAR PERSISTENT
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Vacuum gate valve
-A. Wallace
+Modified from A. Wallace's VGC function
 16-10-29
-
-A gate valve isolates vacuum volumes. Ideally it can be opened when a system is vented
-to allow for faster pumping, and will close when high vacuum is lost.
-
-The following behavior is good for valves in something like a gas attenuator.
-This function block does the following:
-1. The valve can be opened when the difference between the pressures on both sides is
-less than the maximum differential pressure.
-2. This rule persists until the pressures on both sides are lower than the vacuum-setpoint.
-3. Once at-vac, the valve will close if the pressure on either side rises above the setpoint.
-
-Alternatively, the differential pressure interlock can be disabled so the valve may only be opened
-if the pressure on both sides is lower than the at-vacuum-setpoint. You want this behavior if
-the valve is to be used in a UHV section.
-
-Hysteresis is employed to ensure a smooth transition from vented/pumping down, to at-vac.
-
-Finally, an override system is built in so you can bypass all the interlocking logic and
-get back online.
 *)
 (* 10/1/2018 Margaret Ghaly included EPS, PMPS Checkes and MPS trigger signals*)
+(* 6/26/2026 Jing removed the PMPS checks, added a 50 ms delay to filter transient pressure spikes, and modified the override open function to latch for a user-configurable duration of up to 7 days. *)
 
 
 fbFSInit( CLK := TRUE, Q => xFirstPass);
@@ -555,5 +537,44 @@ END_VAR
         <ST><![CDATA[iq_stValve.rAT_VAC_HYS := i_fAtVacSPHys;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VGC_NEW">
+      <LineId Id="3" Count="1" />
+      <LineId Id="274" Count="0" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="27" Count="238" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.ACT_IO">
+      <LineId Id="2" Count="11" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.ACT_Logger">
+      <LineId Id="2" Count="53" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.ACT_Persistent">
+      <LineId Id="2" Count="16" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.ACT_ResetAlarms">
+      <LineId Id="2" Count="7" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.M_Set_OPN_SW">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.M_SetAtVacSP">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.M_SetAtVacSPHys">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
