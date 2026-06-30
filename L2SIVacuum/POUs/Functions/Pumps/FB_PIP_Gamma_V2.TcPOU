@@ -15,28 +15,28 @@ VAR_OUTPUT
     q_IG	:	ST_VG; //When ion pump is used as a measuring device for interlocking gate valves
 END_VAR
 VAR
-	rPRESS : REAL;
-	
-	rV : REAL;
-	
-	(* IO Controls *)
-	i_iPRESS  AT %I*: INT;  //
-	i_xSP_DI  AT %I* : BOOL; // NO contact //function of relay set on the QPC to HV output state
+    rPRESS : REAL;
 
-	// For logging
-	tPumpStartTimeout : TON := (PT:=T#10S); // Timeout pump start if pressure < 1E-11 for more than 10s.
-	stateTimer:TON;
-	
-	{attribute 'instance-path'}
-	{attribute 'noinit'}
-	sPath: STRING;
-	fbGetCurTaskIdx  : GETCURTASKINDEX;
-	fbWritePersistentData           : WritePersistentData;
+    rV : REAL;
+
+    (* IO Controls *)
+    i_iPRESS  AT %I*: INT;  //
+    i_xSP_DI  AT %I* : BOOL; // NO contact //function of relay set on the QPC to HV output state
+
+    // For logging
+    tPumpStartTimeout : TON := (PT:=T#10S); // Timeout pump start if pressure < 1E-11 for more than 10s.
+    stateTimer:TON;
+
+    {attribute 'instance-path'}
+    {attribute 'noinit'}
+    sPath: STRING;
+    fbGetCurTaskIdx  : GETCURTASKINDEX;
+    fbWritePersistentData           : WritePersistentData;
 
 END_VAR
 VAR CONSTANT
-	rMaxPressure : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
-	rMinPressure : REAL :=1E-11; 
+    rMaxPressure : REAL :=1E-4; // Default protection setpoint as per the gamma QPCe manual
+    rMinPressure : REAL :=1E-11;
 END_VAR
 VAR PERSISTENT
 END_VAR
@@ -70,12 +70,12 @@ ACT_Logger();
         <ST><![CDATA[//STATE Logger
 IF ePrevState <> stPump.eState THEN
       CASE stPump.eState OF
-		pumpFAULT:
-			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
-		pumpSTOPPED:
-			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
-		pumpRUNNING:
-			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
+        pumpFAULT:
+            fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+        pumpSTOPPED:
+            fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+        pumpRUNNING:
+            fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
       END_CASE
       ePrevState := stPump.eState;
       stateTimer.IN := TRUE;
@@ -121,20 +121,5 @@ stPump.i_xHV_DI:=	i_xSP_DI;
  This^.stPump.sPath:= sPath;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_PIP_Gamma_V2">
-      <LineId Id="1" Count="20" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma_V2.ACT_Logger">
-      <LineId Id="7" Count="6" />
-      <LineId Id="16" Count="1" />
-      <LineId Id="20" Count="3" />
-      <LineId Id="33" Count="5" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma_V2.ACT_SetGauge">
-      <LineId Id="1" Count="17" />
-    </LineIds>
-    <LineIds Name="FB_PIP_Gamma_V2.IO">
-      <LineId Id="1" Count="6" />
-    </LineIds>
   </POU>
 </TcPlcObject>
