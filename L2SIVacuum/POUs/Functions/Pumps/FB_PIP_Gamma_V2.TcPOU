@@ -24,8 +24,8 @@ VAR
 	i_xSP_DI  AT %I* : BOOL; // NO contact //function of relay set on the QPC to HV output state
 
 	// For logging
-	tTimeOutAction : F_TRIG;
-	tOverrideActivated : R_TRIG;
+	tPumpStartTimeout : TON := (PT:=T#10S); // Timeout pump start if pressure < 1E-11 for more than 10s.
+	stateTimer:TON;
 	
 	{attribute 'instance-path'}
 	{attribute 'noinit'}
@@ -67,38 +67,19 @@ ACT_Logger();
     </Implementation>
     <Action Name="ACT_Logger" Id="{2c57f6b9-5743-4a81-9664-9d38b6892653}">
       <Implementation>
-        <ST><![CDATA[// ILK logger
-
-IF NOT (stPump.xILKOk) AND ((ePrevState = pumpRUNNING) OR (ePrevState = pumpSTARTING)) AND NOT tonOvrd.Q THEN
-    fbLogger(sMsg:='Pump turned off due to loss of interlock.', eSevr:=TcEventSeverity.Critical);
-END_IF
-
-//STATE Logger
+        <ST><![CDATA[//STATE Logger
 IF ePrevState <> stPump.eState THEN
       CASE stPump.eState OF
-        pumpFAULT:
-            fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
-          pumpSTOPPED:
-            fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
-        pumpSTARTING:
-            fbLogger(sMsg:='Pump starting.', eSevr:=TcEventSeverity.Info);
-        pumpRUNNING:
-            fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
-        pumpSTOPPING:
-            fbLogger(sMsg:='Pump stopping.', eSevr:=TcEventSeverity.Info);
+		pumpFAULT:
+			fbLogger(sMsg:='Pump Fault.', eSevr:=TcEventSeverity.Critical);
+		pumpSTOPPED:
+			fbLogger(sMsg:='Pump stopped.', eSevr:=TcEventSeverity.Critical);
+		pumpRUNNING:
+			fbLogger(sMsg:='Pump running.', eSevr:=TcEventSeverity.Info);
       END_CASE
       ePrevState := stPump.eState;
       stateTimer.IN := TRUE;
   END_IF
-
-
-  // Log Action
-tAction(CLK:=  stPump.q_xHVEna_DO);
-IF tAction.Q THEN fbLogger(sMsg:='Pump commanded to start', eSevr:=TcEventSeverity.Info); END_IF
-// Log override mode enabled
-tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
-IF tOverrideActivated.Q THEN fbLogger(sMsg:='Pump override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
-
 
 // Log FAULT
 tFault(CLK:=  NOT tPumpStartTimeout.Q);
@@ -144,7 +125,10 @@ stPump.i_xHV_DI:=	i_xSP_DI;
       <LineId Id="1" Count="20" />
     </LineIds>
     <LineIds Name="FB_PIP_Gamma_V2.ACT_Logger">
-      <LineId Id="1" Count="37" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="20" Count="3" />
+      <LineId Id="33" Count="5" />
     </LineIds>
     <LineIds Name="FB_PIP_Gamma_V2.ACT_SetGauge">
       <LineId Id="1" Count="17" />
