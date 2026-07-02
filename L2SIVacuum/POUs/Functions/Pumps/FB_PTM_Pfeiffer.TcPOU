@@ -258,35 +258,5 @@ END_VAR
         <ST><![CDATA[iq_stPTM.rForelineSP := i_fForelinePressureSP;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_PTM_Pfeiffer">
-      <LineId Id="3" Count="55" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.ACT_IO">
-      <LineId Id="2" Count="10" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.ACT_Logger">
-      <LineId Id="2" Count="32" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.ACT_Persistent">
-      <LineId Id="2" Count="16" />
-      <LineId Id="1" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.M_Run">
-      <LineId Id="3" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.M_Serial_IO">
-      <LineId Id="3" Count="51" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.M_SetBackingSP">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="FB_PTM_Pfeiffer.M_SetForelineSP">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
