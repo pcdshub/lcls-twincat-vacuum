@@ -59,7 +59,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{19F43C40-AA59-45D4-A14D-CFB75472AEBC}" Name="L2SIVacuum" PrjFilePath="L2SIVacuum\L2SIVacuum.plcproj" TmcFilePath="L2SIVacuum\L2SIVacuum.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{673F2813-310E-04BB-6483-9A1396147199}" TmcPath="L2SIVacuum\L2SIVacuum.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{FB363140-3A32-B77B-D500-EA49CEF44FB4}" TmcPath="L2SIVacuum\L2SIVacuum.tmc">
 					<Name>L2SIVacuum Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="8" AreaNo="4">
