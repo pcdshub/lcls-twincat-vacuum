@@ -275,10 +275,10 @@ END_IF
 (* Override logic *)
 (* Goal: give ability to override, but do so in a way that people won't forget it.
 Solution: Override only after ten seconds of override, protect against blips,
-Latch override for user defined duration and up to 7 days
+Latch override for user defined duration and up to 12 hours. Maximum 12 hours override duration is requested by CDSO.
 *)
 
-OvrdHrFix := LIMIT (0.25,nOvrdDurationHour,168); // change the override hours to between 0.25 hour to 168 hours /7days
+OvrdHrFix := LIMIT (0.25,nOvrdDurationHour,12); // change the override hours to between 0.25 hour to 168 hours /7days
 tOvrdDurationMS := DINT_TO_TIME(
                         REAL_TO_DINT (OvrdHrFix*60*60*1000.0)
                    ); //convert to time in msec
@@ -529,5 +529,40 @@ END_VAR
         <ST><![CDATA[iq_stValve.rAT_VAC_HYS := i_fAtVacSPHys;]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="FB_VGC_NEW">
+      <LineId Id="3" Count="244" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.ACT_IO">
+      <LineId Id="2" Count="11" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.ACT_Logger">
+      <LineId Id="2" Count="53" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.ACT_Persistent">
+      <LineId Id="2" Count="16" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.ACT_ResetAlarms">
+      <LineId Id="2" Count="7" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.M_IsClosed">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.M_IsOpen">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.M_Set_OPN_SW">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.M_SetAtVacSP">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VGC_NEW.M_SetAtVacSPHys">
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
