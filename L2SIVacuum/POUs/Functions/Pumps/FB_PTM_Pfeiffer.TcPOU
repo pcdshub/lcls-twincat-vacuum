@@ -223,7 +223,7 @@ END_IF
 
 IF st_Pfeiffer_RBK.sErrorCode_303 = '' THEN
     ;
-ELSIF st_Pfeiffer_RBK.sErrorCode_303 <> '000000' THEN
+ELSIF st_Pfeiffer_RBK.iErrorCode_303 <> 0 THEN
 iq_stPTM.i_xFault := TRUE;
 ELSE
 iq_stPTM.i_xFault := FALSE;
