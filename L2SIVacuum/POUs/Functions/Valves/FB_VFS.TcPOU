@@ -233,6 +233,7 @@ fbFF(i_xOK := q_xMPS_OK,
 IF (NOT i_xTrigger AND i_xPress_OK AND i_xVAC_FAULT_Reset) OR xVeto THEN
     xERR_ExtFault := FALSE;
     i_xVAC_FAULT_Reset:=FALSE;
+	q_xVAC_FAULT_OK := TRUE;	
 END_IF
 
 
