@@ -79,7 +79,6 @@
 						<Var>
 							<Name>PMPS_GVL.BP_jsonDoc</Name>
 							<Type>SJsonValue</Type>
-							<BitSize>32</BitSize>
 							<InOut>7</InOut>
 						</Var>
 					</Vars>

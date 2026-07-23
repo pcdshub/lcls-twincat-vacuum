@@ -336,6 +336,9 @@
     <Compile Include="POUs\Functions\Pumps\FB_PIP_Gamma.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Pumps\FB_PIP_Gamma_V2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Pumps\FB_PIP_SIP.TcPOU">
       <SubType>Code</SubType>
     </Compile>
