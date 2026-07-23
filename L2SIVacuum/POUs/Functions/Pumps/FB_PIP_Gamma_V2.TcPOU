@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_PIP_Gamma_V2" Id="{c44c54fb-9e29-48ca-a1a0-2686fc622f82}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function block does basic controls FOR the ION pump connected to a Gamma QPCe controller.
- Provides interlocking interface. Enable HV only when interlock gauge press is less than 1.0E-4 Torr *)
+    <Declaration><![CDATA[(* This function block does basic controls FOR the ION pump connected to a Gamma QPCe controller. *)
 {attribute 'reflection'}
 FUNCTION_BLOCK FB_PIP_Gamma_V2 Extends FB_Pump
 VAR_INPUT
@@ -54,8 +53,6 @@ ELSE
     stPump.eState := pumpFAULT;
 END_IF
 
-
-
 (*Update output gauge values*)
 ACT_SetGauge();
 (*Soft IO Mapping*)
@@ -80,11 +77,6 @@ IF ePrevState <> stPump.eState THEN
       ePrevState := stPump.eState;
       stateTimer.IN := TRUE;
   END_IF
-
-// Log FAULT
-tFault(CLK:=  NOT tPumpStartTimeout.Q);
-IF tFault.Q THEN fbLogger(sMsg:='Pump Fault', eSevr:=TcEventSeverity.Critical); END_IF
-
 ]]></ST>
       </Implementation>
     </Action>
