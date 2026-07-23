@@ -97,6 +97,12 @@ END_IF
 q_IG.rPRESS := rPRESS;
 stPump.rPRESS := rPRESS;
 
+IF (stPump.i_xHV_DI) AND (q_IG.rPRESS < q_IG.rVAC_SP) THEN
+    q_IG.xPRESS_OK := TRUE;
+ELSE
+    q_IG.xPRESS_OK := FALSE;
+END_IF
+
 q_IG.sPath := This^.stPump.sPath;
 
 ]]></ST>
