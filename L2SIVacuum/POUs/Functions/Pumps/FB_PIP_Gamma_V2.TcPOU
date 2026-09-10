@@ -100,7 +100,7 @@ END_IF
 q_IG.rPRESS := rPRESS;
 stPump.rPRESS := rPRESS;
 
-IF stPump.eState := pumpRUNNING THEN
+IF stPump.eState = pumpRUNNING THEN
     q_IG.xPRESS_OK := TRUE;
 ELSE
     q_IG.xPRESS_OK := FALSE;
@@ -122,5 +122,21 @@ stPump.i_xHV_DI:=	i_xSP_DI;
  This^.stPump.sPath:= sPath;]]></ST>
       </Implementation>
     </Action>
+    <LineIds Name="FB_PIP_Gamma_V2">
+      <LineId Id="3" Count="22" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma_V2.ACT_Logger">
+      <LineId Id="2" Count="11" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma_V2.ACT_SetGauge">
+      <LineId Id="2" Count="22" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PIP_Gamma_V2.IO">
+      <LineId Id="2" Count="5" />
+      <LineId Id="1" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

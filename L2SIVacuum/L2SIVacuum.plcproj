@@ -29,7 +29,7 @@
       <Id>{a5724f56-da3f-40b6-8a5e-63302d98c4cc}</Id>
     </SelectedLibraryCategories>
     <Author>LCLS ECS-Platforms</Author>
-    <ProjectVersion>0.0.0</ProjectVersion>
+    <ProjectVersion>0.0.0.1</ProjectVersion>
     <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
     <WriteProductVersion>false</WriteProductVersion>
   </PropertyGroup>
@@ -414,6 +414,10 @@
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VFS_2OO3.TcPOU">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VGC_NEW.TcPOU">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VGC_2S.TcPOU">
       <SubType>Code</SubType>
