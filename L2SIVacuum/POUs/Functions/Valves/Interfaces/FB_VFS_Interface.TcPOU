@@ -153,6 +153,7 @@ iq_stValve.sGFS := IG.sPath;
 
 (*update values*)
 iq_stValve.xOPN_OK := xOPN_OK;
+IF xOPN_OK THEN iq_stValve.pv_xAlmRst := FALSE; END_IF
 
 (*Veto*)
 (*VETO Devices*)
