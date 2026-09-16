@@ -130,6 +130,10 @@ ACT_IO();
 
 // Log States and triggers
 ACT_Logger();
+
+(*Reset Alarms*)
+ACT_ResetAlarms();
+
 ]]></ST>
     </Implementation>
     <Action Name="ACT_IO" Id="{71e6a07b-f8a4-4ad9-819a-47adf702a688}">
@@ -181,6 +185,16 @@ IF tAction.Q THEN fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.
 tOverrideActivated(CLK:= (tonOvrd.Q AND i_xOverrideMode));
 IF tOverrideActivated.Q THEN fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning); END_IF
 ]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_ResetAlarms" Id="{6467e2e2-2291-42de-a755-e154249c2766}">
+      <Implementation>
+        <ST><![CDATA[iq_stValve.bErrorPresent R= iq_stValve.pv_xAlmRst;
+
+IF ( iq_stValve.pv_xAlmRst) THEN
+    iq_stValve.sErrorMessage :='';
+     iq_stValve.pv_xAlmRst := FALSE;
+END_IF]]></ST>
       </Implementation>
     </Action>
     <Method Name="M_IsClosed" Id="{196a70bb-373f-42e5-aeaa-84bd8a433acc}">
