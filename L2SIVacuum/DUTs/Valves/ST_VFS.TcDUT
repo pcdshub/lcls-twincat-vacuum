@@ -12,7 +12,6 @@ STRUCT
     io: i ;
     '}
     i_xTrigger : BOOL;
-    q_xTrigger : BOOL;
     i_xPress_OK : BOOL;
     xMPS_OK : BOOL;
     xVeto : BOOL;
