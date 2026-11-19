@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_VFS" Id="{68519563-003c-4daf-ae0e-7245b1fe09af}" SpecialFunc="None">
+  <POU Name="FB_VFS_New" Id="{68519563-003c-4daf-ae0e-7245b1fe09af}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements basic functionality for Fast Shutter/Valves. *)
-FUNCTION_BLOCK FB_VFS EXTENDS FB_Valve
+FUNCTION_BLOCK FB_VFS_New EXTENDS FB_Valve
 VAR_INPUT
     i_stGauge : ST_VG; // Gauge supplying the fast trigger and pressure-good status
     Veto_Valve : ST_VGC; // Veto valve data
@@ -303,22 +303,22 @@ iq_stValve.sGFS := i_stGauge.sPath;
 iq_stValve.sVetoDeviceName := Veto_Valve.sDevName;]]></ST>
       </Implementation>
     </Action>
-    <LineIds Name="FB_VFS">
+    <LineIds Name="FB_VFS_New">
       <LineId Id="3" Count="36" />
       <LineId Id="41" Count="5" />
       <LineId Id="48" Count="97" />
       <LineId Id="147" Count="7" />
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="FB_VFS.ACT_Logger">
+    <LineIds Name="FB_VFS_New.ACT_Logger">
       <LineId Id="2" Count="31" />
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_VFS.ACT_ResetAlarms">
+    <LineIds Name="FB_VFS_New.ACT_ResetAlarms">
       <LineId Id="2" Count="11" />
       <LineId Id="1" Count="0" />
     </LineIds>
-    <LineIds Name="FB_VFS.IO">
+    <LineIds Name="FB_VFS_New.IO">
       <LineId Id="2" Count="15" />
       <LineId Id="1" Count="0" />
     </LineIds>
