@@ -1,24 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
   <POU Name="FB_VFS" Id="{68519563-003c-4daf-ae0e-7245b1fe09af}" SpecialFunc="None">
-    <Declaration><![CDATA[(* This function block implements basic functionality for Fast Shutter/Valves*)
-(* Create a separate virtual PLC for the fast shutter logic, and tie/map this task to the FAST I/O portion of the ethercat bus,
- so we can scan these I/Os faster than the rest of the vacuum I/Os.
-The Fast shutter was tested with PLC task Cycle Base Time 50us with cycle time 0.050ms.
-*)
+    <Declaration><![CDATA[(* This function block implements basic functionality for Fast Shutter/Valves. *)
 FUNCTION_BLOCK FB_VFS EXTENDS FB_Valve
 VAR_INPUT
+    i_stGauge : ST_VG; // Gauge supplying the fast trigger and pressure-good status
+    Veto_Valve : ST_VGC; // Veto valve data
     i_xPMPS_OK:	BOOL	; (*External MPS interlock, Set to TRUE when no PMPS interlock is required*)
     i_xExt_OK: BOOL; (*Other External Interlock, Set to True when no external interlock is required*)
-    i_sDevName : T_MaxString :=  'VGC'; // Device name for diagnostic
+    i_xOverrideMode : BOOL; (*Global override mode*)
+    i_sDevName : T_MaxString :=  'VFS'; // Device name for diagnostic
     i_xVeto_Enable:BOOL:= FALSE; (*Set to TRUE if there is a Veto Valve to this VFS*)
+END_VAR
+VAR_OUTPUT
+    {attribute 'pytmc' := '
+    pv:
+    '}
+    iq_stValve : ST_VFS; (* All valve data and states *)
+    {attribute 'pytmc' := '
+    pv: MPS_FAULT_OK
+    field: ZNAM MPS FAULT ;
+    field: ONAM MPS OK ;
+    io: i ;
+    '}
+    xMPS_OK : BOOL;
 END_VAR
 VAR_IN_OUT
     io_fbFFHWO    :    FB_HardwareFFOutput;
 END_VAR
 VAR
     xOPN_OK :BOOL;
-    xERR_ExtFault :BOOL;
     xVeto: BOOL;
     // PMPS
     fbFF    :    FB_FastFault :=(
@@ -65,18 +76,6 @@ VAR
     q_xClose_C	AT%Q*: BOOL;
     q_xOPN_DO	AT%Q*: BOOL;
     i_xTrigger	AT%I*: BOOL;
-
-    (*VETO Devices*)
-    i_xVetoValveOpenDO AT%I*: BOOL;
-    i_xVetoValveClosed AT%I*: BOOL;
-
-    // Interface
-    i_xPress_OK AT%I*:BOOL; (*To be linked to the Fast sensor structure signal IG.xPRESS_OK, to make sure that the device is connected*)
-    i_xOPN_SW AT%I*:BOOL;
-    i_xCLS_SW AT%I*:BOOL; (*external open signal e.g epics*)
-    i_xVAC_FAULT_Reset	AT%I*: BOOL;(*Valve Vacuum OK, is set to False when there is Vacuum Fault*)
-    i_xOverrideMode AT%I*: BOOL; (*To be linked to global override bit. This Overrides Vacuum logic only, EPS, MPS and PMPS are still enforces*)
-    i_xOverrideOpen AT%I*: BOOL;
     q_xTrigger	AT%Q*: BOOL; (*Interface*)
     q_xVFS_Open AT%Q*: BOOL; (*Interface*)
     q_xVFS_Closed AT%Q*: BOOL; (*Interface*)
@@ -90,6 +89,13 @@ END_VAR]]></Declaration>
 
 (* Fast Shutter/Valve Function Block*)
 (* M.Ghaly Feb 2019*)
+
+iq_stValve.i_xOpnLS := i_xOpnLS;
+iq_stValve.i_xClsLS := i_xClsLS;
+iq_stValve.i_xTrigger := i_xTrigger;
+iq_stValve.i_xPress_OK := i_stGauge.xPRESS_OK;
+iq_stValve.xOverrideMode := i_xOverrideMode;
+iq_stValve.xEXT_OK := i_xExt_OK;
 
 (* Fast Shutters do not function as complete isolation valves, but are intended to rapidly limit conductance
 between vacuum regions.  They should be installed in conjunction with isolation gate valves.  The conductance
@@ -108,59 +114,57 @@ END_IF
 
 (*set Veto bit*)
 IF (i_xVeto_Enable) THEN
-    xVeto := (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
+    xVeto := (Veto_Valve.i_xClsLS AND NOT Veto_Valve.q_xOPN_DO);
     ELSE xVeto:=FALSE;
 END_IF
+iq_stValve.xVeto := xVeto;
 
-//xVeto:= i_xVeto AND (i_xVetoValveClosed AND NOT i_xVetoValveOpenDO);
 (* Input Trigger to close the Fast Shutter*)
 (* Neighboring Valves Should also be triggered to Close*)
-IF ((i_xTrigger) OR NOT (i_xPress_OK) OR NOT (i_xExt_OK))  AND NOT(xVeto) AND NOT (tonOvrd.Q AND i_xOverrideMode) THEN
+IF ((iq_stValve.i_xTrigger) OR NOT (iq_stValve.i_xPress_OK) OR NOT (i_xExt_OK)) AND NOT(xVeto) AND NOT (tonOvrd.Q AND iq_stValve.xOverrideMode) THEN
     xClose:= TRUE;
     xOpen:= FALSE;
     q_xVAC_FAULT_OK:= FALSE;
-    xERR_ExtFault := TRUE; ;
-    i_xCLS_SW := TRUE;
-    q_xOPN_DO := FALSE;
-    //i_xOPN_SW :=FALSE;
+    iq_stValve.xERR_ExtFault := TRUE;
+    iq_stValve.xCLS_SW := TRUE;
+    iq_stValve.q_xOPN_DO := FALSE;
     xOpen:=FALSE;
-ELSIF (i_xCLS_SW) THEN
+ELSIF (iq_stValve.xCLS_SW) THEN
     xClose:= TRUE;
     xOpen:= FALSE;
     q_xVAC_FAULT_OK:= FALSE;
-    i_xCLS_SW := TRUE;
-    q_xOPN_DO := FALSE;
-    //i_xOPN_SW :=FALSE;
+    iq_stValve.xCLS_SW := TRUE;
+    iq_stValve.q_xOPN_DO := FALSE;
     xOpen:=FALSE;
-ELSIF ((rtOPN_SW.Q) AND xOPN_OK AND NOT i_xOpnLS) OR (tonOvrd.Q AND i_xOverrideMode) THEN
-    q_xOPN_DO := TRUE;
+ELSIF ((rtOPN_SW.Q) AND xOPN_OK AND NOT iq_stValve.i_xOpnLS) OR (tonOvrd.Q AND iq_stValve.xOverrideMode) THEN
+    iq_stValve.q_xOPN_DO := TRUE;
 END_IF
-IF (xClose) AND (NOT i_xClsLS) THEN
+IF (xClose) AND (NOT iq_stValve.i_xClsLS) THEN
     q_xClose_A := TRUE;
     q_xClose_B := TRUE;
     q_xClose_C := TRUE;
 END_IF
-IF(CloseTimer.Q) OR (i_xClsLS) THEN
+IF(CloseTimer.Q) OR (iq_stValve.i_xClsLS) THEN
     q_xClose_A := FALSE;
     q_xClose_B := FALSE;
     q_xClose_C := FALSE;
     xClose := FALSE;
-    //i_xOPN_SW := FALSE;
 END_IF
 
-IF(OpenTimer.Q) AND (i_xOpnLS) THEN
-    q_xOPN_DO :=  FALSE;
-    i_xOPN_SW := FALSE;
+IF(OpenTimer.Q) AND (iq_stValve.i_xOpnLS) THEN
+    iq_stValve.q_xOPN_DO := FALSE;
+    iq_stValve.pv_xOPN_SW := FALSE;
     xOpen:=FALSE;
 END_IF
 
 (* Neighboring Valves Interlock bit is reset When the Vacuum event error is reset and the Shutter is opened *)
-IF ((NOT i_xTrigger) OR xVeto) AND (NOT xERR_ExtFault) AND i_xOpnLS THEN
+IF ((NOT iq_stValve.i_xTrigger) OR xVeto) AND (NOT iq_stValve.xERR_ExtFault) AND iq_stValve.i_xOpnLS THEN
     q_xVAC_FAULT_OK := TRUE;
 END_IF
 
 (*OPN OK evaluation bit *)
-xOPN_OK := (NOT xERR_ExtFault) AND (NOT i_xTrigger OR xVeto) ;
+xOPN_OK := (NOT iq_stValve.xERR_ExtFault) AND (NOT iq_stValve.i_xTrigger OR xVeto);
+iq_stValve.xOPN_OK := xOPN_OK;
 
 (* If Epics Command to close the Valve, check if PMPS, otherwise Keep command set to open valve *)
 // is there really a PMPS requirment.
@@ -168,7 +172,7 @@ xOPN_OK := (NOT xERR_ExtFault) AND (NOT i_xTrigger OR xVeto) ;
 
 
 (* When the valve  is open MPS is OK*)
-q_xMPS_OK := i_xOpnLS AND ((NOT i_xTrigger AND i_xPress_OK) OR xVeto)  AND NOT(i_xCLS_SW);
+q_xMPS_OK := iq_stValve.i_xOpnLS AND ((NOT iq_stValve.i_xTrigger AND iq_stValve.i_xPress_OK) OR xVeto) AND NOT(iq_stValve.xCLS_SW);
 
 
 (* Override logic *)
@@ -176,49 +180,60 @@ q_xMPS_OK := i_xOpnLS AND ((NOT i_xTrigger AND i_xPress_OK) OR xVeto)  AND NOT(i
 Solution: Override only after ten seconds of override, protect against blips,
 when the valve permission goes true for more than ten seconds consistently, remove override
 *)
-rTrigOverrideOpen(CLK:= i_xOverrideOpen);
+rTrigOverrideOpen(CLK:= iq_stValve.pv_xOvrdOpn);
 tonDelOK(IN:=xOPN_OK, PT:=tDelOK);
 rtOK(CLK:=tonDelOK.Q);
-IF rtOK.Q AND i_xOverrideOpen THEN
-    i_xOverrideOpen :=FALSE;
-    //if (i_xOpnLS) AND (i_xOverrideMode) THEN i_xOPN_SW := TRUE; END_IF //for seamless transition
+IF rtOK.Q AND iq_stValve.pv_xOvrdOpn THEN
+    iq_stValve.pv_xOvrdOpn :=FALSE;
     //Log
     fbLogger(sMsg:='Override expired', eSevr:=TcEventSeverity.Warning);
 END_IF
 
 //Override timer
-tonOvrd(IN:=i_xOverrideOpen, PT:=tOvrd);
+tonOvrd(IN:=iq_stValve.pv_xOvrdOpn, PT:=tOvrd);
 
 
 //Assign valve state
-IF (i_xTrigger) THEN q_eVFS_State := E_VGC.Triggered;
-ELSIF xERR_ExtFault THEN q_eVFS_State :=  E_VGC.Vac_Fault;
-ELSIF NOT i_xClsLS AND tCLStimeout.Q THEN
+IF (iq_stValve.i_xTrigger) THEN q_eVFS_State := E_VGC.Triggered;
+ELSIF iq_stValve.xERR_ExtFault THEN q_eVFS_State :=  E_VGC.Vac_Fault;
+ELSIF NOT iq_stValve.i_xClsLS AND tCLStimeout.Q THEN
     q_eVFS_State :=  E_VGC.Cls_Timeout;
-ELSIF NOT i_xOpnLS AND tOPNtimeout.Q THEN
+ELSIF NOT iq_stValve.i_xOpnLS AND tOPNtimeout.Q THEN
     q_eVFS_State :=  E_VGC.Opn_Timeout;
 ELSE q_eVFS_State :=  E_VGC.At_Vac;
 END_IF
 
+IF iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN
+    iq_stValve.eState := INVALID;
+ELSIF NOT iq_stValve.i_xClsLS AND iq_stValve.i_xOpnLS THEN
+    iq_stValve.eState := OPEN;
+ELSIF iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN
+    iq_stValve.eState := CLOSED;
+ELSIF NOT iq_stValve.i_xClsLS AND NOT iq_stValve.i_xOpnLS THEN
+    iq_stValve.eState := MOVING;
+ELSE
+    iq_stValve.eState := INVALID;
+END_IF
+
 (*Timers*)
 CloseTimer ( IN:=xClose, PT:= TimDur, Q=>);
-OpenTimer ( IN:=i_xOpnLS, PT:= OpenTimDur, Q=>);
-tOPNtimeout(IN:= q_xOPN_DO, PT := tOPNTimeOutDuration);
+OpenTimer ( IN:=iq_stValve.i_xOpnLS, PT:= OpenTimDur, Q=>);
+tOPNtimeout(IN:= iq_stValve.q_xOPN_DO, PT := tOPNTimeOutDuration);
 tCLStimeout(IN:= q_xClose_A, PT := tCLSTimeOutDuration);
-rtOPN_SW(CLK:= i_xOPN_SW);
+rtOPN_SW(CLK:= iq_stValve.pv_xOPN_SW);
 
 (* Soft IO Mapping*)
 IO();
 
-(*Alarm reset *)
-ACT_ResetAlarms();
-
 (*FAST FAULT*)
 fbFF(i_xOK := q_xMPS_OK,
-    i_xReset := i_xVAC_FAULT_Reset,
+    i_xReset := iq_stValve.pv_xAlmRst AND
+        ((NOT iq_stValve.i_xTrigger AND iq_stValve.i_xPress_OK) OR xVeto),
     i_xAutoReset :=TRUE,
     io_fbFFHWO := io_fbFFHWO);
 
+ACT_ResetAlarms();
+ACT_Logger();
 
 
 
@@ -230,23 +245,79 @@ fbFF(i_xOK := q_xMPS_OK,
 
 //iq_stValve.bErrorPresent R= i_xResetFault;
 
-IF (NOT i_xTrigger AND i_xPress_OK AND i_xVAC_FAULT_Reset) OR xVeto THEN
-    xERR_ExtFault := FALSE;
-    i_xVAC_FAULT_Reset:=FALSE;
+IF (NOT iq_stValve.i_xTrigger AND iq_stValve.i_xPress_OK AND iq_stValve.pv_xAlmRst) OR xVeto THEN
+    iq_stValve.xERR_ExtFault := FALSE;
+    iq_stValve.pv_xAlmRst := FALSE;
 END_IF
 
 
-IF (i_xTrigger OR NOT i_xPress_OK) AND NOT xVeto THEN
-    i_xVAC_FAULT_Reset:=FALSE;
+IF (iq_stValve.i_xTrigger OR NOT iq_stValve.i_xPress_OK) AND NOT xVeto THEN
+    iq_stValve.pv_xAlmRst := FALSE;
 END_IF]]></ST>
       </Implementation>
     </Action>
     <Action Name="IO" Id="{be2b8137-473d-4278-9e2c-831399c62f45}">
       <Implementation>
         <ST><![CDATA[
-q_xTrigger := i_xTrigger;
-q_xVFS_Closed:= i_xClsLS;
-q_xVFS_Open:= i_xOpnLS;]]></ST>
+q_xTrigger := iq_stValve.i_xTrigger;
+iq_stValve.q_xTrigger := q_xTrigger;
+q_xVFS_Closed := iq_stValve.i_xClsLS;
+q_xVFS_Open := iq_stValve.i_xOpnLS;
+q_xOPN_DO := iq_stValve.q_xOPN_DO;
+iq_stValve.q_xClose_A := q_xClose_A;
+iq_stValve.q_xClose_B := q_xClose_B;
+iq_stValve.q_xClose_C := q_xClose_C;
+iq_stValve.i_xVAC_FAULT_OK := q_xVAC_FAULT_OK;
+iq_stValve.eVGC_State := q_eVFS_State;
+iq_stValve.xMPS_OK := q_xMPS_OK;
+xMPS_OK := q_xMPS_OK;
+iq_stValve.sDevName := i_sDevName;
+iq_stValve.sGFS := i_stGauge.sPath;
+iq_stValve.sVetoDeviceName := Veto_Valve.sDevName;
+
+IF iq_stValve.i_xOpnLS THEN
+    iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
+IF iq_stValve.i_xClsLS THEN
+    iq_stValve.xCLS_SW := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Logger" Id="{ca4b83a8-cdc6-4263-8db9-6ac6c82d2f81}">
+      <Implementation>
+        <ST><![CDATA[
+IF iq_stValve.i_xTrigger AND ePrevState = OPEN THEN
+    fbLogger(sMsg:='Fast valve triggered to close', eSevr:=TcEventSeverity.Critical);
+END_IF
+
+IF ePrevState <> iq_stValve.eState THEN
+    CASE iq_stValve.eState OF
+        INVALID:
+            fbLogger(sMsg:='Valve invalid position.', eSevr:=TcEventSeverity.Critical);
+        MOVING:
+            fbLogger(sMsg:='Valve moving', eSevr:=TcEventSeverity.Warning);
+        OPEN:
+            fbLogger(sMsg:='Valve Open.', eSevr:=TcEventSeverity.Info);
+        CLOSED:
+            fbLogger(sMsg:='Valve closed.', eSevr:=TcEventSeverity.Info);
+    END_CASE
+    ePrevState := iq_stValve.eState;
+END_IF
+
+tErrorPresent(CLK:=iq_stValve.bErrorPresent);
+IF tErrorPresent.Q THEN
+    fbLogger(sMsg:=iq_stValve.sErrorMessage, eSevr:=TcEventSeverity.Warning);
+END_IF
+
+tAction(CLK:=iq_stValve.q_xOPN_DO);
+IF tAction.Q THEN
+    fbLogger(sMsg:='Valve commanded open', eSevr:=TcEventSeverity.Info);
+END_IF
+
+tOverrideActivated(CLK:=(tonOvrd.Q AND iq_stValve.xOverrideMode));
+IF tOverrideActivated.Q THEN
+    fbLogger(sMsg:='Valve override mode activated', eSevr:=TcEventSeverity.Warning);
+END_IF]]></ST>
       </Implementation>
     </Action>
   </POU>
