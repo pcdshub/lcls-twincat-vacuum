@@ -82,12 +82,7 @@ END_VAR]]></Declaration>
 (* Fast Shutter/Valve Function Block*)
 (* M.Ghaly Feb 2019*)
 
-iq_stValve.i_xOpnLS := i_xOpnLS;
-iq_stValve.i_xClsLS := i_xClsLS;
-iq_stValve.i_xTrigger := i_xTrigger;
-iq_stValve.i_xPress_OK := i_stGauge.xPRESS_OK;
-iq_stValve.xOverrideMode := i_xOverrideMode;
-iq_stValve.xEXT_OK := i_xExt_OK;
+IO();
 
 (* Fast Shutters do not function as complete isolation valves, but are intended to rapidly limit conductance
 between vacuum regions.  They should be installed in conjunction with isolation gate valves.  The conductance
@@ -215,6 +210,13 @@ rtOPN_SW(CLK:= iq_stValve.pv_xOPN_SW);
 (* Soft IO Mapping*)
 IO();
 
+IF iq_stValve.i_xOpnLS THEN
+    iq_stValve.pv_xOPN_SW := FALSE;
+END_IF
+IF iq_stValve.i_xClsLS THEN
+    iq_stValve.xCLS_SW := FALSE;
+END_IF
+
 (*FAST FAULT*)
 fbFF(i_xOK := iq_stValve.xMPS_OK,
     i_xReset := iq_stValve.pv_xAlmRst AND
@@ -248,22 +250,23 @@ END_IF]]></ST>
     </Action>
     <Action Name="IO" Id="{be2b8137-473d-4278-9e2c-831399c62f45}">
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[(*inputs*)
+iq_stValve.i_xOpnLS := i_xOpnLS;
+iq_stValve.i_xClsLS := i_xClsLS;
+iq_stValve.i_xTrigger := i_xTrigger;
+iq_stValve.i_xPress_OK := i_stGauge.xPRESS_OK;
+iq_stValve.xOverrideMode := i_xOverrideMode;
+iq_stValve.xEXT_OK := i_xExt_OK;
+(*outputs*)
 q_xOPN_DO := iq_stValve.q_xOPN_DO;
 iq_stValve.q_xClose_A := q_xClose_A;
 iq_stValve.q_xClose_B := q_xClose_B;
 iq_stValve.q_xClose_C := q_xClose_C;
 xMPS_OK := iq_stValve.xMPS_OK;
+(*interlock devices*)
 iq_stValve.sDevName := i_sDevName;
 iq_stValve.sGFS := i_stGauge.sPath;
-iq_stValve.sVetoDeviceName := Veto_Valve.sDevName;
-
-IF iq_stValve.i_xOpnLS THEN
-    iq_stValve.pv_xOPN_SW := FALSE;
-END_IF
-IF iq_stValve.i_xClsLS THEN
-    iq_stValve.xCLS_SW := FALSE;
-END_IF]]></ST>
+iq_stValve.sVetoDeviceName := Veto_Valve.sDevName;]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_Logger" Id="{ca4b83a8-cdc6-4263-8db9-6ac6c82d2f81}">
