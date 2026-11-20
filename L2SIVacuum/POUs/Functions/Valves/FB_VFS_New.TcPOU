@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1">
-  <POU Name="FB_VFS_New" Id="{68519563-003c-4daf-ae0e-7245b1fe09af}" SpecialFunc="None">
+  <POU Name="FB_VFS_New" Id="{F2037C55-2B47-4B4C-8E1A-9D53C1E04A76}" SpecialFunc="None">
     <Declaration><![CDATA[(* This function block implements basic functionality for Fast Shutter/Valves. *)
 FUNCTION_BLOCK FB_VFS_New EXTENDS FB_Valve
 VAR_INPUT
@@ -228,7 +228,7 @@ ACT_Logger();
 
 ]]></ST>
     </Implementation>
-    <Action Name="ACT_Logger" Id="{ca4b83a8-cdc6-4263-8db9-6ac6c82d2f81}">
+    <Action Name="ACT_Logger" Id="{30A49387-2D0F-4BA2-83AE-57B1F7C05D11}">
       <Implementation>
         <ST><![CDATA[
 IF iq_stValve.i_xTrigger AND ePrevState = OPEN THEN
@@ -265,7 +265,7 @@ IF tOverrideActivated.Q THEN
 END_IF]]></ST>
       </Implementation>
     </Action>
-    <Action Name="ACT_ResetAlarms" Id="{5bc381e2-d93d-4e07-9868-4d1094f97e97}">
+    <Action Name="ACT_ResetAlarms" Id="{6E14B639-0CDD-43AE-B5E1-D17E8234A065}">
       <Implementation>
         <ST><![CDATA[//iq_stValve.xERR_DifPres R= i_xResetFault;
 
@@ -282,7 +282,7 @@ IF (iq_stValve.i_xTrigger OR NOT iq_stValve.i_xPress_OK) AND NOT iq_stValve.xVet
 END_IF]]></ST>
       </Implementation>
     </Action>
-    <Action Name="IO" Id="{be2b8137-473d-4278-9e2c-831399c62f45}">
+    <Action Name="IO" Id="{E7F5E9CE-3F98-4C5A-AE6B-827CA78D1243}">
       <Implementation>
         <ST><![CDATA[(*inputs*)
 iq_stValve.i_xOpnLS := i_xOpnLS;
