@@ -12,6 +12,13 @@ STRUCT
     io: i ;
     '}
     i_xTrigger : BOOL;
+    i_xPress_OK : BOOL;
+    xMPS_OK : BOOL;
+    xVeto : BOOL;
+    sDevName : STRING;
+    q_xClose_A : BOOL;
+    q_xClose_B : BOOL;
+    q_xClose_C : BOOL;
 (* Commands *)
     {attribute 'pytmc' := '
     pv: CLS_SW;

@@ -29,7 +29,7 @@
       <Id>{a5724f56-da3f-40b6-8a5e-63302d98c4cc}</Id>
     </SelectedLibraryCategories>
     <Author>LCLS ECS-Platforms</Author>
-    <ProjectVersion>0.0.0</ProjectVersion>
+    <ProjectVersion>0.0.0.3</ProjectVersion>
     <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
     <WriteProductVersion>false</WriteProductVersion>
   </PropertyGroup>
@@ -412,6 +412,9 @@
     <Compile Include="POUs\Functions\Valves\FB_VFS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Valves\FB_VFS_New.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Valves\FB_VFS_2OO3.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -652,6 +655,7 @@
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_SerialCom">
       <DefaultResolution>Tc2_SerialCom, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_SerialCom</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Standard">
       <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
@@ -684,17 +688,11 @@
     <PlaceholderReference Include="TcUnit">
       <DefaultResolution>TcUnit, * (www.tcunit.org)</DefaultResolution>
       <Namespace>TcUnit</Namespace>
-      <Parameters>
-        <Parameter xmlns="">
-          <Key>MAXNUMBEROFTESTSUITES</Key>
-          <Value>500</Value>
-        </Parameter>
-      </Parameters>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
     <PlaceholderResolution Include="LCLS General">
-      <Resolution>LCLS General, * (SLAC)</Resolution>
+      <Resolution>LCLS General, 2.12.0 (SLAC)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="PMPS">
       <Resolution>PMPS, * (SLAC - LCLS)</Resolution>
